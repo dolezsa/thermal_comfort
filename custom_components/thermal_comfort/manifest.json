@@ -1,0 +1,8 @@
+{
+  "domain": "thermal_comfort",
+  "name": "Thermal Comfort",
+  "documentation": "https://github.com/dolezsa/thermal_comfort/blob/master/README.md",
+  "dependencies": [],
+  "codeowners": ["@dolezsa"],
+  "requirements": []
+}
