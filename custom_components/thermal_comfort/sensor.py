@@ -3,6 +3,7 @@ from typing import Optional
 
 import voluptuous as vol
 
+from homeassistant import util
 from homeassistant.core import callback
 from homeassistant.components.sensor import ENTITY_ID_FORMAT, \
     PLATFORM_SCHEMA, DEVICE_CLASSES_SCHEMA
@@ -10,7 +11,7 @@ from homeassistant.const import (
     ATTR_FRIENDLY_NAME, ATTR_UNIT_OF_MEASUREMENT, CONF_ICON_TEMPLATE,
 	CONF_ENTITY_PICTURE_TEMPLATE, CONF_SENSORS, EVENT_HOMEASSISTANT_START,
 	MATCH_ALL, CONF_DEVICE_CLASS, DEVICE_CLASS_TEMPERATURE, STATE_UNKNOWN,
-        STATE_UNAVAILABLE, DEVICE_CLASS_HUMIDITY, ATTR_TEMPERATURE)
+        STATE_UNAVAILABLE, DEVICE_CLASS_HUMIDITY, ATTR_TEMPERATURE, TEMP_FAHRENHEIT)
 from homeassistant.exceptions import TemplateError
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity, async_generate_entity_id
@@ -115,7 +116,12 @@ class SensorThermalComfort(Entity):
     def temperature_state_listener(self, entity, old_state, new_state):
         """Handle temperature device state changes."""
         if new_state and new_state.state != STATE_UNKNOWN and new_state.state != STATE_UNAVAILABLE:
-            self._temperature = float(new_state.state)
+            unit = new_state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
+            temp = util.convert(new_state.state, float)
+            # convert to celsius if necessary
+            if unit == TEMP_FAHRENHEIT:
+                temp = util.temperature.fahrenheit_to_celsius(temp)
+            self._temperature = temp
 
         self.async_schedule_update_ha_state(True)
 
