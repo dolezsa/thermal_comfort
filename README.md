@@ -28,6 +28,7 @@ sensor:
 - friendly_name
 - icon_template
 - entity_picture_template
+- unique_id
 
 ## Screenshots
 
