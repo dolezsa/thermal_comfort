@@ -9,9 +9,11 @@ from homeassistant.components.sensor import ENTITY_ID_FORMAT, \
     PLATFORM_SCHEMA, DEVICE_CLASSES_SCHEMA
 from homeassistant.const import (
     ATTR_FRIENDLY_NAME, ATTR_UNIT_OF_MEASUREMENT, CONF_ICON_TEMPLATE,
-	CONF_ENTITY_PICTURE_TEMPLATE, CONF_SENSORS, EVENT_HOMEASSISTANT_START,
-	MATCH_ALL, CONF_DEVICE_CLASS, DEVICE_CLASS_TEMPERATURE, STATE_UNKNOWN,
-        STATE_UNAVAILABLE, DEVICE_CLASS_HUMIDITY, ATTR_TEMPERATURE, TEMP_FAHRENHEIT)
+    CONF_ENTITY_PICTURE_TEMPLATE, CONF_SENSORS, EVENT_HOMEASSISTANT_START,
+    MATCH_ALL, CONF_DEVICE_CLASS, DEVICE_CLASS_TEMPERATURE, STATE_UNKNOWN,
+    STATE_UNAVAILABLE, DEVICE_CLASS_HUMIDITY, ATTR_TEMPERATURE, TEMP_FAHRENHEIT,
+    CONF_UNIQUE_ID,
+)
 from homeassistant.exceptions import TemplateError
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity, async_generate_entity_id
@@ -30,7 +32,8 @@ SENSOR_SCHEMA = vol.Schema({
     vol.Required(CONF_HUMIDITY_SENSOR): cv.entity_id,
     vol.Optional(CONF_ICON_TEMPLATE): cv.template,
     vol.Optional(CONF_ENTITY_PICTURE_TEMPLATE): cv.template,
-    vol.Optional(ATTR_FRIENDLY_NAME): cv.string
+    vol.Optional(ATTR_FRIENDLY_NAME): cv.string,
+    vol.Optional(CONF_UNIQUE_ID): cv.string,
 })
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
@@ -55,6 +58,7 @@ async def async_setup_platform(hass, config, async_add_entities,
         icon_template = device_config.get(CONF_ICON_TEMPLATE)
         entity_picture_template = device_config.get(CONF_ENTITY_PICTURE_TEMPLATE)
         friendly_name = device_config.get(ATTR_FRIENDLY_NAME, device)
+        unique_id = device_config.get(CONF_UNIQUE_ID)
 
         for sensor_type in SENSOR_TYPES:
                 sensors.append(
@@ -66,8 +70,10 @@ async def async_setup_platform(hass, config, async_add_entities,
                                 friendly_name,
                                 icon_template,
                                 entity_picture_template,
-                                sensor_type)
+                                sensor_type,
+                                unique_id,
                         )
+                )
     if not sensors:
         _LOGGER.error("No sensors added")
         return False
@@ -80,7 +86,7 @@ class SensorThermalComfort(Entity):
     """Representation of a Thermal Comfort Sensor."""
 
     def __init__(self, hass, device_id, temperature_entity, humidity_entity,
-                 friendly_name, icon_template, entity_picture_template, sensor_type):
+                 friendly_name, icon_template, entity_picture_template, sensor_type, unique_id=None):
         """Initialize the sensor."""
         self.hass = hass
         self.entity_id = async_generate_entity_id(ENTITY_ID_FORMAT, "{}_{}".format(device_id, sensor_type), hass=hass)
@@ -98,6 +104,7 @@ class SensorThermalComfort(Entity):
         self._sensor_type = sensor_type
         self._temperature = None
         self._humidity = None
+        self._unique_id = unique_id
 
         async_track_state_change(
             self.hass, self._temperature_entity, self.temperature_state_listener)
@@ -244,6 +251,12 @@ class SensorThermalComfort(Entity):
     def should_poll(self):
         """No polling needed."""
         return False
+
+    @property
+    def unique_id(self) -> str:
+        """Return a unique ID."""
+        if self._unique_id is not None:
+            return self._unique_id + self._sensor_type
 
     async def async_update(self):
         """Update the state."""
