@@ -113,16 +113,16 @@ class SensorThermalComfort(Entity):
             self.hass, self._humidity_entity, self.humidity_state_listener)
 
         temperature_state = hass.states.get(temperature_entity)
-        if temperature_state and temperature_state.state != STATE_UNKNOWN and temperature_state.state != STATE_UNAVAILABLE:
+        if _is_valid_state(temperature_state):
             self._temperature = float(temperature_state.state)
 
         humidity_state = hass.states.get(humidity_entity)
-        if humidity_state and humidity_state.state != STATE_UNKNOWN and humidity_state.state != STATE_UNAVAILABLE:
+        if _is_valid_state(humidity_state):
             self._humidity = float(humidity_state.state)
 
     def temperature_state_listener(self, entity, old_state, new_state):
         """Handle temperature device state changes."""
-        if new_state and new_state.state != STATE_UNKNOWN and new_state.state != STATE_UNAVAILABLE:
+        if _is_valid_state(new_state):
             unit = new_state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
             temp = util.convert(new_state.state, float)
             # convert to celsius if necessary
@@ -134,7 +134,7 @@ class SensorThermalComfort(Entity):
 
     def humidity_state_listener(self, entity, old_state, new_state):
         """Handle humidity device state changes."""
-        if new_state and new_state.state != STATE_UNKNOWN and new_state.state != STATE_UNAVAILABLE:
+        if _is_valid_state(new_state):
             self._humidity = float(new_state.state)
 
         self.async_schedule_update_ha_state(True)
@@ -302,3 +302,6 @@ class SensorThermalComfort(Entity):
                     _LOGGER.error('Could not render %s template %s: %s',
                                   friendly_property_name, self._name, ex)
 
+
+def _is_valid_state(state) -> bool:
+    return state and state.state != STATE_UNKNOWN and state.state != STATE_UNAVAILABLE and not math.isnan(float(state.state))
