@@ -20,6 +20,7 @@ from homeassistant.helpers.entity import Entity, async_generate_entity_id
 from homeassistant.helpers.event import async_track_state_change
 
 import math
+from enum import Enum
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -46,6 +47,15 @@ SENSOR_TYPES = {
     'dewpoint': [DEVICE_CLASS_TEMPERATURE, 'Dew Point', '°C'],
     'perception': [None, 'Thermal Perception', None],
 }
+
+PERCEPTION_DRY = "dry"
+PERCEPTION_VERY_COMFORTABLE = "very_comfortable"
+PERCEPTION_COMFORTABLE = "comfortable"
+PERCEPTION_DEWPOINT_OK_BUT_HUMID = "ok_but_humid"
+PERCEPTION_SOMEWHAT_UNCOMFORTABLE = "somewhat_uncomfortable"
+PERCEPTION_QUITE_UNCOMFORTABLE = "quite_uncomfortable"
+PERCEPTION_EXTREMELY_UNCOMFORTABLE = "extremely_uncomfortable"
+PERCEPTION_SEVERELY_HIGH = "severely_high"
 
 async def async_setup_platform(hass, config, async_add_entities,
                                discovery_info=None):
@@ -186,20 +196,20 @@ class SensorThermalComfort(Entity):
         """https://en.wikipedia.org/wiki/Dew_point"""
         dewPoint = self.computeDewPoint(temperature, humidity)
         if dewPoint < 10:
-            return "A bit dry for some"
+            return PERCEPTION_DRY
         elif dewPoint < 13:
-            return "Very comfortable"
+            return PERCEPTION_VERY_COMFORTABLE
         elif dewPoint < 16:
-            return "Comfortable"
+            return PERCEPTION_COMFORTABLE
         elif dewPoint < 18:
-            return "OK for most, but all perceive the humidity at upper edge"
+            return PERCEPTION_DEWPOINT_OK_BUT_HUMID
         elif dewPoint < 21:
-            return "Somewhat uncomfortable for most people at upper edge"
+            return PERCEPTION_SOMEWHAT_UNCOMFORTABLE
         elif dewPoint < 24:
-            return "Very humid, quite uncomfortable"
+            return PERCEPTION_QUITE_UNCOMFORTABLE
         elif dewPoint < 26:
-            return "Extremely uncomfortable, oppressive"
-        return "Severely high, even deadly for asthma related illnesses"
+            return PERCEPTION_EXTREMELY_UNCOMFORTABLE
+        return PERCEPTION_SEVERELY_HIGH
 
     def computeAbsoluteHumidity(self, temperature, humidity):
         """https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/"""
