@@ -1,0 +1,14 @@
+{
+  "state": {
+    "_": {
+      "dry": "Etwas trocken",
+      "very_comfortable": "Sehr angenehm",
+      "comfortable": "Angenehm",
+      "ok_but_humid": "Angenehm aber schwül",
+      "somewhat_uncomfortable": "Etwas unangenehm",
+      "quite_uncomfortable": "Unangenehm und sehr schwül",
+      "extremely_uncomfortable": "Äußerst unangenehm und drückend",
+      "severely_high":"Extrem hoch, tödlich für asthmabedingte Erkrankungen"
+    }
+  }
+}
