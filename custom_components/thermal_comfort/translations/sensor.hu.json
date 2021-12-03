@@ -1,0 +1,14 @@
+{
+  "state": {
+    "_": {
+      "dry": "Egyeseknek kissé száraz",
+      "very_comfortable": "Nagyon kellemes",
+      "comfortable": "Kellemes",
+      "ok_but_humid": "A többségnek megfelelő, de párás",
+      "somewhat_uncomfortable": "Kicsit kellemetlen",
+      "quite_uncomfortable": "Nagyon nedves, eléggé kellemetlen",
+      "extremely_uncomfortable": "Rendkívül kellemetlen, nyomasztó",
+      "severely_high": "Különösen magas, az asztmás betegségek számára életveszélyes"
+    }
+  }
+}
