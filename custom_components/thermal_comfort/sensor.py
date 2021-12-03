@@ -261,7 +261,7 @@ class SensorThermalComfort(Entity):
     async def async_update(self):
         """Update the state."""
         value = None
-        if self._temperature and self._humidity:
+        if self._temperature is not None and self._humidity is not None:
             if self._sensor_type == "dewpoint":
                 value = self.computeDewPoint(self._temperature, self._humidity)
             if self._sensor_type == "heatindex":
