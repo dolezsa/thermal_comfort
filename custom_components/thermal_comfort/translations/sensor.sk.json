@@ -1,0 +1,14 @@
+{
+  "state": {
+    "_": {
+      "dry": "Pre niekoho suché",
+      "very_comfortable": "Velmi komfortné",
+      "comfortable": "Príjemné",
+      "ok_but_humid": "Pre vǎcsinu OK, ale vlhké",
+      "somewhat_uncomfortable": "Trochu nepríjemné",
+      "quite_uncomfortable": "Veľmi vlhké, dosť nepríjemné",
+      "extremely_uncomfortable": "Extrémne nekomfortné, tiesnivé",
+      "severely_high": "Veľmi vysoká, pre astmatikov smrteľná vlhkosť"
+    }
+  }
+}
