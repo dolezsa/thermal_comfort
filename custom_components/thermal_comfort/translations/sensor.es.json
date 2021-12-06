@@ -1,0 +1,14 @@
+{
+  "state": {
+    "_": {
+      "dry": "Un poco seco para algunos",
+      "very_comfortable": "Muy cómodo",
+      "comfortable": "Cómodo",
+      "ok_but_humid": "Bien para la mayoria, pero algo húmedo",
+      "somewhat_uncomfortable": "Algo incómodo",
+      "quite_uncomfortable": "Muy húmedo, bastante incómodo",
+      "extremely_uncomfortable": "Extremadamente incómodo, agobiante",
+      "severely_high": "Muy alto, incluso mortal para enfermedades relacionadas con el asma"
+    }
+  }
+}
