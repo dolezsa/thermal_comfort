@@ -1,0 +1,14 @@
+{
+  "state": {
+    "_": {
+      "dry": "Natuke liiga kuiv",
+      "very_comfortable": "Väga mugav",
+      "comfortable": "Mugav",
+      "ok_but_humid": "Talutav kuid veidi niiske",
+      "somewhat_uncomfortable": "Veidi ebamugav",
+      "quite_uncomfortable": "Väga niiske ja ebamugav",
+      "extremely_uncomfortable": "Ülimalt ebamugav ja rõhuv niiskus",
+      "severely_high": "Ülikõrge niiskus, ohtlik astmaatikutele"
+    }
+  }
+}
