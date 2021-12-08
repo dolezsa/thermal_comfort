@@ -116,12 +116,6 @@ class SensorThermalComfort(Entity):
         self._humidity = None
         self._unique_id = unique_id
 
-        async_track_state_change(
-            self.hass, self._temperature_entity, self.temperature_state_listener)
-
-        async_track_state_change(
-            self.hass, self._humidity_entity, self.humidity_state_listener)
-
         temperature_state = hass.states.get(temperature_entity)
         if _is_valid_state(temperature_state):
             self._temperature = float(temperature_state.state)
@@ -267,6 +261,13 @@ class SensorThermalComfort(Entity):
         """Return a unique ID."""
         if self._unique_id is not None:
             return self._unique_id + self._sensor_type
+
+    async def async_added_to_hass(self):
+        async_track_state_change(
+            self.hass, self._temperature_entity, self.temperature_state_listener)
+
+        async_track_state_change(
+            self.hass, self._humidity_entity, self.humidity_state_listener)
 
     async def async_update(self):
         """Update the state."""
