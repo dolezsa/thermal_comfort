@@ -258,3 +258,44 @@ async def test_zero_degree_celcius(hass, start_ha):
     await hass.async_block_till_done()
     assert hass.states.get(f"{TEST_NAME}_dewpoint") is not None
     assert hass.states.get(f"{TEST_NAME}_dewpoint").state == "-9.19"
+
+
+@pytest.mark.parametrize("domains", [({
+    sensor.DOMAIN: {
+        "count": 3,
+        "config": {
+            "sensor": [
+                {
+                    "platform": 'command_line',
+                    "command": 'echo 0',
+                    "name": "test_temperature_sensor",
+                    "value_template": "{{ 25.0 | float }}",
+                },
+                {
+                    "platform": 'command_line',
+                    "command": 'echo 0',
+                    "name": "test_humidity_sensor",
+                    "value_template": "{{ 50.0 | float }}",
+                },
+                {
+                    "platform": "thermal_comfort",
+                    "sensors": {
+                        "test_thermal_comfort": {
+                            "temperature_sensor": "sensor.test_temperature_sensor",
+                            "humidity_sensor": "sensor.test_humidity_sensor",
+                            "sensor_types": ["absolutehumidity", "dewpoint"],
+                        },
+                    },
+                },
+            ],
+        },
+    },
+})])
+async def test_sensor_types(hass, start_ha):
+    assert len(hass.states.async_all("sensor")) == 4
+
+    assert hass.states.get(f"{TEST_NAME}_heatindex") is None
+    assert hass.states.get(f"{TEST_NAME}_perception") is None
+
+    assert hass.states.get(f"{TEST_NAME}_absolutehumidity") is not None
+    assert hass.states.get(f"{TEST_NAME}_dewpoint") is not None
