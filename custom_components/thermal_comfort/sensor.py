@@ -17,7 +17,7 @@ from homeassistant.const import (
 from homeassistant.exceptions import TemplateError
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity, async_generate_entity_id
-from homeassistant.helpers.event import async_track_state_change
+from homeassistant.helpers.event import async_track_state_change_event
 
 import math
 from enum import Enum
@@ -133,8 +133,9 @@ class SensorThermalComfort(Entity):
         if _is_valid_state(humidity_state):
             self._humidity = float(humidity_state.state)
 
-    def temperature_state_listener(self, entity, old_state, new_state):
+    def temperature_state_listener(self, event):
         """Handle temperature device state changes."""
+        new_state = event.data.get("new_state")
         if _is_valid_state(new_state):
             unit = new_state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
             temp = util.convert(new_state.state, float)
@@ -145,8 +146,9 @@ class SensorThermalComfort(Entity):
 
         self.async_schedule_update_ha_state(True)
 
-    def humidity_state_listener(self, entity, old_state, new_state):
+    def humidity_state_listener(self, event):
         """Handle humidity device state changes."""
+        new_state = event.data.get("new_state")
         if _is_valid_state(new_state):
             self._humidity = float(new_state.state)
 
@@ -225,10 +227,10 @@ class SensorThermalComfort(Entity):
         return round(absHumidity, 2)
 
     async def async_added_to_hass(self):
-        async_track_state_change(
+        async_track_state_change_event(
             self.hass, self._temperature_entity, self.temperature_state_listener)
 
-        async_track_state_change(
+        async_track_state_change_event(
             self.hass, self._humidity_entity, self.humidity_state_listener)
 
     async def async_update(self):
@@ -277,4 +279,4 @@ class SensorThermalComfort(Entity):
 
 
 def _is_valid_state(state) -> bool:
-    return state and state.state != STATE_UNKNOWN and state.state != STATE_UNAVAILABLE and not math.isnan(float(state.state))
+    return state and state.state not in (STATE_UNKNOWN, STATE_UNAVAILABLE, math.isnan(float(state.state)))
