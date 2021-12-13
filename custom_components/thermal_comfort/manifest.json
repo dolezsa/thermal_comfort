@@ -4,8 +4,6 @@
   "version": "2021.3.1",
   "documentation": "https://github.com/dolezsa/thermal_comfort/blob/master/README.md",
   "issue_tracker": "https://github.com/dolezsa/thermal_comfort/issues",
-  "dependencies": [],
   "codeowners": ["@dolezsa"],
-  "requirements": []
   "iot_class": "calculated"
 }
