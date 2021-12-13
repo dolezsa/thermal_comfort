@@ -279,4 +279,10 @@ class SensorThermalComfort(Entity):
 
 
 def _is_valid_state(state) -> bool:
-    return state and state.state not in (STATE_UNKNOWN, STATE_UNAVAILABLE, math.isnan(float(state.state)))
+    if state is not None:
+        if state.state not in (STATE_UNKNOWN, STATE_UNAVAILABLE):
+            try:
+                return not math.isnan(float(state.state))
+            except:
+                pass
+    return False
