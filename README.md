@@ -1,4 +1,4 @@
-# thermal_comfort
+# ![thermal_comfort](./icons/logo.png)
 Thermal Comfort sensor for HA (absolute humidity, heat index, dew point, thermal perception)
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
