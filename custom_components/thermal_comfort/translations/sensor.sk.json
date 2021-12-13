@@ -1,6 +1,6 @@
 {
   "state": {
-    "_": {
+    "thermal_comfort__thermal_perception": {
       "dry": "Pre niekoho suché",
       "very_comfortable": "Velmi komfortné",
       "comfortable": "Príjemné",

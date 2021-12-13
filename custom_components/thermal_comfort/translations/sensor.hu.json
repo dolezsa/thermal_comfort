@@ -1,6 +1,6 @@
 {
   "state": {
-    "_": {
+    "thermal_comfort__thermal_perception": {
       "dry": "Egyeseknek kissé száraz",
       "very_comfortable": "Nagyon kellemes",
       "comfortable": "Kellemes",

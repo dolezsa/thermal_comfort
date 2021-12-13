@@ -28,6 +28,7 @@ CONF_TEMPERATURE_SENSOR = 'temperature_sensor'
 CONF_HUMIDITY_SENSOR = 'humidity_sensor'
 CONF_SENSOR_TYPES = 'sensor_types'
 ATTR_HUMIDITY = 'humidity'
+DEVICE_CLASS_THERMAL_PERCEPTION ='thermal_comfort__thermal_perception'
 
 DEFAULT_SENSOR_TYPES = ["absolutehumidity", "heatindex", "dewpoint", "perception"]
 
@@ -49,7 +50,7 @@ SENSOR_TYPES = {
     'absolutehumidity': [DEVICE_CLASS_HUMIDITY, 'Absolute Humidity', 'g/m³'],
     'heatindex': [DEVICE_CLASS_TEMPERATURE, 'Heat Index', '°C'],
     'dewpoint': [DEVICE_CLASS_TEMPERATURE, 'Dew Point', '°C'],
-    'perception': [None, 'Thermal Perception', None],
+    'perception': [DEVICE_CLASS_THERMAL_PERCEPTION, 'Thermal Perception', None],
 }
 
 PERCEPTION_DRY = "dry"
