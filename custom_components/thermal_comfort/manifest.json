@@ -7,4 +7,5 @@
   "dependencies": [],
   "codeowners": ["@dolezsa"],
   "requirements": []
+  "iot_class": "calculated"
 }
