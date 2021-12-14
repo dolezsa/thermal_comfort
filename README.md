@@ -1,4 +1,4 @@
-# [![thermal_comfort](https://github.com/dolezsa/thermal_comfort/raw/eddcc1c2857397551bbc0812314bd7aaa581ff6e/icons/logo.png)](https://github.com/dolezsa/thermal_comfort)
+# [![thermal_comfort](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/icons/logo.png)](https://github.com/dolezsa/thermal_comfort)
 Thermal Comfort sensor for HA (absolute humidity, heat index, dew point, thermal perception)
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
@@ -44,13 +44,13 @@ If not provided, all sensors will be created.
 ## Screenshots
 
 #### Absolute Humidity
-![Absolute Humidity](https://user-images.githubusercontent.com/37278442/55691083-8d2ec900-599a-11e9-9b5b-867fc4551092.png)
+![Absolute Humidity](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/absolute_humidity.png)
 
 #### Dew Point
-![Dew Point](https://user-images.githubusercontent.com/37278442/55691084-8dc75f80-599a-11e9-9cad-001ea9bb16fd.png)
+![Dew Point](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/dew_point.png)
 
 #### Heat Index
-![Heat Index](https://user-images.githubusercontent.com/37278442/55691085-8dc75f80-599a-11e9-9baf-8e003d09bf0c.png)
+![Heat Index](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/heat_index.png)
 
 #### Thermal Perception
-![Thermal Perception](https://user-images.githubusercontent.com/37278442/55691086-8dc75f80-599a-11e9-89f0-fb88e79f722f.png)
+![Thermal Perception](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/perception.png)
