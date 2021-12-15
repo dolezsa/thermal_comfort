@@ -1,0 +1,14 @@
+{
+  "state": {
+    "thermal_comfort__thermal_perception": {
+      "dry": "Un peu sec pour certains",
+      "very_comfortable": "Très confortable",
+      "comfortable": "Confortable",
+      "ok_but_humid": "OK pour la plupart, mais humide",
+      "somewhat_uncomfortable": "Un peu inconfortable",
+      "quite_uncomfortable": "Très humide, assez inconfortable",
+      "extremely_uncomfortable": "Extrêmement inconfortable, oppressant",
+      "severely_high": "Gravement élevé, voire mortel pour les maladies liées à l'asthme"
+    }
+  }
+}
