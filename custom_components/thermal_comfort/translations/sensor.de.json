@@ -1,5 +1,11 @@
 {
   "state": {
+    "thermal_comfort__frost_risk": {
+      "no_risk": "Kein Risiko",
+      "unlikely": "Unwahrscheinlich",
+      "probable": "Wahrscheinlich",
+      "high": "Sehr wahrscheinlich"
+    },
     "thermal_comfort__thermal_perception": {
       "dry": "Etwas trocken",
       "very_comfortable": "Sehr angenehm",
