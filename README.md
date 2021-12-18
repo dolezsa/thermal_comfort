@@ -1,13 +1,18 @@
 # [![thermal_comfort](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/icons/logo.png)](https://github.com/dolezsa/thermal_comfort)
-Thermal Comfort sensor for HA (absolute humidity, heat index, dew point, thermal perception)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+Thermal Comfort provides the following calculated sensors for Home Assistant:
+
+ * Absolute Humidity `absolutehumidity`
+ * Heat Index `heatindex`
+ * Dew Point `dewpoint`
+ * Thermal Perception `perception`
 
 ## Usage
 
 To use, add the following to your `configuration.yaml` file:
 
-```
+```yaml
 sensor:
   - platform: thermal_comfort
     sensors:
@@ -22,24 +27,25 @@ sensor:
           - absolutehumidity
           - heatindex
       bedroom:
-        ...
-
+…
 ```
-
-#### Required
-- temperature_sensor
-- humidity_sensor
-
-#### Optional
-- friendly_name
-- icon_template
-- entity_picture_template
-- unique_id
-- sensor_types
-
-`sensor_types` is a list of sensors that must be created.
-It can be any of: "absolutehumidity", "heatindex", "dewpoint", "perception".
-If not provided, all sensors will be created.
+### Configuration Variables
+<dl>
+  <dt><strong>temperature_sensor</strong> <code>string</code> <code>REQUIRED</code></dt>
+  <dd>ID of temperature sensor entity to be used for calculations.</dd>
+  <dt><strong>humidity_sensor</strong>  <code>string</code> <code>REQUIRED</code></dt>
+  <dd>ID of humidity sensor entity to be used for calculations..</dd>
+  <dt><strong>friendly_name</strong> <code>string</code> <code>(optional)</code></dt>
+  <dd>Name to use in the frontend.</dd>
+  <dt><strong>icon_template</strong> <code>template</code> <code>(optional)</code></dt>
+  <dd>Defines a template for the icon of the sensor.</dd>
+  <dt><strong>entity_picture_template</strong> <code>template</code> <code>(optional)</code></dt>
+  <dd>Defines a template for the entity picture of the sensor.</dd>
+  <dt><strong>unique_id</strong> <code>string</code> <code>(optional)</code></dt>
+  <dd>An ID that uniquely identifies the sensors. Set this to a unique value to allow customization through the UI.</dd>
+  <dt><strong>sensor_types</strong> <code>list</code> <code>(optional)</code></dt>
+  <dd>A list of sensors to create. If omitted all will be created. Available sensors: <code>absolutehumidity</code>, <code>heatindex</code>, <code>dewpoint</code>, <code>perception</code></dd>
+</dl>
 
 ## Screenshots
 
