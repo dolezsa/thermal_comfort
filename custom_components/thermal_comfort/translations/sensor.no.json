@@ -1,0 +1,14 @@
+{
+  "state": {
+    "thermal_comfort__thermal_perception": {
+      "dry": "Litt tørt",
+      "very_comfortable": "Veldig komfortabelt",
+      "comfortable": "Komfortabelt",
+      "ok_but_humid": "Greit, men fuktig",
+      "somewhat_uncomfortable": "Litt ukomfortabelt",
+      "quite_uncomfortable": "Veldig fuktig, ganske ukomfortabelt",
+      "extremely_uncomfortable": "Ekstremt ukomfortabelt, trykkende",
+      "severely_high": "Skadelig, dødelig for astmastikere"
+    }
+  }
+}
