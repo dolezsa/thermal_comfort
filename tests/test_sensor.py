@@ -6,8 +6,14 @@ import logging
 from homeassistant.components import sensor
 from homeassistant.helpers import entity_registry, entity_component
 
+from homeassistant.const import (
+        ATTR_TEMPERATURE,
+)
+
 from custom_components.thermal_comfort.sensor import (
-        SENSOR_TYPES,
+        ATTR_HUMIDITY,
+        ATTR_FROST_RISK_LEVEL,
+        DEFAULT_SENSOR_TYPES,
         PERCEPTION_DRY,
         PERCEPTION_VERY_COMFORTABLE,
         PERCEPTION_COMFORTABLE,
@@ -25,7 +31,7 @@ DEFAULT_TEST_SENSORS = [({
     sensor.DOMAIN: {
         "count": 3,
         "config": {
-            "sensor": [
+            sensor.DOMAIN: [
                 {
                     "platform": 'command_line',
                     "command": 'echo 0',
@@ -54,16 +60,16 @@ DEFAULT_TEST_SENSORS = [({
 
 @pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
 async def test_config(hass, start_ha):
-    assert len(hass.states.async_all("sensor")) == 6
+    assert len(hass.states.async_all(sensor.DOMAIN)) == 8
 
 
 @pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
 async def test_properties(hass, start_ha):
-    for sensor_type in SENSOR_TYPES:
-        assert "temperature" in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        assert "humidity" in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes["temperature"] == 25.0
-        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes["humidity"] == 50.0
+    for sensor_type in DEFAULT_SENSOR_TYPES:
+        assert ATTR_TEMPERATURE in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
+        assert ATTR_HUMIDITY in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
+        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_TEMPERATURE] == 25.0
+        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_HUMIDITY] == 50.0
 
 
 @pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
@@ -163,11 +169,50 @@ async def test_perception(hass, start_ha):
     assert hass.states.get(f"{TEST_NAME}_perception").state == PERCEPTION_SEVERELY_HIGH
 
 
+@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+async def test_frost_point(hass, start_ha):
+    assert hass.states.get(f"{TEST_NAME}_frostpoint") is not None
+    assert hass.states.get(f"{TEST_NAME}_frostpoint").state == "10.43"
+
+    hass.states.async_set("sensor.test_temperature_sensor", "15.0")
+    await hass.async_block_till_done()
+    assert hass.states.get(f"{TEST_NAME}_frostpoint").state == "2.73"
+
+    hass.states.async_set("sensor.test_humidity_sensor", "25.0")
+    await hass.async_block_till_done()
+    assert hass.states.get(f"{TEST_NAME}_frostpoint").state == "-6.81"
+
+
+@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+async def test_frost_risk(hass, start_ha):
+    assert hass.states.get(f"{TEST_NAME}_frostrisk") is not None
+    assert hass.states.get(f"{TEST_NAME}_frostrisk").state == "no_risk"
+    assert hass.states.get(f"{TEST_NAME}_frostrisk").attributes[ATTR_FROST_RISK_LEVEL] == 0
+
+    hass.states.async_set("sensor.test_temperature_sensor", "0")
+    hass.states.async_set("sensor.test_humidity_sensor", "57.7")
+    await hass.async_block_till_done()
+    assert hass.states.get(f"{TEST_NAME}_frostrisk").state == "unlikely"
+    assert hass.states.get(f"{TEST_NAME}_frostrisk").attributes[ATTR_FROST_RISK_LEVEL] == 1
+
+    hass.states.async_set("sensor.test_temperature_sensor", "4.0")
+    hass.states.async_set("sensor.test_humidity_sensor", "80.65")
+    await hass.async_block_till_done()
+    assert hass.states.get(f"{TEST_NAME}_frostrisk").state == "probable"
+    assert hass.states.get(f"{TEST_NAME}_frostrisk").attributes[ATTR_FROST_RISK_LEVEL] == 2
+
+    hass.states.async_set("sensor.test_temperature_sensor", "1.0")
+    hass.states.async_set("sensor.test_humidity_sensor", "90.00")
+    await hass.async_block_till_done()
+    assert hass.states.get(f"{TEST_NAME}_frostrisk").state == "high"
+    assert hass.states.get(f"{TEST_NAME}_frostrisk").attributes[ATTR_FROST_RISK_LEVEL] == 3
+
+
 @pytest.mark.parametrize("domains", [({
     sensor.DOMAIN: {
         "count": 3,
         "config": {
-            "sensor": [
+            sensor.DOMAIN: [
                 {
                     "platform": 'command_line',
                     "command": 'echo 0',
@@ -205,16 +250,16 @@ async def test_perception(hass, start_ha):
     },
 })])
 async def test_unique_id(hass, start_ha):
-    assert len(hass.states.async_all()) == 10
+    assert len(hass.states.async_all()) == 14
 
     ent_reg = entity_registry.async_get(hass)
 
-    assert len(ent_reg.entities) == 8
+    assert len(ent_reg.entities) == 12
 
-    for sensor_type in SENSOR_TYPES:
-        assert ent_reg.async_get_entity_id("sensor", "thermal_comfort", f"unique{sensor_type}") is not None
+    for sensor_type in DEFAULT_SENSOR_TYPES:
+        assert ent_reg.async_get_entity_id(sensor.DOMAIN, "thermal_comfort", f"unique{sensor_type}") is not None
         assert (
-            ent_reg.async_get_entity_id("sensor", "thermal_comfort", f"not-so-unique-anymore{sensor_type}")
+            ent_reg.async_get_entity_id(sensor.DOMAIN, "thermal_comfort", f"not-so-unique-anymore{sensor_type}")
             is not None
         )
 
@@ -223,7 +268,7 @@ async def test_unique_id(hass, start_ha):
     sensor.DOMAIN: {
         "count": 3,
         "config": {
-            "sensor": [
+            sensor.DOMAIN: [
                 {
                     "platform": 'command_line',
                     "command": 'echo 0',
@@ -251,12 +296,12 @@ async def test_unique_id(hass, start_ha):
     },
 })])
 async def test_valid_icon_template(hass, start_ha):
-    assert len(hass.states.async_all("sensor")) == 6
+    assert len(hass.states.async_all(sensor.DOMAIN)) == 8
 
 
 @pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
 async def test_zero_degree_celcius(hass, start_ha):
-    assert len(hass.states.async_all("sensor")) == 6
+    assert len(hass.states.async_all(sensor.DOMAIN)) == 8
     hass.states.async_set("sensor.test_temperature_sensor", "0")
     await hass.async_block_till_done()
     assert hass.states.get(f"{TEST_NAME}_dewpoint") is not None
@@ -267,7 +312,7 @@ async def test_zero_degree_celcius(hass, start_ha):
     sensor.DOMAIN: {
         "count": 3,
         "config": {
-            "sensor": [
+            sensor.DOMAIN: [
                 {
                     "platform": 'command_line',
                     "command": 'echo 0',
@@ -295,7 +340,7 @@ async def test_zero_degree_celcius(hass, start_ha):
     },
 })])
 async def test_sensor_types(hass, start_ha):
-    assert len(hass.states.async_all("sensor")) == 4
+    assert len(hass.states.async_all(sensor.DOMAIN)) == 4
 
     assert hass.states.get(f"{TEST_NAME}_heatindex") is None
     assert hass.states.get(f"{TEST_NAME}_perception") is None
@@ -307,7 +352,7 @@ async def test_sensor_types(hass, start_ha):
 sensor.DOMAIN: {
     "count": 3,
     "config": {
-        "sensor": [
+        sensor.DOMAIN: [
             {
                 "platform": 'command_line',
                 "command": 'echo 0',
@@ -334,19 +379,19 @@ sensor.DOMAIN: {
 },
 })])
 async def test_sensor_is_nan(hass, start_ha):
-    assert len(hass.states.async_all("sensor")) == 6
-    for sensor_type in SENSOR_TYPES:
-        assert "temperature" in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        assert "humidity" in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes["temperature"] == None
-        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes["humidity"] == None
+    assert len(hass.states.async_all(sensor.DOMAIN)) == 8
+    for sensor_type in DEFAULT_SENSOR_TYPES:
+        assert ATTR_TEMPERATURE in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
+        assert ATTR_HUMIDITY in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
+        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_TEMPERATURE] == None
+        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_HUMIDITY] == None
 
 
 @pytest.mark.parametrize("domains", [({
 sensor.DOMAIN: {
     "count": 3,
     "config": {
-        "sensor": [
+        sensor.DOMAIN: [
             {
                 "platform": 'command_line',
                 "command": 'echo 0',
@@ -373,23 +418,23 @@ sensor.DOMAIN: {
 },
 })])
 async def test_sensor_unknown(hass, start_ha):
-    assert len(hass.states.async_all("sensor")) == 6
-    for sensor_type in SENSOR_TYPES:
-        assert "temperature" in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        assert "humidity" in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes["temperature"] == None
-        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes["humidity"] == None
+    assert len(hass.states.async_all(sensor.DOMAIN)) == 8
+    for sensor_type in DEFAULT_SENSOR_TYPES:
+        assert ATTR_TEMPERATURE in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
+        assert ATTR_HUMIDITY in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
+        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_TEMPERATURE] == None
+        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_HUMIDITY] == None
 
 
 @pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
 async def test_sensor_unavailable(hass, start_ha):
-    assert len(hass.states.async_all("sensor")) == 6
+    assert len(hass.states.async_all(sensor.DOMAIN)) == 8
     hass.states.async_remove("sensor.test_temperature_sensor")
     hass.states.async_remove("sensor.test_humidity_sensor")
     await hass.async_block_till_done()
-    assert len(hass.states.async_all("sensor")) == 4
-    for sensor_type in SENSOR_TYPES:
-        assert "temperature" in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        assert "humidity" in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes["temperature"] == 25.0
-        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes["humidity"] == 50.0
+    assert len(hass.states.async_all(sensor.DOMAIN)) == 6
+    for sensor_type in DEFAULT_SENSOR_TYPES:
+        assert ATTR_TEMPERATURE in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
+        assert ATTR_HUMIDITY in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
+        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_TEMPERATURE] == 25.0
+        assert hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_HUMIDITY] == 50.0

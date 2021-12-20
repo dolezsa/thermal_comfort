@@ -28,9 +28,20 @@ CONF_TEMPERATURE_SENSOR = 'temperature_sensor'
 CONF_HUMIDITY_SENSOR = 'humidity_sensor'
 CONF_SENSOR_TYPES = 'sensor_types'
 ATTR_HUMIDITY = 'humidity'
+ATTR_FROST_RISK_LEVEL = 'frost_risk_level'
 DEVICE_CLASS_THERMAL_PERCEPTION ='thermal_comfort__thermal_perception'
+DEVICE_CLASS_FROST_RISK = 'thermal_comfort__frost_risk'
 
-DEFAULT_SENSOR_TYPES = ["absolutehumidity", "heatindex", "dewpoint", "perception"]
+SENSOR_TYPES = {
+    'absolutehumidity': [DEVICE_CLASS_HUMIDITY, 'Absolute Humidity', 'g/m³'],
+    'heatindex': [DEVICE_CLASS_TEMPERATURE, 'Heat Index', '°C'],
+    'dewpoint': [DEVICE_CLASS_TEMPERATURE, 'Dew Point', '°C'],
+    'perception': [DEVICE_CLASS_THERMAL_PERCEPTION, 'Thermal Perception', None],
+    'frostpoint': [DEVICE_CLASS_TEMPERATURE, 'Frost Point', '°C'],
+    'frostrisk': [DEVICE_CLASS_FROST_RISK, 'Frost Risk', None],
+}
+
+DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
 
 SENSOR_SCHEMA = vol.Schema({
     vol.Required(CONF_TEMPERATURE_SENSOR): cv.entity_id,
@@ -46,12 +57,6 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_SENSORS): cv.schema_with_slug_keys(SENSOR_SCHEMA),
 })
 
-SENSOR_TYPES = {
-    'absolutehumidity': [DEVICE_CLASS_HUMIDITY, 'Absolute Humidity', 'g/m³'],
-    'heatindex': [DEVICE_CLASS_TEMPERATURE, 'Heat Index', '°C'],
-    'dewpoint': [DEVICE_CLASS_TEMPERATURE, 'Dew Point', '°C'],
-    'perception': [DEVICE_CLASS_THERMAL_PERCEPTION, 'Thermal Perception', None],
-}
 
 PERCEPTION_DRY = "dry"
 PERCEPTION_VERY_COMFORTABLE = "very_comfortable"
@@ -61,6 +66,13 @@ PERCEPTION_SOMEWHAT_UNCOMFORTABLE = "somewhat_uncomfortable"
 PERCEPTION_QUITE_UNCOMFORTABLE = "quite_uncomfortable"
 PERCEPTION_EXTREMELY_UNCOMFORTABLE = "extremely_uncomfortable"
 PERCEPTION_SEVERELY_HIGH = "severely_high"
+
+FROST_RISK = [
+        "no_risk",
+        "unlikely",
+        "probable",
+        "high",
+]
 
 async def async_setup_platform(hass, config, async_add_entities,
                                discovery_info=None):
@@ -92,7 +104,7 @@ async def async_setup_platform(hass, config, async_add_entities,
                         )
                 )
     if not sensors:
-        _LOGGER.error("No sensors added")
+        _LOGGER.warning("No sensors added")
         return False
 
     async_add_entities(sensors)
@@ -227,6 +239,27 @@ class SensorThermalComfort(Entity):
         absHumidity /= absTemperature;
         return round(absHumidity, 2)
 
+    def computeFrostPoint(self, temperature, humidity):
+        """ https://pon.fr/dzvents-alerte-givre-et-calcul-humidite-absolue/ """
+        dewPoint = self.computeDewPoint(temperature, humidity)
+        T = temperature + 273.15
+        Td = dewPoint + 273.15
+        return round((Td + (2671.02 /((2954.61/T) + 2.193665 * math.log(T) - 13.3448))-T)-273.15,2)
+
+    def computeRiskLevel(self, temperature, humidity):
+        thresholdAbsHumidity = 2.8
+        dewPoint = self.computeDewPoint(temperature, humidity)
+        absoluteHumidity = self.computeAbsoluteHumidity(temperature, humidity)
+        freezePoint = self.computeFrostPoint(temperature, humidity)
+        if temperature <= 1 and freezePoint <= 0:
+            if absoluteHumidity <= thresholdAbsHumidity:
+                return 1 # Frost unlikely despite the temperature
+            else:
+                return 3 # high probability of frost
+        elif temperature <= 4 and freezePoint <= 0.5 and absoluteHumidity > thresholdAbsHumidity:
+            return 2 # Frost probable despite the temperature
+        return 0 # No risk of frost
+
     async def async_added_to_hass(self):
         async_track_state_change_event(
             self.hass, self._temperature_entity, self.temperature_state_listener)
@@ -246,8 +279,12 @@ class SensorThermalComfort(Entity):
                 value = self.computePerception(self._temperature, self._humidity)
             elif self._sensor_type == "absolutehumidity":
                 value = self.computeAbsoluteHumidity(self._temperature, self._humidity)
-            elif self._sensor_type == "comfortratio":
-                value = "comfortratio"
+            elif self._sensor_type == "frostpoint":
+                value = self.computeFrostPoint(self._temperature, self._humidity)
+            elif self._sensor_type == "frostrisk":
+                risk_level = self.computeRiskLevel(self._temperature, self._humidity)
+                value = FROST_RISK[risk_level]
+                self._attr_extra_state_attributes[ATTR_FROST_RISK_LEVEL] = risk_level
 
         self._attr_state = value
         self._attr_extra_state_attributes[ATTR_TEMPERATURE] = self._temperature

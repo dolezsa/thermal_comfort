@@ -7,6 +7,8 @@ Thermal Comfort provides the following calculated sensors for Home Assistant:
  * Heat Index `heatindex`
  * Dew Point `dewpoint`
  * Thermal Perception `perception`
+ * Frost point `frostpoint`
+ * Frost Risk `frostrisk`
 
 ## Usage
 
@@ -44,7 +46,7 @@ sensor:
   <dt><strong>unique_id</strong> <code>string</code> <code>(optional)</code></dt>
   <dd>An ID that uniquely identifies the sensors. Set this to a unique value to allow customization through the UI.</dd>
   <dt><strong>sensor_types</strong> <code>list</code> <code>(optional)</code></dt>
-  <dd>A list of sensors to create. If omitted all will be created. Available sensors: <code>absolutehumidity</code>, <code>heatindex</code>, <code>dewpoint</code>, <code>perception</code></dd>
+  <dd>A list of sensors to create. If omitted all will be created. Available sensors: <code>absolutehumidity</code>, <code>heatindex</code>, <code>dewpoint</code>, <code>perception</code>, <code>frostpoint</code>, <code>frostrisk</code></dd>
 </dl>
 
 ## Installation
