@@ -47,6 +47,32 @@ sensor:
   <dd>A list of sensors to create. If omitted all will be created. Available sensors: <code>absolutehumidity</code>, <code>heatindex</code>, <code>dewpoint</code>, <code>perception</code></dd>
 </dl>
 
+## Installation
+
+### Using [HACS](https://hacs.xyz/) (recommended)
+
+This integration can be installed using HACS. To do it search for Thermal Comfort in the integrations section.
+
+### Manual
+
+To install this integration manually you can either
+
+* Use git:
+
+```sh
+git clone https://github.com/dolezsa/thermal_comfort.git
+cd thermal_comfort
+# if you want a specific version checkout its tag
+# e.g. git checkout 1.0.0
+
+# replace $hacs_config_folder with your home assistant config folder path
+cp -r custom_components $hacs_config_folder
+```
+
+* Download the source release and extract the custom_components folder into your home assistant config folder.
+
+Finally you need to restart home assistant before you can use it.
+
 ## Screenshots
 
 #### Absolute Humidity
