@@ -298,7 +298,7 @@ async def test_unique_id(hass, start_ha):
 async def test_valid_icon_template(hass, start_ha):
     assert len(hass.states.async_all(sensor.DOMAIN)) == 8
 
-
+    
 @pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
 async def test_zero_degree_celcius(hass, start_ha):
     assert len(hass.states.async_all(sensor.DOMAIN)) == 8
