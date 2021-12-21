@@ -3,7 +3,7 @@
     "thermal_comfort__thermal_perception": {
       "dry": "Um pouco seco",
       "very_comfortable": "Muito confortável",
-      "comfortable": "Confortábel",
+      "comfortable": "Confortável",
       "ok_but_humid": "Um pouco húmido",
       "somewhat_uncomfortable": "Algo desconfortável",
       "quite_uncomfortable": "Muito húmido, muito desconfortável",
