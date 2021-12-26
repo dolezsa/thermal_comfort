@@ -1,5 +1,11 @@
 {
   "state": {
+     "thermal_comfort__frost_risk": {
+      "no_risk": "Nincs kockázat",
+      "unlikely": "Nem valószínű",
+      "probable": "Valószínű",
+      "high": "Nagy valószínűség"
+    },
     "thermal_comfort__thermal_perception": {
       "dry": "Egyeseknek kissé száraz",
       "very_comfortable": "Nagyon kellemes",
