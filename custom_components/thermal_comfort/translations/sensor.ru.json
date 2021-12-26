@@ -1,0 +1,20 @@
+{
+  "state": {
+    "thermal_comfort__frost_risk": {
+      "no_risk": "Не опасно",
+      "unlikely": "Маловероятно",
+      "probable": "Вероятно",
+      "high": "Очень вероятно"
+    },
+    "thermal_comfort__thermal_perception": {
+      "dry": "Сухо",
+      "very_comfortable": "Очень комфортно",
+      "comfortable": "Комфортно",
+      "ok_but_humid": "Нормально, но сыровато",
+      "somewhat_uncomfortable": "Слегка некомфортно",
+      "quite_uncomfortable": "Очень влажно, некомфортно",
+      "extremely_uncomfortable": "Максимально влажно, угнетающе",
+      "severely_high": "Очень высокая влажность, опасно для астматиков"
+    }
+  }
+}
