@@ -1,5 +1,6 @@
 name: Validate with HACS
 
+# yamllint disable-line rule:truthy
 on:
   push:
   pull_request:

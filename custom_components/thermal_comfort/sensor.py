@@ -1,26 +1,28 @@
+"""Sensor platform for thermal_comfort."""
 import logging
-from typing import Optional
-
-import voluptuous as vol
+import math
 
 from homeassistant import util
-from homeassistant.core import callback
-from homeassistant.components.sensor import ENTITY_ID_FORMAT, \
-    PLATFORM_SCHEMA, DEVICE_CLASSES_SCHEMA
+from homeassistant.components.sensor import ENTITY_ID_FORMAT, PLATFORM_SCHEMA
 from homeassistant.const import (
-    ATTR_FRIENDLY_NAME, ATTR_UNIT_OF_MEASUREMENT, CONF_ICON_TEMPLATE,
-    CONF_ENTITY_PICTURE_TEMPLATE, CONF_SENSORS, EVENT_HOMEASSISTANT_START,
-    MATCH_ALL, CONF_DEVICE_CLASS, DEVICE_CLASS_TEMPERATURE, STATE_UNKNOWN,
-    STATE_UNAVAILABLE, DEVICE_CLASS_HUMIDITY, ATTR_TEMPERATURE, TEMP_FAHRENHEIT,
+    ATTR_FRIENDLY_NAME,
+    ATTR_TEMPERATURE,
+    ATTR_UNIT_OF_MEASUREMENT,
+    CONF_ENTITY_PICTURE_TEMPLATE,
+    CONF_ICON_TEMPLATE,
+    CONF_SENSORS,
     CONF_UNIQUE_ID,
+    DEVICE_CLASS_HUMIDITY,
+    DEVICE_CLASS_TEMPERATURE,
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
+    TEMP_FAHRENHEIT,
 )
 from homeassistant.exceptions import TemplateError
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity, async_generate_entity_id
 from homeassistant.helpers.event import async_track_state_change_event
-
-import math
-from enum import Enum
+import voluptuous as vol
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -29,7 +31,7 @@ CONF_HUMIDITY_SENSOR = 'humidity_sensor'
 CONF_SENSOR_TYPES = 'sensor_types'
 ATTR_HUMIDITY = 'humidity'
 ATTR_FROST_RISK_LEVEL = 'frost_risk_level'
-DEVICE_CLASS_THERMAL_PERCEPTION ='thermal_comfort__thermal_perception'
+DEVICE_CLASS_THERMAL_PERCEPTION = 'thermal_comfort__thermal_perception'
 DEVICE_CLASS_FROST_RISK = 'thermal_comfort__frost_risk'
 
 SENSOR_TYPES = {
@@ -68,11 +70,12 @@ PERCEPTION_EXTREMELY_UNCOMFORTABLE = "extremely_uncomfortable"
 PERCEPTION_SEVERELY_HIGH = "severely_high"
 
 FROST_RISK = [
-        "no_risk",
-        "unlikely",
-        "probable",
-        "high",
+    "no_risk",
+    "unlikely",
+    "probable",
+    "high",
 ]
+
 
 async def async_setup_platform(hass, config, async_add_entities,
                                discovery_info=None):
@@ -91,17 +94,17 @@ async def async_setup_platform(hass, config, async_add_entities,
         for sensor_type in SENSOR_TYPES:
             if sensor_type in config_sensor_types :
                 sensors.append(
-                        SensorThermalComfort(
-                                hass,
-                                device,
-                                temperature_entity,
-                                humidity_entity,
-                                friendly_name,
-                                icon_template,
-                                entity_picture_template,
-                                sensor_type,
-                                unique_id,
-                        )
+                    SensorThermalComfort(
+                        hass,
+                        device,
+                        temperature_entity,
+                        humidity_entity,
+                        friendly_name,
+                        icon_template,
+                        entity_picture_template,
+                        sensor_type,
+                        unique_id,
+                    )
                 )
     if not sensors:
         _LOGGER.error("No sensors added")
@@ -118,8 +121,8 @@ class SensorThermalComfort(Entity):
                  friendly_name, icon_template, entity_picture_template, sensor_type, unique_id=None):
         """Initialize the sensor."""
         self.hass = hass
-        self.entity_id = async_generate_entity_id(ENTITY_ID_FORMAT, "{}_{}".format(device_id, sensor_type), hass=hass)
-        self._attr_name = "{} {}".format(friendly_name, SENSOR_TYPES[sensor_type][1])
+        self.entity_id = async_generate_entity_id(ENTITY_ID_FORMAT, f"{device_id}_{sensor_type}", hass=hass)
+        self._attr_name = f"{friendly_name} {SENSOR_TYPES[sensor_type][1]}"
         self._attr_unit_of_measurement = SENSOR_TYPES[sensor_type][2]
         self._attr_state = None
         self._attr_extra_state_attributes = {}
@@ -168,7 +171,7 @@ class SensorThermalComfort(Entity):
         self.async_schedule_update_ha_state(True)
 
     def computeDewPoint(self, temperature, humidity):
-        """http://wahiduddin.net/calc/density_algorithms.htm"""
+        """Dew Point <http://wahiduddin.net/calc/density_algorithms.htm>."""
         A0 = 373.15 / (273.15 + temperature)
         SUM = -7.90298 * (A0 - 1)
         SUM += 5.02808 * math.log(A0, 10)
@@ -181,17 +184,17 @@ class SensorThermalComfort(Entity):
         return round(Td, 2)
 
     def toFahrenheit(self, celsius):
-        """celsius to fahrenheit"""
+        """Celsius to fahrenheit."""
         return 1.8 * celsius + 32.0
 
     def toCelsius(self, fahrenheit):
-        """fahrenheit to celsius"""
+        """Fahrenheit to celsius."""
         return (fahrenheit - 32.0) / 1.8
 
     def computeHeatIndex(self, temperature, humidity):
-        """http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml"""
+        """Heat Index <http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml>."""
         fahrenheit = self.toFahrenheit(temperature)
-        hi = 0.5 * (fahrenheit + 61.0 + ((fahrenheit - 68.0) * 1.2) + (humidity * 0.094));
+        hi = 0.5 * (fahrenheit + 61.0 + ((fahrenheit - 68.0) * 1.2) + (humidity * 0.094))
 
         if hi > 79:
             hi = -42.379 + 2.04901523 * fahrenheit
@@ -201,7 +204,7 @@ class SensorThermalComfort(Entity):
             hi = hi + -0.05481717 * pow(humidity, 2)
             hi = hi + 0.00122874 * pow(fahrenheit, 2) * humidity
             hi = hi + 0.00085282 * fahrenheit * pow(humidity, 2)
-            hi = hi + -0.00000199 * pow(fahrenheit, 2) * pow(humidity, 2);
+            hi = hi + -0.00000199 * pow(fahrenheit, 2) * pow(humidity, 2)
 
         if humidity < 13 and fahrenheit >= 80 and fahrenheit <= 112:
             hi = hi - ((13 - humidity) * 0.25) * math.sqrt((17 - abs(fahrenheit - 95)) * 0.05882)
@@ -211,7 +214,7 @@ class SensorThermalComfort(Entity):
         return round(self.toCelsius(hi), 2)
 
     def computePerception(self, temperature, humidity):
-        """https://en.wikipedia.org/wiki/Dew_point"""
+        """Dew Point <https://en.wikipedia.org/wiki/Dew_point>."""
         dewPoint = self.computeDewPoint(temperature, humidity)
         if dewPoint < 10:
             return PERCEPTION_DRY
@@ -230,37 +233,38 @@ class SensorThermalComfort(Entity):
         return PERCEPTION_SEVERELY_HIGH
 
     def computeAbsoluteHumidity(self, temperature, humidity):
-        """https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/"""
-        absTemperature = temperature + 273.15;
-        absHumidity = 6.112;
-        absHumidity *= math.exp((17.67 * temperature) / (243.5 + temperature));
-        absHumidity *= humidity;
-        absHumidity *= 2.1674;
-        absHumidity /= absTemperature;
+        """Absolute Humidity <https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/>."""
+        absTemperature = temperature + 273.15
+        absHumidity = 6.112
+        absHumidity *= math.exp((17.67 * temperature) / (243.5 + temperature))
+        absHumidity *= humidity
+        absHumidity *= 2.1674
+        absHumidity /= absTemperature
         return round(absHumidity, 2)
 
     def computeFrostPoint(self, temperature, humidity):
-        """ https://pon.fr/dzvents-alerte-givre-et-calcul-humidite-absolue/ """
+        """Frost Point <https://pon.fr/dzvents-alerte-givre-et-calcul-humidite-absolue/>."""
         dewPoint = self.computeDewPoint(temperature, humidity)
         T = temperature + 273.15
         Td = dewPoint + 273.15
-        return round((Td + (2671.02 /((2954.61/T) + 2.193665 * math.log(T) - 13.3448))-T)-273.15,2)
+        return round((Td + (2671.02 / ((2954.61 / T) + 2.193665 * math.log(T) - 13.3448)) - T) - 273.15, 2)
 
     def computeRiskLevel(self, temperature, humidity):
+        """Frost Risk Level."""
         thresholdAbsHumidity = 2.8
-        dewPoint = self.computeDewPoint(temperature, humidity)
         absoluteHumidity = self.computeAbsoluteHumidity(temperature, humidity)
         freezePoint = self.computeFrostPoint(temperature, humidity)
         if temperature <= 1 and freezePoint <= 0:
             if absoluteHumidity <= thresholdAbsHumidity:
-                return 1 # Frost unlikely despite the temperature
+                return 1  # Frost unlikely despite the temperature
             else:
-                return 3 # high probability of frost
+                return 3  # high probability of frost
         elif temperature <= 4 and freezePoint <= 0.5 and absoluteHumidity > thresholdAbsHumidity:
-            return 2 # Frost probable despite the temperature
-        return 0 # No risk of frost
+            return 2  # Frost probable despite the temperature
+        return 0  # No risk of frost
 
     async def async_added_to_hass(self):
+        """Subscribe sensor state change events."""
         async_track_state_change_event(
             self.hass, self._temperature_entity, self.temperature_state_listener)
 
@@ -321,6 +325,6 @@ def _is_valid_state(state) -> bool:
         if state.state not in (STATE_UNKNOWN, STATE_UNAVAILABLE):
             try:
                 return not math.isnan(float(state.state))
-            except:
+            except ValueError:
                 pass
     return False
