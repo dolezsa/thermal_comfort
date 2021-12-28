@@ -183,17 +183,9 @@ class SensorThermalComfort(Entity):
         Td = (241.88 * Td) / (17.558 - Td)
         return round(Td, 2)
 
-    def toFahrenheit(self, celsius):
-        """Celsius to fahrenheit."""
-        return 1.8 * celsius + 32.0
-
-    def toCelsius(self, fahrenheit):
-        """Fahrenheit to celsius."""
-        return (fahrenheit - 32.0) / 1.8
-
     def computeHeatIndex(self, temperature, humidity):
         """Heat Index <http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml>."""
-        fahrenheit = self.toFahrenheit(temperature)
+        fahrenheit = util.temperature.celsius_to_fahrenheit(temperature)
         hi = 0.5 * (fahrenheit + 61.0 + ((fahrenheit - 68.0) * 1.2) + (humidity * 0.094))
 
         if hi > 79:
@@ -211,7 +203,7 @@ class SensorThermalComfort(Entity):
         elif humidity > 85 and fahrenheit >= 80 and fahrenheit <= 87:
             hi = hi + ((humidity - 85) * 0.1) * ((87 - fahrenheit) * 0.2)
 
-        return round(self.toCelsius(hi), 2)
+        return round(util.temperature.fahrenheit_to_celsius(hi), 2)
 
     def computePerception(self, temperature, humidity):
         """Dew Point <https://en.wikipedia.org/wiki/Dew_point>."""
