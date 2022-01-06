@@ -270,14 +270,14 @@ class SensorThermalComfort(Entity):
 
     def computeSimmerIndex(self, temperature, humidity):
         """https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index"""
-        fahrenheit = self.toFahrenheit(temperature)
+        fahrenheit = util.temperature.celsius_to_fahrenheit(temperature)
 
         si = (1.98 * (fahrenheit - (0.55 - (0.0055 * humidity)) * (fahrenheit - 58.0)) - 56.83)
 
         if fahrenheit < 70:
             si = fahrenheit
         
-        return round(self.toCelsius(si), 2)
+        return round(util.temperature.fahrenheit_to_celsius(si), 2)
 
     def computeSimmerZone(self, temperature, humidity):
         """http://summersimmer.com/default.asp"""
