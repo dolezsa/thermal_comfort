@@ -9,6 +9,8 @@ Thermal Comfort provides the following calculated sensors for Home Assistant:
  * Thermal Perception `perception`
  * Frost point `frostpoint`
  * Frost Risk `frostrisk`
+ * Simmer Index `simmerindex`
+ * Simmer Zone `simmerzone`
 
 ## Usage
 
