@@ -79,7 +79,7 @@ FROST_RISK = [
     "high",
 ]
 
-SIMMER_COLD = 'Cold'
+SIMMER_COOL= 'Cool'
 SIMMER_SLIGHTLY_COOL = 'Slightly cool'
 SIMMER_COMFORTABLE = 'Comfortable'
 SIMMER_SLIGHTLY_WARM = 'Slightly warm'
@@ -283,7 +283,7 @@ class SensorThermalComfort(Entity):
         """http://summersimmer.com/default.asp"""
         si = self.computeSimmerIndex(temperature, humidity)
         if si < 21.1:
-            return SIMMER_COLD
+            return SIMMER_COOL
         elif si < 25.0:
             return SIMMER_SLIGHTLY_COOL
         elif si < 28.3:
