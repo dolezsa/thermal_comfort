@@ -33,6 +33,7 @@ ATTR_HUMIDITY = 'humidity'
 ATTR_FROST_RISK_LEVEL = 'frost_risk_level'
 DEVICE_CLASS_THERMAL_PERCEPTION = 'thermal_comfort__thermal_perception'
 DEVICE_CLASS_FROST_RISK = 'thermal_comfort__frost_risk'
+DEVICE_CLASS_SIMMER_ZONE = 'thermal_comfort__simmer_zone'
 
 SENSOR_TYPES = {
     'absolutehumidity': [DEVICE_CLASS_HUMIDITY, 'Absolute Humidity', 'g/m³'],
@@ -41,6 +42,8 @@ SENSOR_TYPES = {
     'perception': [DEVICE_CLASS_THERMAL_PERCEPTION, 'Thermal Perception', None],
     'frostpoint': [DEVICE_CLASS_TEMPERATURE, 'Frost Point', '°C'],
     'frostrisk': [DEVICE_CLASS_FROST_RISK, 'Frost Risk', None],
+    'simmerindex': [DEVICE_CLASS_TEMPERATURE, 'Simmer Index', '°C'],
+    'simmerzone': [DEVICE_CLASS_SIMMER_ZONE, 'Simmer Zone', None],
 }
 
 DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
@@ -76,6 +79,15 @@ FROST_RISK = [
     "high",
 ]
 
+SIMMER_COOL= 'cool'
+SIMMER_SLIGHTLY_COOL = 'slightly_cool'
+SIMMER_COMFORTABLE = 'comfortable'
+SIMMER_SLIGHTLY_WARM = 'slightly_warm'
+SIMMER_INCREASING_DISCOMFORT = 'increasing_discomfort'
+SIMMER_EXTREMELY_WARM = 'extremely_warm'
+SIMMER_DANGER_OF_HEATSTROKE = 'danger_of_heatstroke'
+SIMMER_EXTREME_DANGER_OF_HEATSTROKE = 'extreme_danger_of_heatstroke'
+SIMMER_CIRCULATORY_COLLAPSE_IMMINENT = 'circulatory_collapse_imminent'
 
 async def async_setup_platform(hass, config, async_add_entities,
                                discovery_info=None):
@@ -255,6 +267,38 @@ class SensorThermalComfort(Entity):
             return 2  # Frost probable despite the temperature
         return 0  # No risk of frost
 
+    def computeSimmerIndex(self, temperature, humidity):
+        """https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index"""
+        fahrenheit = util.temperature.celsius_to_fahrenheit(temperature)
+
+        si = (1.98 * (fahrenheit - (0.55 - (0.0055 * humidity)) * (fahrenheit - 58.0)) - 56.83)
+
+        if fahrenheit < 70:
+            si = fahrenheit
+        
+        return round(util.temperature.fahrenheit_to_celsius(si), 2)
+
+    def computeSimmerZone(self, temperature, humidity):
+        """http://summersimmer.com/default.asp"""
+        si = self.computeSimmerIndex(temperature, humidity)
+        if si < 21.1:
+            return SIMMER_COOL
+        elif si < 25.0:
+            return SIMMER_SLIGHTLY_COOL
+        elif si < 28.3:
+            return SIMMER_COMFORTABLE
+        elif si < 32.8:
+            return SIMMER_SLIGHTLY_WARM
+        elif si < 37.8:
+            return SIMMER_INCREASING_DISCOMFORT
+        elif si < 44.4:
+            return SIMMER_EXTREMELY_WARM
+        elif si < 51.7:
+            return SIMMER_DANGER_OF_HEATSTROKE
+        elif si < 65.6:
+            return SIMMER_EXTREME_DANGER_OF_HEATSTROKE
+        return SIMMER_CIRCULATORY_COLLAPSE_IMMINENT
+
     async def async_added_to_hass(self):
         """Subscribe sensor state change events."""
         async_track_state_change_event(
@@ -281,6 +325,10 @@ class SensorThermalComfort(Entity):
                 risk_level = self.computeRiskLevel(self._temperature, self._humidity)
                 value = FROST_RISK[risk_level]
                 self._attr_extra_state_attributes[ATTR_FROST_RISK_LEVEL] = risk_level
+            elif self._sensor_type == "simmerindex":
+                value = self.computeSimmerIndex(self._temperature, self._humidity)
+            elif self._sensor_type == "simmerzone":
+                value = self.computeSimmerZone(self._temperature, self._humidity)
 
         self._attr_state = value
         self._attr_extra_state_attributes[ATTR_TEMPERATURE] = self._temperature
