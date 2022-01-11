@@ -275,7 +275,7 @@ class SensorThermalComfort(Entity):
 
         if fahrenheit < 70:
             si = fahrenheit
-        
+
         return round(util.temperature.fahrenheit_to_celsius(si), 2)
 
     def computeSimmerZone(self, temperature, humidity):
