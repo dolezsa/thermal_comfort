@@ -15,6 +15,17 @@
       "quite_uncomfortable": "Very humid, quite uncomfortable",
       "extremely_uncomfortable": "Extremely uncomfortable, oppressive",
       "severely_high": "Severely high, even deadly for asthma related illnesses"
+    },
+    "thermal_comfort__simmer_zone": {
+      "cool": "Cool",
+      "slightly_cool": "Slightly cool",
+      "comfortable": "Comfortable",
+      "slightly_warm": "Slightly warm",
+      "increasing_discomfort": "Increasing discomfort",
+      "extremely_warm": "Extremely warm",
+      "danger_of_heatstroke": "Danger of heatstroke",
+      "extreme_danger_of_heatstroke": "Extreme danger of heatstroke",
+      "circulatory_collapse_imminent": "Circulatory collapse imminent"
     }
   }
 }
