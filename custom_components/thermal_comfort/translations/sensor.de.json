@@ -15,6 +15,17 @@
       "quite_uncomfortable": "Unangenehm und sehr schwül",
       "extremely_uncomfortable": "Äußerst unangenehm und drückend",
       "severely_high":"Extrem hoch, tödlich für asthmabedingte Erkrankungen"
+    },
+    "thermal_comfort__simmer_zone": {
+      "cool": "Kühl",
+      "slightly_cool": "Etwas kühl",
+      "comfortable": "Angenehm",
+      "slightly_warm": "Etwas warm",
+      "increasing_discomfort": "Zunehmend unbehaglich",
+      "extremely_warm": "Äußerst warm",
+      "danger_of_heatstroke": "Hitzschlaggefahr",
+      "extreme_danger_of_heatstroke": "Extreme Hitzschlaggefahr",
+      "circulatory_collapse_imminent": "Drohender Kreislaufkollaps"
     }
   }
 }
