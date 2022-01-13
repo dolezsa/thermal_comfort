@@ -141,7 +141,7 @@ class SensorThermalComfort(SensorEntity):
         self.entity_id = async_generate_entity_id(ENTITY_ID_FORMAT, f"{device_id}_{sensor_type}", hass=hass)
         self._attr_name = f"{friendly_name} {SENSOR_TYPES[sensor_type][1]}"
         self._attr_unit_of_measurement = SENSOR_TYPES[sensor_type][2]
-        self._attr_state = None
+        self._attr_native_value = None
         self._attr_extra_state_attributes = {}
         self._icon_template = icon_template
         self._entity_picture_template = entity_picture_template
@@ -336,7 +336,7 @@ class SensorThermalComfort(SensorEntity):
             elif self._sensor_type == "simmerzone":
                 value = self.computeSimmerZone(self._temperature, self._humidity)
 
-        self._attr_state = value
+        self._attr_native_value = value
         self._attr_extra_state_attributes[ATTR_TEMPERATURE] = self._temperature
         self._attr_extra_state_attributes[ATTR_HUMIDITY] = self._humidity
 
