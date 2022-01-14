@@ -1,4 +1,7 @@
 """Sensor platform for thermal_comfort."""
+from asyncio import Lock
+from dataclasses import dataclass
+from functools import wraps
 import logging
 import math
 
@@ -158,6 +161,19 @@ class SimmerZone(StrEnum):
     CIRCULATORY_COLLAPSE_IMMINENT = 'circulatory_collapse_imminent'
 
 
+def compute_once_lock(sensor_type):
+    def wrapper(func):
+        @wraps(func)
+        async def wrapped(self, *args, **kwargs):
+            async with self._compute_states[sensor_type].lock:
+                if self._compute_states[sensor_type].needs_update:
+                    setattr(self, f'_{sensor_type}', await func(self, *args, **kwargs))
+                    self._compute_states[sensor_type].needs_update = False
+                return getattr(self, f'_{sensor_type}')
+        return wrapped
+    return wrapper
+
+
 async def async_setup_platform(hass, config, async_add_entities,
                                discovery_info=None):
     """Set up the Thermal Comfort sensors."""
@@ -166,27 +182,33 @@ async def async_setup_platform(hass, config, async_add_entities,
     for device, device_config in config[CONF_SENSORS].items():
         temperature_entity = device_config.get(CONF_TEMPERATURE_SENSOR)
         humidity_entity = device_config.get(CONF_HUMIDITY_SENSOR)
-        config_sensor_types = device_config.get(CONF_SENSOR_TYPES)
+        sensor_types = device_config.get(CONF_SENSOR_TYPES)
         icon_template = device_config.get(CONF_ICON_TEMPLATE)
         entity_picture_template = device_config.get(CONF_ENTITY_PICTURE_TEMPLATE)
         friendly_name = device_config.get(ATTR_FRIENDLY_NAME, device)
         unique_id = device_config.get(CONF_UNIQUE_ID)
 
-        for sensor_type in SENSOR_TYPES:
-            if sensor_type in config_sensor_types :
-                sensors.append(
-                    SensorThermalComfort(
-                        hass,
-                        device,
-                        temperature_entity,
-                        humidity_entity,
-                        friendly_name,
-                        icon_template,
-                        entity_picture_template,
-                        sensor_type,
-                        unique_id,
-                    )
+        compute_device = DeviceThermalComfort(
+            hass,
+            temperature_entity,
+            humidity_entity,
+            sensor_types,
+        )
+
+        for sensor_type in sensor_types:
+            sensors.append(
+                SensorThermalComfort(
+                    compute_device,
+                    device,
+                    friendly_name,
+                    SensorEntityDescription(**SENSOR_TYPES[sensor_type]),
+                    icon_template,
+                    entity_picture_template,
+                    sensor_type,
+                    unique_id,
                 )
+            )
+
     if not sensors:
         _LOGGER.error("No sensors added")
         return False
@@ -197,29 +219,89 @@ async def async_setup_platform(hass, config, async_add_entities,
 
 class SensorThermalComfort(SensorEntity):
     """Representation of a Thermal Comfort Sensor."""
-
-    def __init__(self, hass, device_id, temperature_entity, humidity_entity,
-                 friendly_name, icon_template, entity_picture_template, sensor_type, unique_id=None):
-        """Initialize the sensor."""
-        self.hass = hass
-        self.entity_id = async_generate_entity_id(ENTITY_ID_FORMAT, f"{device_id}_{sensor_type}", hass=hass)
-        self.entity_description = SensorEntityDescription(**SENSOR_TYPES[sensor_type])
-        self.entity_description.name = self.entity_description.name.format(friendly_name)
-        self._attr_native_value = None
-        self._attr_extra_state_attributes = {}
+    def __init__(self, device, device_id, friendly_name, entity_description, icon_template, entity_picture_template, sensor_type, unique_id):
+        self._device = device
+        self.entity_description = entity_description
+        self.entity_description.name = entity_description.name.format(friendly_name)
+        self.entity_id = async_generate_entity_id(ENTITY_ID_FORMAT, f"{device_id}_{sensor_type}", hass=device.hass)
         self._icon_template = icon_template
         self._entity_picture_template = entity_picture_template
         self._attr_icon = None
         self._attr_entity_picture = None
-        self._temperature_entity = temperature_entity
-        self._humidity_entity = humidity_entity
         self._sensor_type = sensor_type
-        self._temperature = None
-        self._humidity = None
-        self._attr_unique_id = None
+        self._attr_native_value = None
+        self._attr_extra_state_attributes = {}
         if unique_id is not None:
             self._attr_unique_id = unique_id + sensor_type
-        self._attr_should_poll = False
+
+    @property
+    def extra_state_attributes(self):
+        return dict(self._device.extra_state_attributes, **self._attr_extra_state_attributes)
+
+    async def async_added_to_hass(self):
+        """Register callbacks."""
+        self._device._sensors.append(self)
+
+    async def async_update(self):
+        """Update the state of the sensor."""
+        if self._sensor_type == SensorType.FROSTRISK:
+            level = await getattr(self._device, self._sensor_type)()
+            self._attr_extra_state_attributes[ATTR_FROST_RISK_LEVEL] = level
+            self._attr_native_value = list(FrostRisk)[level]
+        else:
+            self._attr_native_value = await getattr(self._device, self._sensor_type)()
+
+        for property_name, template in (
+                ('_attr_icon', self._icon_template),
+                ('_attr_entity_picture', self._entity_picture_template)):
+            if template is None:
+                continue
+
+            try:
+                setattr(self, property_name, template.async_render())
+            except TemplateError as ex:
+                friendly_property_name = property_name[1:].replace('_', ' ')
+                if ex.args and ex.args[0].startswith(
+                        "UndefinedError: 'None' has no attribute"):
+                    # Common during HA startup - so just a warning
+                    _LOGGER.warning('Could not render %s template %s,'
+                                    ' the state is unknown.',
+                                    friendly_property_name, self.name)
+                    continue
+
+                try:
+                    setattr(self, property_name,
+                            getattr(super(), property_name))
+                except AttributeError:
+                    _LOGGER.error('Could not render %s template %s: %s',
+                                  friendly_property_name, self.name, ex)
+
+
+@dataclass
+class ComputeState():
+    """Thermal Comfort Calculation State."""
+    needs_update: bool = True
+    lock: Lock = None
+
+
+class DeviceThermalComfort():
+    """Representation of a Thermal Comfort Sensor."""
+    def __init__(self,
+            hass,
+            temperature_entity,
+            humidity_entity,
+            sensor_types
+    ):
+        """Initialize the sensor."""
+        self.hass = hass
+        self.extra_state_attributes = {}
+        self._temperature_entity = temperature_entity
+        self._humidity_entity = humidity_entity
+        self._temperature = None
+        self._humidity = None
+        self._sensor_types = sensor_types
+        self._sensors = []
+        self._compute_states = { sensor_type: ComputeState(lock=Lock()) for sensor_type in SENSOR_TYPES.keys() }
 
         temperature_state = hass.states.get(temperature_entity)
         if _is_valid_state(temperature_state):
@@ -229,7 +311,13 @@ class SensorThermalComfort(SensorEntity):
         if _is_valid_state(humidity_state):
             self._humidity = float(humidity_state.state)
 
-    def temperature_state_listener(self, event):
+        async_track_state_change_event(
+            self.hass, self._temperature_entity, self.temperature_state_listener)
+
+        async_track_state_change_event(
+            self.hass, self._humidity_entity, self.humidity_state_listener)
+
+    async def temperature_state_listener(self, event):
         """Handle temperature device state changes."""
         new_state = event.data.get("new_state")
         if _is_valid_state(new_state):
@@ -239,116 +327,125 @@ class SensorThermalComfort(SensorEntity):
             if unit == TEMP_FAHRENHEIT:
                 temp = util.temperature.fahrenheit_to_celsius(temp)
             self._temperature = temp
+            self.extra_state_attributes[ATTR_TEMPERATURE] = self._temperature
+            await self.async_update()
 
-        self.async_schedule_update_ha_state(True)
-
-    def humidity_state_listener(self, event):
+    async def humidity_state_listener(self, event):
         """Handle humidity device state changes."""
         new_state = event.data.get("new_state")
         if _is_valid_state(new_state):
             self._humidity = float(new_state.state)
+            self.extra_state_attributes[ATTR_HUMIDITY] = self._humidity
+            await self.async_update()
 
-        self.async_schedule_update_ha_state(True)
-
-    def computeDewPoint(self, temperature, humidity):
+    @compute_once_lock(SensorType.DEWPOINT)
+    async def dewpoint(self):
         """Dew Point <http://wahiduddin.net/calc/density_algorithms.htm>."""
-        A0 = 373.15 / (273.15 + temperature)
+        A0 = 373.15 / (273.15 + self._temperature)
         SUM = -7.90298 * (A0 - 1)
         SUM += 5.02808 * math.log(A0, 10)
         SUM += -1.3816e-7 * (pow(10, (11.344 * (1 - 1 / A0))) - 1)
         SUM += 8.1328e-3 * (pow(10, (-3.49149 * (A0 - 1))) - 1)
         SUM += math.log(1013.246, 10)
-        VP = pow(10, SUM - 3) * humidity
+        VP = pow(10, SUM - 3) * self._humidity
         Td = math.log(VP / 0.61078)
         Td = (241.88 * Td) / (17.558 - Td)
         return round(Td, 2)
 
-    def computeHeatIndex(self, temperature, humidity):
+    @compute_once_lock(SensorType.HEATINDEX)
+    async def heatindex(self):
         """Heat Index <http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml>."""
-        fahrenheit = util.temperature.celsius_to_fahrenheit(temperature)
-        hi = 0.5 * (fahrenheit + 61.0 + ((fahrenheit - 68.0) * 1.2) + (humidity * 0.094))
+        fahrenheit = util.temperature.celsius_to_fahrenheit(self._temperature)
+        hi = 0.5 * (fahrenheit + 61.0 + ((fahrenheit - 68.0) * 1.2) + (self._humidity * 0.094))
 
         if hi > 79:
             hi = -42.379 + 2.04901523 * fahrenheit
-            hi = hi + 10.14333127 * humidity
-            hi = hi + -0.22475541 * fahrenheit * humidity
+            hi = hi + 10.14333127 * self._humidity
+            hi = hi + -0.22475541 * fahrenheit * self._humidity
             hi = hi + -0.00683783 * pow(fahrenheit, 2)
-            hi = hi + -0.05481717 * pow(humidity, 2)
-            hi = hi + 0.00122874 * pow(fahrenheit, 2) * humidity
-            hi = hi + 0.00085282 * fahrenheit * pow(humidity, 2)
-            hi = hi + -0.00000199 * pow(fahrenheit, 2) * pow(humidity, 2)
+            hi = hi + -0.05481717 * pow(self._humidity, 2)
+            hi = hi + 0.00122874 * pow(fahrenheit, 2) * self._humidity
+            hi = hi + 0.00085282 * fahrenheit * pow(self._humidity, 2)
+            hi = hi + -0.00000199 * pow(fahrenheit, 2) * pow(self._humidity, 2)
 
-        if humidity < 13 and fahrenheit >= 80 and fahrenheit <= 112:
-            hi = hi - ((13 - humidity) * 0.25) * math.sqrt((17 - abs(fahrenheit - 95)) * 0.05882)
-        elif humidity > 85 and fahrenheit >= 80 and fahrenheit <= 87:
-            hi = hi + ((humidity - 85) * 0.1) * ((87 - fahrenheit) * 0.2)
+        if self._humidity < 13 and fahrenheit >= 80 and fahrenheit <= 112:
+            hi = hi - ((13 - self._humidity) * 0.25) * math.sqrt((17 - abs(fahrenheit - 95)) * 0.05882)
+        elif self._humidity > 85 and fahrenheit >= 80 and fahrenheit <= 87:
+            hi = hi + ((self._humidity - 85) * 0.1) * ((87 - fahrenheit) * 0.2)
 
         return round(util.temperature.fahrenheit_to_celsius(hi), 2)
 
-    def computePerception(self, temperature, humidity):
+    @compute_once_lock(SensorType.THERMALPERCEPTION)
+    async def perception(self):
         """Dew Point <https://en.wikipedia.org/wiki/Dew_point>."""
-        dewPoint = self.computeDewPoint(temperature, humidity)
-        if dewPoint < 10:
+        dewpoint = await self.dewpoint()
+        if dewpoint < 10:
             return ThermalPerception.DRY
-        elif dewPoint < 13:
+        elif dewpoint < 13:
             return ThermalPerception.VERY_COMFORTABLE
-        elif dewPoint < 16:
+        elif dewpoint < 16:
             return ThermalPerception.COMFORTABLE
-        elif dewPoint < 18:
+        elif dewpoint < 18:
             return ThermalPerception.OK_BUT_HUMID
-        elif dewPoint < 21:
+        elif dewpoint < 21:
             return ThermalPerception.SOMEWHAT_UNCOMFORTABLE
-        elif dewPoint < 24:
+        elif dewpoint < 24:
             return ThermalPerception.QUITE_UNCOMFORTABLE
-        elif dewPoint < 26:
+        elif dewpoint < 26:
             return ThermalPerception.EXTREMELY_UNCOMFORTABLE
-        return ThermalPerception.SEVERELY_HIGH
+        else:
+            return ThermalPerception.SEVERELY_HIGH
 
-    def computeAbsoluteHumidity(self, temperature, humidity):
+    @compute_once_lock(SensorType.ABSOLUTEHUMIDITY)
+    async def absolutehumidity(self):
         """Absolute Humidity <https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/>."""
-        absTemperature = temperature + 273.15
-        absHumidity = 6.112
-        absHumidity *= math.exp((17.67 * temperature) / (243.5 + temperature))
-        absHumidity *= humidity
-        absHumidity *= 2.1674
-        absHumidity /= absTemperature
-        return round(absHumidity, 2)
+        abs_temperature = self._temperature + 273.15
+        abs_humidity = 6.112
+        abs_humidity *= math.exp((17.67 * self._temperature) / (243.5 + self._temperature))
+        abs_humidity *= self._humidity
+        abs_humidity *= 2.1674
+        abs_humidity /= abs_temperature
+        return round(abs_humidity,2)
 
-    def computeFrostPoint(self, temperature, humidity):
+    @compute_once_lock(SensorType.FROSTPOINT)
+    async def frostpoint(self):
         """Frost Point <https://pon.fr/dzvents-alerte-givre-et-calcul-humidite-absolue/>."""
-        dewPoint = self.computeDewPoint(temperature, humidity)
-        T = temperature + 273.15
-        Td = dewPoint + 273.15
+        dewpoint = await self.dewpoint()
+        T = self._temperature + 273.15
+        Td = dewpoint + 273.15
         return round((Td + (2671.02 / ((2954.61 / T) + 2.193665 * math.log(T) - 13.3448)) - T) - 273.15, 2)
 
-    def computeRiskLevel(self, temperature, humidity):
+    @compute_once_lock(SensorType.FROSTRISK)
+    async def frostrisk(self):
         """Frost Risk Level."""
         thresholdAbsHumidity = 2.8
-        absoluteHumidity = self.computeAbsoluteHumidity(temperature, humidity)
-        freezePoint = self.computeFrostPoint(temperature, humidity)
-        if temperature <= 1 and freezePoint <= 0:
-            if absoluteHumidity <= thresholdAbsHumidity:
+        absolutehumidity = await self.absolutehumidity()
+        frostpoint = await self.frostpoint()
+        if self._temperature <= 1 and frostpoint <= 0:
+            if absolutehumidity <= thresholdAbsHumidity:
                 return 1  # Frost unlikely despite the temperature
             else:
                 return 3  # high probability of frost
-        elif temperature <= 4 and freezePoint <= 0.5 and absoluteHumidity > thresholdAbsHumidity:
+        elif self._temperature <= 4 and frostpoint <= 0.5 and absolutehumidity > thresholdAbsHumidity:
             return 2  # Frost probable despite the temperature
         return 0  # No risk of frost
 
-    def computeSimmerIndex(self, temperature, humidity):
+    @compute_once_lock(SensorType.SIMMERINDEX)
+    async def simmerindex(self):
         """https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index"""
-        fahrenheit = util.temperature.celsius_to_fahrenheit(temperature)
+        fahrenheit = util.temperature.celsius_to_fahrenheit(self._temperature)
 
-        si = (1.98 * (fahrenheit - (0.55 - (0.0055 * humidity)) * (fahrenheit - 58.0)) - 56.83)
+        si = (1.98 * (fahrenheit - (0.55 - (0.0055 * self._humidity)) * (fahrenheit - 58.0)) - 56.83)
 
         if fahrenheit < 70:
             si = fahrenheit
 
         return round(util.temperature.fahrenheit_to_celsius(si), 2)
 
-    def computeSimmerZone(self, temperature, humidity):
+    @compute_once_lock(SensorType.SIMMERZONE)
+    async def simmerzone(self):
         """http://summersimmer.com/default.asp"""
-        si = self.computeSimmerIndex(temperature, humidity)
+        si = await self.simmerindex()
         if si < 21.1:
             return SimmerZone.COOL
         elif si < 25.0:
@@ -365,67 +462,17 @@ class SensorThermalComfort(SensorEntity):
             return SimmerZone.DANGER_OF_HEATSTROKE
         elif si < 65.6:
             return SimmerZone.EXTREME_DANGER_OF_HEATSTROKE
-        return SimmerZone.CIRCULATORY_COLLAPSE_IMMINENT
-
-    async def async_added_to_hass(self):
-        """Subscribe sensor state change events."""
-        async_track_state_change_event(
-            self.hass, self._temperature_entity, self.temperature_state_listener)
-
-        async_track_state_change_event(
-            self.hass, self._humidity_entity, self.humidity_state_listener)
+        else:
+            return SimmerZone.CIRCULATORY_COLLAPSE_IMMINENT
 
     async def async_update(self):
         """Update the state."""
-        value = None
         if self._temperature is not None and self._humidity is not None:
-            if self._sensor_type == "dewpoint":
-                value = self.computeDewPoint(self._temperature, self._humidity)
-            if self._sensor_type == "heatindex":
-                value = self.computeHeatIndex(self._temperature, self._humidity)
-            elif self._sensor_type == "perception":
-                value = self.computePerception(self._temperature, self._humidity)
-            elif self._sensor_type == "absolutehumidity":
-                value = self.computeAbsoluteHumidity(self._temperature, self._humidity)
-            elif self._sensor_type == "frostpoint":
-                value = self.computeFrostPoint(self._temperature, self._humidity)
-            elif self._sensor_type == "frostrisk":
-                risk_level = self.computeRiskLevel(self._temperature, self._humidity)
-                value = list(FrostRisk)[risk_level]
-                self._attr_extra_state_attributes[ATTR_FROST_RISK_LEVEL] = risk_level
-            elif self._sensor_type == "simmerindex":
-                value = self.computeSimmerIndex(self._temperature, self._humidity)
-            elif self._sensor_type == "simmerzone":
-                value = self.computeSimmerZone(self._temperature, self._humidity)
-
-        self._attr_native_value = value
-        self._attr_extra_state_attributes[ATTR_TEMPERATURE] = self._temperature
-        self._attr_extra_state_attributes[ATTR_HUMIDITY] = self._humidity
-
-        for property_name, template in (
-                ('_icon', self._icon_template),
-                ('_entity_picture', self._entity_picture_template)):
-            if template is None:
-                continue
-
-            try:
-                setattr(self, property_name, template.async_render())
-            except TemplateError as ex:
-                friendly_property_name = property_name[1:].replace('_', ' ')
-                if ex.args and ex.args[0].startswith(
-                        "UndefinedError: 'None' has no attribute"):
-                    # Common during HA startup - so just a warning
-                    _LOGGER.warning('Could not render %s template %s,'
-                                    ' the state is unknown.',
-                                    friendly_property_name, self._attr_name)
-                    continue
-
-                try:
-                    setattr(self, property_name,
-                            getattr(super(), property_name))
-                except AttributeError:
-                    _LOGGER.error('Could not render %s template %s: %s',
-                                  friendly_property_name, self._attr_name, ex)
+            for sensor_type in SENSOR_TYPES.keys():
+                self._compute_states[sensor_type].needs_update = True
+            for sensor in self._sensors:
+                if sensor is not None:
+                    sensor.async_schedule_update_ha_state(True)
 
 
 def _is_valid_state(state) -> bool:

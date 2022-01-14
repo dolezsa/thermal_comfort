@@ -589,16 +589,12 @@ async def test_sensor_is_nan(hass, start_ha):
     assert len(hass.states.async_all(sensor.DOMAIN)) == 10
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert (
-            ATTR_TEMPERATURE in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        )
-        assert ATTR_HUMIDITY in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        assert (
-            hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_TEMPERATURE]
-            is None
+            ATTR_TEMPERATURE
+            not in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
         )
         assert (
-            hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_HUMIDITY]
-            is None
+            ATTR_HUMIDITY
+            not in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
         )
 
 
@@ -644,16 +640,12 @@ async def test_sensor_unknown(hass, start_ha):
     assert len(hass.states.async_all(sensor.DOMAIN)) == 10
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert (
-            ATTR_TEMPERATURE in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        )
-        assert ATTR_HUMIDITY in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
-        assert (
-            hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_TEMPERATURE]
-            is None
+            ATTR_TEMPERATURE
+            not in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
         )
         assert (
-            hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_HUMIDITY]
-            is None
+            ATTR_HUMIDITY
+            not in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
         )
 
 
