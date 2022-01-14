@@ -233,6 +233,7 @@ class SensorThermalComfort(SensorEntity):
         self._attr_extra_state_attributes = {}
         if unique_id is not None:
             self._attr_unique_id = unique_id + sensor_type
+        self._attr_should_poll = False
 
     @property
     def extra_state_attributes(self):
