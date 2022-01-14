@@ -7,7 +7,9 @@ from homeassistant.backports.enum import StrEnum
 from homeassistant.components.sensor import (
     ENTITY_ID_FORMAT,
     PLATFORM_SCHEMA,
+    SensorDeviceClass,
     SensorEntity,
+    SensorEntityDescription,
     SensorStateClass,
 )
 from homeassistant.const import (
@@ -22,6 +24,7 @@ from homeassistant.const import (
     DEVICE_CLASS_TEMPERATURE,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
+    TEMP_CELSIUS,
     TEMP_FAHRENHEIT,
 )
 from homeassistant.exceptions import TemplateError
@@ -56,14 +59,56 @@ class SensorType(StrEnum):
     THERMALPERCEPTION = 'perception'
 
 SENSOR_TYPES = {
-    SensorType.ABSOLUTEHUMIDITY: [DEVICE_CLASS_HUMIDITY, 'Absolute Humidity', 'g/m³', SensorStateClass.MEASUREMENT],
-    SensorType.HEATINDEX: [DEVICE_CLASS_TEMPERATURE, 'Heat Index', '°C', SensorStateClass.MEASUREMENT],
-    SensorType.DEWPOINT: [DEVICE_CLASS_TEMPERATURE, 'Dew Point', '°C', SensorStateClass.MEASUREMENT],
-    SensorType.THERMALPERCEPTION: [ThermalComfortDeviceClass.THERMAL_PERCEPTION, 'Thermal Perception', None, None],
-    SensorType.FROSTPOINT: [DEVICE_CLASS_TEMPERATURE, 'Frost Point', '°C', SensorStateClass.MEASUREMENT],
-    SensorType.FROSTRISK: [ThermalComfortDeviceClass.FROST_RISK, 'Frost Risk', None, None],
-    SensorType.SIMMERINDEX: [DEVICE_CLASS_TEMPERATURE, 'Simmer Index', '°C', SensorStateClass.MEASUREMENT],
-    SensorType.SIMMERZONE: [ThermalComfortDeviceClass.SIMMER_ZONE, 'Simmer Zone', None, None],
+    SensorType.ABSOLUTEHUMIDITY: dict(
+        key = SensorType.ABSOLUTEHUMIDITY,
+        name = '{} Absolute Humidity',
+        device_class = SensorDeviceClass.HUMIDITY,
+        native_unit_of_measurement = 'g/m³',
+        state_class = SensorStateClass.MEASUREMENT,
+    ),
+    SensorType.DEWPOINT: dict(
+        key = SensorType.DEWPOINT,
+        name = '{} Dew Point',
+        device_class = SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement = TEMP_CELSIUS,
+        state_class = SensorStateClass.MEASUREMENT,
+    ),
+    SensorType.FROSTPOINT: dict(
+        key = SensorType.FROSTPOINT,
+        name = '{} Frost Point',
+        device_class = SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement = TEMP_CELSIUS,
+        state_class = SensorStateClass.MEASUREMENT,
+    ),
+    SensorType.FROSTRISK: dict(
+        key = SensorType.FROSTRISK,
+        name = '{} Frost Risk',
+        device_class = ThermalComfortDeviceClass.FROST_RISK,
+    ),
+    SensorType.HEATINDEX: dict(
+        key = SensorType.HEATINDEX,
+        name = '{} Heat Index',
+        device_class = SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement = TEMP_CELSIUS,
+        state_class = SensorStateClass.MEASUREMENT,
+    ),
+    SensorType.SIMMERINDEX: dict(
+        key = SensorType.SIMMERINDEX,
+        name='{} Simmer Index',
+        device_class = SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement = TEMP_CELSIUS,
+        state_class = SensorStateClass.MEASUREMENT,
+    ),
+    SensorType.SIMMERZONE: dict(
+        key = SensorType.SIMMERZONE,
+        name='{} Simmer Zone',
+        device_class = ThermalComfortDeviceClass.SIMMER_ZONE,
+    ),
+    SensorType.THERMALPERCEPTION: dict(
+        key = SensorType.THERMALPERCEPTION,
+        name = '{} Thermal Perception',
+        device_class = ThermalComfortDeviceClass.THERMAL_PERCEPTION,
+    ),
 }
 
 DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
@@ -158,8 +203,8 @@ class SensorThermalComfort(SensorEntity):
         """Initialize the sensor."""
         self.hass = hass
         self.entity_id = async_generate_entity_id(ENTITY_ID_FORMAT, f"{device_id}_{sensor_type}", hass=hass)
-        self._attr_name = f"{friendly_name} {SENSOR_TYPES[sensor_type][1]}"
-        self._attr_unit_of_measurement = SENSOR_TYPES[sensor_type][2]
+        self.entity_description = SensorEntityDescription(**SENSOR_TYPES[sensor_type])
+        self.entity_description.name = self.entity_description.name.format(friendly_name)
         self._attr_native_value = None
         self._attr_extra_state_attributes = {}
         self._icon_template = icon_template
@@ -168,8 +213,6 @@ class SensorThermalComfort(SensorEntity):
         self._attr_entity_picture = None
         self._temperature_entity = temperature_entity
         self._humidity_entity = humidity_entity
-        self._attr_device_class = SENSOR_TYPES[sensor_type][0]
-        self._attr_state_class = SENSOR_TYPES[sensor_type][3]
         self._sensor_type = sensor_type
         self._temperature = None
         self._humidity = None

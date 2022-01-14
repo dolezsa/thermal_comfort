@@ -111,6 +111,7 @@ async def test_heatindex(hass, start_ha):
     assert hass.states.get(f"{TEST_NAME}_{SensorType.HEATINDEX}").state == "13.21"
 
     hass.states.async_set("sensor.test_humidity_sensor", "12.0")
+    await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "28.0")
     await hass.async_block_till_done()
     assert hass.states.get(f"{TEST_NAME}_{SensorType.HEATINDEX}").state == "26.55"
