@@ -28,6 +28,9 @@
 **French:**
 [<img src="https://github.com/papo-o.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @papo-o](https://github.com/papo-o)
+[<img src="https://github.com/landaisbenj.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@landaisbenj](https://github.com/landaisbenj)
+
 
 **German:**
 [<img src="https://github.com/rautesamtr.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
