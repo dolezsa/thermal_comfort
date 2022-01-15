@@ -19,6 +19,8 @@ To use, add the following to your `configuration.yaml` file:
 ```yaml
 sensor:
   - platform: thermal_comfort
+    poll: true
+    scan_interval: 300
     sensors:
       livingroom:
         friendly_name: Living Room
@@ -33,7 +35,15 @@ sensor:
       bedroom:
 …
 ```
-### Configuration Variables
+### Platform Configuration Variables
+<dl>
+  <dt><strong>poll</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
+  <dd>Set to true if you want the sensors to be polled. This can avoid double calculated values if your input sensors split change updates for humidity and temperature.</dd>
+  <dt><strong>scan_interval</strong> <code>boolean</code> <code>(optional, default: 30)</code></dt>
+  <dd>Change the polling interval in seconds if <code>poll</code> is set to true.</dd>
+</dl>
+
+### Sensor Configuration Variables
 <dl>
   <dt><strong>temperature_sensor</strong> <code>string</code> <code>REQUIRED</code></dt>
   <dd>ID of temperature sensor entity to be used for calculations.</dd>
