@@ -16,15 +16,13 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.const import (
-    ATTR_FRIENDLY_NAME,
     ATTR_TEMPERATURE,
     ATTR_UNIT_OF_MEASUREMENT,
     CONF_ENTITY_PICTURE_TEMPLATE,
+    CONF_FRIENDLY_NAME,
     CONF_ICON_TEMPLATE,
     CONF_SENSORS,
     CONF_UNIQUE_ID,
-    DEVICE_CLASS_HUMIDITY,
-    DEVICE_CLASS_TEMPERATURE,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
     TEMP_CELSIUS,
@@ -123,7 +121,7 @@ SENSOR_SCHEMA = vol.Schema({
     vol.Optional(CONF_SENSOR_TYPES, default=DEFAULT_SENSOR_TYPES): cv.ensure_list,
     vol.Optional(CONF_ICON_TEMPLATE): cv.template,
     vol.Optional(CONF_ENTITY_PICTURE_TEMPLATE): cv.template,
-    vol.Optional(ATTR_FRIENDLY_NAME): cv.string,
+    vol.Optional(CONF_FRIENDLY_NAME): cv.string,
     vol.Optional(CONF_UNIQUE_ID): cv.string,
 })
 
@@ -188,7 +186,7 @@ async def async_setup_platform(hass, config, async_add_entities,
         sensor_types = device_config.get(CONF_SENSOR_TYPES)
         icon_template = device_config.get(CONF_ICON_TEMPLATE)
         entity_picture_template = device_config.get(CONF_ENTITY_PICTURE_TEMPLATE)
-        friendly_name = device_config.get(ATTR_FRIENDLY_NAME, device)
+        friendly_name = device_config.get(CONF_FRIENDLY_NAME, device)
         unique_id = device_config.get(CONF_UNIQUE_ID)
 
         compute_device = DeviceThermalComfort(
