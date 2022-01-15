@@ -7,14 +7,25 @@
       "high": "Очень вероятно"
     },
     "thermal_comfort__thermal_perception": {
-      "dry": "Сухо",
+      "dry": "Слегка суховато",
       "very_comfortable": "Очень комфортно",
       "comfortable": "Комфортно",
-      "ok_but_humid": "Нормально, но сыровато",
-      "somewhat_uncomfortable": "Слегка некомфортно",
-      "quite_uncomfortable": "Очень влажно, некомфортно",
-      "extremely_uncomfortable": "Максимально влажно, угнетающе",
-      "severely_high": "Очень высокая влажность, опасно для астматиков"
+      "ok_but_humid": "Хорошо, но немного влажно",
+	  "somewhat_uncomfortable":"Немного некомфортно",
+      "quite_uncomfortable": "Очень влажно, довольно некомфортно",
+      "extremely_uncomfortable": "Максимально влажно, крайне некомфортно",
+      "severely_high": "Очень высокая влажность, опасно для больных астмой"
+    },
+	"thermal_comfort__simmer_zone": {
+      "cool": "Холодно",
+      "slightly_cool": "Прохладно",
+      "comfortable": "Комфортно",
+      "slightly_warm": "Тепло",
+      "increasing_discomfort": "Растущий дискомфорт",
+      "extremely_warm": "Очень жарко",
+      "danger_of_heatstroke": "Опасность теплового удара",
+      "extreme_danger_of_heatstroke": "Повышенная опасность теплового удара",
+      "circulatory_collapse_imminent": "Угроза возникновения сердечно-сосудистой недостаточности"
     }
   }
 }
