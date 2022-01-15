@@ -1,5 +1,11 @@
 {
   "state": {
+    "thermal_comfort__frost_risk": {
+      "no_risk": "Sem risco",
+      "unlikely": "Improvável",
+      "probable": "Provável",
+      "high": "Muito provável"
+    },
     "thermal_comfort__thermal_perception": {
       "dry": "Um pouco seco",
       "very_comfortable": "Muito confortável",
@@ -9,6 +15,17 @@
       "quite_uncomfortable": "Muito húmido, muito desconfortável",
       "extremely_uncomfortable": "Extremamente desconfortável, opressivo",
       "severely_high": "Alto risco para a saúde, mortal em caso de asma"
+    },
+    "thermal_comfort__simmer_zone": {
+      "cool": "Frio",
+      "slightly_cool": "Um pouco frio",
+      "comfortable": "Confortável",
+      "slightly_warm": "Um pouco quente",
+      "increasing_discomfort": "Desconforto crescente",
+      "extremely_warm": "Muito quente",
+      "danger_of_heatstroke": "Perigo de insolação",
+      "extreme_danger_of_heatstroke": "Perigo extremo de insolação",
+      "circulatory_collapse_imminent": "Colapso circulatório iminente"
     }
   }
 }
