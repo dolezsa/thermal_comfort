@@ -11,7 +11,7 @@ repos:
         args:
           - --safe
           - --quiet
-        files: ^((homeassistant|script|tests)/.+)?[^/]+\.py$
+        files: ^((custom_components|tests)/.+)?[^/]+\.py$
   - repo: https://github.com/codespell-project/codespell
     rev: v2.0.0
     hooks:
@@ -34,7 +34,7 @@ repos:
           - flake8-comprehensions==3.7.0
           - flake8-noqa==1.2.0
           - mccabe==0.6.1
-        files: ^(homeassistant|script|tests)/.+\.py$
+        files: ^(custom_components|tests)/.+\.py$
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.0
     hooks:
@@ -43,7 +43,7 @@ repos:
           - --quiet
           - --format=custom
           - --configfile=tests/bandit.yaml
-        files: ^(homeassistant|script|tests)/.+\.py$
+        files: ^(custom_components|tests)/.+\.py$
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.0
     hooks:
@@ -81,4 +81,4 @@ repos:
           - --py38-plus
           - --force
           - --keep-updates
-        files: ^(homeassistant|tests|script)/.+\.py$
+        files: ^(custom_components|script)/.+\.py$
