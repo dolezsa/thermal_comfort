@@ -34,14 +34,13 @@ from homeassistant.helpers.entity import async_generate_entity_id
 from homeassistant.helpers.event import async_track_state_change_event
 import voluptuous as vol
 
+from .const import CONF_HUMIDITY_SENSOR, CONF_POLL, CONF_TEMPERATURE_SENSOR
+
 _LOGGER = logging.getLogger(__name__)
 
 ATTR_HUMIDITY = "humidity"
 ATTR_FROST_RISK_LEVEL = "frost_risk_level"
-CONF_HUMIDITY_SENSOR = "humidity_sensor"
-CONF_POLL = "poll"
 CONF_SENSOR_TYPES = "sensor_types"
-CONF_TEMPERATURE_SENSOR = "temperature_sensor"
 
 
 class ThermalComfortDeviceClass(StrEnum):
