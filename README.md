@@ -19,8 +19,6 @@ To use, add the following to your `configuration.yaml` file:
 ```yaml
 sensor:
   - platform: thermal_comfort
-    poll: true
-    scan_interval: 300
     sensors:
       livingroom:
         friendly_name: Living Room
