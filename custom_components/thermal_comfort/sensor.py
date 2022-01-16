@@ -236,14 +236,12 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     return True
 
 
-class SensorThermalComfort(SensorEntity):
+class SensorThermalComfortCommon(SensorEntity):
     """Representation of a Thermal Comfort Sensor."""
 
     def __init__(
         self,
         device,
-        device_id,
-        friendly_name,
         entity_description,
         icon_template,
         entity_picture_template,
@@ -253,10 +251,6 @@ class SensorThermalComfort(SensorEntity):
         """Initialize the sensor."""
         self._device = device
         self.entity_description = entity_description
-        self.entity_description.name = entity_description.name.format(friendly_name)
-        self.entity_id = async_generate_entity_id(
-            ENTITY_ID_FORMAT, f"{device_id}_{sensor_type}", hass=device.hass
-        )
         self._icon_template = icon_template
         self._entity_picture_template = entity_picture_template
         self._attr_icon = None
@@ -323,6 +317,35 @@ class SensorThermalComfort(SensorEntity):
                         self.name,
                         ex,
                     )
+
+
+class SensorThermalComfort(SensorThermalComfortCommon):
+    """Sensor entry configured via configuration.yaml."""
+
+    def __init__(
+        self,
+        device,
+        device_id,
+        friendly_name,
+        entity_description,
+        icon_template,
+        entity_picture_template,
+        sensor_type,
+        unique_id,
+    ):
+        """Initialize sensor entity."""
+        super().__init__(
+            device,
+            entity_description,
+            icon_template,
+            entity_picture_template,
+            sensor_type,
+            unique_id,
+        )
+        self.entity_description.name = entity_description.name.format(friendly_name)
+        self.entity_id = async_generate_entity_id(
+            ENTITY_ID_FORMAT, f"{device_id}_{sensor_type}", hass=device.hass
+        )
 
 
 @dataclass
