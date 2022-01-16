@@ -236,6 +236,16 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     return True
 
 
+def id_generator(unique_id: str, sensor_type: str) -> str:
+    """Generate id based on unique_id and sensor type.
+
+    :param unique_id: str: common part of id for all entities, device unique_id, as a rule
+    :param sensor_type: str: different part of id, sensor type, as s rule
+    :returns: str: unique_id+sensor_type
+    """
+    return unique_id + sensor_type
+
+
 class SensorThermalComfortCommon(SensorEntity):
     """Representation of a Thermal Comfort Sensor."""
 
@@ -259,7 +269,7 @@ class SensorThermalComfortCommon(SensorEntity):
         self._attr_native_value = None
         self._attr_extra_state_attributes = {}
         if unique_id is not None:
-            self._attr_unique_id = unique_id + sensor_type
+            self._attr_unique_id = id_generator(unique_id, sensor_type)
         self._attr_should_poll = self._device.should_poll
 
     @property
