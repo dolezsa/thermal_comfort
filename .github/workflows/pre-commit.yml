@@ -3,8 +3,6 @@ name: Run pre-commit Check
 # yamllint disable-line rule:truthy
 on:
   pull_request:
-  push:
-    branches: [master]
 
 jobs:
   pre-commit:
