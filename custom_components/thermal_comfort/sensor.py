@@ -279,6 +279,10 @@ class SensorThermalComfort(SensorEntity):
     async def async_added_to_hass(self):
         """Register callbacks."""
         self._device.sensors.append(self)
+        if self._icon_template is not None:
+            self._icon_template.hass = self.hass
+        if self._entity_picture_template is not None:
+            self._entity_picture_template.hass = self.hass
 
     async def async_update(self):
         """Update the state of the sensor."""
