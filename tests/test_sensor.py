@@ -4,9 +4,12 @@ import logging
 
 from homeassistant.components import sensor
 from homeassistant.const import ATTR_TEMPERATURE
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry
 import pytest
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.thermal_comfort.const import DOMAIN
 from custom_components.thermal_comfort.sensor import (
     ATTR_FROST_RISK_LEVEL,
     ATTR_HUMIDITY,
@@ -14,7 +17,10 @@ from custom_components.thermal_comfort.sensor import (
     SensorType,
     SimmerZone,
     ThermalPerception,
+    id_generator,
 )
+
+from .const import USER_INPUT
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -670,3 +676,29 @@ async def test_sensor_unavailable(hass, start_ha):
             hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes[ATTR_HUMIDITY]
             == 50.0
         )
+
+
+async def test_create_sensors(hass: HomeAssistant):
+    """Test sensors update engine.
+
+    When user remove sensor in integration config, then we should remove it from system
+    :param hass: HomeAssistant: Home Assistant object
+    """
+
+    def get_eid(registry: entity_registry, _id):
+        return registry.async_get_entity_id(
+            domain="sensor", platform=DOMAIN, unique_id=_id
+        )
+
+    er = entity_registry.async_get(hass)
+
+    entry = MockConfigEntry(
+        domain=DOMAIN, data=USER_INPUT, entry_id="test", unique_id="uniqueid"
+    )
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    # Make sure that sensors in registry
+    for s in SensorType:
+        assert get_eid(er, id_generator(entry.unique_id, s)) is not None
