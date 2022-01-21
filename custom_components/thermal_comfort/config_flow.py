@@ -4,9 +4,15 @@ from __future__ import annotations
 import logging
 
 from homeassistant import config_entries
-from homeassistant.const import CONF_NAME
+from homeassistant.const import (
+    CONF_NAME,
+    DEVICE_CLASS_HUMIDITY,
+    DEVICE_CLASS_TEMPERATURE,
+    Platform,
+)
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import entity_registry
+from homeassistant.helpers.entity_registry import EntityRegistry
 import voluptuous as vol
 
 from .const import (
@@ -19,6 +25,18 @@ from .const import (
 from .sensor import DEFAULT_SENSOR_TYPES, SensorType
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def get_sensors_by_device_class(_er: EntityRegistry, device_class: str) -> list:
+    """Get sensors of required class from entity registry."""
+
+    result = []
+    for d in _er.async_get_device_class_lookup(
+        {(Platform.SENSOR, device_class)}
+    ).values():
+        for e in d.values():
+            result.append(e)
+    return result
 
 
 def get_value(
@@ -38,16 +56,22 @@ def get_value(
 
 
 def build_schema(
-    config_entry: config_entries | None, show_advanced: bool = False, step: str = "user"
+    config_entry: config_entries | None,
+    er: EntityRegistry,
+    show_advanced: bool = False,
+    step: str = "user",
 ) -> vol.Schema:
     """Build configuration schema.
 
     :param config_entry: config entry for getting current parameters on None
+    :param er: Entity Registry instance
     :param show_advanced: bool: should we show advanced options?
     :param step: for which step we should build schema
     :return: Configuration schema with default parameters
     """
-    # ToDo: get list of CONF_TEMPERATURE_SENSOR and CONF_HUMIDITY_SENSOR to create dropdown list and "one of" selection
+    h_sensors = get_sensors_by_device_class(er, DEVICE_CLASS_HUMIDITY)
+    t_sensors = get_sensors_by_device_class(er, DEVICE_CLASS_TEMPERATURE)
+
     schema = vol.Schema(
         {
             vol.Required(
@@ -56,12 +80,12 @@ def build_schema(
             vol.Required(
                 CONF_TEMPERATURE_SENSOR,
                 default=get_value(config_entry, CONF_TEMPERATURE_SENSOR),
-            ): str,
+            ): vol.In(t_sensors),
             vol.Required(
                 CONF_HUMIDITY_SENSOR,
                 default=get_value(config_entry, CONF_HUMIDITY_SENSOR),
-            ): str,
-        }
+            ): vol.In(h_sensors),
+        },
     )
     if show_advanced:
         schema = schema.extend(
@@ -125,6 +149,7 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
         errors = {}
+        er = entity_registry.async_get(self.hass)
 
         if user_input is not None:
             if not (errors := check_input(self.hass, user_input)):
@@ -146,7 +171,7 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(
             step_id="user",
-            data_schema=build_schema(None, self.show_advanced_options),
+            data_schema=build_schema(None, er, self.show_advanced_options),
             errors=errors,
         )
 
@@ -162,6 +187,7 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
         """Manage the options."""
 
         errors = {}
+        er = entity_registry.async_get(self.hass)
         if user_input is not None:
             _LOGGER.debug(f"OptionsFlow: going to update configuration {user_input}")
             if not (errors := check_input(self.hass, user_input)):
@@ -170,7 +196,7 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=build_schema(
-                self.config_entry, self.show_advanced_options, "init"
+                self.config_entry, er, self.show_advanced_options, "init"
             ),
             errors=errors,
         )
