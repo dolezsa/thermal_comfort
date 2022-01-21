@@ -1,0 +1,47 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "Temperature sensor not found",
+      "humidity_not_found": "Humidity sensor not found"
+    },
+    "step": {
+      "init": {
+        "title": "Thermal comfort settings",
+        "data": {
+          "temperature_sensor": "Temperature sensor",
+          "humidity_sensor": "Humidity sensor",
+          "poll": "Enable Polling"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "This combination of temperature and humidity sensors is already configured"
+    },
+    "error": {
+      "temperature_not_found": "Temperature sensor not found",
+      "humidity_not_found": "Humidity sensor not found"
+    },
+    "step": {
+      "user": {
+        "title": "Thermal comfort settings",
+        "data": {
+          "name": "Name",
+          "temperature_sensor": "Temperature sensor",
+          "humidity_sensor": "Humidity sensor",
+          "poll": "Enable Polling",
+          "absolutehumidity": "Enable Absolute humidity sensor",
+          "dewpoint": "Enable Dew point sensor",
+          "frostpoint": "Enable Frost point sensor",
+          "frostrisk": "Enable Frost risk sensor",
+          "heatindex": "Enable Heat index sensor",
+          "simmerindex": "Enable Simmer index sensor",
+          "simmerzone": "Enable Simmer zone sensor",
+          "perception": "Enable Perception sensor",
+          "show_advanced_options": "Advanced options"
+        }
+      }
+    }
+  }
+}
