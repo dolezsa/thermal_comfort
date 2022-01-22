@@ -360,14 +360,6 @@ class DeviceThermalComfort:
             for sensor_type in SENSOR_TYPES.keys()
         }
 
-        temperature_state = hass.states.get(temperature_entity)
-        if _is_valid_state(temperature_state):
-            self._temperature = float(temperature_state.state)
-
-        humidity_state = hass.states.get(humidity_entity)
-        if _is_valid_state(humidity_state):
-            self._humidity = float(humidity_state.state)
-
         async_track_state_change_event(
             self.hass, self._temperature_entity, self.temperature_state_listener
         )
@@ -376,12 +368,21 @@ class DeviceThermalComfort:
             self.hass, self._humidity_entity, self.humidity_state_listener
         )
 
+        hass.async_create_task(
+            self._new_temperature_state(hass.states.get(temperature_entity))
+        )
+        hass.async_create_task(
+            self._new_humidity_state(hass.states.get(humidity_entity))
+        )
+
     async def temperature_state_listener(self, event):
         """Handle temperature device state changes."""
-        new_state = event.data.get("new_state")
-        if _is_valid_state(new_state):
-            unit = new_state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
-            temp = util.convert(new_state.state, float)
+        await self._new_temperature_state(event.data.get("new_state"))
+
+    async def _new_temperature_state(self, state):
+        if _is_valid_state(state):
+            unit = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
+            temp = util.convert(state.state, float)
             # convert to celsius if necessary
             if unit == TEMP_FAHRENHEIT:
                 temp = util.temperature.fahrenheit_to_celsius(temp)
@@ -391,9 +392,11 @@ class DeviceThermalComfort:
 
     async def humidity_state_listener(self, event):
         """Handle humidity device state changes."""
-        new_state = event.data.get("new_state")
-        if _is_valid_state(new_state):
-            self._humidity = float(new_state.state)
+        await self._new_humidity_state(event.data.get("new_state"))
+
+    async def _new_humidity_state(self, state):
+        if _is_valid_state(state):
+            self._humidity = float(state.state)
             self.extra_state_attributes[ATTR_HUMIDITY] = self._humidity
             await self.async_update()
 
