@@ -85,6 +85,19 @@ cp -r custom_components $hacs_config_folder
 
 Finally you need to restart home assistant before you can use it.
 
+## Custom Icons
+
+To use Thermal Comfort's custom icon set you have to add the following repository
+as [custom frontend](https://hacs.xyz/docs/faq/custom_repositories) integration
+in HACS. The icons can then be added within the `tc:` namespace with `tc:sensor-type`.
+ e.g. `tc:dew-point`. All names and altervative icons can be found in the repositorys
+readme.
+
+https://github.com/rautesamtr/thermal_comfort_icons/
+
+
+![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/living_room.png)
+
 ## Screenshots
 
 #### Absolute Humidity
