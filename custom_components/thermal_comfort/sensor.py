@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from functools import wraps
 import logging
 import math
+from typing import Any
 
 from homeassistant import util
 from homeassistant.backports.enum import StrEnum
@@ -36,6 +37,7 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import DeviceInfo, async_generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
+from homeassistant.helpers.template import Template
 import voluptuous as vol
 
 from .const import CONF_HUMIDITY_SENSOR, CONF_POLL, CONF_TEMPERATURE_SENSOR, DOMAIN
@@ -123,7 +125,7 @@ SENSOR_TYPES = {
 
 DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
 
-SENSOR_SCHEMA = vol.Schema(
+LEGACY_SENSOR_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_TEMPERATURE_SENSOR): cv.entity_id,
         vol.Required(CONF_HUMIDITY_SENSOR): cv.entity_id,
@@ -132,6 +134,12 @@ SENSOR_SCHEMA = vol.Schema(
         vol.Optional(CONF_ENTITY_PICTURE_TEMPLATE): cv.template,
         vol.Optional(CONF_FRIENDLY_NAME): cv.string,
         vol.Optional(CONF_UNIQUE_ID): cv.string,
+    }
+)
+
+SENSOR_SCHEMA = LEGACY_SENSOR_SCHEMA.extend(
+    {
+        vol.Optional(CONF_NAME): cv.string,
     }
 )
 
@@ -198,39 +206,43 @@ def compute_once_lock(sensor_type):
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the Thermal Comfort sensors."""
+    if discovery_info is None:
+        devices = [
+            dict(device_config, **{CONF_NAME: device_name})
+            for (device_name, device_config) in config[CONF_SENSORS].items()
+        ]
+    else:
+        devices = discovery_info["devices"]
+
+    _LOGGER.warning("Thermal Comfort entities: %s", devices)
+
     sensors = []
 
     should_poll = config.get(CONF_POLL)
-    for device, device_config in config[CONF_SENSORS].items():
-        temperature_entity = device_config.get(CONF_TEMPERATURE_SENSOR)
-        humidity_entity = device_config.get(CONF_HUMIDITY_SENSOR)
+
+    for device_config in devices:
         sensor_types = device_config.get(CONF_SENSOR_TYPES)
-        icon_template = device_config.get(CONF_ICON_TEMPLATE)
-        entity_picture_template = device_config.get(CONF_ENTITY_PICTURE_TEMPLATE)
-        friendly_name = device_config.get(CONF_FRIENDLY_NAME, device)
-        unique_id = device_config.get(CONF_UNIQUE_ID)
 
         compute_device = DeviceThermalComfort(
-            hass,
-            temperature_entity,
-            humidity_entity,
-            sensor_types,
-            should_poll,
+            hass=hass,
+            name=device_config.get(CONF_FRIENDLY_NAME, device_config.get(CONF_NAME)),
+            unique_id=device_config.get(CONF_UNIQUE_ID),
+            temperature_entity=device_config.get(CONF_TEMPERATURE_SENSOR),
+            humidity_entity=device_config.get(CONF_HUMIDITY_SENSOR),
+            sensor_types=sensor_types,
+            should_poll=should_poll,
         )
 
-        for sensor_type in sensor_types:
-            sensors.append(
-                SensorThermalComfort(
-                    compute_device,
-                    device,
-                    friendly_name,
-                    SensorEntityDescription(**SENSOR_TYPES[sensor_type]),
-                    icon_template,
-                    entity_picture_template,
-                    sensor_type,
-                    unique_id,
-                )
+        sensors += [
+            SensorThermalComfort(
+                device=compute_device,
+                entity_description=SensorEntityDescription(**SENSOR_TYPES[sensor_type]),
+                icon_template=device_config.get(CONF_ICON_TEMPLATE),
+                entity_picture_template=device_config.get(CONF_ENTITY_PICTURE_TEMPLATE),
+                sensor_type=sensor_type,
             )
+            for sensor_type in sensor_types
+        ]
 
     if not sensors:
         _LOGGER.error("No sensors added")
@@ -257,14 +269,16 @@ async def async_setup_entry(
             enabled_sensor_types.append(c)
 
     compute_device = DeviceThermalComfort(
-        hass,
-        data[CONF_TEMPERATURE_SENSOR],
-        data[CONF_HUMIDITY_SENSOR],
-        SENSOR_TYPES,
-        data[CONF_POLL],
+        hass=hass,
+        name=data[CONF_NAME],
+        unique_id=f"{config_entry.unique_id}",
+        temperature_entity=data[CONF_TEMPERATURE_SENSOR],
+        humidity_entity=data[CONF_HUMIDITY_SENSOR],
+        sensor_types=SENSOR_TYPES,
+        should_poll=data[CONF_POLL],
     )
 
-    entities: list[SensorThermalComfortEntry] = []
+    entities: list[SensorThermalComfort] = []
     for sensor_type in SENSOR_TYPES:
         entity_description = SensorEntityDescription(**SENSOR_TYPES[sensor_type])
         entity_description.entity_registry_enabled_default = (
@@ -276,13 +290,10 @@ async def async_setup_entry(
             f"enabled_default = {entity_description.entity_registry_enabled_default}"
         )
         entities.append(
-            SensorThermalComfortEntry(
+            SensorThermalComfort(
                 device=compute_device,
                 entity_description=entity_description,
-                hass=hass,
                 sensor_type=sensor_type,
-                device_name=data[CONF_NAME],
-                device_unique_id=f"{config_entry.unique_id}",
             )
         )
     if entities:
@@ -299,21 +310,26 @@ def id_generator(unique_id: str, sensor_type: str) -> str:
     return unique_id + sensor_type
 
 
-class SensorThermalComfortCommon(SensorEntity):
+class SensorThermalComfort(SensorEntity):
     """Representation of a Thermal Comfort Sensor."""
 
     def __init__(
         self,
-        device,
-        entity_description,
-        icon_template,
-        entity_picture_template,
-        sensor_type,
-        unique_id,
-    ):
+        device: "DeviceThermalComfort",
+        sensor_type: SensorType,
+        entity_description: SensorEntityDescription,
+        icon_template: Template = None,
+        entity_picture_template: Template = None,
+    ) -> None:
         """Initialize the sensor."""
         self._device = device
         self.entity_description = entity_description
+        self.entity_description.name = self.entity_description.name.format(
+            self._device.name
+        )
+        self.entity_id = async_generate_entity_id(
+            ENTITY_ID_FORMAT, f"{self._device.name}_{sensor_type}", hass=device.hass
+        )
         self._icon_template = icon_template
         self._entity_picture_template = entity_picture_template
         self._attr_icon = None
@@ -321,9 +337,14 @@ class SensorThermalComfortCommon(SensorEntity):
         self._sensor_type = sensor_type
         self._attr_native_value = None
         self._attr_extra_state_attributes = {}
-        if unique_id is not None:
-            self._attr_unique_id = id_generator(unique_id, sensor_type)
+        if self._device.unique_id is not None:
+            self._attr_unique_id = id_generator(self._device.unique_id, sensor_type)
         self._attr_should_poll = self._device.should_poll
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """Return device information."""
+        return self._device.device_info
 
     @property
     def extra_state_attributes(self):
@@ -384,35 +405,6 @@ class SensorThermalComfortCommon(SensorEntity):
                     )
 
 
-class SensorThermalComfort(SensorThermalComfortCommon):
-    """Sensor entry configured via configuration.yaml."""
-
-    def __init__(
-        self,
-        device,
-        device_id,
-        friendly_name,
-        entity_description,
-        icon_template,
-        entity_picture_template,
-        sensor_type,
-        unique_id,
-    ):
-        """Initialize sensor entity."""
-        super().__init__(
-            device,
-            entity_description,
-            icon_template,
-            entity_picture_template,
-            sensor_type,
-            unique_id,
-        )
-        self.entity_description.name = entity_description.name.format(friendly_name)
-        self.entity_id = async_generate_entity_id(
-            ENTITY_ID_FORMAT, f"{device_id}_{sensor_type}", hass=device.hass
-        )
-
-
 @dataclass
 class ComputeState:
     """Thermal Comfort Calculation State."""
@@ -426,14 +418,21 @@ class DeviceThermalComfort:
 
     def __init__(
         self,
-        hass,
-        temperature_entity,
-        humidity_entity,
-        sensor_types,
-        should_poll,
+        hass: HomeAssistant,
+        name: str,
+        unique_id: str,
+        temperature_entity: str,
+        humidity_entity: str,
+        sensor_types: [SensorType],
+        should_poll: bool,
     ):
         """Initialize the sensor."""
         self.hass = hass
+        self._unique_id = unique_id
+        self._device_info = DeviceInfo(
+            identifiers={(DOMAIN, self.unique_id)},
+            name=name,
+        )
         self.extra_state_attributes = {}
         self._temperature_entity = temperature_entity
         self._humidity_entity = humidity_entity
@@ -646,6 +645,21 @@ class DeviceThermalComfort:
         """Compute states of configured sensors."""
         return self._compute_states
 
+    @property
+    def unique_id(self) -> str:
+        """Return a unique ID."""
+        return self._unique_id
+
+    @property
+    def device_info(self) -> dict:
+        """Return the device info."""
+        return self._device_info
+
+    @property
+    def name(self) -> str:
+        """Return the name."""
+        return self._device_info["name"]
+
 
 def _is_valid_state(state) -> bool:
     if state is not None:
@@ -655,39 +669,3 @@ def _is_valid_state(state) -> bool:
             except ValueError:
                 pass
     return False
-
-
-class SensorThermalComfortEntry(SensorThermalComfortCommon):
-    """Sensor entry configured via user interface."""
-
-    def __init__(
-        self,
-        device: DeviceThermalComfort,
-        entity_description: SensorEntityDescription,
-        hass: HomeAssistant,
-        sensor_type: SensorType,
-        device_unique_id: ConfigEntry.unique_id,
-        device_name: str,
-    ) -> None:
-        """Initialize sensor entry configured via user interface.
-
-        :param device_unique_id: Integration unique_id for device and sensors identifiers
-        :param device_name: Integration name for device
-        """
-        super().__init__(
-            device=device,
-            entity_description=entity_description,
-            icon_template=None,
-            entity_picture_template=None,
-            sensor_type=sensor_type,
-            unique_id=device_unique_id,
-        )
-        self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, device_unique_id)},
-            name=device_name,
-        )
-        self.entity_description.name = entity_description.name.format(device_name)
-        self.entity_id = async_generate_entity_id(
-            ENTITY_ID_FORMAT, f"{device_name}_{sensor_type}", hass=device.hass
-        )
-        self.hass = hass
