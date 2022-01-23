@@ -47,7 +47,7 @@ async def _flow_configure(hass, r, _input=USER_INPUT):
         )
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_successful_config_flow(hass, start_ha):
     """Test a successful config flow."""
     # Initialize a config flow
@@ -66,7 +66,7 @@ async def test_successful_config_flow(hass, start_ha):
     assert result["result"]
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_failed_config_flow(hass, start_ha):
     """Config flow should fail if ..."""
 
@@ -79,7 +79,7 @@ async def test_failed_config_flow(hass, start_ha):
     assert result["reason"] == "already_configured"
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_options_flow(hass, start_ha):
     """Test flow for options changes."""
     # setup entry
@@ -117,7 +117,7 @@ async def test_config_flow_enabled():
         assert manifest.get("config_flow") is True
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 @pytest.mark.parametrize("sensor", [CONF_TEMPERATURE_SENSOR, CONF_HUMIDITY_SENSOR])
 async def test_missed_sensors(hass, sensor, start_ha):
     """Test is we show message if sensor missed."""

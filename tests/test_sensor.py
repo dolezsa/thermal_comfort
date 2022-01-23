@@ -2,7 +2,8 @@
 
 import logging
 
-from homeassistant.components import sensor
+from homeassistant.components.command_line.const import DOMAIN as COMMAND_LINE_DOMAIN
+from homeassistant.components.sensor import DOMAIN as PLATFORM_DOMAIN
 from homeassistant.const import ATTR_TEMPERATURE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry
@@ -25,49 +26,53 @@ from .const import USER_INPUT
 _LOGGER = logging.getLogger(__name__)
 
 TEST_NAME = "sensor.test_thermal_comfort"
+
+TEMPERATURE_TEST_SENSOR = {
+    "platform": COMMAND_LINE_DOMAIN,
+    "command": "echo 0",
+    "name": "test_temperature_sensor",
+    "value_template": "{{ 25.0 | float }}",
+}
+
+HUMIDITY_TEST_SENSOR = {
+    "platform": COMMAND_LINE_DOMAIN,
+    "command": "echo 0",
+    "name": "test_humidity_sensor",
+    "value_template": "{{ 50.0 | float }}",
+}
+
 DEFAULT_TEST_SENSORS = [
-    (
-        {
-            sensor.DOMAIN: {
-                "count": 3,
-                "config": {
-                    sensor.DOMAIN: [
-                        {
-                            "platform": "command_line",
-                            "command": "echo 0",
-                            "name": "test_temperature_sensor",
-                            "value_template": "{{ 25.0 | float }}",
-                        },
-                        {
-                            "platform": "command_line",
-                            "command": "echo 0",
-                            "name": "test_humidity_sensor",
-                            "value_template": "{{ 50.0 | float }}",
-                        },
-                        {
-                            "platform": "thermal_comfort",
-                            "sensors": {
-                                "test_thermal_comfort": {
-                                    "temperature_sensor": "sensor.test_temperature_sensor",
-                                    "humidity_sensor": "sensor.test_humidity_sensor",
-                                },
+    "domains, config",
+    [
+        (
+            [(PLATFORM_DOMAIN, 3)],
+            {
+                PLATFORM_DOMAIN: [
+                    TEMPERATURE_TEST_SENSOR,
+                    HUMIDITY_TEST_SENSOR,
+                    {
+                        "platform": DOMAIN,
+                        "sensors": {
+                            "test_thermal_comfort": {
+                                "temperature_sensor": "sensor.test_temperature_sensor",
+                                "humidity_sensor": "sensor.test_humidity_sensor",
                             },
                         },
-                    ],
-                },
+                    },
+                ],
             },
-        }
-    )
+        ),
+    ],
 ]
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_config(hass, start_ha):
     """Test basic config."""
-    assert len(hass.states.async_all(sensor.DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_properties(hass, start_ha):
     """Test if properties are set up correctly."""
     for sensor_type in DEFAULT_SENSOR_TYPES:
@@ -85,7 +90,7 @@ async def test_properties(hass, start_ha):
         )
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_absolutehumidity(hass, start_ha):
     """Test if absolute humidity is calculted correctly."""
     assert hass.states.get(f"{TEST_NAME}_{SensorType.ABSOLUTEHUMIDITY}") is not None
@@ -102,7 +107,7 @@ async def test_absolutehumidity(hass, start_ha):
     assert hass.states.get(f"{TEST_NAME}_{SensorType.ABSOLUTEHUMIDITY}").state == "3.2"
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_heatindex(hass, start_ha):
     """Test if heat index is calculated correctly."""
     assert hass.states.get(f"{TEST_NAME}_{SensorType.HEATINDEX}") is not None
@@ -123,7 +128,7 @@ async def test_heatindex(hass, start_ha):
     assert hass.states.get(f"{TEST_NAME}_{SensorType.HEATINDEX}").state == "26.55"
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_dew_point(hass, start_ha):
     """Test if dew point is calculated correctly."""
     assert hass.states.get(f"{TEST_NAME}_{SensorType.DEWPOINT}") is not None
@@ -138,7 +143,7 @@ async def test_dew_point(hass, start_ha):
     assert hass.states.get(f"{TEST_NAME}_{SensorType.DEWPOINT}").state == "-4.86"
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_perception(hass, start_ha):
     """Test if perception is calculated correctly."""
     hass.states.async_set("sensor.test_temperature_sensor", "20.77")
@@ -213,7 +218,7 @@ async def test_perception(hass, start_ha):
     )
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_frost_point(hass, start_ha):
     """Test if frost point is calculated correctly."""
     assert hass.states.get(f"{TEST_NAME}_{SensorType.FROSTPOINT}") is not None
@@ -228,7 +233,7 @@ async def test_frost_point(hass, start_ha):
     assert hass.states.get(f"{TEST_NAME}_{SensorType.FROSTPOINT}").state == "-6.81"
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_frost_risk(hass, start_ha):
     """Test if frost risk is calculated correctly."""
     assert hass.states.get(f"{TEST_NAME}_{SensorType.FROSTRISK}") is not None
@@ -274,7 +279,7 @@ async def test_frost_risk(hass, start_ha):
     )
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_simmer_index(hass, start_ha):
     """Test if simmer index is calculated correctly."""
     assert hass.states.get(f"{TEST_NAME}_{SensorType.SIMMERINDEX}") is not None
@@ -291,7 +296,7 @@ async def test_simmer_index(hass, start_ha):
     assert hass.states.get(f"{TEST_NAME}_{SensorType.SIMMERINDEX}").state == "27.88"
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_simmer_zone(hass, start_ha):
     """Test if simmer zone is calculated correctly."""
     hass.states.async_set("sensor.test_temperature_sensor", "20.77")
@@ -376,51 +381,37 @@ async def test_simmer_zone(hass, start_ha):
 
 
 @pytest.mark.parametrize(
-    "domains",
+    "domains, config",
     [
         (
+            [(PLATFORM_DOMAIN, 3)],
             {
-                sensor.DOMAIN: {
-                    "count": 3,
-                    "config": {
-                        sensor.DOMAIN: [
-                            {
-                                "platform": "command_line",
-                                "command": "echo 0",
-                                "name": "test_temperature_sensor",
-                                "value_template": "{{ 25.0 | float }}",
+                PLATFORM_DOMAIN: [
+                    TEMPERATURE_TEST_SENSOR,
+                    HUMIDITY_TEST_SENSOR,
+                    {
+                        "platform": DOMAIN,
+                        "sensors": {
+                            "test_thermal_comfort": {
+                                "temperature_sensor": "sensor.test_temperature_sensor",
+                                "humidity_sensor": "sensor.test_humidity_sensor",
+                                "unique_id": "unique",
                             },
-                            {
-                                "platform": "command_line",
-                                "command": "echo 0",
-                                "name": "test_humidity_sensor",
-                                "value_template": "{{ 50.0 | float }}",
+                            "test_thermal_comfort_not_unique1": {
+                                "temperature_sensor": "sensor.test_temperature_sensor",
+                                "humidity_sensor": "sensor.test_humidity_sensor",
+                                "unique_id": "not-so-unique-anymore",
                             },
-                            {
-                                "platform": "thermal_comfort",
-                                "sensors": {
-                                    "test_thermal_comfort": {
-                                        "temperature_sensor": "sensor.test_temperature_sensor",
-                                        "humidity_sensor": "sensor.test_humidity_sensor",
-                                        "unique_id": "unique",
-                                    },
-                                    "test_thermal_comfort_not_unique1": {
-                                        "temperature_sensor": "sensor.test_temperature_sensor",
-                                        "humidity_sensor": "sensor.test_humidity_sensor",
-                                        "unique_id": "not-so-unique-anymore",
-                                    },
-                                    "test_thermal_comfort_not_unique2": {
-                                        "temperature_sensor": "sensor.test_temperature_sensor",
-                                        "humidity_sensor": "sensor.test_humidity_sensor",
-                                        "unique_id": "not-so-unique-anymore",
-                                    },
-                                },
+                            "test_thermal_comfort_not_unique2": {
+                                "temperature_sensor": "sensor.test_temperature_sensor",
+                                "humidity_sensor": "sensor.test_humidity_sensor",
+                                "unique_id": "not-so-unique-anymore",
                             },
-                        ],
+                        },
                     },
-                },
-            }
-        )
+                ],
+            },
+        ),
     ],
 )
 async def test_unique_id(hass, start_ha):
@@ -434,65 +425,53 @@ async def test_unique_id(hass, start_ha):
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert (
             ent_reg.async_get_entity_id(
-                sensor.DOMAIN, "thermal_comfort", f"unique{sensor_type}"
+                PLATFORM_DOMAIN, "thermal_comfort", f"unique{sensor_type}"
             )
             is not None
         )
         assert (
             ent_reg.async_get_entity_id(
-                sensor.DOMAIN, "thermal_comfort", f"not-so-unique-anymore{sensor_type}"
+                PLATFORM_DOMAIN,
+                "thermal_comfort",
+                f"not-so-unique-anymore{sensor_type}",
             )
             is not None
         )
 
 
 @pytest.mark.parametrize(
-    "domains",
+    "domains, config",
     [
         (
+            [(PLATFORM_DOMAIN, 3)],
             {
-                sensor.DOMAIN: {
-                    "count": 3,
-                    "config": {
-                        sensor.DOMAIN: [
-                            {
-                                "platform": "command_line",
-                                "command": "echo 0",
-                                "name": "test_temperature_sensor",
-                                "value_template": "{{ 25.0 | float }}",
+                PLATFORM_DOMAIN: [
+                    TEMPERATURE_TEST_SENSOR,
+                    HUMIDITY_TEST_SENSOR,
+                    {
+                        "platform": DOMAIN,
+                        "sensors": {
+                            "test_thermal_comfort": {
+                                "temperature_sensor": "sensor.test_temperature_sensor",
+                                "humidity_sensor": "sensor.test_humidity_sensor",
+                                "icon_template": "mdi:thermometer",
                             },
-                            {
-                                "platform": "command_line",
-                                "command": "echo 0",
-                                "name": "test_humidity_sensor",
-                                "value_template": "{{ 50.0 | float }}",
-                            },
-                            {
-                                "platform": "thermal_comfort",
-                                "sensors": {
-                                    "test_thermal_comfort": {
-                                        "temperature_sensor": "sensor.test_temperature_sensor",
-                                        "humidity_sensor": "sensor.test_humidity_sensor",
-                                        "icon_template": "mdi:thermometer",
-                                    },
-                                },
-                            },
-                        ],
+                        },
                     },
-                },
-            }
+                ],
+            },
         )
     ],
 )
 async def test_valid_icon_template(hass, start_ha):
     """Test if icon template is working as expected."""
-    assert len(hass.states.async_all(sensor.DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_zero_degree_celcius(hass, start_ha):
     """Test if zero degree celsius does not cause any errors."""
-    assert len(hass.states.async_all(sensor.DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
     hass.states.async_set("sensor.test_temperature_sensor", "0")
     await hass.async_block_till_done()
     assert hass.states.get(f"{TEST_NAME}_{SensorType.DEWPOINT}") is not None
@@ -502,49 +481,35 @@ async def test_zero_degree_celcius(hass, start_ha):
 
 
 @pytest.mark.parametrize(
-    "domains",
+    "domains, config",
     [
         (
+            [(PLATFORM_DOMAIN, 3)],
             {
-                sensor.DOMAIN: {
-                    "count": 3,
-                    "config": {
-                        sensor.DOMAIN: [
-                            {
-                                "platform": "command_line",
-                                "command": "echo 0",
-                                "name": "test_temperature_sensor",
-                                "value_template": "{{ 25.0 | float }}",
+                PLATFORM_DOMAIN: [
+                    TEMPERATURE_TEST_SENSOR,
+                    HUMIDITY_TEST_SENSOR,
+                    {
+                        "platform": "thermal_comfort",
+                        "sensors": {
+                            "test_thermal_comfort": {
+                                "temperature_sensor": "sensor.test_temperature_sensor",
+                                "humidity_sensor": "sensor.test_humidity_sensor",
+                                "sensor_types": [
+                                    "absolutehumidity",
+                                    "dewpoint",
+                                ],
                             },
-                            {
-                                "platform": "command_line",
-                                "command": "echo 0",
-                                "name": "test_humidity_sensor",
-                                "value_template": "{{ 50.0 | float }}",
-                            },
-                            {
-                                "platform": "thermal_comfort",
-                                "sensors": {
-                                    "test_thermal_comfort": {
-                                        "temperature_sensor": "sensor.test_temperature_sensor",
-                                        "humidity_sensor": "sensor.test_humidity_sensor",
-                                        "sensor_types": [
-                                            "absolutehumidity",
-                                            "dewpoint",
-                                        ],
-                                    },
-                                },
-                            },
-                        ],
+                        },
                     },
-                },
-            }
+                ],
+            },
         )
     ],
 )
 async def test_sensor_types(hass, start_ha):
     """Test if configure sensor_types only creates the sensors specified."""
-    assert len(hass.states.async_all(sensor.DOMAIN)) == 4
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 4
 
     assert hass.states.get(f"{TEST_NAME}_{SensorType.HEATINDEX}") is None
     assert hass.states.get(f"{TEST_NAME}_{SensorType.THERMALPERCEPTION}") is None
@@ -554,45 +519,41 @@ async def test_sensor_types(hass, start_ha):
 
 
 @pytest.mark.parametrize(
-    "domains",
+    "domains, config",
     [
         (
+            [(PLATFORM_DOMAIN, 3)],
             {
-                sensor.DOMAIN: {
-                    "count": 3,
-                    "config": {
-                        sensor.DOMAIN: [
-                            {
-                                "platform": "command_line",
-                                "command": "echo 0",
-                                "name": "test_temperature_sensor",
-                                "value_template": "{{ NaN | float }}",
-                            },
-                            {
-                                "platform": "command_line",
-                                "command": "echo 0",
-                                "name": "test_humidity_sensor",
-                                "value_template": "{{ NaN | float }}",
-                            },
-                            {
-                                "platform": "thermal_comfort",
-                                "sensors": {
-                                    "test_thermal_comfort": {
-                                        "temperature_sensor": "sensor.test_temperature_sensor",
-                                        "humidity_sensor": "sensor.test_humidity_sensor",
-                                    },
-                                },
-                            },
-                        ],
+                PLATFORM_DOMAIN: [
+                    {
+                        "platform": COMMAND_LINE_DOMAIN,
+                        "command": "echo 0",
+                        "name": "test_temperature_sensor",
+                        "value_template": "{{ NaN | float }}",
                     },
-                },
-            }
+                    {
+                        "platform": COMMAND_LINE_DOMAIN,
+                        "command": "echo 0",
+                        "name": "test_humidity_sensor",
+                        "value_template": "{{ NaN | float }}",
+                    },
+                    {
+                        "platform": DOMAIN,
+                        "sensors": {
+                            "test_thermal_comfort": {
+                                "temperature_sensor": "sensor.test_temperature_sensor",
+                                "humidity_sensor": "sensor.test_humidity_sensor",
+                            },
+                        },
+                    },
+                ],
+            },
         )
     ],
 )
 async def test_sensor_is_nan(hass, start_ha):
     """Test if we correctly handle input sensors with NaN as state value."""
-    assert len(hass.states.async_all(sensor.DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert (
             ATTR_TEMPERATURE
@@ -605,45 +566,41 @@ async def test_sensor_is_nan(hass, start_ha):
 
 
 @pytest.mark.parametrize(
-    "domains",
+    "domains, config",
     [
         (
+            [(PLATFORM_DOMAIN, 3)],
             {
-                sensor.DOMAIN: {
-                    "count": 3,
-                    "config": {
-                        sensor.DOMAIN: [
-                            {
-                                "platform": "command_line",
-                                "command": "echo 0",
-                                "name": "test_temperature_sensor",
-                                "value_template": "{{ 'Unknown' }}",
-                            },
-                            {
-                                "platform": "command_line",
-                                "command": "echo 0",
-                                "name": "test_humidity_sensor",
-                                "value_template": "{{ 'asdf' }}",
-                            },
-                            {
-                                "platform": "thermal_comfort",
-                                "sensors": {
-                                    "test_thermal_comfort": {
-                                        "temperature_sensor": "sensor.test_temperature_sensor",
-                                        "humidity_sensor": "sensor.test_humidity_sensor",
-                                    },
-                                },
-                            },
-                        ],
+                PLATFORM_DOMAIN: [
+                    {
+                        "platform": COMMAND_LINE_DOMAIN,
+                        "command": "echo 0",
+                        "name": "test_temperature_sensor",
+                        "value_template": "{{ 'Unknown' }}",
                     },
-                },
-            }
+                    {
+                        "platform": COMMAND_LINE_DOMAIN,
+                        "command": "echo 0",
+                        "name": "test_humidity_sensor",
+                        "value_template": "{{ 'asdf' }}",
+                    },
+                    {
+                        "platform": DOMAIN,
+                        "sensors": {
+                            "test_thermal_comfort": {
+                                "temperature_sensor": "sensor.test_temperature_sensor",
+                                "humidity_sensor": "sensor.test_humidity_sensor",
+                            },
+                        },
+                    },
+                ],
+            },
         )
     ],
 )
 async def test_sensor_unknown(hass, start_ha):
     """Test handling input sensors with unknown state."""
-    assert len(hass.states.async_all(sensor.DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert (
             ATTR_TEMPERATURE
@@ -655,14 +612,14 @@ async def test_sensor_unknown(hass, start_ha):
         )
 
 
-@pytest.mark.parametrize("domains", DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_sensor_unavailable(hass, start_ha):
     """Test handling unavailable sensors."""
-    assert len(hass.states.async_all(sensor.DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
     hass.states.async_remove("sensor.test_temperature_sensor")
     hass.states.async_remove("sensor.test_humidity_sensor")
     await hass.async_block_till_done()
-    assert len(hass.states.async_all(sensor.DOMAIN)) == 8
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 8
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert (
             ATTR_TEMPERATURE in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
