@@ -65,11 +65,13 @@ DEFAULT_TEST_SENSORS = [
     ],
 ]
 
+LEN_DEFAULT_SENSORS = len(DEFAULT_SENSOR_TYPES)
+
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_config(hass, start_ha):
     """Test basic config."""
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
@@ -416,11 +418,11 @@ async def test_simmer_zone(hass, start_ha):
 )
 async def test_unique_id(hass, start_ha):
     """Test if unique id is working as expected."""
-    assert len(hass.states.async_all()) == 18
+    assert len(hass.states.async_all()) == 2 * LEN_DEFAULT_SENSORS + 2
 
     ent_reg = entity_registry.async_get(hass)
 
-    assert len(ent_reg.entities) == 16
+    assert len(ent_reg.entities) == 2 * LEN_DEFAULT_SENSORS
 
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert (
@@ -465,13 +467,13 @@ async def test_unique_id(hass, start_ha):
 )
 async def test_valid_icon_template(hass, start_ha):
     """Test if icon template is working as expected."""
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_zero_degree_celcius(hass, start_ha):
     """Test if zero degree celsius does not cause any errors."""
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
     hass.states.async_set("sensor.test_temperature_sensor", "0")
     await hass.async_block_till_done()
     assert hass.states.get(f"{TEST_NAME}_{SensorType.DEWPOINT}") is not None
@@ -553,7 +555,7 @@ async def test_sensor_types(hass, start_ha):
 )
 async def test_sensor_is_nan(hass, start_ha):
     """Test if we correctly handle input sensors with NaN as state value."""
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert (
             ATTR_TEMPERATURE
@@ -600,7 +602,7 @@ async def test_sensor_is_nan(hass, start_ha):
 )
 async def test_sensor_unknown(hass, start_ha):
     """Test handling input sensors with unknown state."""
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert (
             ATTR_TEMPERATURE
@@ -615,11 +617,11 @@ async def test_sensor_unknown(hass, start_ha):
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_sensor_unavailable(hass, start_ha):
     """Test handling unavailable sensors."""
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 10
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
     hass.states.async_remove("sensor.test_temperature_sensor")
     hass.states.async_remove("sensor.test_humidity_sensor")
     await hass.async_block_till_done()
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 8
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert (
             ATTR_TEMPERATURE in hass.states.get(f"{TEST_NAME}_{sensor_type}").attributes
