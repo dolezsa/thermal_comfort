@@ -22,16 +22,16 @@ def calls(hass):
 
 
 @pytest.fixture
-async def start_ha(hass, domains, caplog):
+async def start_ha(hass, domains, config, caplog):
     """Do setup of integration."""
-    for domain, value in domains.items():
-        with assert_setup_component(value["count"], domain):
+    for domain, count in domains:
+        with assert_setup_component(count, domain):
             assert await async_setup_component(
                 hass,
                 domain,
-                value["config"],
+                config,
             )
-            await hass.async_block_till_done()
+        await hass.async_block_till_done()
     await hass.async_start()
     await hass.async_block_till_done()
 
