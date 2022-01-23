@@ -62,6 +62,22 @@ DEFAULT_TEST_SENSORS = [
                 ],
             },
         ),
+        (
+            [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
+            {
+                PLATFORM_DOMAIN: [
+                    TEMPERATURE_TEST_SENSOR,
+                    HUMIDITY_TEST_SENSOR,
+                ],
+                DOMAIN: {
+                    PLATFORM_DOMAIN: {
+                        "name": "test_thermal_comfort",
+                        "temperature_sensor": "sensor.test_temperature_sensor",
+                        "humidity_sensor": "sensor.test_humidity_sensor",
+                    },
+                },
+            },
+        ),
     ],
 ]
 
@@ -414,6 +430,37 @@ async def test_simmer_zone(hass, start_ha):
                 ],
             },
         ),
+        (
+            [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
+            {
+                PLATFORM_DOMAIN: [
+                    TEMPERATURE_TEST_SENSOR,
+                    HUMIDITY_TEST_SENSOR,
+                ],
+                DOMAIN: {
+                    PLATFORM_DOMAIN: [
+                        {
+                            "name": "test_thermal_comfort",
+                            "temperature_sensor": "sensor.test_temperature_sensor",
+                            "humidity_sensor": "sensor.test_humidity_sensor",
+                            "unique_id": "unique",
+                        },
+                        {
+                            "name": "test_thermal_comfort_not_unique1",
+                            "temperature_sensor": "sensor.test_temperature_sensor",
+                            "humidity_sensor": "sensor.test_humidity_sensor",
+                            "unique_id": "not-so-unique-anymore",
+                        },
+                        {
+                            "name": "test_thermal_comfort_not_unique2",
+                            "temperature_sensor": "sensor.test_temperature_sensor",
+                            "humidity_sensor": "sensor.test_humidity_sensor",
+                            "unique_id": "not-so-unique-anymore",
+                        },
+                    ]
+                },
+            },
+        ),
     ],
 )
 async def test_unique_id(hass, start_ha):
@@ -462,7 +509,24 @@ async def test_unique_id(hass, start_ha):
                     },
                 ],
             },
-        )
+        ),
+        (
+            [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
+            {
+                PLATFORM_DOMAIN: [
+                    TEMPERATURE_TEST_SENSOR,
+                    HUMIDITY_TEST_SENSOR,
+                ],
+                DOMAIN: {
+                    PLATFORM_DOMAIN: {
+                        "name": "test_thermal_comfort",
+                        "temperature_sensor": "sensor.test_temperature_sensor",
+                        "humidity_sensor": "sensor.test_humidity_sensor",
+                        "icon_template": "mdi:thermometer",
+                    },
+                },
+            },
+        ),
     ],
 )
 async def test_valid_icon_template(hass, start_ha):
@@ -506,7 +570,27 @@ async def test_zero_degree_celcius(hass, start_ha):
                     },
                 ],
             },
-        )
+        ),
+        (
+            [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
+            {
+                PLATFORM_DOMAIN: [
+                    TEMPERATURE_TEST_SENSOR,
+                    HUMIDITY_TEST_SENSOR,
+                ],
+                DOMAIN: {
+                    PLATFORM_DOMAIN: {
+                        "name": "test_thermal_comfort",
+                        "temperature_sensor": "sensor.test_temperature_sensor",
+                        "humidity_sensor": "sensor.test_humidity_sensor",
+                        "sensor_types": [
+                            "absolutehumidity",
+                            "dewpoint",
+                        ],
+                    },
+                },
+            },
+        ),
     ],
 )
 async def test_sensor_types(hass, start_ha):
@@ -550,7 +634,33 @@ async def test_sensor_types(hass, start_ha):
                     },
                 ],
             },
-        )
+        ),
+        (
+            [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
+            {
+                PLATFORM_DOMAIN: [
+                    {
+                        "platform": COMMAND_LINE_DOMAIN,
+                        "command": "echo 0",
+                        "name": "test_temperature_sensor",
+                        "value_template": "{{ NaN | float }}",
+                    },
+                    {
+                        "platform": COMMAND_LINE_DOMAIN,
+                        "command": "echo 0",
+                        "name": "test_humidity_sensor",
+                        "value_template": "{{ NaN | float }}",
+                    },
+                ],
+                DOMAIN: {
+                    PLATFORM_DOMAIN: {
+                        "name": "test_thermal_comfort",
+                        "temperature_sensor": "sensor.test_temperature_sensor",
+                        "humidity_sensor": "sensor.test_humidity_sensor",
+                    },
+                },
+            },
+        ),
     ],
 )
 async def test_sensor_is_nan(hass, start_ha):
@@ -597,7 +707,33 @@ async def test_sensor_is_nan(hass, start_ha):
                     },
                 ],
             },
-        )
+        ),
+        (
+            [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
+            {
+                PLATFORM_DOMAIN: [
+                    {
+                        "platform": COMMAND_LINE_DOMAIN,
+                        "command": "echo 0",
+                        "name": "test_temperature_sensor",
+                        "value_template": "{{ NaN | float }}",
+                    },
+                    {
+                        "platform": COMMAND_LINE_DOMAIN,
+                        "command": "echo 0",
+                        "name": "test_humidity_sensor",
+                        "value_template": "{{ NaN | float }}",
+                    },
+                ],
+                DOMAIN: {
+                    PLATFORM_DOMAIN: {
+                        "name": "test_thermal_comfort",
+                        "temperature_sensor": "sensor.test_temperature_sensor",
+                        "humidity_sensor": "sensor.test_humidity_sensor",
+                    },
+                },
+            },
+        ),
     ],
 )
 async def test_sensor_unknown(hass, start_ha):
