@@ -1,9 +1,11 @@
 """Sensor platform for thermal_comfort."""
 from asyncio import Lock
 from dataclasses import dataclass
-from functools import wraps
+from functools import cached_property, wraps
+import json
 import logging
 import math
+import os
 from typing import Any
 
 from homeassistant import util
@@ -46,7 +48,6 @@ from .const import (
     CONF_TEMPERATURE_SENSOR,
     DEFAULT_NAME,
     DOMAIN,
-    VERSION,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -441,7 +442,7 @@ class DeviceThermalComfort:
             name=name,
             manufacturer=DEFAULT_NAME,
             model="Virtual Device",
-            sw_version=VERSION,
+            sw_version=self.version,
         )
         self.extra_state_attributes = {}
         self._temperature_entity = temperature_entity
@@ -669,6 +670,21 @@ class DeviceThermalComfort:
     def name(self) -> str:
         """Return the name."""
         return self._device_info["name"]
+
+    @cached_property
+    def version(self) -> str:
+        """Return version from manifest file."""
+        manifest_file = os.path.join(
+            self.hass.config.config_dir,
+            "custom_components/thermal_comfort/manifest.json",
+        )
+        version = "dev"
+        try:
+            with open(manifest_file) as m:
+                version = json.load(m).get("version")
+        except FileNotFoundError:
+            pass
+        return version
 
 
 def _is_valid_state(state) -> bool:
