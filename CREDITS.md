@@ -7,6 +7,9 @@
 
 
 # Contributors
+[<img src="https://github.com/IATkachenko.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @IATkachenko](https://github.com/IATkachenko)
+* Support Config Flow configuration.
+
 [<img src="https://github.com/johnboiles.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @johnboiles](https://github.com/johnboiles)
 * Support fahrenheit temperature sensors
 
