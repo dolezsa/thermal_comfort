@@ -64,68 +64,96 @@ class ThermalComfortDeviceClass(StrEnum):
     THERMAL_PERCEPTION = "thermal_comfort__thermal_perception"
 
 
+# Deprecate shortform in 2.0
 class SensorType(StrEnum):
     """Sensor type enum."""
 
-    ABSOLUTEHUMIDITY = "absolutehumidity"
-    DEWPOINT = "dewpoint"
-    FROSTPOINT = "frostpoint"
-    FROSTRISK = "frostrisk"
-    HEATINDEX = "heatindex"
-    SIMMERINDEX = "simmerindex"
-    SIMMERZONE = "simmerzone"
-    THERMALPERCEPTION = "perception"
+    ABSOLUTE_HUMIDITY = "absolute_humidity"
+    DEW_POINT = "dew_point"
+    FROST_POINT = "frost_point"
+    FROST_RISK = "frost_risk"
+    HEAT_INDEX = "heat_index"
+    SIMMER_INDEX = "simmer_index"
+    SIMMER_ZONE = "simmer_zone"
+    THERMAL_PERCEPTION = "thermal_perception"
+
+    def to_title(self) -> str:
+        """Return the title of the sensor type."""
+        return self.value.replace("_", " ").title()
+
+    def to_shortform(self) -> str:
+        """Return the shortform of the sensor type."""
+        if self.value == "thermal_perception":
+            return "perception"
+        else:
+            return self.value.replace("_", "")
+
+    @classmethod
+    def from_shortform(cls, shortform: str) -> "SensorType":
+        """Return the sensor type from the shortform."""
+        if "_" in shortform:
+            return shortform
+        elif shortform == "absolutehumidity":
+            return cls.ABSOLUTE_HUMIDITY
+        elif shortform == "dewpoint":
+            return cls.DEW_POINT
+        elif shortform == "frostpoint":
+            return cls.FROST_POINT
+        elif shortform == "frostrisk":
+            return cls.FROST_RISK
+        elif shortform == "heatindex":
+            return cls.HEAT_INDEX
+        elif shortform == "simmerindex":
+            return cls.SIMMER_INDEX
+        elif shortform == "simmerzone":
+            return cls.SIMMER_ZONE
+        elif shortform == "perception":
+            return cls.THERMAL_PERCEPTION
+        else:
+            raise ValueError(f"Unknown sensor type: {shortform}")
 
 
 SENSOR_TYPES = {
-    SensorType.ABSOLUTEHUMIDITY: {
-        "key": SensorType.ABSOLUTEHUMIDITY,
-        "name": "{} Absolute Humidity",
+    SensorType.ABSOLUTE_HUMIDITY: {
+        "key": SensorType.ABSOLUTE_HUMIDITY,
         "device_class": SensorDeviceClass.HUMIDITY,
         "native_unit_of_measurement": "g/m³",
         "state_class": SensorStateClass.MEASUREMENT,
     },
-    SensorType.DEWPOINT: {
-        "key": SensorType.DEWPOINT,
-        "name": "{} Dew Point",
+    SensorType.DEW_POINT: {
+        "key": SensorType.DEW_POINT,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
     },
-    SensorType.FROSTPOINT: {
-        "key": SensorType.FROSTPOINT,
-        "name": "{} Frost Point",
+    SensorType.FROST_POINT: {
+        "key": SensorType.FROST_POINT,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
     },
-    SensorType.FROSTRISK: {
-        "key": SensorType.FROSTRISK,
-        "name": "{} Frost Risk",
+    SensorType.FROST_RISK: {
+        "key": SensorType.FROST_RISK,
         "device_class": ThermalComfortDeviceClass.FROST_RISK,
     },
-    SensorType.HEATINDEX: {
-        "key": SensorType.HEATINDEX,
-        "name": "{} Heat Index",
+    SensorType.HEAT_INDEX: {
+        "key": SensorType.HEAT_INDEX,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
     },
-    SensorType.SIMMERINDEX: {
-        "key": SensorType.SIMMERINDEX,
-        "name": "{} Simmer Index",
+    SensorType.SIMMER_INDEX: {
+        "key": SensorType.SIMMER_INDEX,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
     },
-    SensorType.SIMMERZONE: {
-        "key": SensorType.SIMMERZONE,
-        "name": "{} Simmer Zone",
+    SensorType.SIMMER_ZONE: {
+        "key": SensorType.SIMMER_ZONE,
         "device_class": ThermalComfortDeviceClass.SIMMER_ZONE,
     },
-    SensorType.THERMALPERCEPTION: {
-        "key": SensorType.THERMALPERCEPTION,
-        "name": "{} Thermal Perception",
+    SensorType.THERMAL_PERCEPTION: {
+        "key": SensorType.THERMAL_PERCEPTION,
         "device_class": ThermalComfortDeviceClass.THERMAL_PERCEPTION,
     },
 }
@@ -221,39 +249,33 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     else:
         devices = discovery_info["devices"]
 
-    _LOGGER.warning("Thermal Comfort entities: %s", devices)
-
     sensors = []
 
     should_poll = config.get(CONF_POLL)
 
     for device_config in devices:
-        sensor_types = device_config.get(CONF_SENSOR_TYPES)
-
         compute_device = DeviceThermalComfort(
             hass=hass,
-            name=device_config.get(CONF_FRIENDLY_NAME, device_config.get(CONF_NAME)),
+            name=device_config.get(CONF_NAME),
             unique_id=device_config.get(CONF_UNIQUE_ID),
             temperature_entity=device_config.get(CONF_TEMPERATURE_SENSOR),
             humidity_entity=device_config.get(CONF_HUMIDITY_SENSOR),
-            sensor_types=sensor_types,
             should_poll=should_poll,
         )
 
         sensors += [
             SensorThermalComfort(
                 device=compute_device,
-                entity_description=SensorEntityDescription(**SENSOR_TYPES[sensor_type]),
+                entity_description=SensorEntityDescription(
+                    **SENSOR_TYPES[SensorType.from_shortform(sensor_type)]
+                ),
                 icon_template=device_config.get(CONF_ICON_TEMPLATE),
                 entity_picture_template=device_config.get(CONF_ENTITY_PICTURE_TEMPLATE),
-                sensor_type=sensor_type,
+                sensor_type=SensorType.from_shortform(sensor_type),
+                friendly_name=device_config.get(CONF_FRIENDLY_NAME),
             )
-            for sensor_type in sensor_types
+            for sensor_type in device_config.get(CONF_SENSOR_TYPES)
         ]
-
-    if not sensors:
-        _LOGGER.error("No sensors added")
-        return False
 
     async_add_entities(sensors)
     return True
@@ -281,7 +303,6 @@ async def async_setup_entry(
         unique_id=f"{config_entry.unique_id}",
         temperature_entity=data[CONF_TEMPERATURE_SENSOR],
         humidity_entity=data[CONF_HUMIDITY_SENSOR],
-        sensor_types=SENSOR_TYPES,
         should_poll=data[CONF_POLL],
     )
 
@@ -327,21 +348,31 @@ class SensorThermalComfort(SensorEntity):
         entity_description: SensorEntityDescription,
         icon_template: Template = None,
         entity_picture_template: Template = None,
+        friendly_name: str = None,
     ) -> None:
         """Initialize the sensor."""
         self._device = device
+        # TODO deprecate shortform in 2.0
+        self._sensor_type = sensor_type
         self.entity_description = entity_description
-        self.entity_description.name = self.entity_description.name.format(
-            self._device.name
-        )
+        if friendly_name is None:
+            self.entity_description.name = (
+                f"{self._device.name} {self._sensor_type.to_title()}"
+            )
+        else:
+            self.entity_description.name = (
+                f"{friendly_name} {self._sensor_type.to_title()}"
+            )
+        # TODO deprecate shortform in 2.0
         self.entity_id = async_generate_entity_id(
-            ENTITY_ID_FORMAT, f"{self._device.name}_{sensor_type}", hass=device.hass
+            ENTITY_ID_FORMAT,
+            f"{self._device.name}_{self._sensor_type.to_shortform()}",
+            hass=self._device.hass,
         )
         self._icon_template = icon_template
         self._entity_picture_template = entity_picture_template
         self._attr_icon = None
         self._attr_entity_picture = None
-        self._sensor_type = sensor_type
         self._attr_native_value = None
         self._attr_extra_state_attributes = {}
         if self._device.unique_id is not None:
@@ -372,7 +403,7 @@ class SensorThermalComfort(SensorEntity):
 
     async def async_update(self):
         """Update the state of the sensor."""
-        if self._sensor_type == SensorType.FROSTRISK:
+        if self._sensor_type == SensorType.FROST_RISK:
             level = await getattr(self._device, self._sensor_type)()
             self._attr_extra_state_attributes[ATTR_FROST_RISK_LEVEL] = level
             self._attr_native_value = list(FrostRisk)[level]
@@ -430,7 +461,6 @@ class DeviceThermalComfort:
         unique_id: str,
         temperature_entity: str,
         humidity_entity: str,
-        sensor_types: [SensorType],
         should_poll: bool,
     ):
         """Initialize the sensor."""
@@ -447,7 +477,6 @@ class DeviceThermalComfort:
         self._humidity_entity = humidity_entity
         self._temperature = None
         self._humidity = None
-        self._sensor_types = sensor_types
         self.should_poll = should_poll
         self.sensors = []
         self._compute_states = {
@@ -502,8 +531,8 @@ class DeviceThermalComfort:
             self.extra_state_attributes[ATTR_HUMIDITY] = self._humidity
             await self.async_update()
 
-    @compute_once_lock(SensorType.DEWPOINT)
-    async def dewpoint(self):
+    @compute_once_lock(SensorType.DEW_POINT)
+    async def dew_point(self) -> float:
         """Dew Point <http://wahiduddin.net/calc/density_algorithms.htm>."""
         A0 = 373.15 / (273.15 + self._temperature)
         SUM = -7.90298 * (A0 - 1)
@@ -516,8 +545,8 @@ class DeviceThermalComfort:
         Td = (241.88 * Td) / (17.558 - Td)
         return round(Td, 2)
 
-    @compute_once_lock(SensorType.HEATINDEX)
-    async def heatindex(self):
+    @compute_once_lock(SensorType.HEAT_INDEX)
+    async def heat_index(self) -> float:
         """Heat Index <http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml>."""
         fahrenheit = util.temperature.celsius_to_fahrenheit(self._temperature)
         hi = 0.5 * (
@@ -543,10 +572,10 @@ class DeviceThermalComfort:
 
         return round(util.temperature.fahrenheit_to_celsius(hi), 2)
 
-    @compute_once_lock(SensorType.THERMALPERCEPTION)
-    async def perception(self):
+    @compute_once_lock(SensorType.THERMAL_PERCEPTION)
+    async def thermal_perception(self) -> ThermalPerception:
         """Dew Point <https://en.wikipedia.org/wiki/Dew_point>."""
-        dewpoint = await self.dewpoint()
+        dewpoint = await self.dew_point()
         if dewpoint < 10:
             return ThermalPerception.DRY
         elif dewpoint < 13:
@@ -564,8 +593,8 @@ class DeviceThermalComfort:
         else:
             return ThermalPerception.SEVERELY_HIGH
 
-    @compute_once_lock(SensorType.ABSOLUTEHUMIDITY)
-    async def absolutehumidity(self):
+    @compute_once_lock(SensorType.ABSOLUTE_HUMIDITY)
+    async def absolute_humidity(self) -> float:
         """Absolute Humidity <https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/>."""
         abs_temperature = self._temperature + 273.15
         abs_humidity = 6.112
@@ -577,10 +606,10 @@ class DeviceThermalComfort:
         abs_humidity /= abs_temperature
         return round(abs_humidity, 2)
 
-    @compute_once_lock(SensorType.FROSTPOINT)
-    async def frostpoint(self):
+    @compute_once_lock(SensorType.FROST_POINT)
+    async def frost_point(self) -> float:
         """Frost Point <https://pon.fr/dzvents-alerte-givre-et-calcul-humidite-absolue/>."""
-        dewpoint = await self.dewpoint()
+        dewpoint = await self.dew_point()
         T = self._temperature + 273.15
         Td = dewpoint + 273.15
         return round(
@@ -589,12 +618,12 @@ class DeviceThermalComfort:
             2,
         )
 
-    @compute_once_lock(SensorType.FROSTRISK)
-    async def frostrisk(self):
+    @compute_once_lock(SensorType.FROST_RISK)
+    async def frost_risk(self) -> int:
         """Frost Risk Level."""
         thresholdAbsHumidity = 2.8
-        absolutehumidity = await self.absolutehumidity()
-        frostpoint = await self.frostpoint()
+        absolutehumidity = await self.absolute_humidity()
+        frostpoint = await self.frost_point()
         if self._temperature <= 1 and frostpoint <= 0:
             if absolutehumidity <= thresholdAbsHumidity:
                 return 1  # Frost unlikely despite the temperature
@@ -608,8 +637,8 @@ class DeviceThermalComfort:
             return 2  # Frost probable despite the temperature
         return 0  # No risk of frost
 
-    @compute_once_lock(SensorType.SIMMERINDEX)
-    async def simmerindex(self):
+    @compute_once_lock(SensorType.SIMMER_INDEX)
+    async def simmer_index(self) -> float:
         """<https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index>."""
         fahrenheit = util.temperature.celsius_to_fahrenheit(self._temperature)
 
@@ -624,10 +653,10 @@ class DeviceThermalComfort:
 
         return round(util.temperature.fahrenheit_to_celsius(si), 2)
 
-    @compute_once_lock(SensorType.SIMMERZONE)
-    async def simmerzone(self):
+    @compute_once_lock(SensorType.SIMMER_ZONE)
+    async def simmer_zone(self) -> SimmerZone:
         """<http://summersimmer.com/default.asp>."""
-        si = await self.simmerindex()
+        si = await self.simmer_index()
         if si < 21.1:
             return SimmerZone.COOL
         elif si < 25.0:
