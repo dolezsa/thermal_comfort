@@ -31,14 +31,14 @@
           "temperature_sensor": "Temperature sensor",
           "humidity_sensor": "Humidity sensor",
           "poll": "Enable Polling",
-          "absolutehumidity": "Enable Absolute humidity sensor",
-          "dewpoint": "Enable Dew point sensor",
-          "frostpoint": "Enable Frost point sensor",
-          "frostrisk": "Enable Frost risk sensor",
-          "heatindex": "Enable Heat index sensor",
-          "simmerindex": "Enable Simmer index sensor",
-          "simmerzone": "Enable Simmer zone sensor",
-          "perception": "Enable Perception sensor",
+          "absolute_humidity": "Enable Absolute humidity sensor",
+          "dew_point": "Enable Dew point sensor",
+          "frost_point": "Enable Frost point sensor",
+          "frost_risk": "Enable Frost risk sensor",
+          "heat_index": "Enable Heat index sensor",
+          "simmer_index": "Enable Simmer index sensor",
+          "simmer_zone": "Enable Simmer zone sensor",
+          "thermal_perception": "Enable Perception sensor",
           "show_advanced_options": "Advanced options"
         }
       }
