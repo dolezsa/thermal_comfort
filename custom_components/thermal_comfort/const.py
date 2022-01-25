@@ -1,7 +1,6 @@
 """General thermal_comfort constants."""
 from homeassistant.const import Platform
 
-VERSION = "1.3.1"
 DOMAIN = "thermal_comfort"
 PLATFORMS = [Platform.SENSOR]
 CONF_TEMPERATURE_SENSOR = "temperature_sensor"

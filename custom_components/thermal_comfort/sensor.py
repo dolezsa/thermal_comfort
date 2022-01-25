@@ -38,6 +38,7 @@ from homeassistant.helpers.entity import DeviceInfo, async_generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.template import Template
+from homeassistant.loader import async_get_custom_components
 import voluptuous as vol
 
 from .const import (
@@ -46,7 +47,6 @@ from .const import (
     CONF_TEMPERATURE_SENSOR,
     DEFAULT_NAME,
     DOMAIN,
-    VERSION,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -441,7 +441,6 @@ class DeviceThermalComfort:
             name=name,
             manufacturer=DEFAULT_NAME,
             model="Virtual Device",
-            sw_version=VERSION,
         )
         self.extra_state_attributes = {}
         self._temperature_entity = temperature_entity
@@ -470,6 +469,13 @@ class DeviceThermalComfort:
         hass.async_create_task(
             self._new_humidity_state(hass.states.get(humidity_entity))
         )
+
+        hass.async_create_task(self._set_version())
+
+    async def _set_version(self):
+        self._device_info["sw_version"] = (
+            await async_get_custom_components(self.hass)
+        )[DOMAIN].version.string
 
     async def temperature_state_listener(self, event):
         """Handle temperature device state changes."""
