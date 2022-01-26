@@ -15,6 +15,17 @@
       "quite_uncomfortable": "Nagyon nedves, eléggé kellemetlen",
       "extremely_uncomfortable": "Rendkívül kellemetlen, nyomasztó",
       "severely_high": "Különösen magas, az asztmás betegségek számára életveszélyes"
+    },
+    "thermal_comfort__simmer_zone": {
+      "cool": "Hideg",
+      "slightly_cool": "Enyhén hűvös",
+      "comfortable": "Kellemes",
+      "slightly_warm": "Enyhén meleg",
+      "increasing_discomfort": "Fokozódó diszkomfort",
+      "extremely_warm": "Rendkívül meleg",
+      "danger_of_heatstroke": "Napszúrásveszély",
+      "extreme_danger_of_heatstroke": "Rendkívüli napszúrásveszély",
+      "circulatory_collapse_imminent": "Keringési összeomlás veszélye"
     }
   }
 }
