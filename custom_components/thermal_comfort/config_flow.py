@@ -44,7 +44,7 @@ def get_sensors_by_device_class(
 
     if include_not_in_registry:
         result += list(
-            {e.entity_id for e in _hass.states.async_all()} - {e for e in _er.entities}
+            {e.entity_id for e in _hass.states.async_all()} - set(_er.entities)
         )
     return result
 
