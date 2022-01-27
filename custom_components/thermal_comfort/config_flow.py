@@ -35,12 +35,12 @@ def get_sensors_by_device_class(
 ) -> list:
     """Get sensors of required class from entity registry."""
 
-    result = []
-    for d in _er.async_get_device_class_lookup(
-        {(Platform.SENSOR, device_class)}
-    ).values():
-        for e in d.values():
-            result.append(e)
+    result = [
+        entity.values()
+        for entity in _entity_registry_instance.async_get_device_class_lookup(
+            {(Platform.SENSOR, device_class)}
+        ).values()
+    ]
 
     if include_not_in_registry:
         result += list(
