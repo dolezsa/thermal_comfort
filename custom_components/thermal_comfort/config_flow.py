@@ -186,7 +186,11 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(
             step_id="user",
-            data_schema=build_schema(None, self.hass, self.show_advanced_options),
+            data_schema=build_schema(
+                config_entry=None,
+                hass=self.hass,
+                show_advanced=self.show_advanced_options,
+            ),
             errors=errors,
         )
 
@@ -210,7 +214,10 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=build_schema(
-                self.config_entry, self.hass, self.show_advanced_options, "init"
+                config_entry=self.config_entry,
+                hass=self.hass,
+                show_advanced=self.show_advanced_options,
+                step="init",
             ),
             errors=errors,
         )
