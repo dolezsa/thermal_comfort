@@ -28,7 +28,10 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def get_sensors_by_device_class(
-    _er: EntityRegistry, _hass: HomeAssistant, device_class: str
+    _er: EntityRegistry,
+    _hass: HomeAssistant,
+    device_class: str,
+    include_not_in_registry: bool = False,
 ) -> list:
     """Get sensors of required class from entity registry."""
 
@@ -39,11 +42,11 @@ def get_sensors_by_device_class(
         for e in d.values():
             result.append(e)
 
-    # add entities that not in registry.
-    result += list(
-        {e.entity_id for e in _hass.states.async_all()}
-        - {e.entity_id for e in _er.entities}
-    )
+    if include_not_in_registry:
+        result += list(
+            {e.entity_id for e in _hass.states.async_all()}
+            - {e.entity_id for e in _er.entities}
+        )
     return result
 
 
@@ -78,8 +81,12 @@ def build_schema(
     :return: Configuration schema with default parameters
     """
     er = entity_registry.async_get(hass)
-    h_sensors = get_sensors_by_device_class(er, hass, DEVICE_CLASS_HUMIDITY)
-    t_sensors = get_sensors_by_device_class(er, hass, DEVICE_CLASS_TEMPERATURE)
+    h_sensors = get_sensors_by_device_class(
+        er, hass, DEVICE_CLASS_HUMIDITY, show_advanced
+    )
+    t_sensors = get_sensors_by_device_class(
+        er, hass, DEVICE_CLASS_TEMPERATURE, show_advanced
+    )
 
     schema = vol.Schema(
         {
