@@ -4,10 +4,9 @@ from __future__ import annotations
 import logging
 
 from homeassistant import config_entries
+from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import (
     CONF_NAME,
-    DEVICE_CLASS_HUMIDITY,
-    DEVICE_CLASS_TEMPERATURE,
     Platform,
 )
 from homeassistant.core import HomeAssistant, callback
@@ -82,10 +81,10 @@ def build_schema(
     """
     entity_registry_instance = entity_registry.async_get(hass)
     humidity_sensors = get_sensors_by_device_class(
-        entity_registry_instance, hass, DEVICE_CLASS_HUMIDITY, show_advanced
+        entity_registry_instance, hass, SensorDeviceClass.HUMIDITY, show_advanced
     )
     temperature_sensors = get_sensors_by_device_class(
-        entity_registry_instance, hass, DEVICE_CLASS_TEMPERATURE, show_advanced
+        entity_registry_instance, hass, SensorDeviceClass.TEMPERATURE, show_advanced
     )
 
     schema = vol.Schema(
