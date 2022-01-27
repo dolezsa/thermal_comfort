@@ -94,11 +94,11 @@ def build_schema(
             ): str,
             vol.Required(
                 CONF_TEMPERATURE_SENSOR,
-                default=get_value(config_entry, CONF_TEMPERATURE_SENSOR),
+                default=get_value(config_entry, CONF_TEMPERATURE_SENSOR, t_sensors[0]),
             ): vol.In(t_sensors),
             vol.Required(
                 CONF_HUMIDITY_SENSOR,
-                default=get_value(config_entry, CONF_HUMIDITY_SENSOR),
+                default=get_value(config_entry, CONF_HUMIDITY_SENSOR, h_sensors[0]),
             ): vol.In(h_sensors),
         },
     )
