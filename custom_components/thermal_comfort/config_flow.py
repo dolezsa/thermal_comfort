@@ -27,7 +27,9 @@ from .sensor import DEFAULT_SENSOR_TYPES, SensorType
 _LOGGER = logging.getLogger(__name__)
 
 
-def get_sensors_by_device_class(_er: EntityRegistry, device_class: str) -> list:
+def get_sensors_by_device_class(
+    _er: EntityRegistry, _hass: HomeAssistant, device_class: str
+) -> list:
     """Get sensors of required class from entity registry."""
 
     result = []
@@ -36,6 +38,12 @@ def get_sensors_by_device_class(_er: EntityRegistry, device_class: str) -> list:
     ).values():
         for e in d.values():
             result.append(e)
+
+    # add entities that not in registry.
+    result += list(
+        {e.entity_id for e in _hass.states.async_all()}
+        - {e.entity_id for e in _er.entities}
+    )
     return result
 
 
@@ -57,20 +65,21 @@ def get_value(
 
 def build_schema(
     config_entry: config_entries | None,
-    er: EntityRegistry,
+    hass: HomeAssistant,
     show_advanced: bool = False,
     step: str = "user",
 ) -> vol.Schema:
     """Build configuration schema.
 
     :param config_entry: config entry for getting current parameters on None
-    :param er: Entity Registry instance
+    :param hass: Home Assistant instance
     :param show_advanced: bool: should we show advanced options?
     :param step: for which step we should build schema
     :return: Configuration schema with default parameters
     """
-    h_sensors = get_sensors_by_device_class(er, DEVICE_CLASS_HUMIDITY)
-    t_sensors = get_sensors_by_device_class(er, DEVICE_CLASS_TEMPERATURE)
+    er = entity_registry.async_get(hass)
+    h_sensors = get_sensors_by_device_class(er, hass, DEVICE_CLASS_HUMIDITY)
+    t_sensors = get_sensors_by_device_class(er, hass, DEVICE_CLASS_TEMPERATURE)
 
     schema = vol.Schema(
         {
@@ -149,7 +158,6 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
         errors = {}
-        er = entity_registry.async_get(self.hass)
 
         if user_input is not None:
             if not (errors := check_input(self.hass, user_input)):
@@ -171,7 +179,7 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(
             step_id="user",
-            data_schema=build_schema(None, er, self.show_advanced_options),
+            data_schema=build_schema(None, self.hass, self.show_advanced_options),
             errors=errors,
         )
 
@@ -187,7 +195,6 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
         """Manage the options."""
 
         errors = {}
-        er = entity_registry.async_get(self.hass)
         if user_input is not None:
             _LOGGER.debug(f"OptionsFlow: going to update configuration {user_input}")
             if not (errors := check_input(self.hass, user_input)):
@@ -196,7 +203,7 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=build_schema(
-                self.config_entry, er, self.show_advanced_options, "init"
+                self.config_entry, self.hass, self.show_advanced_options, "init"
             ),
             errors=errors,
         )
