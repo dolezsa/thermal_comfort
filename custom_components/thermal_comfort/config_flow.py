@@ -38,7 +38,10 @@ def get_value(
 
 
 def build_schema(
-    config_entry: config_entries | None, show_advanced: bool = False, step: str = "user"
+    config_entry: config_entries | None,
+    entity_ids: list(str),
+    show_advanced: bool = False,
+    step: str = "user",
 ) -> vol.Schema:
     """Build configuration schema.
 
@@ -55,12 +58,12 @@ def build_schema(
             ): str,
             vol.Required(
                 CONF_TEMPERATURE_SENSOR,
-                default=get_value(config_entry, CONF_TEMPERATURE_SENSOR),
-            ): str,
+                default=get_value(config_entry, CONF_TEMPERATURE_SENSOR, entity_ids[0]),
+            ): vol.In(entity_ids),
             vol.Required(
                 CONF_HUMIDITY_SENSOR,
-                default=get_value(config_entry, CONF_HUMIDITY_SENSOR),
-            ): str,
+                default=get_value(config_entry, CONF_HUMIDITY_SENSOR, entity_ids[0]),
+            ): vol.In(entity_ids),
         }
     )
     if show_advanced:
@@ -113,6 +116,11 @@ def check_input(hass: HomeAssistant, user_input: dict) -> dict:
     return result
 
 
+async def get_entity_ids(hass) -> list(str):
+    """Return a list of all entity ids found in states."""
+    return [entity.entity_id for entity in hass.states.async_all()]
+
+
 class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Configuration flow for setting up new thermal_comfort entry."""
 
@@ -146,7 +154,9 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(
             step_id="user",
-            data_schema=build_schema(None, self.show_advanced_options),
+            data_schema=build_schema(
+                None, await get_entity_ids(self.hass), self.show_advanced_options
+            ),
             errors=errors,
         )
 
@@ -170,7 +180,10 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=build_schema(
-                self.config_entry, self.show_advanced_options, "init"
+                self.config_entry,
+                await get_entity_ids(self.hass),
+                self.show_advanced_options,
+                "init",
             ),
             errors=errors,
         )
