@@ -28,7 +28,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def get_sensors_by_device_class(
-    _er: EntityRegistry,
+    _entity_registry_instance: EntityRegistry,
     _hass: HomeAssistant,
     device_class: str,
     include_not_in_registry: bool = False,
@@ -44,7 +44,8 @@ def get_sensors_by_device_class(
 
     if include_not_in_registry:
         result += list(
-            {e.entity_id for e in _hass.states.async_all()} - set(_er.entities)
+            {e.entity_id for e in _hass.states.async_all()}
+            - set(_entity_registry_instance.entities)
         )
     return result
 
@@ -79,12 +80,12 @@ def build_schema(
     :param step: for which step we should build schema
     :return: Configuration schema with default parameters
     """
-    er = entity_registry.async_get(hass)
-    h_sensors = get_sensors_by_device_class(
-        er, hass, DEVICE_CLASS_HUMIDITY, show_advanced
+    entity_registry_instance = entity_registry.async_get(hass)
+    humidity_sensors = get_sensors_by_device_class(
+        entity_registry_instance, hass, DEVICE_CLASS_HUMIDITY, show_advanced
     )
-    t_sensors = get_sensors_by_device_class(
-        er, hass, DEVICE_CLASS_TEMPERATURE, show_advanced
+    temperature_sensors = get_sensors_by_device_class(
+        entity_registry_instance, hass, DEVICE_CLASS_TEMPERATURE, show_advanced
     )
 
     schema = vol.Schema(
@@ -94,12 +95,16 @@ def build_schema(
             ): str,
             vol.Required(
                 CONF_TEMPERATURE_SENSOR,
-                default=get_value(config_entry, CONF_TEMPERATURE_SENSOR, t_sensors[0]),
-            ): vol.In(t_sensors),
+                default=get_value(
+                    config_entry, CONF_TEMPERATURE_SENSOR, temperature_sensors[0]
+                ),
+            ): vol.In(temperature_sensors),
             vol.Required(
                 CONF_HUMIDITY_SENSOR,
-                default=get_value(config_entry, CONF_HUMIDITY_SENSOR, h_sensors[0]),
-            ): vol.In(h_sensors),
+                default=get_value(
+                    config_entry, CONF_HUMIDITY_SENSOR, humidity_sensors[0]
+                ),
+            ): vol.In(humidity_sensors),
         },
     )
     if show_advanced:
