@@ -7,11 +7,7 @@ from homeassistant.const import CONF_NAME
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.thermal_comfort.const import (
-    CONF_HUMIDITY_SENSOR,
-    CONF_TEMPERATURE_SENSOR,
-    DOMAIN,
-)
+from custom_components.thermal_comfort.const import DOMAIN
 
 from .const import USER_INPUT, USER_NEW_INPUT
 from .test_sensor import DEFAULT_TEST_SENSORS
@@ -115,21 +111,3 @@ async def test_config_flow_enabled():
     with open("custom_components/thermal_comfort/manifest.json") as f:
         manifest = json.load(f)
         assert manifest.get("config_flow") is True
-
-
-@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
-@pytest.mark.parametrize("sensor", [CONF_TEMPERATURE_SENSOR, CONF_HUMIDITY_SENSOR])
-async def test_missed_sensors(hass, sensor, start_ha):
-    """Test is we show message if sensor missed."""
-
-    result = await _flow_init(hass)
-
-    # Check that the config flow shows the user form as the first step
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
-    assert result["step_id"] == "user"
-
-    no_sensor = dict(USER_INPUT)
-    no_sensor[sensor] = "foo"
-    result = await _flow_configure(hass, result, no_sensor)
-
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
