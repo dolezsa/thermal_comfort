@@ -10,7 +10,8 @@
         "data": {
           "temperature_sensor": "Temperature sensor",
           "humidity_sensor": "Humidity sensor",
-          "poll": "Enable Polling"
+          "poll": "Enable Polling",
+          "custom_icons": "Use custom icons pack"
         }
       }
     }
@@ -31,6 +32,7 @@
           "temperature_sensor": "Temperature sensor",
           "humidity_sensor": "Humidity sensor",
           "poll": "Enable Polling",
+          "custom_icons": "Use custom icons pack",
           "absolute_humidity": "Enable Absolute humidity sensor",
           "dew_point": "Enable Dew point sensor",
           "frost_point": "Enable Frost point sensor",

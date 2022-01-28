@@ -54,6 +54,7 @@ _LOGGER = logging.getLogger(__name__)
 ATTR_HUMIDITY = "humidity"
 ATTR_FROST_RISK_LEVEL = "frost_risk_level"
 CONF_SENSOR_TYPES = "sensor_types"
+CONF_CUSTOM_ICONS = "custom_icons"
 
 
 class ThermalComfortDeviceClass(StrEnum):
@@ -119,46 +120,61 @@ SENSOR_TYPES = {
         "device_class": SensorDeviceClass.HUMIDITY,
         "native_unit_of_measurement": "g/m³",
         "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:water",
     },
     SensorType.DEW_POINT: {
         "key": SensorType.DEW_POINT,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "tc:dew-point",
     },
     SensorType.FROST_POINT: {
         "key": SensorType.FROST_POINT,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "tc:frost-point",
     },
     SensorType.FROST_RISK: {
         "key": SensorType.FROST_RISK,
         "device_class": ThermalComfortDeviceClass.FROST_RISK,
+        "icon": "mdi:snowflake-alert",
     },
     SensorType.HEAT_INDEX: {
         "key": SensorType.HEAT_INDEX,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "tc:heat-index",
     },
     SensorType.SIMMER_INDEX: {
         "key": SensorType.SIMMER_INDEX,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "tc:simmer-index",
     },
     SensorType.SIMMER_ZONE: {
         "key": SensorType.SIMMER_ZONE,
         "device_class": ThermalComfortDeviceClass.SIMMER_ZONE,
+        "icon": "tc:simmer-zone",
     },
     SensorType.THERMAL_PERCEPTION: {
         "key": SensorType.THERMAL_PERCEPTION,
         "device_class": ThermalComfortDeviceClass.THERMAL_PERCEPTION,
+        "icon": "tc:thermal-perception",
     },
 }
 
 DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
+
+PLATFORM_OPTIONS_SCHEMA = vol.Schema(
+    {
+        vol.Optional(CONF_POLL, default=False): cv.boolean,
+        vol.Optional(CONF_CUSTOM_ICONS, default=False): cv.boolean,
+    }
+)
 
 LEGACY_SENSOR_SCHEMA = vol.Schema(
     {
@@ -176,14 +192,13 @@ SENSOR_SCHEMA = LEGACY_SENSOR_SCHEMA.extend(
     {
         vol.Optional(CONF_NAME): cv.string,
     }
-)
+).extend(PLATFORM_OPTIONS_SCHEMA.schema)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_SENSORS): cv.schema_with_slug_keys(SENSOR_SCHEMA),
-        vol.Optional(CONF_POLL, default=False): cv.boolean,
     }
-)
+).extend(PLATFORM_OPTIONS_SCHEMA.schema)
 
 
 class ThermalPerception(StrEnum):
@@ -273,6 +288,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
                 entity_picture_template=device_config.get(CONF_ENTITY_PICTURE_TEMPLATE),
                 sensor_type=SensorType.from_shortform(sensor_type),
                 friendly_name=device_config.get(CONF_FRIENDLY_NAME),
+                custom_icons=device_config.get(CONF_CUSTOM_ICONS),
             )
             for sensor_type in device_config.get(CONF_SENSOR_TYPES)
         ]
@@ -322,6 +338,7 @@ async def async_setup_entry(
                 device=compute_device,
                 entity_description=entity_description,
                 sensor_type=sensor_type,
+                custom_icons=data[CONF_CUSTOM_ICONS],
             )
         )
     if entities:
@@ -349,6 +366,7 @@ class SensorThermalComfort(SensorEntity):
         icon_template: Template = None,
         entity_picture_template: Template = None,
         friendly_name: str = None,
+        custom_icons: bool = False,
     ) -> None:
         """Initialize the sensor."""
         self._device = device
@@ -369,10 +387,11 @@ class SensorThermalComfort(SensorEntity):
             f"{self._device.name}_{self._sensor_type.to_shortform()}",
             hass=self._device.hass,
         )
+        if not custom_icons:
+            if "tc" in self.entity_description.icon:
+                self._attr_icon = None
         self._icon_template = icon_template
         self._entity_picture_template = entity_picture_template
-        self._attr_icon = None
-        self._attr_entity_picture = None
         self._attr_native_value = None
         self._attr_extra_state_attributes = {}
         if self._device.unique_id is not None:
