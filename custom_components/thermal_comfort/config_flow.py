@@ -34,6 +34,12 @@ def get_sensors_by_device_class(
     def filter_by_device_class(
         _state: State, _list: list[SensorDeviceClass], should_be_in: bool = True
     ) -> bool:
+        """Filter state objects by device class.
+
+        :param _state: state object for examination
+        :param _list: list of device classes
+        :param should_be_in: should the object's device_class be in the list to pass the filter or not
+        """
         collected_device_class = _state.attributes.get(
             "device_class", _state.attributes.get("original_device_class")
         )
@@ -47,6 +53,7 @@ def get_sensors_by_device_class(
         )
 
     def filter_useless_device_class(state: State) -> bool:
+        """Filter out states with useless for us device class."""
         device_class_for_exclude = [
             SensorDeviceClass.AQI,
             SensorDeviceClass.BATTERY,
@@ -81,6 +88,7 @@ def get_sensors_by_device_class(
         )
 
     def filter_useless_domain(state: State) -> bool:
+        """Filter states with useless for us domains."""
         domains_for_exclude = [
             Platform.AIR_QUALITY,
             Platform.ALARM_CONTROL_PANEL,
@@ -115,6 +123,7 @@ def get_sensors_by_device_class(
         return state.domain not in domains_for_exclude
 
     def filter_useless_units(state: State) -> bool:
+        """Filter out states with useless for us units of measurements."""
         units_for_exclude = [
             # Electric
             "W",
