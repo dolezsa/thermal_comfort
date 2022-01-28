@@ -31,68 +31,6 @@ def get_sensors_by_device_class(
 ) -> list:
     """Get sensors of required class from entity registry."""
 
-    DEVICE_CLASS_FOR_EXCLUDE = [
-        SensorDeviceClass.AQI,
-        SensorDeviceClass.BATTERY,
-        SensorDeviceClass.CO,
-        SensorDeviceClass.CO2,
-        SensorDeviceClass.CURRENT,
-        SensorDeviceClass.DATE,
-        SensorDeviceClass.ENERGY,
-        SensorDeviceClass.FREQUENCY,
-        SensorDeviceClass.GAS,
-        SensorDeviceClass.ILLUMINANCE,
-        SensorDeviceClass.MONETARY,
-        SensorDeviceClass.NITROGEN_DIOXIDE,
-        SensorDeviceClass.NITROGEN_MONOXIDE,
-        SensorDeviceClass.NITROUS_OXIDE,
-        SensorDeviceClass.OZONE,
-        SensorDeviceClass.PM1,
-        SensorDeviceClass.PM10,
-        SensorDeviceClass.PM25,
-        SensorDeviceClass.POWER_FACTOR,
-        SensorDeviceClass.POWER,
-        SensorDeviceClass.PRESSURE,
-        SensorDeviceClass.SIGNAL_STRENGTH,
-        SensorDeviceClass.SULPHUR_DIOXIDE,
-        SensorDeviceClass.TIMESTAMP,
-        SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
-        SensorDeviceClass.VOLTAGE,
-    ]
-    """We are sure that this device classes could not be useful as data source in any case"""
-
-    DOMAINS_FOR_EXCLUDE = [
-        Platform.AIR_QUALITY,
-        Platform.ALARM_CONTROL_PANEL,
-        Platform.BINARY_SENSOR,
-        Platform.BUTTON,
-        Platform.CALENDAR,
-        Platform.CAMERA,
-        Platform.COVER,
-        Platform.DEVICE_TRACKER,
-        Platform.FAN,
-        Platform.GEO_LOCATION,
-        Platform.IMAGE_PROCESSING,
-        Platform.LIGHT,
-        Platform.LOCK,
-        Platform.MAILBOX,
-        Platform.MEDIA_PLAYER,
-        Platform.NOTIFY,
-        Platform.REMOTE,
-        Platform.SCENE,
-        Platform.SIREN,
-        Platform.STT,
-        Platform.TTS,
-        Platform.VACUUM,
-        "automation",
-        "person",
-        "script",
-        "scene",
-        "timer",
-        "zone",
-    ]
-    """We are sure that this domains could not be useful as data source in any case"""
-
     def filter_by_device_class(
         _state: State, _list: list[SensorDeviceClass], should_be_in: bool = True
     ) -> bool:
@@ -109,12 +47,72 @@ def get_sensors_by_device_class(
         )
 
     def filter_useless_device_class(state: State) -> bool:
+        device_class_for_exclude = [
+            SensorDeviceClass.AQI,
+            SensorDeviceClass.BATTERY,
+            SensorDeviceClass.CO,
+            SensorDeviceClass.CO2,
+            SensorDeviceClass.CURRENT,
+            SensorDeviceClass.DATE,
+            SensorDeviceClass.ENERGY,
+            SensorDeviceClass.FREQUENCY,
+            SensorDeviceClass.GAS,
+            SensorDeviceClass.ILLUMINANCE,
+            SensorDeviceClass.MONETARY,
+            SensorDeviceClass.NITROGEN_DIOXIDE,
+            SensorDeviceClass.NITROGEN_MONOXIDE,
+            SensorDeviceClass.NITROUS_OXIDE,
+            SensorDeviceClass.OZONE,
+            SensorDeviceClass.PM1,
+            SensorDeviceClass.PM10,
+            SensorDeviceClass.PM25,
+            SensorDeviceClass.POWER_FACTOR,
+            SensorDeviceClass.POWER,
+            SensorDeviceClass.PRESSURE,
+            SensorDeviceClass.SIGNAL_STRENGTH,
+            SensorDeviceClass.SULPHUR_DIOXIDE,
+            SensorDeviceClass.TIMESTAMP,
+            SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
+            SensorDeviceClass.VOLTAGE,
+        ]
+        """We are sure that this device classes could not be useful as data source in any case"""
         return filter_by_device_class(
-            state, DEVICE_CLASS_FOR_EXCLUDE, should_be_in=False
+            state, device_class_for_exclude, should_be_in=False
         )
 
     def filter_useless_domain(state: State) -> bool:
-        return state.domain not in DOMAINS_FOR_EXCLUDE
+        domains_for_exclude = [
+            Platform.AIR_QUALITY,
+            Platform.ALARM_CONTROL_PANEL,
+            Platform.BINARY_SENSOR,
+            Platform.BUTTON,
+            Platform.CALENDAR,
+            Platform.CAMERA,
+            Platform.COVER,
+            Platform.DEVICE_TRACKER,
+            Platform.FAN,
+            Platform.GEO_LOCATION,
+            Platform.IMAGE_PROCESSING,
+            Platform.LIGHT,
+            Platform.LOCK,
+            Platform.MAILBOX,
+            Platform.MEDIA_PLAYER,
+            Platform.NOTIFY,
+            Platform.REMOTE,
+            Platform.SCENE,
+            Platform.SIREN,
+            Platform.STT,
+            Platform.TTS,
+            Platform.VACUUM,
+            "automation",
+            "person",
+            "script",
+            "scene",
+            "timer",
+            "zone",
+        ]
+        """We are sure that this domains could not be useful as data source in any case"""
+        return state.domain not in domains_for_exclude
 
     def filter_useless_units(state: State) -> bool:
         units_for_exclude = [
