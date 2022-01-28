@@ -1,63 +1,62 @@
 # [![thermal_comfort](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/icons/logo.png)](https://github.com/dolezsa/thermal_comfort)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 
-Thermal Comfort provides the following calculated sensors for Home Assistant:
+Thermal Comfort provides the following calculated sensors for Home Assistant.
 
- * Absolute Humidity `absolutehumidity`
- * Heat Index `heatindex`
- * Dew Point `dewpoint`
- * Thermal Perception `perception`
- * Frost point `frostpoint`
- * Frost Risk `frostrisk`
- * Simmer Index `simmerindex`
- * Simmer Zone `simmerzone`
+## Sensors:
+
+<dl>
+  <dt><strong>Absolute Humidity</strong></dt>
+  <dd>
+    Absolute humidity is a measure of the actual amount of water vapor
+      (moisture) in the air.
+  </dd>
+  <dt><strong>Heat Index</strong></dt>
+  <dd>
+    The heat index combines air temperature and relative humidity to posit a
+    human-perceived equivalent temperature.
+  </dd>
+  <dt><strong>Dew Point</strong></dt>
+  <dd>
+    The dew point is the temperature to which air must be cooled to become
+    saturated with water vapor and dew forms on surfaces.
+  </dd>
+  <dt><strong>Thermal Perception</strong></dt>
+  <dd>
+    Human perception of the dew point.
+  </dd>
+  <dt><strong>Frost Point</strong></dt>
+  <dd>
+    Frost point, temperature, below 0° C (32° F), at which moisture in the air 
+    will condense as a layer of frost on any exposed surface.
+  </dd>
+  <dt><strong>Frost Risk</strong></dt>
+  <dd>
+    Risk of Frost based on current temperature, frost point and absolute humidity.
+  </dd>
+  <dt><strong>Simmer Index</strong></dt>
+  <dd>
+    An index that combines air temperature and relative humidity. In contrast to
+    the Heat Index it describes the human-perceived equivalent temperature at
+    night and describes a factor of discomfort.
+  </dd>
+  <dt><strong>Simmer Zone</strong></dt>
+  <dd>
+    Human perception of the simmer index.
+  </dd>
+</dl>
+
+![Custom Icons](./screenshots/living_room.png)
 
 ## Usage
+To use Thermal Comfort check the documentation for your preferred way to setup
+sensors.
 
-To use, add the following to your `configuration.yaml` file:
+**UI/Frontend (Config Flow) [1.4.0](./documentation/config_flow.md) / [master](./documentation/config_flow.next.md)**
 
-```yaml
-sensor:
-  - platform: thermal_comfort
-    sensors:
-      livingroom:
-        friendly_name: Living Room
-        temperature_sensor: sensor.temperature_livingroom
-        humidity_sensor: sensor.humidity_livingroom
-      bathroom:
-        temperature_sensor: sensor.temperature_bathroom
-        humidity_sensor: sensor.humidity_bathroom
-        sensor_types:
-          - absolutehumidity
-          - heatindex
-      bedroom:
-…
-```
-### Platform Configuration Variables
-<dl>
-  <dt><strong>poll</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
-  <dd>Set to true if you want the sensors to be polled. This can avoid double calculated values if your input sensors split change updates for humidity and temperature.</dd>
-  <dt><strong>scan_interval</strong> <code>boolean</code> <code>(optional, default: 30)</code></dt>
-  <dd>Change the polling interval in seconds if <code>poll</code> is set to true.</dd>
-</dl>
+**YAML [1.4.0](./documentation/yaml.md) / [master](./documentation/yaml.next.md)**
 
-### Sensor Configuration Variables
-<dl>
-  <dt><strong>temperature_sensor</strong> <code>string</code> <code>REQUIRED</code></dt>
-  <dd>ID of temperature sensor entity to be used for calculations.</dd>
-  <dt><strong>humidity_sensor</strong>  <code>string</code> <code>REQUIRED</code></dt>
-  <dd>ID of humidity sensor entity to be used for calculations..</dd>
-  <dt><strong>friendly_name</strong> <code>string</code> <code>(optional)</code></dt>
-  <dd>Name to use in the frontend.</dd>
-  <dt><strong>icon_template</strong> <code>template</code> <code>(optional)</code></dt>
-  <dd>Defines a template for the icon of the sensor.</dd>
-  <dt><strong>entity_picture_template</strong> <code>template</code> <code>(optional)</code></dt>
-  <dd>Defines a template for the entity picture of the sensor.</dd>
-  <dt><strong>unique_id</strong> <code>string</code> <code>(optional)</code></dt>
-  <dd>An ID that uniquely identifies the sensors. Set this to a unique value to allow customization through the UI.</dd>
-  <dt><strong>sensor_types</strong> <code>list</code> <code>(optional)</code></dt>
-  <dd>A list of sensors to create. If omitted all will be created. Available sensors: <code>absolutehumidity</code>, <code>heatindex</code>, <code>dewpoint</code>, <code>perception</code>, <code>frostpoint</code>, <code>frostrisk</code>, <code>simmerindex</code>, <code>simmerzone</code></dd>
-</dl>
+*Legacy YAML [1.4.0](./documentation/legacy_yaml.md)*
 
 ## Installation
 
@@ -85,7 +84,7 @@ cp -r custom_components $hacs_config_folder
 
 Finally you need to restart home assistant before you can use it.
 
-## Custom Icons
+### Custom Icons
 
 To use Thermal Comfort's custom icon set you have to add the following repository
 as [custom frontend](https://hacs.xyz/docs/faq/custom_repositories) integration
@@ -94,20 +93,3 @@ in HACS. The icons can then be added within the `tc:` namespace with `tc:sensor-
 readme.
 
 https://github.com/rautesamtr/thermal_comfort_icons/
-
-
-![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/living_room.png)
-
-## Screenshots
-
-#### Absolute Humidity
-![Absolute Humidity](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/absolute_humidity.png)
-
-#### Dew Point
-![Dew Point](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/dew_point.png)
-
-#### Heat Index
-![Heat Index](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/heat_index.png)
-
-#### Thermal Perception
-![Thermal Perception](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/perception.png)
