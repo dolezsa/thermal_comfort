@@ -27,7 +27,7 @@ from .const import (
     PLATFORMS,
     UPDATE_LISTENER,
 )
-from .sensor import SensorType
+from .sensor import CONF_CUSTOM_ICONS, SensorType
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,6 +40,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         CONF_TEMPERATURE_SENSOR: get_value(entry, CONF_TEMPERATURE_SENSOR),
         CONF_HUMIDITY_SENSOR: get_value(entry, CONF_HUMIDITY_SENSOR),
         CONF_POLL: get_value(entry, CONF_POLL),
+        CONF_CUSTOM_ICONS: get_value(entry, CONF_CUSTOM_ICONS),
     }
     if entry.unique_id is None:
         # We have no unique_id yet, let's use backup.
