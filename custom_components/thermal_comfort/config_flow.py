@@ -4,9 +4,11 @@ from __future__ import annotations
 import logging
 
 from homeassistant import config_entries
-from homeassistant.const import CONF_NAME
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.components.sensor import SensorDeviceClass
+from homeassistant.const import CONF_NAME, Platform
+from homeassistant.core import HomeAssistant, State, callback
 from homeassistant.helpers import entity_registry
+from homeassistant.helpers.entity_registry import EntityRegistry
 import voluptuous as vol
 
 from .const import (
@@ -19,6 +21,294 @@ from .const import (
 from .sensor import CONF_CUSTOM_ICONS, DEFAULT_SENSOR_TYPES, SensorType
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def get_sensors_by_device_class(
+    _er: EntityRegistry,
+    _hass: HomeAssistant,
+    device_class: SensorDeviceClass,
+    include_all: bool = False,
+) -> list:
+    """Get sensors of required class from entity registry."""
+
+    def filter_by_device_class(
+        _state: State, _list: list[SensorDeviceClass], should_be_in: bool = True
+    ) -> bool:
+        """Filter state objects by device class.
+
+        :param _state: state object for examination
+        :param _list: list of device classes
+        :param should_be_in: should the object's device_class be in the list to pass the filter or not
+        """
+        collected_device_class = _state.attributes.get(
+            "device_class", _state.attributes.get("original_device_class")
+        )
+        # XNOR
+        return not ((collected_device_class in _list) ^ should_be_in)
+
+    def filter_for_device_class_sensor(state: State) -> bool:
+        """Filter states by Platform.SENSOR and required device class."""
+        return state.domain == Platform.SENSOR and filter_by_device_class(
+            state, [device_class], should_be_in=True
+        )
+
+    def filter_useless_device_class(state: State) -> bool:
+        """Filter out states with useless for us device class."""
+        device_class_for_exclude = [
+            SensorDeviceClass.AQI,
+            SensorDeviceClass.BATTERY,
+            SensorDeviceClass.CO,
+            SensorDeviceClass.CO2,
+            SensorDeviceClass.CURRENT,
+            SensorDeviceClass.DATE,
+            SensorDeviceClass.ENERGY,
+            SensorDeviceClass.FREQUENCY,
+            SensorDeviceClass.GAS,
+            SensorDeviceClass.ILLUMINANCE,
+            SensorDeviceClass.MONETARY,
+            SensorDeviceClass.NITROGEN_DIOXIDE,
+            SensorDeviceClass.NITROGEN_MONOXIDE,
+            SensorDeviceClass.NITROUS_OXIDE,
+            SensorDeviceClass.OZONE,
+            SensorDeviceClass.PM1,
+            SensorDeviceClass.PM10,
+            SensorDeviceClass.PM25,
+            SensorDeviceClass.POWER_FACTOR,
+            SensorDeviceClass.POWER,
+            SensorDeviceClass.PRESSURE,
+            SensorDeviceClass.SIGNAL_STRENGTH,
+            SensorDeviceClass.SULPHUR_DIOXIDE,
+            SensorDeviceClass.TIMESTAMP,
+            SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
+            SensorDeviceClass.VOLTAGE,
+        ]
+        """We are sure that this device classes could not be useful as data source in any case"""
+        return filter_by_device_class(
+            state, device_class_for_exclude, should_be_in=False
+        )
+
+    def filter_useless_domain(state: State) -> bool:
+        """Filter states with useless for us domains."""
+        domains_for_exclude = [
+            Platform.AIR_QUALITY,
+            Platform.ALARM_CONTROL_PANEL,
+            Platform.BINARY_SENSOR,
+            Platform.BUTTON,
+            Platform.CALENDAR,
+            Platform.CAMERA,
+            Platform.COVER,
+            Platform.DEVICE_TRACKER,
+            Platform.FAN,
+            Platform.GEO_LOCATION,
+            Platform.IMAGE_PROCESSING,
+            Platform.LIGHT,
+            Platform.LOCK,
+            Platform.MAILBOX,
+            Platform.MEDIA_PLAYER,
+            Platform.NOTIFY,
+            Platform.REMOTE,
+            Platform.SCENE,
+            Platform.SIREN,
+            Platform.STT,
+            Platform.TTS,
+            Platform.VACUUM,
+            "automation",
+            "person",
+            "script",
+            "scene",
+            "timer",
+            "zone",
+        ]
+        """We are sure that this domains could not be useful as data source in any case"""
+        return state.domain not in domains_for_exclude
+
+    def filter_useless_units(state: State) -> bool:
+        """Filter out states with useless for us units of measurements."""
+        units_for_exclude = [
+            # Electric
+            "W",
+            "kW",
+            "VA",
+            "BTU/h" "Wh",
+            "kWh",
+            "MWh",
+            "mA",
+            "A",
+            "mV",
+            "V",
+            # Degree units
+            "°",
+            # Currency units
+            "€",
+            "$",
+            "¢",
+            # Time units
+            "μs",
+            "ms",
+            "s",
+            "min",
+            "h",
+            "d",
+            "w",
+            "m",
+            "y",
+            # Length units
+            "mm",
+            "cm",
+            "m",
+            "km",
+            "in",
+            "ft",
+            "yd",
+            "mi",
+            # Frequency units
+            "Hz",
+            "kHz",
+            "MHz",
+            "GHz",
+            # Pressure units
+            "Pa",
+            "hPa",
+            "kPa",
+            "bar",
+            "cbar",
+            "mbar",
+            "mmHg",
+            "inHg",
+            "psi",
+            # Sound pressure units
+            "dB",
+            "dBa",
+            # Volume units
+            "L",
+            "mL",
+            "m³",
+            "ft³",
+            "gal",
+            "fl. oz.",
+            # Volume Flow Rate units
+            "m³/h",
+            "ft³/m",
+            # Area units
+            "m²",
+            # Mass
+            "g",
+            "kg",
+            "mg",
+            "µg",
+            "oz",
+            "lb",
+            #
+            "µS/cm",
+            "lx",
+            "UV index",
+            "W/m²",
+            "BTU/(h×ft²)",
+            # Precipitation units
+            "mm/h",
+            "in",
+            "in/h",
+            # Concentration units
+            "µg/m³",
+            "mg/m³",
+            "μg/ft³",
+            "p/m³",
+            "ppm",
+            "ppb",
+            # Speed units
+            "mm/d",
+            "in/d",
+            "m/s",
+            "in/h",
+            "km/h",
+            "mph",
+            # Signal_strength units
+            "dB",
+            "dBm",
+            # Data units
+            "bit",
+            "kbit",
+            "Mbit",
+            "Gbit",
+            "B",
+            "kB",
+            "MB",
+            "GB",
+            "TB",
+            "PB",
+            "EB",
+            "ZB",
+            "YB",
+            "KiB",
+            "MiB",
+            "GiB",
+            "TiB",
+            "PiB",
+            "EiB",
+            "ZiB",
+            "YiB",
+            "bit/s",
+            "kbit/s",
+            "Mbit/s",
+            "Gbit/s",
+            "B/s",
+            "kB/s",
+            "MB/s",
+            "GB/s",
+            "KiB/s",
+            "MiB/s",
+            "GiB/s",
+        ]
+        """We are sure that entities with this units could not be useful as data source in any case"""
+        unit_of_measurement = state.attributes.get(
+            "unit_of_measurement", state.attributes.get("native_unit_of_measurement")
+        )
+        return unit_of_measurement not in units_for_exclude
+
+    def filter_thermal_comfort_ids(entity_id: str) -> bool:
+        """Filter out device_ids containing our SensorType."""
+        return all(
+            sensor_type.to_shortform() not in entity_id for sensor_type in SensorType
+        )
+
+    filters_for_additional_sensors: list[callable] = [
+        filter_useless_device_class,
+        filter_useless_domain,
+        filter_useless_units,
+    ]
+
+    result = [
+        state.entity_id
+        for state in filter(
+            filter_for_device_class_sensor,
+            _hass.states.async_all(),
+        )
+    ]
+
+    result.sort()
+    _LOGGER.debug(f"Results for {device_class} based on device class: {result}")
+
+    if include_all:
+        additional_sensors = _hass.states.async_all()
+        for f in filters_for_additional_sensors:
+            additional_sensors = list(filter(f, additional_sensors))
+
+        additional_entity_ids = [state.entity_id for state in additional_sensors]
+        additional_entity_ids = list(set(additional_entity_ids) - set(result))
+        additional_entity_ids.sort()
+        _LOGGER.debug(f"Additional results: {additional_entity_ids}")
+        result += additional_entity_ids
+
+    result = list(
+        filter(
+            filter_thermal_comfort_ids,
+            result,
+        )
+    )
+
+    _LOGGER.debug(f"Results after cleaning own entities: {result}")
+
+    return result
 
 
 def get_value(
@@ -38,16 +328,27 @@ def get_value(
 
 
 def build_schema(
-    config_entry: config_entries | None, show_advanced: bool = False, step: str = "user"
+    config_entry: config_entries | None,
+    hass: HomeAssistant,
+    show_advanced: bool = False,
+    step: str = "user",
 ) -> vol.Schema:
     """Build configuration schema.
 
     :param config_entry: config entry for getting current parameters on None
+    :param hass: Home Assistant instance
     :param show_advanced: bool: should we show advanced options?
     :param step: for which step we should build schema
     :return: Configuration schema with default parameters
     """
-    # ToDo: get list of CONF_TEMPERATURE_SENSOR and CONF_HUMIDITY_SENSOR to create dropdown list and "one of" selection
+    entity_registry_instance = entity_registry.async_get(hass)
+    humidity_sensors = get_sensors_by_device_class(
+        entity_registry_instance, hass, SensorDeviceClass.HUMIDITY, show_advanced
+    )
+    temperature_sensors = get_sensors_by_device_class(
+        entity_registry_instance, hass, SensorDeviceClass.TEMPERATURE, show_advanced
+    )
+
     schema = vol.Schema(
         {
             vol.Required(
@@ -55,13 +356,17 @@ def build_schema(
             ): str,
             vol.Required(
                 CONF_TEMPERATURE_SENSOR,
-                default=get_value(config_entry, CONF_TEMPERATURE_SENSOR),
-            ): str,
+                default=get_value(
+                    config_entry, CONF_TEMPERATURE_SENSOR, temperature_sensors[0]
+                ),
+            ): vol.In(temperature_sensors),
             vol.Required(
                 CONF_HUMIDITY_SENSOR,
-                default=get_value(config_entry, CONF_HUMIDITY_SENSOR),
-            ): str,
-        }
+                default=get_value(
+                    config_entry, CONF_HUMIDITY_SENSOR, humidity_sensors[0]
+                ),
+            ): vol.In(humidity_sensors),
+        },
     )
     if show_advanced:
         schema = schema.extend(
@@ -150,7 +455,11 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(
             step_id="user",
-            data_schema=build_schema(None, self.show_advanced_options),
+            data_schema=build_schema(
+                config_entry=None,
+                hass=self.hass,
+                show_advanced=self.show_advanced_options,
+            ),
             errors=errors,
         )
 
@@ -174,7 +483,10 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=build_schema(
-                self.config_entry, self.show_advanced_options, "init"
+                config_entry=self.config_entry,
+                hass=self.hass,
+                show_advanced=self.show_advanced_options,
+                step="init",
             ),
             errors=errors,
         )

@@ -6,6 +6,7 @@ from homeassistant import config_entries, data_entry_flow
 from homeassistant.const import CONF_NAME
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
+import voluptuous as vol
 
 from custom_components.thermal_comfort.const import (
     CONF_HUMIDITY_SENSOR,
@@ -130,6 +131,7 @@ async def test_missed_sensors(hass, sensor, start_ha):
 
     no_sensor = dict(USER_INPUT)
     no_sensor[sensor] = "foo"
-    result = await _flow_configure(hass, result, no_sensor)
+    with pytest.raises(vol.error.MultipleInvalid):
+        result = await _flow_configure(hass, result, no_sensor)
 
     assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
