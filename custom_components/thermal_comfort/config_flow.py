@@ -5,11 +5,8 @@ import logging
 
 from homeassistant import config_entries
 from homeassistant.components.sensor import SensorDeviceClass
-from homeassistant.const import (
-    CONF_NAME,
-    Platform,
-)
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.const import CONF_NAME, Platform
+from homeassistant.core import HomeAssistant, State, callback
 from homeassistant.helpers import entity_registry
 from homeassistant.helpers.entity_registry import EntityRegistry
 import voluptuous as vol
@@ -27,25 +24,283 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def get_sensors_by_device_class(
-    _entity_registry_instance: EntityRegistry,
+    _er: EntityRegistry,
     _hass: HomeAssistant,
-    device_class: str,
-    include_not_in_registry: bool = False,
+    device_class: SensorDeviceClass,
+    include_all: bool = False,
 ) -> list:
     """Get sensors of required class from entity registry."""
 
-    result = [
-        entity.values()
-        for entity in _entity_registry_instance.async_get_device_class_lookup(
-            {(Platform.SENSOR, device_class)}
-        ).values()
+    DEVICE_CLASS_FOR_EXCLUDE = [
+        SensorDeviceClass.AQI,
+        SensorDeviceClass.BATTERY,
+        SensorDeviceClass.CO,
+        SensorDeviceClass.CO2,
+        SensorDeviceClass.CURRENT,
+        SensorDeviceClass.DATE,
+        SensorDeviceClass.ENERGY,
+        SensorDeviceClass.FREQUENCY,
+        SensorDeviceClass.GAS,
+        SensorDeviceClass.ILLUMINANCE,
+        SensorDeviceClass.MONETARY,
+        SensorDeviceClass.NITROGEN_DIOXIDE,
+        SensorDeviceClass.NITROGEN_MONOXIDE,
+        SensorDeviceClass.NITROUS_OXIDE,
+        SensorDeviceClass.OZONE,
+        SensorDeviceClass.PM1,
+        SensorDeviceClass.PM10,
+        SensorDeviceClass.PM25,
+        SensorDeviceClass.POWER_FACTOR,
+        SensorDeviceClass.POWER,
+        SensorDeviceClass.PRESSURE,
+        SensorDeviceClass.SIGNAL_STRENGTH,
+        SensorDeviceClass.SULPHUR_DIOXIDE,
+        SensorDeviceClass.TIMESTAMP,
+        SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
+        SensorDeviceClass.VOLTAGE,
+    ]
+    """We are sure that this device classes could not be useful as data source in any case"""
+
+    DOMAINS_FOR_EXCLUDE = [
+        Platform.AIR_QUALITY,
+        Platform.ALARM_CONTROL_PANEL,
+        Platform.BINARY_SENSOR,
+        Platform.BUTTON,
+        Platform.CALENDAR,
+        Platform.CAMERA,
+        Platform.COVER,
+        Platform.DEVICE_TRACKER,
+        Platform.FAN,
+        Platform.GEO_LOCATION,
+        Platform.IMAGE_PROCESSING,
+        Platform.LIGHT,
+        Platform.LOCK,
+        Platform.MAILBOX,
+        Platform.MEDIA_PLAYER,
+        Platform.NOTIFY,
+        Platform.REMOTE,
+        Platform.SCENE,
+        Platform.SIREN,
+        Platform.STT,
+        Platform.TTS,
+        Platform.VACUUM,
+        "automation",
+        "person",
+        "script",
+        "scene",
+        "timer",
+        "zone",
+    ]
+    """We are sure that this domains could not be useful as data source in any case"""
+
+    def filter_by_device_class(
+        _state: State, _list: list[SensorDeviceClass], should_be_in: bool = True
+    ) -> bool:
+        collected_device_class = _state.attributes.get(
+            "device_class", _state.attributes.get("original_device_class")
+        )
+        # XNOR
+        return not ((collected_device_class in _list) ^ should_be_in)
+
+    def filter_for_device_class_sensor(state: State) -> bool:
+        """Filter states by Platform.SENSOR and SensorDeviceClass.TEMPERATURE."""
+        return state.domain == Platform.SENSOR and filter_by_device_class(
+            state, [device_class], should_be_in=True
+        )
+
+    def filter_useless_device_class(state: State) -> bool:
+        return filter_by_device_class(
+            state, DEVICE_CLASS_FOR_EXCLUDE, should_be_in=False
+        )
+
+    def filter_useless_domain(state: State) -> bool:
+        return state.domain not in DOMAINS_FOR_EXCLUDE
+
+    def filter_useless_units(state: State) -> bool:
+        units_for_exclude = [
+            # Electric
+            "W",
+            "kW",
+            "VA",
+            "BTU/h" "Wh",
+            "kWh",
+            "MWh",
+            "mA",
+            "A",
+            "mV",
+            "V",
+            # Degree units
+            "°",
+            # Currency units
+            "€",
+            "$",
+            "¢",
+            # Time units
+            "μs",
+            "ms",
+            "s",
+            "min",
+            "h",
+            "d",
+            "w",
+            "m",
+            "y",
+            # Length units
+            "mm",
+            "cm",
+            "m",
+            "km",
+            "in",
+            "ft",
+            "yd",
+            "mi",
+            # Frequency units
+            "Hz",
+            "kHz",
+            "MHz",
+            "GHz",
+            # Pressure units
+            "Pa",
+            "hPa",
+            "kPa",
+            "bar",
+            "cbar",
+            "mbar",
+            "mmHg",
+            "inHg",
+            "psi",
+            # Sound pressure units
+            "dB",
+            "dBa",
+            # Volume units
+            "L",
+            "mL",
+            "m³",
+            "ft³",
+            "gal",
+            "fl. oz.",
+            # Volume Flow Rate units
+            "m³/h",
+            "ft³/m",
+            # Area units
+            "m²",
+            # Mass
+            "g",
+            "kg",
+            "mg",
+            "µg",
+            "oz",
+            "lb",
+            #
+            "µS/cm",
+            "lx",
+            "UV index",
+            "W/m²",
+            "BTU/(h×ft²)",
+            # Precipitation units
+            "mm/h",
+            "in",
+            "in/h",
+            # Concentration units
+            "µg/m³",
+            "mg/m³",
+            "μg/ft³",
+            "p/m³",
+            "ppm",
+            "ppb",
+            # Speed units
+            "mm/d",
+            "in/d",
+            "m/s",
+            "in/h",
+            "km/h",
+            "mph",
+            # Signal_strength units
+            "dB",
+            "dBm",
+            # Data units
+            "bit",
+            "kbit",
+            "Mbit",
+            "Gbit",
+            "B",
+            "kB",
+            "MB",
+            "GB",
+            "TB",
+            "PB",
+            "EB",
+            "ZB",
+            "YB",
+            "KiB",
+            "MiB",
+            "GiB",
+            "TiB",
+            "PiB",
+            "EiB",
+            "ZiB",
+            "YiB",
+            "bit/s",
+            "kbit/s",
+            "Mbit/s",
+            "Gbit/s",
+            "B/s",
+            "kB/s",
+            "MB/s",
+            "GB/s",
+            "KiB/s",
+            "MiB/s",
+            "GiB/s",
+        ]
+        """We are sure that entities with this units could not be useful as data source in any case"""
+        unit_of_measurement = state.attributes.get(
+            "unit_of_measurement", state.attributes.get("native_unit_of_measurement")
+        )
+        return unit_of_measurement not in units_for_exclude
+
+    def filter_thermal_comfort_ids(entity_id: str) -> bool:
+        """Filter out device_ids containing our SensorType."""
+        return all(
+            sensor_type.to_shortform() not in entity_id for sensor_type in SensorType
+        )
+
+    filters_for_additional_sensors: list[callable] = [
+        filter_useless_device_class,
+        filter_useless_domain,
+        filter_useless_units,
     ]
 
-    if include_not_in_registry:
-        result += list(
-            {e.entity_id for e in _hass.states.async_all()}
-            - set(_entity_registry_instance.entities)
+    result = [
+        state.entity_id
+        for state in filter(
+            filter_for_device_class_sensor,
+            _hass.states.async_all(),
         )
+    ]
+
+    result.sort()
+    _LOGGER.debug(f"Results for {device_class} based on device class: {result}")
+
+    if include_all:
+        additional_sensors = _hass.states.async_all()
+        for f in filters_for_additional_sensors:
+            additional_sensors = list(filter(f, additional_sensors))
+
+        additional_entity_ids = [state.entity_id for state in additional_sensors]
+        additional_entity_ids = list(set(additional_entity_ids) - set(result))
+        additional_entity_ids.sort()
+        _LOGGER.debug(f"Additional results: {additional_entity_ids}")
+        result += additional_entity_ids
+
+    result = list(
+        filter(
+            filter_thermal_comfort_ids,
+            result,
+        )
+    )
+
+    _LOGGER.debug(f"Results after cleaning own entities: {result}")
+
     return result
 
 
