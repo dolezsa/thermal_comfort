@@ -41,7 +41,7 @@ def get_sensors_by_device_class(
         return not ((collected_device_class in _list) ^ should_be_in)
 
     def filter_for_device_class_sensor(state: State) -> bool:
-        """Filter states by Platform.SENSOR and SensorDeviceClass.TEMPERATURE."""
+        """Filter states by Platform.SENSOR and required device class."""
         return state.domain == Platform.SENSOR and filter_by_device_class(
             state, [device_class], should_be_in=True
         )
