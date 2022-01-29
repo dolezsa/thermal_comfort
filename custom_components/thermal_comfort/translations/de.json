@@ -1,0 +1,49 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "Temperatursensor konnte nicht gefunden werden",
+      "humidity_not_found": "Feuchtigkeitssensor konnte nicht gefunden werden"
+    },
+    "step": {
+      "init": {
+        "title": "Thermal Comfort Einstellungen",
+        "data": {
+          "temperature_sensor": "Temperatursensor",
+          "humidity_sensor": "Feuchtigkeitssensor",
+          "poll": "Polling verwenden",
+          "custom_icons": "Benutzerdefinierte Icons verwenden"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Diese Kombination aus Temperatursensor und Feuchtigkeitssensor wird bereits verwendet"
+    },
+    "error": {
+      "temperature_not_found": "Temperatursensor konnte nicht gefunden werden",
+      "humidity_not_found": "Feuchtigkeitssensor konnte nicht gefunden werden"
+    },
+    "step": {
+      "user": {
+        "title": "Thermal Comfort Einstellungen",
+        "data": {
+          "name": "Name",
+          "temperature_sensor": "Temperatursensor",
+          "humidity_sensor": "Feuchtigkeitssensor",
+          "poll": "Polling verwenden",
+          "custom_icons": "Benutzerdefinierte Icons verwenden",
+          "absolute_humidity": "Absolute-Feuchtesensor aktivieren",
+          "dew_point": "Taupunktsensor aktivieren",
+          "frost_point": "Frostpunksensor aktivieren",
+          "frost_risk": "Frostrisikosensor aktivieren",
+          "heat_index": "Hitzeindexsensor aktivieren",
+          "simmer_index": "Simmerindexsensor aktivieren",
+          "simmer_zone": "Simmerzonensensor aktivieren",
+          "thermal_perception": "Thermische-Wahrnemungssensor aktivieren",
+          "show_advanced_options": "Erweiterter Modus"
+        }
+      }
+    }
+  }
+}
