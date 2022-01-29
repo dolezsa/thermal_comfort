@@ -1,0 +1,20 @@
+{
+  "state": {
+     "thermal_comfort__frost_risk": {
+      "no_risk": "Žádne riziko",
+      "unlikely": "Nepravěpodobné",
+      "probable": "Pravděpodobné",
+      "high": "Vysoká pravděpodobnost"
+    },
+    "thermal_comfort__thermal_perception": {
+      "dry": "Pro někoho suché",
+      "very_comfortable": "Velmi komfortní",
+      "comfortable": "Příjemné",
+      "ok_but_humid": "Pro většinu OK, ale vlhké",
+      "somewhat_uncomfortable": "Trochu nepříjemné",
+      "quite_uncomfortable": "Velmi vlhké, dost nepříjemné",
+      "extremely_uncomfortable": "Extrémně nekomfortní, tísnivé",
+      "severely_high": "Velmi vysoká, pro astmatiky smrtelná vlhkost"
+    }
+  }
+}
