@@ -449,6 +449,11 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     await self.async_set_unique_id(unique_id)
                     self._abort_if_unique_id_configured()
 
+                if not self.show_advanced_options:
+                    # enable default sensors in simple mode just before entity creation
+                    for st in DEFAULT_SENSOR_TYPES:
+                        user_input[st] = True
+
                 return self.async_create_entry(
                     title=user_input[CONF_NAME], data=user_input
                 )
