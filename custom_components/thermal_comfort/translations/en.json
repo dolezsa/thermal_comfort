@@ -40,7 +40,7 @@
           "heat_index": "Enable Heat index sensor",
           "simmer_index": "Enable Simmer index sensor",
           "simmer_zone": "Enable Simmer zone sensor",
-          "thermal_perception": "Enable Perception sensor",
+          "thermal_perception": "Enable Thermal perception sensor",
           "show_advanced_options": "Advanced options"
         }
       }
