@@ -50,7 +50,7 @@ thermal_comfort:
     and temperature.
   </dd>
   <dt><strong>custom_icons</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
-  <dd>Set to true if you have the <a href="../README.md#custom-icons">custom icon pack</a>
+  <dd>Set to true if you have the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/README.md#custom-icons">custom icon pack</a>
     installed and want to use it as default icons for the sensors.
   </dd>
 </dl>

@@ -46,17 +46,21 @@ Thermal Comfort provides the following calculated sensors for Home Assistant.
   </dd>
 </dl>
 
-![Custom Icons](./screenshots/living_room.png)
+![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/living_room.png)
 
 ## Usage
 To use Thermal Comfort check the documentation for your preferred way to setup
 sensors.
 
-**UI/Frontend (Config Flow) [1.4.0](./documentation/config_flow.md) / [master](./documentation/config_flow.next.md)**
+**UI/Frontend (Config Flow)
+ [1.4.0](https://github.com/dolezsa/thermal_comfort/blob/1.4.0/documentation/config_flow.md) /
+ [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)**
 
-**YAML [1.4.0](./documentation/yaml.md) / [master](./documentation/yaml.next.md)**
+**YAML
+ [1.4.0](https://github.com/dolezsa/thermal_comfort/blob/1.4.0/documentation/yaml.md) /
+ [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md)**
 
-*Legacy YAML [1.4.0](./documentation/legacy_yaml.md)*
+*Legacy YAML [1.4.0](https://github.com/dolezsa/thermal_comfort/blob/1.4.0/documentation/legacy_yaml.md)*
 
 ## Installation
 
