@@ -18,7 +18,9 @@
   },
   "config": {
     "abort": {
-      "already_configured": "Diese Kombination aus Temperatursensor und Feuchtigkeitssensor wird bereits verwendet"
+      "already_configured": "Diese Kombination aus Temperatursensor und Feuchtigkeitssensor wird bereits verwendet",
+      "no_sensors": "Es wurden entweder keine Temperatursensoren oder Feuchtigkeitssensoren gefunden. Versuche es erneut im erweiterten Modus.",
+      "no_sensors_advanced": "Es wurden entweder keine Temperatursensoren oder Feuchtigkeitssensoren gefunden."
     },
     "error": {
       "temperature_not_found": "Temperatursensor konnte nicht gefunden werden",
