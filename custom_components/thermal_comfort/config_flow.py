@@ -350,6 +350,9 @@ def build_schema(
         entity_registry_instance, hass, SensorDeviceClass.TEMPERATURE, show_advanced
     )
 
+    if not temperature_sensors or not humidity_sensors:
+        return None
+
     schema = vol.Schema(
         {
             vol.Required(
@@ -458,13 +461,22 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     data=user_input,
                 )
 
+        schema = build_schema(
+            config_entry=None,
+            hass=self.hass,
+            show_advanced=self.show_advanced_options,
+        )
+
+        if schema is None:
+            if self.show_advanced_options:
+                reason = "no_sensors_advanced"
+            else:
+                reason = "no_sensors"
+            return self.async_abort(reason=reason)
+
         return self.async_show_form(
             step_id="user",
-            data_schema=build_schema(
-                config_entry=None,
-                hass=self.hass,
-                show_advanced=self.show_advanced_options,
-            ),
+            data_schema=schema,
             errors=errors,
         )
 

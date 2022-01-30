@@ -18,7 +18,9 @@
   },
   "config": {
     "abort": {
-      "already_configured": "This combination of temperature and humidity sensors is already configured"
+      "already_configured": "This combination of temperature and humidity sensors is already configured",
+      "no_sensors": "No temperature or humidity sensors found. Try again in advanced mode.",
+      "no_sensors_advanced": "No temperature or humidity sensors found."
     },
     "error": {
       "temperature_not_found": "Temperature sensor not found",
