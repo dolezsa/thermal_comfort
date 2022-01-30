@@ -27,7 +27,7 @@ from .const import (
     PLATFORMS,
     UPDATE_LISTENER,
 )
-from .sensor import CONF_CUSTOM_ICONS, SensorType
+from .sensor import CONF_CUSTOM_ICONS, CONF_ENABLED_SENSORS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -42,12 +42,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         CONF_POLL: get_value(entry, CONF_POLL),
         CONF_CUSTOM_ICONS: get_value(entry, CONF_CUSTOM_ICONS),
     }
+    if get_value(entry, CONF_ENABLED_SENSORS):
+        hass.data[DOMAIN][entry.entry_id][CONF_ENABLED_SENSORS] = get_value(
+            entry, CONF_ENABLED_SENSORS
+        )
+        data = dict(entry.data)
+        data.pop(CONF_ENABLED_SENSORS)
+        hass.config_entries.async_update_entry(entry, data=data)
+
     if entry.unique_id is None:
         # We have no unique_id yet, let's use backup.
         hass.config_entries.async_update_entry(entry, unique_id=entry.entry_id)
-
-    for st in SensorType:
-        hass.data[DOMAIN][entry.entry_id][st] = get_value(entry, st)
 
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
     update_listener = entry.add_update_listener(async_update_options)

@@ -1,4 +1,5 @@
 """Test integration_blueprint config flow."""
+
 import json
 from unittest.mock import MagicMock, patch
 
@@ -14,7 +15,7 @@ from custom_components.thermal_comfort.const import (
     DOMAIN,
 )
 
-from .const import USER_INPUT, USER_NEW_INPUT
+from .const import ADVANCED_USER_INPUT, USER_INPUT
 from .test_sensor import DEFAULT_TEST_SENSORS
 
 
@@ -38,7 +39,7 @@ async def _flow_init(hass, advanced_options=True):
     )
 
 
-async def _flow_configure(hass, r, _input=USER_INPUT):
+async def _flow_configure(hass, r, _input=ADVANCED_USER_INPUT):
     with patch(
         "homeassistant.helpers.entity_registry.EntityRegistry.async_get",
         return_value=MagicMock(unique_id="foo"),
@@ -62,8 +63,8 @@ async def test_successful_config_flow(hass, start_ha):
 
     assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
 
-    assert result["title"] == USER_INPUT[CONF_NAME]
-    assert result["data"] == USER_INPUT
+    assert result["title"] == ADVANCED_USER_INPUT[CONF_NAME]
+    assert result["data"] == ADVANCED_USER_INPUT
     assert result["result"]
 
 
@@ -84,7 +85,7 @@ async def test_failed_config_flow(hass, start_ha):
 async def test_options_flow(hass, start_ha):
     """Test flow for options changes."""
     # setup entry
-    entry = MockConfigEntry(domain=DOMAIN, data=USER_INPUT, entry_id="test")
+    entry = MockConfigEntry(domain=DOMAIN, data=ADVANCED_USER_INPUT, entry_id="test")
     entry.add_to_hass(hass)
 
     # Initialize an options flow for entry
@@ -99,7 +100,7 @@ async def test_options_flow(hass, start_ha):
     # Enter some data into the form
     result = await hass.config_entries.options.async_configure(
         result["flow_id"],
-        user_input=USER_NEW_INPUT,
+        user_input=USER_INPUT,
     )
 
     # Verify that the flow finishes
@@ -108,7 +109,7 @@ async def test_options_flow(hass, start_ha):
 
     # Verify that the options were updated
 
-    assert entry.options == USER_NEW_INPUT
+    assert entry.options == USER_INPUT
 
 
 async def test_config_flow_enabled():
@@ -129,7 +130,7 @@ async def test_missed_sensors(hass, sensor, start_ha):
     assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
     assert result["step_id"] == "user"
 
-    no_sensor = dict(USER_INPUT)
+    no_sensor = dict(ADVANCED_USER_INPUT)
     no_sensor[sensor] = "foo"
     with pytest.raises(vol.error.MultipleInvalid):
         result = await _flow_configure(hass, result, no_sensor)

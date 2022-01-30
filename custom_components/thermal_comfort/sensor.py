@@ -53,6 +53,7 @@ _LOGGER = logging.getLogger(__name__)
 
 ATTR_HUMIDITY = "humidity"
 ATTR_FROST_RISK_LEVEL = "frost_risk_level"
+CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
 
@@ -307,12 +308,7 @@ async def async_setup_entry(
     Called via async_setup_platforms(, SENSOR) from __init__.py
     """
     data = hass.data[DOMAIN][config_entry.entry_id]
-    enabled_sensor_types: list[SensorType] = []
     _LOGGER.debug(f"async_setup_entry: {data}")
-    for c in SensorType:
-        if data.get(c, False):
-            enabled_sensor_types.append(c)
-
     compute_device = DeviceThermalComfort(
         hass=hass,
         name=data[CONF_NAME],
@@ -322,25 +318,20 @@ async def async_setup_entry(
         should_poll=data[CONF_POLL],
     )
 
-    entities: list[SensorThermalComfort] = []
-    for sensor_type in SENSOR_TYPES:
-        entity_description = SensorEntityDescription(**SENSOR_TYPES[sensor_type])
-        entity_description.entity_registry_enabled_default = (
-            True if sensor_type in enabled_sensor_types else False
+    entities: list[SensorThermalComfort] = [
+        SensorThermalComfort(
+            device=compute_device,
+            entity_description=SensorEntityDescription(**SENSOR_TYPES[sensor_type]),
+            sensor_type=sensor_type,
+            custom_icons=data[CONF_CUSTOM_ICONS],
         )
+        for sensor_type in SensorType
+    ]
+    if CONF_ENABLED_SENSORS in data:
+        for entity in entities:
+            if entity.entity_description.key not in data[CONF_ENABLED_SENSORS]:
+                entity.entity_description.entity_registry_enabled_default = False
 
-        _LOGGER.debug(
-            f"async_setup_entry: setting up entity for {sensor_type},"
-            f"enabled_default = {entity_description.entity_registry_enabled_default}"
-        )
-        entities.append(
-            SensorThermalComfort(
-                device=compute_device,
-                entity_description=entity_description,
-                sensor_type=sensor_type,
-                custom_icons=data[CONF_CUSTOM_ICONS],
-            )
-        )
     if entities:
         async_add_entities(entities)
 
