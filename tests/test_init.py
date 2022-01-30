@@ -10,7 +10,7 @@ from custom_components.thermal_comfort import (
 )
 from custom_components.thermal_comfort.const import DOMAIN, PLATFORMS
 
-from .const import USER_INPUT
+from .const import ADVANCED_USER_INPUT
 
 
 async def test_setup_update_unload_entry(hass):
@@ -19,7 +19,7 @@ async def test_setup_update_unload_entry(hass):
     hass.config_entries.async_setup_platforms = MagicMock()
     with patch.object(hass.config_entries, "async_update_entry") as p:
         config_entry = MockConfigEntry(
-            domain=DOMAIN, data=USER_INPUT, entry_id="test", unique_id=None
+            domain=DOMAIN, data=ADVANCED_USER_INPUT, entry_id="test", unique_id=None
         )
         await hass.config_entries.async_add(config_entry)
         assert p.called
@@ -28,8 +28,12 @@ async def test_setup_update_unload_entry(hass):
     assert DOMAIN in hass.data and config_entry.entry_id in hass.data[DOMAIN]
 
     # check user input is in config
-    for i in USER_INPUT.keys():
-        assert hass.data[DOMAIN][config_entry.entry_id][i] == USER_INPUT[i]
+    for key in ADVANCED_USER_INPUT.keys():
+        if key in hass.data[DOMAIN][config_entry.entry_id]:
+            assert (
+                hass.data[DOMAIN][config_entry.entry_id][key]
+                == ADVANCED_USER_INPUT[key]
+            )
 
     hass.config_entries.async_setup_platforms.assert_called_with(
         config_entry, PLATFORMS

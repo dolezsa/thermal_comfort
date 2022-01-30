@@ -8,6 +8,7 @@ from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import CONF_NAME, Platform
 from homeassistant.core import HomeAssistant, State, callback
 from homeassistant.helpers import entity_registry
+import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_registry import EntityRegistry
 import voluptuous as vol
 
@@ -18,7 +19,7 @@ from .const import (
     DEFAULT_NAME,
     DOMAIN,
 )
-from .sensor import CONF_CUSTOM_ICONS, DEFAULT_SENSOR_TYPES, SensorType
+from .sensor import CONF_CUSTOM_ICONS, CONF_ENABLED_SENSORS, SensorType
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -381,16 +382,19 @@ def build_schema(
             }
         )
         if step == "user":
-            for st in SensorType:
-                default_enable = st in DEFAULT_SENSOR_TYPES
-                schema = schema.extend(
-                    {
-                        vol.Optional(
-                            str(st),
-                            default=get_value(config_entry, str(st), default_enable),
-                        ): bool
-                    }
-                )
+            schema = schema.extend(
+                {
+                    vol.Optional(
+                        CONF_ENABLED_SENSORS,
+                        default=list(SensorType),
+                    ): cv.multi_select(
+                        {
+                            sensor_type: sensor_type.to_title()
+                            for sensor_type in SensorType
+                        }
+                    ),
+                }
+            )
 
     return schema
 
@@ -449,13 +453,9 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     await self.async_set_unique_id(unique_id)
                     self._abort_if_unique_id_configured()
 
-                if not self.show_advanced_options:
-                    # enable default sensors in simple mode just before entity creation
-                    for st in DEFAULT_SENSOR_TYPES:
-                        user_input[st] = True
-
                 return self.async_create_entry(
-                    title=user_input[CONF_NAME], data=user_input
+                    title=user_input[CONF_NAME],
+                    data=user_input,
                 )
 
         return self.async_show_form(

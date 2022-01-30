@@ -22,7 +22,7 @@ from custom_components.thermal_comfort.sensor import (
     id_generator,
 )
 
-from .const import USER_INPUT
+from .const import ADVANCED_USER_INPUT
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -735,7 +735,7 @@ async def test_create_sensors(hass: HomeAssistant):
     er = entity_registry.async_get(hass)
 
     entry = MockConfigEntry(
-        domain=DOMAIN, data=USER_INPUT, entry_id="test", unique_id="uniqueid"
+        domain=DOMAIN, data=ADVANCED_USER_INPUT, entry_id="test", unique_id="uniqueid"
     )
     entry.add_to_hass(hass)
     assert await hass.config_entries.async_setup(entry.entry_id)

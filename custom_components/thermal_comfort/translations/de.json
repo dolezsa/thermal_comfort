@@ -33,15 +33,7 @@
           "humidity_sensor": "Feuchtigkeitssensor",
           "poll": "Polling verwenden",
           "custom_icons": "Benutzerdefinierte Icons verwenden",
-          "absolute_humidity": "Absolute-Feuchtesensor aktivieren",
-          "dew_point": "Taupunktsensor aktivieren",
-          "frost_point": "Frostpunksensor aktivieren",
-          "frost_risk": "Frostrisikosensor aktivieren",
-          "heat_index": "Hitzeindexsensor aktivieren",
-          "simmer_index": "Simmerindexsensor aktivieren",
-          "simmer_zone": "Simmerzonensensor aktivieren",
-          "thermal_perception": "Thermische-Wahrnemungssensor aktivieren",
-          "show_advanced_options": "Erweiterter Modus"
+          "enabled_sensors": "Aktivierte Sensoren"
         }
       }
     }
