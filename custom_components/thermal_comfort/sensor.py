@@ -91,28 +91,28 @@ class SensorType(StrEnum):
             return self.value.replace("_", "")
 
     @classmethod
-    def from_shortform(cls, shortform: str) -> "SensorType":
-        """Return the sensor type from the shortform."""
-        if "_" in shortform:
-            return shortform
-        elif shortform == "absolutehumidity":
+    def from_string(cls, string: str) -> "SensorType":
+        """Return the sensor type from string."""
+        if string in list(cls):
+            return cls(string)
+        elif string == "absolutehumidity":
             return cls.ABSOLUTE_HUMIDITY
-        elif shortform == "dewpoint":
+        elif string == "dewpoint":
             return cls.DEW_POINT
-        elif shortform == "frostpoint":
+        elif string == "frostpoint":
             return cls.FROST_POINT
-        elif shortform == "frostrisk":
+        elif string == "frostrisk":
             return cls.FROST_RISK
-        elif shortform == "heatindex":
+        elif string == "heatindex":
             return cls.HEAT_INDEX
-        elif shortform == "simmerindex":
+        elif string == "simmerindex":
             return cls.SIMMER_INDEX
-        elif shortform == "simmerzone":
+        elif string == "simmerzone":
             return cls.SIMMER_ZONE
-        elif shortform == "perception":
+        elif string == "perception":
             return cls.THERMAL_PERCEPTION
         else:
-            raise ValueError(f"Unknown sensor type: {shortform}")
+            raise ValueError(f"Unknown sensor type: {string}")
 
 
 SENSOR_TYPES = {
@@ -283,11 +283,11 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             SensorThermalComfort(
                 device=compute_device,
                 entity_description=SensorEntityDescription(
-                    **SENSOR_TYPES[SensorType.from_shortform(sensor_type)]
+                    **SENSOR_TYPES[SensorType.from_string(sensor_type)]
                 ),
                 icon_template=device_config.get(CONF_ICON_TEMPLATE),
                 entity_picture_template=device_config.get(CONF_ENTITY_PICTURE_TEMPLATE),
-                sensor_type=SensorType.from_shortform(sensor_type),
+                sensor_type=SensorType.from_string(sensor_type),
                 friendly_name=device_config.get(CONF_FRIENDLY_NAME),
                 custom_icons=device_config.get(CONF_CUSTOM_ICONS),
             )
