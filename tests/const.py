@@ -9,6 +9,7 @@ from custom_components.thermal_comfort.const import (
 from custom_components.thermal_comfort.sensor import (
     CONF_CUSTOM_ICONS,
     CONF_ENABLED_SENSORS,
+    CONF_SCAN_INTERVAL,
 )
 
 USER_INPUT = {
@@ -17,6 +18,7 @@ USER_INPUT = {
     CONF_HUMIDITY_SENSOR: "sensor.test_humidity_sensor",
     CONF_POLL: False,
     CONF_CUSTOM_ICONS: False,
+    CONF_SCAN_INTERVAL: 30,
 }
 
 ADVANCED_USER_INPUT = {
