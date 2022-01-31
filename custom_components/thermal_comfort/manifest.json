@@ -1,7 +1,7 @@
 {
   "domain": "thermal_comfort",
   "name": "Thermal Comfort",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "documentation": "https://github.com/dolezsa/thermal_comfort/blob/master/README.md",
   "issue_tracker": "https://github.com/dolezsa/thermal_comfort/issues",
   "codeowners": ["@dolezsa"],
