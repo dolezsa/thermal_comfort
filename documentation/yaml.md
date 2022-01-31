@@ -9,13 +9,14 @@ thermal_comfort:
       temperature_sensor: sensor.temperature_livingroom
       humidity_sensor: sensor.humidity_livingroom
     - name: Bathroom
-      polling: true
+      poll: true
       custom_icons: true
       temperature_sensor: sensor.temperature_bathroom
       humidity_sensor: sensor.humidity_bathroom
       sensor_types:
-        - absolutehumidity
-        - heatindex
+        - absolute_humidity
+        - heat_index
+        - thermal_perception
     - name: Bedroom
 …
 ```
@@ -31,8 +32,15 @@ thermal_comfort:
   <dd>Defines a template for the entity picture of the sensor.</dd>
   <dt><strong>unique_id</strong> <code>string</code> <code>(optional)</code></dt>
   <dd>
-    An ID that uniquely identifies the sensors. Set this to a unique value to 
+    An ID that uniquely identifies the sensors. Set this to a unique value to
     allow customization through the UI.
+    <p> Make sure this is a unique value. Home assistant uses this internally and you
+    will not see it in the frontend.
+    A good tool to get a unique value is the `uuidgen` command line tool or your can
+    use a <a href="https://www.uuidgenerator.net/">online uuid generator</a></p>
+    Internally we add the sensor type name to the unique id you set for each sensor.
+    e.g. with a unique id of `0ee4d8a7-c610-4afa-855d-0b2c2c265e11` for a absolute humidity
+    sensor you would get `0ee4d8a7-c610-4afa-855d-0b2c2c265e11absolute_humidity`.
   </dd>
   <dt><strong>sensor_types</strong> <code>list</code> <code>(optional)</code></dt>
   <dd>
