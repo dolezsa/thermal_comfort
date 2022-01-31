@@ -27,7 +27,7 @@ from .const import (
     PLATFORMS,
     UPDATE_LISTENER,
 )
-from .sensor import CONF_CUSTOM_ICONS, CONF_ENABLED_SENSORS
+from .sensor import CONF_CUSTOM_ICONS, CONF_ENABLED_SENSORS, CONF_SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,6 +40,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         CONF_TEMPERATURE_SENSOR: get_value(entry, CONF_TEMPERATURE_SENSOR),
         CONF_HUMIDITY_SENSOR: get_value(entry, CONF_HUMIDITY_SENSOR),
         CONF_POLL: get_value(entry, CONF_POLL),
+        CONF_SCAN_INTERVAL: get_value(entry, CONF_SCAN_INTERVAL),
         CONF_CUSTOM_ICONS: get_value(entry, CONF_CUSTOM_ICONS),
     }
     if get_value(entry, CONF_ENABLED_SENSORS):

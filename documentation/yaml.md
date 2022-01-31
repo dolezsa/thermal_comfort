@@ -57,6 +57,10 @@ thermal_comfort:
     calculated values if your input sensors split change updates for humidity
     and temperature.
   </dd>
+  <dt><strong>scan_interval</strong> <code>boolean</code> <code>(optional, default: 30)</code></dt>
+  <dd>
+    If polling is enabled this sets the interval in seconds.
+  </dd>
   <dt><strong>custom_icons</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
   <dd>Set to true if you have the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/README.md#custom-icons">custom icon pack</a>
     installed and want to use it as default icons for the sensors.

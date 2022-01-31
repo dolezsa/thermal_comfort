@@ -1,6 +1,7 @@
 """Sensor platform for thermal_comfort."""
 from asyncio import Lock
 from dataclasses import dataclass
+from datetime import timedelta
 from functools import wraps
 import logging
 import math
@@ -36,7 +37,10 @@ from homeassistant.exceptions import TemplateError
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import DeviceInfo, async_generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.event import async_track_state_change_event
+from homeassistant.helpers.event import (
+    async_track_state_change_event,
+    async_track_time_interval,
+)
 from homeassistant.helpers.template import Template
 from homeassistant.loader import async_get_custom_components
 import voluptuous as vol
@@ -56,6 +60,7 @@ ATTR_FROST_RISK_LEVEL = "frost_risk_level"
 CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
+CONF_SCAN_INTERVAL = "scan_interval"
 
 
 class ThermalComfortDeviceClass(StrEnum):
@@ -173,6 +178,7 @@ DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
 PLATFORM_OPTIONS_SCHEMA = vol.Schema(
     {
         vol.Optional(CONF_POLL, default=False): cv.boolean,
+        vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(seconds=30)): cv.time_period,
         vol.Optional(CONF_CUSTOM_ICONS, default=False): cv.boolean,
     }
 )
@@ -267,8 +273,6 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     sensors = []
 
-    should_poll = config.get(CONF_POLL)
-
     for device_config in devices:
         compute_device = DeviceThermalComfort(
             hass=hass,
@@ -276,7 +280,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             unique_id=device_config.get(CONF_UNIQUE_ID),
             temperature_entity=device_config.get(CONF_TEMPERATURE_SENSOR),
             humidity_entity=device_config.get(CONF_HUMIDITY_SENSOR),
-            should_poll=should_poll,
+            should_poll=device_config.get(CONF_POLL),
+            scan_interval=device_config.get(CONF_SCAN_INTERVAL),
         )
 
         sensors += [
@@ -316,6 +321,7 @@ async def async_setup_entry(
         temperature_entity=data[CONF_TEMPERATURE_SENSOR],
         humidity_entity=data[CONF_HUMIDITY_SENSOR],
         should_poll=data[CONF_POLL],
+        scan_interval=timedelta(seconds=data[CONF_SCAN_INTERVAL]),
     )
 
     entities: list[SensorThermalComfort] = [
@@ -387,7 +393,7 @@ class SensorThermalComfort(SensorEntity):
         self._attr_extra_state_attributes = {}
         if self._device.unique_id is not None:
             self._attr_unique_id = id_generator(self._device.unique_id, sensor_type)
-        self._attr_should_poll = self._device.should_poll
+        self._attr_should_poll = False
 
     @property
     def device_info(self) -> dict[str, Any]:
@@ -472,6 +478,7 @@ class DeviceThermalComfort:
         temperature_entity: str,
         humidity_entity: str,
         should_poll: bool,
+        scan_interval: timedelta,
     ):
         """Initialize the sensor."""
         self.hass = hass
@@ -487,7 +494,7 @@ class DeviceThermalComfort:
         self._humidity_entity = humidity_entity
         self._temperature = None
         self._humidity = None
-        self.should_poll = should_poll
+        self._should_poll = should_poll
         self.sensors = []
         self._compute_states = {
             sensor_type: ComputeState(lock=Lock())
@@ -510,6 +517,15 @@ class DeviceThermalComfort:
         )
 
         hass.async_create_task(self._set_version())
+
+        if self._should_poll:
+            if scan_interval is None:
+                scan_interval = timedelta(seconds=30)
+            async_track_time_interval(
+                self.hass,
+                self.async_update_sensors,
+                scan_interval,
+            )
 
     async def _set_version(self):
         self._device_info["sw_version"] = (
@@ -691,9 +707,13 @@ class DeviceThermalComfort:
         if self._temperature is not None and self._humidity is not None:
             for sensor_type in SENSOR_TYPES.keys():
                 self._compute_states[sensor_type].needs_update = True
-            if not self.should_poll:
-                for sensor in self.sensors:
-                    sensor.async_schedule_update_ha_state(True)
+            if not self._should_poll:
+                await self.async_update_sensors(True)
+
+    async def async_update_sensors(self, force_refresh: bool = False) -> None:
+        """Update the state of the sensors."""
+        for sensor in self.sensors:
+            sensor.async_schedule_update_ha_state(force_refresh)
 
     @property
     def compute_states(self) -> dict[SensorType, ComputeState]:

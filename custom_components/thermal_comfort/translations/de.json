@@ -11,6 +11,7 @@
           "temperature_sensor": "Temperatursensor",
           "humidity_sensor": "Feuchtigkeitssensor",
           "poll": "Polling verwenden",
+          "scan_interval": "Poll Interval (Sekunden)",
           "custom_icons": "Benutzerdefinierte Icons verwenden"
         }
       }
@@ -34,6 +35,7 @@
           "temperature_sensor": "Temperatursensor",
           "humidity_sensor": "Feuchtigkeitssensor",
           "poll": "Polling verwenden",
+          "scan_interval": "Poll Interval (Sekunden)",
           "custom_icons": "Benutzerdefinierte Icons verwenden",
           "enabled_sensors": "Aktivierte Sensoren"
         }
