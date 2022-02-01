@@ -270,6 +270,12 @@ def get_sensors_by_device_class(
             "GiB/s",
         ]
         """We are sure that entities with this units could not be useful as data source in any case"""
+        additional_units = {
+            SensorDeviceClass.HUMIDITY: ["°C", "°F", "K"],
+            SensorDeviceClass.TEMPERATURE: ["%"],
+        }
+        units_for_exclude += additional_units.get(device_class, [])
+
         unit_of_measurement = state.attributes.get(
             "unit_of_measurement", state.attributes.get("native_unit_of_measurement")
         )
