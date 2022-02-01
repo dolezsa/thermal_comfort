@@ -319,6 +319,12 @@ async def async_setup_entry(
     Called via async_setup_platforms(, SENSOR) from __init__.py
     """
     data = hass.data[DOMAIN][config_entry.entry_id]
+    if data.get(CONF_SCAN_INTERVAL) is None:
+        hass.data[DOMAIN][config_entry.entry_id][
+            CONF_SCAN_INTERVAL
+        ] = SCAN_INTERVAL_DEFAULT
+        data[CONF_SCAN_INTERVAL] = SCAN_INTERVAL_DEFAULT
+
     _LOGGER.debug(f"async_setup_entry: {data}")
     compute_device = DeviceThermalComfort(
         hass=hass,
