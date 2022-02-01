@@ -102,6 +102,7 @@ def get_sensors_by_device_class(
             Platform.BUTTON,
             Platform.CALENDAR,
             Platform.CAMERA,
+            Platform.CLIMATE,
             Platform.COVER,
             Platform.DEVICE_TRACKER,
             Platform.FAN,
