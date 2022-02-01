@@ -19,7 +19,12 @@ from .const import (
     DEFAULT_NAME,
     DOMAIN,
 )
-from .sensor import CONF_CUSTOM_ICONS, CONF_ENABLED_SENSORS, SensorType
+from .sensor import (
+    CONF_CUSTOM_ICONS,
+    CONF_ENABLED_SENSORS,
+    CONF_SCAN_INTERVAL,
+    SensorType,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -378,6 +383,10 @@ def build_schema(
                 vol.Optional(
                     CONF_POLL, default=get_value(config_entry, CONF_POLL, False)
                 ): bool,
+                vol.Optional(
+                    CONF_SCAN_INTERVAL,
+                    default=get_value(config_entry, CONF_SCAN_INTERVAL, 30),
+                ): vol.All(vol.Coerce(int), vol.Range(min=1)),
                 vol.Optional(
                     CONF_CUSTOM_ICONS,
                     default=get_value(config_entry, CONF_CUSTOM_ICONS, False),
