@@ -23,6 +23,8 @@ from .sensor import (
     CONF_CUSTOM_ICONS,
     CONF_ENABLED_SENSORS,
     CONF_SCAN_INTERVAL,
+    POLL_DEFAULT,
+    SCAN_INTERVAL_DEFAULT,
     SensorType,
 )
 
@@ -381,11 +383,13 @@ def build_schema(
         schema = schema.extend(
             {
                 vol.Optional(
-                    CONF_POLL, default=get_value(config_entry, CONF_POLL, False)
+                    CONF_POLL, default=get_value(config_entry, CONF_POLL, POLL_DEFAULT)
                 ): bool,
                 vol.Optional(
                     CONF_SCAN_INTERVAL,
-                    default=get_value(config_entry, CONF_SCAN_INTERVAL, 30),
+                    default=get_value(
+                        config_entry, CONF_SCAN_INTERVAL, SCAN_INTERVAL_DEFAULT
+                    ),
                 ): vol.All(vol.Coerce(int), vol.Range(min=1)),
                 vol.Optional(
                     CONF_CUSTOM_ICONS,

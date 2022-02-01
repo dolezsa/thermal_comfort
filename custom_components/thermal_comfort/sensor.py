@@ -62,6 +62,10 @@ CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
 CONF_SCAN_INTERVAL = "scan_interval"
 
+# Default values
+POLL_DEFAULT = False
+SCAN_INTERVAL_DEFAULT = 30
+
 
 class ThermalComfortDeviceClass(StrEnum):
     """State class for thermal comfort sensors."""
@@ -177,8 +181,10 @@ DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
 
 PLATFORM_OPTIONS_SCHEMA = vol.Schema(
     {
-        vol.Optional(CONF_POLL, default=False): cv.boolean,
-        vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(seconds=30)): cv.time_period,
+        vol.Optional(CONF_POLL, default=POLL_DEFAULT): cv.boolean,
+        vol.Optional(
+            CONF_SCAN_INTERVAL, default=timedelta(seconds=SCAN_INTERVAL_DEFAULT)
+        ): cv.time_period,
         vol.Optional(CONF_CUSTOM_ICONS, default=False): cv.boolean,
     }
 )
@@ -520,7 +526,7 @@ class DeviceThermalComfort:
 
         if self._should_poll:
             if scan_interval is None:
-                scan_interval = timedelta(seconds=30)
+                scan_interval = timedelta(seconds=SCAN_INTERVAL_DEFAULT)
             async_track_time_interval(
                 self.hass,
                 self.async_update_sensors,
