@@ -65,6 +65,8 @@
 **Russian:**
 [<img src="https://github.com/drts-sv.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @drts-sv](https://github.com/drts-sv)
+[<img src="https://github.com/MoonlightGuest.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@MoonlightGuest](https://github.com/MoonlightGuest)
 
 **Slovak:**
 [<img src="https://github.com/dolezsa.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%;border: solid 0.1px grey;" width="24"/>
