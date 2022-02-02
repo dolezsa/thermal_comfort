@@ -1,0 +1,31 @@
+{
+  "state": {
+    "thermal_comfort__frost_risk": {
+      "no_risk": "Brak ryzyka",
+      "unlikely": "Mała szansa",
+      "probable": "Prawdopodobne",
+      "high": "Duża szansa"
+    },
+    "thermal_comfort__thermal_perception": {
+      "dry": "Dla niektórych może być sucho",
+      "very_comfortable": "Bardzo komfortowe",
+      "comfortable": "Komfortowe",
+      "ok_but_humid": "OK dla większości, ale wilgotno",
+      "somewhat_uncomfortable": "Trochę niekomfortowe",
+      "quite_uncomfortable": "Bardzo wilgotno, całkiem niekomfortowe",
+      "extremely_uncomfortable": "Bardzo niekomfortowe, uciążliwe",
+      "severely_high": "Wysoce niebezpieczne dla astmatyków, bardzo uciążliwe"
+    },
+    "thermal_comfort__simmer_zone": {
+      "cool": "Chłodno",
+      "slightly_cool": "Trochę chłodno",
+      "comfortable": "Komfortowo",
+      "slightly_warm": "Całkiem ciepło",
+      "increasing_discomfort": "Rosnący dyskomfort",
+      "extremely_warm": "Bardzo ciepło",
+      "danger_of_heatstroke": "Możliwy udar cieplny",
+      "extreme_danger_of_heatstroke": "Wysokie niebezpieczeństwo udaru",
+      "circulatory_collapse_imminent": "Zdecydowane problemy z krążeniem, zapaść"
+    }
+  }
+}
