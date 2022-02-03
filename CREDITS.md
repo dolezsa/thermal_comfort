@@ -75,3 +75,7 @@
 **Spanish:**
 [<img src="https://github.com/RaulVKoNe.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @RaulVKoNe](https://github.com/RaulVKoNe)
+
+**Polish:**
+[<img src="https://github.com/pejotigrek.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@pejotigrek]https://github.com/pejotigrek)
