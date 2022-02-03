@@ -1,10 +1,10 @@
 {
   "state": {
     "thermal_comfort__frost_risk": {
-      "no_risk": "Brak ryzyka",
-      "unlikely": "Mała szansa",
-      "probable": "Prawdopodobne",
-      "high": "Duża szansa"
+      "no_risk": "Brak",
+      "unlikely": "Małe",
+      "probable": "Możliwe",
+      "high": "Wysokie"
     },
     "thermal_comfort__thermal_perception": {
       "dry": "Dla niektórych może być sucho",
@@ -17,11 +17,11 @@
       "severely_high": "Wysoce niebezpieczne dla astmatyków, bardzo uciążliwe"
     },
     "thermal_comfort__simmer_zone": {
-      "cool": "Chłodno",
-      "slightly_cool": "Trochę chłodno",
+      "cool": "Zimno",
+      "slightly_cool": "Chłodnawo",
       "comfortable": "Komfortowo",
-      "slightly_warm": "Całkiem ciepło",
-      "increasing_discomfort": "Rosnący dyskomfort",
+      "slightly_warm": "Ciepło",
+      "increasing_discomfort": "Trochę za ciepło",
       "extremely_warm": "Bardzo ciepło",
       "danger_of_heatstroke": "Możliwy udar cieplny",
       "extreme_danger_of_heatstroke": "Wysokie niebezpieczeństwo udaru",
