@@ -78,4 +78,4 @@
 
 **Polish:**
 [<img src="https://github.com/pejotigrek.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@pejotigrek]https://github.com/pejotigrek)
+@pejotigrek](https://github.com/pejotigrek)
