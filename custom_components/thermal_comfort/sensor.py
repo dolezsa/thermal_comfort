@@ -45,13 +45,7 @@ from homeassistant.helpers.template import Template
 from homeassistant.loader import async_get_custom_components
 import voluptuous as vol
 
-from .const import (
-    CONF_HUMIDITY_SENSOR,
-    CONF_POLL,
-    CONF_TEMPERATURE_SENSOR,
-    DEFAULT_NAME,
-    DOMAIN,
-)
+from .const import DEFAULT_NAME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -62,6 +56,9 @@ CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
 CONF_SCAN_INTERVAL = "scan_interval"
 
+CONF_TEMPERATURE_SENSOR = "temperature_sensor"
+CONF_HUMIDITY_SENSOR = "humidity_sensor"
+CONF_POLL = "poll"
 # Default values
 POLL_DEFAULT = False
 SCAN_INTERVAL_DEFAULT = 30

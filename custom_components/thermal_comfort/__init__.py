@@ -19,15 +19,15 @@ from homeassistant.helpers.typing import ConfigType
 from homeassistant.loader import async_get_integration
 
 from .config_flow import get_value
-from .const import (
+from .const import DOMAIN, PLATFORMS, UPDATE_LISTENER
+from .sensor import (
+    CONF_CUSTOM_ICONS,
+    CONF_ENABLED_SENSORS,
     CONF_HUMIDITY_SENSOR,
     CONF_POLL,
+    CONF_SCAN_INTERVAL,
     CONF_TEMPERATURE_SENSOR,
-    DOMAIN,
-    PLATFORMS,
-    UPDATE_LISTENER,
 )
-from .sensor import CONF_CUSTOM_ICONS, CONF_ENABLED_SENSORS, CONF_SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
