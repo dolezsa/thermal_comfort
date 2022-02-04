@@ -12,17 +12,14 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_registry import EntityRegistry
 import voluptuous as vol
 
-from .const import (
-    CONF_HUMIDITY_SENSOR,
-    CONF_POLL,
-    CONF_TEMPERATURE_SENSOR,
-    DEFAULT_NAME,
-    DOMAIN,
-)
+from .const import DEFAULT_NAME, DOMAIN
 from .sensor import (
     CONF_CUSTOM_ICONS,
     CONF_ENABLED_SENSORS,
+    CONF_HUMIDITY_SENSOR,
+    CONF_POLL,
     CONF_SCAN_INTERVAL,
+    CONF_TEMPERATURE_SENSOR,
     POLL_DEFAULT,
     SCAN_INTERVAL_DEFAULT,
     SensorType,
