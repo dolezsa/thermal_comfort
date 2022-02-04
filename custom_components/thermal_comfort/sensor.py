@@ -181,14 +181,15 @@ PLATFORM_OPTIONS_SCHEMA = vol.Schema(
         vol.Optional(CONF_POLL): cv.boolean,
         vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
         vol.Optional(CONF_CUSTOM_ICONS): cv.boolean,
-    }
+        vol.Optional(CONF_SENSOR_TYPES): cv.ensure_list,
+    },
+    extra=vol.REMOVE_EXTRA,
 )
 
 LEGACY_SENSOR_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_TEMPERATURE_SENSOR): cv.entity_id,
         vol.Required(CONF_HUMIDITY_SENSOR): cv.entity_id,
-        vol.Optional(CONF_SENSOR_TYPES): cv.ensure_list,
         vol.Optional(CONF_ICON_TEMPLATE): cv.template,
         vol.Optional(CONF_ENTITY_PICTURE_TEMPLATE): cv.template,
         vol.Optional(CONF_FRIENDLY_NAME): cv.string,
@@ -269,12 +270,15 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             dict(device_config, **{CONF_NAME: device_name})
             for (device_name, device_config) in config[CONF_SENSORS].items()
         ]
+        options = {}
     else:
         devices = discovery_info["devices"]
+        options = discovery_info["options"]
 
     sensors = []
 
     for device_config in devices:
+        device_config = options | device_config
         compute_device = DeviceThermalComfort(
             hass=hass,
             name=device_config.get(CONF_NAME),

@@ -15,6 +15,8 @@ from custom_components.thermal_comfort.const import DOMAIN
 from custom_components.thermal_comfort.sensor import (
     ATTR_FROST_RISK_LEVEL,
     ATTR_HUMIDITY,
+    CONF_CUSTOM_ICONS,
+    CONF_SENSOR_TYPES,
     DEFAULT_SENSOR_TYPES,
     SensorType,
     SimmerZone,
@@ -812,4 +814,45 @@ async def test_sensor_type_names(hass: HomeAssistant, start_ha: Callable) -> Non
     assert (
         SensorType.THERMAL_PERCEPTION.to_title()
         in get_sensor(hass, SensorType.THERMAL_PERCEPTION).name
+    )
+
+
+@pytest.mark.parametrize(
+    "domains, config",
+    [
+        (
+            [(DOMAIN, 1)],
+            {
+                DOMAIN: {
+                    CONF_SENSOR_TYPES: [
+                        SensorType.ABSOLUTE_HUMIDITY,
+                    ],
+                    CONF_CUSTOM_ICONS: True,
+                    PLATFORM_DOMAIN: [
+                        {
+                            "name": "test_thermal_comfort",
+                            "temperature_sensor": "sensor.test_temperature_sensor",
+                            "humidity_sensor": "sensor.test_humidity_sensor",
+                            "sensor_types": [
+                                SensorType.THERMAL_PERCEPTION,
+                                SensorType.ABSOLUTE_HUMIDITY,
+                            ],
+                        },
+                        {
+                            "name": "test_thermal_comfort2",
+                            "temperature_sensor": "sensor.test_temperature_sensor",
+                            "humidity_sensor": "sensor.test_humidity_sensor",
+                        },
+                    ],
+                },
+            },
+        ),
+    ],
+)
+async def test_global_options(hass: HomeAssistant, start_ha: Callable) -> None:
+    """Test if global options are correctly set."""
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 3
+    assert (
+        get_sensor(hass, SensorType.THERMAL_PERCEPTION).attributes["icon"]
+        == f"tc:{SensorType.THERMAL_PERCEPTION.replace('_', '-')}"
     )

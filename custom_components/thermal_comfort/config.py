@@ -9,8 +9,14 @@ import voluptuous as vol
 
 from . import sensor as sensor_platform
 from .const import DOMAIN
+from .sensor import PLATFORM_OPTIONS_SCHEMA as SENSOR_OPTIONS_SCHEMA
 
 PACKAGE_MERGE_HINT = "list"
+
+OPTIONS_SCHEMA = vol.Schema({}).extend(
+    SENSOR_OPTIONS_SCHEMA.schema,
+    extra=vol.REMOVE_EXTRA,
+)
 
 CONFIG_SECTION_SCHEMA = vol.Schema(
     {
@@ -18,7 +24,7 @@ CONFIG_SECTION_SCHEMA = vol.Schema(
             cv.ensure_list, [sensor_platform.SENSOR_SCHEMA]
         ),
     }
-)
+).extend(OPTIONS_SCHEMA.schema)
 
 
 async def async_validate_config(hass: HomeAssistant, config: ConfigType) -> ConfigType:

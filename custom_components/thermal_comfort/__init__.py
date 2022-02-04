@@ -18,6 +18,7 @@ from homeassistant.helpers.reload import async_reload_integration_platforms
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.loader import async_get_integration
 
+from .config import OPTIONS_SCHEMA
 from .config_flow import get_value
 from .const import DOMAIN, PLATFORMS, UPDATE_LISTENER
 from .sensor import (
@@ -122,6 +123,7 @@ async def _process_config(hass: HomeAssistant, hass_config: ConfigType) -> None:
                         DOMAIN,
                         {
                             "devices": conf_section[platform_domain],
+                            "options": OPTIONS_SCHEMA(conf_section),
                         },
                         hass_config,
                     )
