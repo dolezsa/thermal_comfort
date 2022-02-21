@@ -557,11 +557,11 @@ class DeviceThermalComfort:
         if _is_valid_state(state):
             unit = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
             temp = util.convert(state.state, float)
+            self.extra_state_attributes[ATTR_TEMPERATURE] = temp
             # convert to celsius if necessary
             if unit == TEMP_FAHRENHEIT:
                 temp = util.temperature.fahrenheit_to_celsius(temp)
             self._temperature = temp
-            self.extra_state_attributes[ATTR_TEMPERATURE] = self._temperature
             await self.async_update()
 
     async def humidity_state_listener(self, event):
