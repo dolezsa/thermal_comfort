@@ -32,6 +32,10 @@
 [<img src="https://github.com/mstefany.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @mstefany](https://github.com/mstefany)
 
+**Dutch:**
+[<img src="https://github.com/rdwdm.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@rdwdm](https://github.com/rdwdm)
+
 **French:**
 [<img src="https://github.com/papo-o.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @papo-o](https://github.com/papo-o)
