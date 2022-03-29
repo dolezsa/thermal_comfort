@@ -45,6 +45,10 @@ Thermal Comfort provides the following calculated sensors for Home Assistant.
   <dd>
     Human perception of the simmer index.
   </dd>
+  <dt><strong>Moist Air Enthalpy</strong></dt>
+  <dd>
+    The enthalpy of moist air is the sum of the enthalpy of the dry air and the enthalpy of the water vapour. Enthalpy is the total energy of a thermodynamic system.
+  </dd>
 </dl>
 
 ![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/living_room.png)
