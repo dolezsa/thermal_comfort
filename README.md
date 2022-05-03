@@ -1,5 +1,6 @@
 # [![thermal_comfort](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/icons/logo.png)](https://github.com/dolezsa/thermal_comfort)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
+![GitHub release (latest by date)](https://img.shields.io/github/downloads/dolezsa/thermal_comfort/latest/total?style=for-the-badge&color=f55041)
 
 Thermal Comfort provides the following calculated sensors for Home Assistant.
 
