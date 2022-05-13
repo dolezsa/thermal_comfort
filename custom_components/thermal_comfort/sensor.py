@@ -256,7 +256,7 @@ def compute_once_lock(sensor_type):
                 if self._compute_states[sensor_type].needs_update:
                     setattr(self, f"_{sensor_type}", await func(self, *args, **kwargs))
                     self._compute_states[sensor_type].needs_update = False
-                return getattr(self, f"_{sensor_type}")
+                return getattr(self, f"_{sensor_type}", None)
 
         return wrapped
 
@@ -436,12 +436,15 @@ class SensorThermalComfort(SensorEntity):
 
     async def async_update(self):
         """Update the state of the sensor."""
+        value = await getattr(self._device, self._sensor_type)()
+        if value is None:  # can happen during startup
+            return
+
         if self._sensor_type == SensorType.FROST_RISK:
-            level = await getattr(self._device, self._sensor_type)()
-            self._attr_extra_state_attributes[ATTR_FROST_RISK_LEVEL] = level
-            self._attr_native_value = list(FrostRisk)[level]
+            self._attr_extra_state_attributes[ATTR_FROST_RISK_LEVEL] = value
+            self._attr_native_value = list(FrostRisk)[value]
         else:
-            self._attr_native_value = await getattr(self._device, self._sensor_type)()
+            self._attr_native_value = value
 
         for property_name, template in (
             ("_attr_icon", self._icon_template),
