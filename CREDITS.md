@@ -28,7 +28,7 @@
 
 # Translators
 
-**Brazilian Portugese:**
+**Brazilian Portuguese:**
 [<img src="https://github.com/cvroque.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @cvroque](https://github.com/cvroque)
 
