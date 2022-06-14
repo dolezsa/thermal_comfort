@@ -70,6 +70,10 @@
 [<img src="https://github.com/kongjudas.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @kongjudas](https://github.com/kongjudas)
 
+**Polish:**
+[<img src="https://github.com/pejotigrek.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@pejotigrek](https://github.com/pejotigrek)
+
 **Russian:**
 [<img src="https://github.com/drts-sv.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @drts-sv](https://github.com/drts-sv)
@@ -88,6 +92,6 @@
 [<img src="https://github.com/filikun.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @filikun](https://github.com/filikun)
 
-**Polish:**
-[<img src="https://github.com/pejotigrek.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@pejotigrek](https://github.com/pejotigrek)
+**Ukrainian:**
+[<img src="https://github.com/splin777.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@splin777](https://github.com/splin777)
