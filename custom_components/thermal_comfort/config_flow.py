@@ -372,14 +372,14 @@ def build_schema(
             vol.Required(
                 CONF_NAME, default=get_value(config_entry, CONF_NAME, DEFAULT_NAME)
             ): str,
-            vol.Required(CONF_TEMPERATURE_SENSOR,): selector(
+            vol.Required(CONF_TEMPERATURE_SENSOR): selector(
                 {
                     "entity": {
                         "include_entities": temperature_sensors,
                     }
                 }
             ),
-            vol.Required(CONF_HUMIDITY_SENSOR,): selector(
+            vol.Required(CONF_HUMIDITY_SENSOR): selector(
                 {
                     "entity": {
                         "include_entities": humidity_sensors,
