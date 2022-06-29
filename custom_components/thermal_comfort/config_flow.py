@@ -10,6 +10,7 @@ from homeassistant.core import HomeAssistant, State, callback
 from homeassistant.helpers import entity_registry
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_registry import EntityRegistry
+from homeassistant.helpers.selector import selector
 import voluptuous as vol
 
 from .const import DEFAULT_NAME, DOMAIN
@@ -371,18 +372,20 @@ def build_schema(
             vol.Required(
                 CONF_NAME, default=get_value(config_entry, CONF_NAME, DEFAULT_NAME)
             ): str,
-            vol.Required(
-                CONF_TEMPERATURE_SENSOR,
-                default=get_value(
-                    config_entry, CONF_TEMPERATURE_SENSOR, temperature_sensors[0]
-                ),
-            ): vol.In(temperature_sensors),
-            vol.Required(
-                CONF_HUMIDITY_SENSOR,
-                default=get_value(
-                    config_entry, CONF_HUMIDITY_SENSOR, humidity_sensors[0]
-                ),
-            ): vol.In(humidity_sensors),
+            vol.Required(CONF_TEMPERATURE_SENSOR): selector(
+                {
+                    "entity": {
+                        "include_entities": temperature_sensors,
+                    }
+                }
+            ),
+            vol.Required(CONF_HUMIDITY_SENSOR): selector(
+                {
+                    "entity": {
+                        "include_entities": humidity_sensors,
+                    }
+                }
+            ),
         },
     )
     if show_advanced:
