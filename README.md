@@ -65,6 +65,10 @@ sensors.
 
 ## Installation
 
+### Requirements
+
+Home Assistant >= 2021.12.0
+
 ### Using [HACS](https://hacs.xyz/) (recommended)
 
 This integration can be installed using HACS. To do it search for Thermal Comfort in the integrations section.
