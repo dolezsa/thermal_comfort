@@ -326,7 +326,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up entity configured via user interface.
 
-    Called via async_setup_platforms(, SENSOR) from __init__.py
+    Called via async_forward_entry_setups(, SENSOR) from __init__.py
     """
     data = hass.data[DOMAIN][config_entry.entry_id]
     if data.get(CONF_SCAN_INTERVAL) is None:
