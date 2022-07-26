@@ -1,0 +1,45 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "No se ha encontrado sensor de temperatura",
+      "humidity_not_found": "No se ha encontrado sensor de humedad"
+    },
+    "step": {
+      "init": {
+        "title": "Ajustes de confort termal",
+        "data": {
+          "temperature_sensor": "Sensor de temperatura",
+          "humidity_sensor": "Sensor de humedad",
+          "poll": "Activar consulta de datos",
+          "scan_interval": "Intervalo de consulta (segundos)",
+          "custom_icons": "Usar paquete de iconos personalizado"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Esta combinación de sensores de temperatura y humedad ya ha sido configurada.",
+      "no_sensors": "No se han encontrado sensores de temperatura o humedad. Prueba de nuevo en modo avanzado.",
+      "no_sensors_advanced": "No se han encontrado sensores de temperatura o humedad."
+    },
+    "error": {
+      "temperature_not_found": "No se han encontrado sensores de temperatura",
+      "humidity_not_found": "No se han encontrado sensores de humedad"
+    },
+    "step": {
+      "user": {
+        "title": "Ajustes de confort termal",
+        "data": {
+          "name": "Nombre",
+          "temperature_sensor": "Sensor de temperatura",
+          "humidity_sensor": "Sensor de humedad",
+          "poll": "Activar consulta de datos",
+          "scan_interval": "Intervalo de consulta (segundos)",
+          "custom_icons": "Usar paquete de iconos personalizado",
+          "enabled_sensors": "Sensores activados"
+        }
+      }
+    }
+  }
+}
