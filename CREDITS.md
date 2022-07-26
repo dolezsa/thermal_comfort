@@ -87,6 +87,8 @@
 **Spanish:**
 [<img src="https://github.com/RaulVKoNe.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @RaulVKoNe](https://github.com/RaulVKoNe)
+[<img src="https://github.com/alceasan.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@alceasan](https://github.com/alceasan)
 
 **Swedish:**
 [<img src="https://github.com/filikun.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
