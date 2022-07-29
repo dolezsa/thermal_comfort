@@ -89,8 +89,7 @@ LEN_DEFAULT_SENSORS = len(DEFAULT_SENSOR_TYPES)
 
 def get_sensor(hass, sensor_type: SensorType) -> str:
     """Get test sensor id."""
-    # TODO deprecate shortform in 2.0
-    return hass.states.get(f"{TEST_NAME}_{sensor_type.to_shortform()}")
+    return hass.states.get(f"{TEST_NAME}_{sensor_type}")
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
@@ -748,21 +747,6 @@ async def test_create_sensors(hass: HomeAssistant):
         assert get_eid(er, id_generator(entry.unique_id, s)) is not None
 
 
-async def test_sensor_type_from_shortform() -> None:
-    """Test if sensor types are correctly converted from shortform."""
-    assert SensorType.from_string("absolutehumidity") == SensorType.ABSOLUTE_HUMIDITY
-    assert SensorType.from_string("dewpoint") == SensorType.DEW_POINT
-    assert SensorType.from_string("frostpoint") == SensorType.FROST_POINT
-    assert SensorType.from_string("frostrisk") == SensorType.FROST_RISK
-    assert SensorType.from_string("heatindex") == SensorType.HEAT_INDEX
-    assert SensorType.from_string("simmerindex") == SensorType.SIMMER_INDEX
-    assert SensorType.from_string("simmerzone") == SensorType.SIMMER_ZONE
-    assert SensorType.from_string("perception") == SensorType.THERMAL_PERCEPTION
-    with pytest.raises(ValueError) as error:
-        SensorType.from_string("unknown")
-    assert "Unknown sensor type: unknown" in str(error.value)
-
-
 @pytest.mark.parametrize(
     "domains, config",
     [
@@ -777,7 +761,7 @@ async def test_sensor_type_from_shortform() -> None:
                                 "temperature_sensor": "sensor.test_temperature_sensor",
                                 "humidity_sensor": "sensor.test_humidity_sensor",
                                 "sensor_types": [
-                                    SensorType.THERMAL_PERCEPTION.to_shortform(),
+                                    SensorType.THERMAL_PERCEPTION,
                                     SensorType.ABSOLUTE_HUMIDITY,
                                 ],
                             },
@@ -795,7 +779,7 @@ async def test_sensor_type_from_shortform() -> None:
                         "temperature_sensor": "sensor.test_temperature_sensor",
                         "humidity_sensor": "sensor.test_humidity_sensor",
                         "sensor_types": [
-                            SensorType.THERMAL_PERCEPTION.to_shortform(),
+                            SensorType.THERMAL_PERCEPTION,
                             SensorType.ABSOLUTE_HUMIDITY,
                         ],
                     },
@@ -808,11 +792,7 @@ async def test_sensor_type_names(hass: HomeAssistant, start_ha: Callable) -> Non
     """Test if sensor types shortform can be used."""
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 2
     assert (
-        get_sensor(hass, SensorType.THERMAL_PERCEPTION).entity_id
-        == f"{PLATFORM_DOMAIN}.test_thermal_comfort_{SensorType.THERMAL_PERCEPTION.to_shortform()}"
-    )
-    assert (
-        SensorType.THERMAL_PERCEPTION.to_title()
+        SensorType.THERMAL_PERCEPTION.to_name()
         in get_sensor(hass, SensorType.THERMAL_PERCEPTION).name
     )
 

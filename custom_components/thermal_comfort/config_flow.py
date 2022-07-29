@@ -282,9 +282,7 @@ def get_sensors_by_device_class(
 
     def filter_thermal_comfort_ids(entity_id: str) -> bool:
         """Filter out device_ids containing our SensorType."""
-        return all(
-            sensor_type.to_shortform() not in entity_id for sensor_type in SensorType
-        )
+        return all(sensor_type not in entity_id for sensor_type in SensorType)
 
     filters_for_additional_sensors: list[callable] = [
         filter_useless_device_class,
@@ -414,7 +412,7 @@ def build_schema(
                         default=list(SensorType),
                     ): cv.multi_select(
                         {
-                            sensor_type: sensor_type.to_title()
+                            sensor_type: sensor_type.to_name()
                             for sensor_type in SensorType
                         }
                     ),

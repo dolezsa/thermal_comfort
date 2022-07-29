@@ -10,7 +10,6 @@ from typing import Any
 from homeassistant import util
 from homeassistant.backports.enum import StrEnum
 from homeassistant.components.sensor import (
-    ENTITY_ID_FORMAT,
     PLATFORM_SCHEMA,
     SensorDeviceClass,
     SensorEntity,
@@ -35,7 +34,7 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import TemplateError
 import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.entity import DeviceInfo, async_generate_entity_id
+from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import (
     async_track_state_change_event,
@@ -72,7 +71,6 @@ class ThermalComfortDeviceClass(StrEnum):
     THERMAL_PERCEPTION = "thermal_comfort__thermal_perception"
 
 
-# Deprecate shortform in 2.0
 class SensorType(StrEnum):
     """Sensor type enum."""
 
@@ -85,16 +83,9 @@ class SensorType(StrEnum):
     SIMMER_ZONE = "simmer_zone"
     THERMAL_PERCEPTION = "thermal_perception"
 
-    def to_title(self) -> str:
+    def to_name(self) -> str:
         """Return the title of the sensor type."""
-        return self.value.replace("_", " ").title()
-
-    def to_shortform(self) -> str:
-        """Return the shortform of the sensor type."""
-        if self.value == "thermal_perception":
-            return "perception"
-        else:
-            return self.value.replace("_", "")
+        return self.value.replace("_", " ").capitalize()
 
     @classmethod
     def from_string(cls, string: str) -> "SensorType":
@@ -102,32 +93,15 @@ class SensorType(StrEnum):
         if string in list(cls):
             return cls(string)
         else:
-            _LOGGER.warning(
-                "Sensor type shortform and legacy YAML will be removed in 2.0. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
+            raise ValueError(
+                f"Unknown sensor type: {string}. Please check https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-options for valid options."
             )
-            if string == "absolutehumidity":
-                return cls.ABSOLUTE_HUMIDITY
-            elif string == "dewpoint":
-                return cls.DEW_POINT
-            elif string == "frostpoint":
-                return cls.FROST_POINT
-            elif string == "frostrisk":
-                return cls.FROST_RISK
-            elif string == "heatindex":
-                return cls.HEAT_INDEX
-            elif string == "simmerindex":
-                return cls.SIMMER_INDEX
-            elif string == "simmerzone":
-                return cls.SIMMER_ZONE
-            elif string == "perception":
-                return cls.THERMAL_PERCEPTION
-            else:
-                raise ValueError(f"Unknown sensor type: {string}")
 
 
 SENSOR_TYPES = {
     SensorType.ABSOLUTE_HUMIDITY: {
         "key": SensorType.ABSOLUTE_HUMIDITY,
+        "name": SensorType.ABSOLUTE_HUMIDITY.to_name(),
         "device_class": SensorDeviceClass.HUMIDITY,
         "native_unit_of_measurement": "g/m³",
         "state_class": SensorStateClass.MEASUREMENT,
@@ -135,6 +109,7 @@ SENSOR_TYPES = {
     },
     SensorType.DEW_POINT: {
         "key": SensorType.DEW_POINT,
+        "name": SensorType.DEW_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
@@ -142,6 +117,7 @@ SENSOR_TYPES = {
     },
     SensorType.FROST_POINT: {
         "key": SensorType.FROST_POINT,
+        "name": SensorType.FROST_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
@@ -149,11 +125,13 @@ SENSOR_TYPES = {
     },
     SensorType.FROST_RISK: {
         "key": SensorType.FROST_RISK,
+        "name": SensorType.FROST_RISK.to_name(),
         "device_class": ThermalComfortDeviceClass.FROST_RISK,
         "icon": "mdi:snowflake-alert",
     },
     SensorType.HEAT_INDEX: {
         "key": SensorType.HEAT_INDEX,
+        "name": SensorType.HEAT_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
@@ -161,6 +139,7 @@ SENSOR_TYPES = {
     },
     SensorType.SIMMER_INDEX: {
         "key": SensorType.SIMMER_INDEX,
+        "name": SensorType.SIMMER_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
@@ -168,11 +147,13 @@ SENSOR_TYPES = {
     },
     SensorType.SIMMER_ZONE: {
         "key": SensorType.SIMMER_ZONE,
+        "name": SensorType.SIMMER_ZONE.to_name(),
         "device_class": ThermalComfortDeviceClass.SIMMER_ZONE,
         "icon": "tc:simmer-zone",
     },
     SensorType.THERMAL_PERCEPTION: {
         "key": SensorType.THERMAL_PERCEPTION,
+        "name": SensorType.THERMAL_PERCEPTION.to_name(),
         "device_class": ThermalComfortDeviceClass.THERMAL_PERCEPTION,
         "icon": "tc:thermal-perception",
     },
@@ -271,7 +252,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     """Set up the Thermal Comfort sensors."""
     if discovery_info is None:
         _LOGGER.warning(
-            "Legacy YAML configuration support will be removed in 2.0. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
+            "Legacy YAML configuration is unsupported in 2.0. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
         )
         devices = [
             dict(device_config, **{CONF_NAME: device_name})
@@ -307,8 +288,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
                 icon_template=device_config.get(CONF_ICON_TEMPLATE),
                 entity_picture_template=device_config.get(CONF_ENTITY_PICTURE_TEMPLATE),
                 sensor_type=SensorType.from_string(sensor_type),
-                friendly_name=device_config.get(CONF_FRIENDLY_NAME),
                 custom_icons=device_config.get(CONF_CUSTOM_ICONS, False),
+                is_config_entry=False,
             )
             for sensor_type in device_config.get(
                 CONF_SENSOR_TYPES, DEFAULT_SENSOR_TYPES
@@ -386,28 +367,18 @@ class SensorThermalComfort(SensorEntity):
         entity_description: SensorEntityDescription,
         icon_template: Template = None,
         entity_picture_template: Template = None,
-        friendly_name: str = None,
         custom_icons: bool = False,
+        is_config_entry: bool = True,
     ) -> None:
         """Initialize the sensor."""
         self._device = device
-        # TODO deprecate shortform in 2.0
         self._sensor_type = sensor_type
         self.entity_description = entity_description
-        if friendly_name is None:
+        self.entity_description.has_entity_name = is_config_entry
+        if not is_config_entry:
             self.entity_description.name = (
-                f"{self._device.name} {self._sensor_type.to_title()}"
+                f"{self._device.name} {self.entity_description.name}"
             )
-        else:
-            self.entity_description.name = (
-                f"{friendly_name} {self._sensor_type.to_title()}"
-            )
-        # TODO deprecate shortform in 2.0
-        self.entity_id = async_generate_entity_id(
-            ENTITY_ID_FORMAT,
-            f"{self._device.name}_{self._sensor_type.to_shortform()}",
-            hass=self._device.hass,
-        )
         if not custom_icons:
             if "tc" in self.entity_description.icon:
                 self._attr_icon = None
