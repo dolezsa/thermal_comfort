@@ -65,6 +65,8 @@
 @mario-tux](https://github.com/mario-tux)
 [<img src="https://github.com/rautesamtr.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @rautesamtr](https://github.com/rautesamtr)
+[<img src="https://github.com/wlady75.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@wlady75](https://github.com/wlady75)
 
 **Norwegian:**
 [<img src="https://github.com/kongjudas.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
