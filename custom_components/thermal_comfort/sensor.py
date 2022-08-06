@@ -101,24 +101,28 @@ class SensorType(StrEnum):
         """Return the sensor type from string."""
         if string in list(cls):
             return cls(string)
-        elif string == "absolutehumidity":
-            return cls.ABSOLUTE_HUMIDITY
-        elif string == "dewpoint":
-            return cls.DEW_POINT
-        elif string == "frostpoint":
-            return cls.FROST_POINT
-        elif string == "frostrisk":
-            return cls.FROST_RISK
-        elif string == "heatindex":
-            return cls.HEAT_INDEX
-        elif string == "simmerindex":
-            return cls.SIMMER_INDEX
-        elif string == "simmerzone":
-            return cls.SIMMER_ZONE
-        elif string == "perception":
-            return cls.THERMAL_PERCEPTION
         else:
-            raise ValueError(f"Unknown sensor type: {string}")
+            _LOGGER.warning(
+                "Sensor type shortform and legacy YAML will be removed in 2.0. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
+            )
+            if string == "absolutehumidity":
+                return cls.ABSOLUTE_HUMIDITY
+            elif string == "dewpoint":
+                return cls.DEW_POINT
+            elif string == "frostpoint":
+                return cls.FROST_POINT
+            elif string == "frostrisk":
+                return cls.FROST_RISK
+            elif string == "heatindex":
+                return cls.HEAT_INDEX
+            elif string == "simmerindex":
+                return cls.SIMMER_INDEX
+            elif string == "simmerzone":
+                return cls.SIMMER_ZONE
+            elif string == "perception":
+                return cls.THERMAL_PERCEPTION
+            else:
+                raise ValueError(f"Unknown sensor type: {string}")
 
 
 SENSOR_TYPES = {
@@ -266,6 +270,9 @@ def compute_once_lock(sensor_type):
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the Thermal Comfort sensors."""
     if discovery_info is None:
+        _LOGGER.warning(
+            "Legacy YAML configuration support will be removed in 2.0. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
+        )
         devices = [
             dict(device_config, **{CONF_NAME: device_name})
             for (device_name, device_config) in config[CONF_SENSORS].items()
