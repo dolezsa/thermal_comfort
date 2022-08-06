@@ -15,6 +15,17 @@
       "quite_uncomfortable": "Molto umido, abbastanza a disagio",
       "extremely_uncomfortable": "Particolarmente a disagio e opprimente",
       "severely_high": "Estremamente a disagio, rischioso per malattie correlati all'asma"
+    },
+    "thermal_comfort__simmer_zone": {
+      "cool": "Fresco",
+      "slightly_cool": "Leggermente fresco",
+      "comfortable": "Confortevole",
+      "slightly_warm": "Leggermente caldo",
+      "increasing_discomfort": "Poco confortevole",
+      "extremely_warm": "Estremo caldo",
+      "danger_of_heatstroke": "Pericolo colpo di calore",
+      "extreme_danger_of_heatstroke": "Estremo pericolo colpo di calore!",
+      "circulatory_collapse_imminent": "Imminente collasso circolatorio!"
     }
   }
 }
