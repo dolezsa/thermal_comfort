@@ -54,14 +54,14 @@ To use Thermal Comfort check the documentation for your preferred way to setup
 sensors.
 
 **UI/Frontend (Config Flow)
- [1.5.1](https://github.com/dolezsa/thermal_comfort/blob/1.5.1/documentation/config_flow.md) /
+ [1.5.2](https://github.com/dolezsa/thermal_comfort/blob/1.5.2/documentation/config_flow.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)**
 
 **YAML
- [1.5.1](https://github.com/dolezsa/thermal_comfort/blob/1.5.1/documentation/yaml.md) /
+ [1.5.2](https://github.com/dolezsa/thermal_comfort/blob/1.5.2/documentation/yaml.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md)**
 
-*Legacy YAML [1.5.1](https://github.com/dolezsa/thermal_comfort/blob/1.5.1/documentation/legacy_yaml.md)*
+*Legacy YAML [1.5.2](https://github.com/dolezsa/thermal_comfort/blob/1.5.2/documentation/legacy_yaml.md)*
 
 ## Installation
 
