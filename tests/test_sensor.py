@@ -366,6 +366,19 @@ async def test_simmer_zone(hass, start_ha):
     )
 
 
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_moist_air_enthalpy(hass, start_ha):
+    """Test if moist air enthalpy is calculated correctly."""
+    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY) is not None
+    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == "50.26"
+
+    hass.states.async_set("sensor.test_temperature_sensor", "20.77")
+    hass.states.async_set("sensor.test_humidity_sensor", "60.82")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY) is not None
+    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == "44.45"
+
+
 @pytest.mark.parametrize(
     "domains, config",
     [
