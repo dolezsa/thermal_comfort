@@ -49,6 +49,14 @@ Thermal Comfort provides the following calculated sensors for Home Assistant.
   <dd>
     The enthalpy of moist air is the sum of the enthalpy of the dry air and the enthalpy of the water vapour. Enthalpy is the total energy of a thermodynamic system.
   </dd>
+  <dt><strong>Summer Scharlau Index/Perception</strong></dt>
+  <dd>
+    The summer Scharlau index describes a bioclimatic thermal comfort when temperature values are higher than 0°C. Valid for temperatures 17° to 39°C (63° to 102°F) and humidity >= 30%.
+  </dd>
+  <dt><strong>Winter Scharlau Index/Perception</strong></dt>
+  <dd>
+    Reflects the level of human discomfort caused by cooling. Valid for: temperatures -5 to +6°C (23 to 43°F) and humidity >= 40%.
+  </dd>
 </dl>
 
 ![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/living_room.png)

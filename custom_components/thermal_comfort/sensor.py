@@ -50,6 +50,8 @@ _LOGGER = logging.getLogger(__name__)
 
 ATTR_HUMIDITY = "humidity"
 ATTR_FROST_RISK_LEVEL = "frost_risk_level"
+ATTR_SUMMER_SCHARLAU_INDEX = "summer_scharlau_index"
+ATTR_WINTER_SCHARLAU_INDEX = "winter_scharlau_index"
 CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
@@ -70,6 +72,7 @@ class ThermalComfortDeviceClass(StrEnum):
     SIMMER_ZONE = "thermal_comfort__simmer_zone"
     THERMAL_PERCEPTION = "thermal_comfort__thermal_perception"
     ENTHALPY = "thermal_comfort__enthalpy"
+    SCHARLAU_PERCEPTION = "thermal_comfort__scharlau_perception"
 
 
 class SensorType(StrEnum):
@@ -81,6 +84,8 @@ class SensorType(StrEnum):
     FROST_RISK = "frost_risk"
     HEAT_INDEX = "heat_index"
     MOIST_AIR_ENTHALPY = "moist_air_enthalpy"
+    SUMMER_SCHARLAU_PERCEPTION = "summer_scharlau_perception"
+    WINTER_SCHARLAU_PERCEPTION = "winter_scharlau_perception"
     SIMMER_INDEX = "simmer_index"
     SIMMER_ZONE = "simmer_zone"
     THERMAL_PERCEPTION = "thermal_perception"
@@ -145,6 +150,18 @@ SENSOR_TYPES = {
         "device_class": ThermalComfortDeviceClass.ENTHALPY,
         "native_unit_of_measurement": "kJ/kg",
         "state_class": SensorStateClass.MEASUREMENT,
+    },
+    SensorType.SUMMER_SCHARLAU_PERCEPTION: {
+        "key": SensorType.SUMMER_SCHARLAU_PERCEPTION,
+        "name": SensorType.SUMMER_SCHARLAU_PERCEPTION.to_name(),
+        "device_class": ThermalComfortDeviceClass.SCHARLAU_PERCEPTION,
+        "icon": "tc:simmer-zone",
+    },
+    SensorType.WINTER_SCHARLAU_PERCEPTION: {
+        "key": SensorType.WINTER_SCHARLAU_PERCEPTION,
+        "name": SensorType.WINTER_SCHARLAU_PERCEPTION.to_name(),
+        "device_class": ThermalComfortDeviceClass.SCHARLAU_PERCEPTION,
+        "icon": "tc:simmer-zone",
     },
     SensorType.SIMMER_INDEX: {
         "key": SensorType.SIMMER_INDEX,
@@ -238,6 +255,16 @@ class SimmerZone(StrEnum):
     DANGER_OF_HEATSTROKE = "danger_of_heatstroke"
     EXTREME_DANGER_OF_HEATSTROKE = "extreme_danger_of_heatstroke"
     CIRCULATORY_COLLAPSE_IMMINENT = "circulatory_collapse_imminent"
+
+
+class ScharlauPerception(StrEnum):
+    """Scharlau Winter and Summer Index Perception."""
+
+    OUTSIDE_CALCULABLE_RANGE = "outside_calculable_range"
+    COMFORTABLE = "comfortable"
+    SLIGHTLY_UNCOMFORTABLE = "slightly_uncomfortable"
+    MODERATLY_UNCOMFORTABLE = "moderatly_uncomfortable"
+    HIGHLY_UNCOMFORTABLE = "highly_uncomfortable"
 
 
 def compute_once_lock(sensor_type):
@@ -430,6 +457,12 @@ class SensorThermalComfort(SensorEntity):
         if self._sensor_type == SensorType.FROST_RISK:
             self._attr_extra_state_attributes[ATTR_FROST_RISK_LEVEL] = value
             self._attr_native_value = list(FrostRisk)[value]
+        elif self._sensor_type == SensorType.SUMMER_SCHARLAU_PERCEPTION:
+            self._attr_extra_state_attributes[ATTR_SUMMER_SCHARLAU_INDEX] = value[0]
+            self._attr_native_value = value[1]
+        elif self._sensor_type == SensorType.WINTER_SCHARLAU_PERCEPTION:
+            self._attr_extra_state_attributes[ATTR_WINTER_SCHARLAU_INDEX] = value[0]
+            self._attr_native_value = value[1]
         else:
             self._attr_native_value = value
 
@@ -669,6 +702,43 @@ class DeviceThermalComfort:
         ):
             return 2  # Frost probable despite the temperature
         return 0  # No risk of frost
+
+    @compute_once_lock(SensorType.SUMMER_SCHARLAU_PERCEPTION)
+    async def summer_scharlau_perception(self) -> (float, ScharlauPerception):
+        """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
+        tc = -17.089 * math.log(self._humidity) + 94.979
+        ise = tc - self._temperature
+
+        if self._temperature < 17 or self._temperature > 39 or self._humidity < 30:
+            perception = ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
+        elif ise <= -3:
+            perception = ScharlauPerception.HIGHLY_UNCOMFORTABLE
+        elif ise <= -1:
+            perception = ScharlauPerception.MODERATLY_UNCOMFORTABLE
+        elif ise < 0:
+            perception = ScharlauPerception.SLIGHTLY_UNCOMFORTABLE
+        else:
+            perception = ScharlauPerception.COMFORTABLE
+
+        return round(ise, 2), perception
+
+    @compute_once_lock(SensorType.WINTER_SCHARLAU_PERCEPTION)
+    async def winter_scharlau_perception(self) -> (float, ScharlauPerception):
+        """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
+        tc = (0.0003 * self._humidity) + (0.1497 * self._humidity) - 7.7133
+        ish = self._temperature - tc
+        if self._temperature < -5 or self._temperature > 6 or self._humidity < 40:
+            perception = ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
+        elif ish <= -3:
+            perception = ScharlauPerception.HIGHLY_UNCOMFORTABLE
+        elif ish <= -1:
+            perception = ScharlauPerception.MODERATLY_UNCOMFORTABLE
+        elif ish < 0:
+            perception = ScharlauPerception.SLIGHTLY_UNCOMFORTABLE
+        else:
+            perception = ScharlauPerception.COMFORTABLE
+
+        return round(ish, 2), perception
 
     @compute_once_lock(SensorType.SIMMER_INDEX)
     async def simmer_index(self) -> float:

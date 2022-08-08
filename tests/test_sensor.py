@@ -15,9 +15,12 @@ from custom_components.thermal_comfort.const import DOMAIN
 from custom_components.thermal_comfort.sensor import (
     ATTR_FROST_RISK_LEVEL,
     ATTR_HUMIDITY,
+    ATTR_SUMMER_SCHARLAU_INDEX,
+    ATTR_WINTER_SCHARLAU_INDEX,
     CONF_CUSTOM_ICONS,
     CONF_SENSOR_TYPES,
     DEFAULT_SENSOR_TYPES,
+    ScharlauPerception,
     SensorType,
     SimmerZone,
     ThermalPerception,
@@ -377,6 +380,193 @@ async def test_moist_air_enthalpy(hass, start_ha):
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY) is not None
     assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == "44.45"
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_summer_scharlau_perception(hass, start_ha):
+    """Test if summer scharlau perception is calculated correctly."""
+    assert get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION) is not None
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).attributes[
+            ATTR_SUMMER_SCHARLAU_INDEX
+        ]
+        == 3.13
+    )
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.COMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "36.291")
+    hass.states.async_set("sensor.test_humidity_sensor", "31.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).attributes[
+            ATTR_SUMMER_SCHARLAU_INDEX
+        ]
+        == 0
+    )
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.COMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "36.31")
+    hass.states.async_set("sensor.test_humidity_sensor", "31.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).attributes[
+            ATTR_SUMMER_SCHARLAU_INDEX
+        ]
+        == -0.01
+    )
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.SLIGHTLY_UNCOMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "36.23")
+    hass.states.async_set("sensor.test_humidity_sensor", "33.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).attributes[
+            ATTR_SUMMER_SCHARLAU_INDEX
+        ]
+        == -1.0
+    )
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.MODERATLY_UNCOMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "35.82")
+    hass.states.async_set("sensor.test_humidity_sensor", "38.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).attributes[
+            ATTR_SUMMER_SCHARLAU_INDEX
+        ]
+        == -3.0
+    )
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.HIGHLY_UNCOMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "39.01")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "15.99")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "30.00")
+    hass.states.async_set("sensor.test_humidity_sensor", "29.99")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
+    )
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_winter_scharlau_perception(hass, start_ha):
+    """Test if winter scharlau perception is calculated correctly."""
+    assert get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION) is not None
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).attributes[
+            ATTR_WINTER_SCHARLAU_INDEX
+        ]
+        == 25.21
+    )
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "3.54")
+    hass.states.async_set("sensor.test_humidity_sensor", "75.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).attributes[
+            ATTR_WINTER_SCHARLAU_INDEX
+        ]
+        == 0
+    )
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.COMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "3.53")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).attributes[
+            ATTR_WINTER_SCHARLAU_INDEX
+        ]
+        == -0.01
+    )
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.SLIGHTLY_UNCOMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "-0.06")
+    hass.states.async_set("sensor.test_humidity_sensor", "71.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).attributes[
+            ATTR_WINTER_SCHARLAU_INDEX
+        ]
+        == -3.0
+    )
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.MODERATLY_UNCOMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "-0.07")
+    hass.states.async_set("sensor.test_humidity_sensor", "71.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).attributes[
+            ATTR_WINTER_SCHARLAU_INDEX
+        ]
+        == -3.01
+    )
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.HIGHLY_UNCOMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "-6.01")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "6.01")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "6.00")
+    hass.states.async_set("sensor.test_humidity_sensor", "39.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).state
+        == ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
+    )
 
 
 @pytest.mark.parametrize(
