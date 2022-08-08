@@ -69,6 +69,7 @@ class ThermalComfortDeviceClass(StrEnum):
     FROST_RISK = "thermal_comfort__frost_risk"
     SIMMER_ZONE = "thermal_comfort__simmer_zone"
     THERMAL_PERCEPTION = "thermal_comfort__thermal_perception"
+    ENTHALPY = "thermal_comfort__enthalpy"
 
 
 class SensorType(StrEnum):
@@ -79,6 +80,7 @@ class SensorType(StrEnum):
     FROST_POINT = "frost_point"
     FROST_RISK = "frost_risk"
     HEAT_INDEX = "heat_index"
+    MOIST_AIR_ENTHALPY = "moist_air_enthalpy"
     SIMMER_INDEX = "simmer_index"
     SIMMER_ZONE = "simmer_zone"
     THERMAL_PERCEPTION = "thermal_perception"
@@ -136,6 +138,13 @@ SENSOR_TYPES = {
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "tc:heat-index",
+    },
+    SensorType.MOIST_AIR_ENTHALPY: {
+        "key": SensorType.MOIST_AIR_ENTHALPY,
+        "name": SensorType.MOIST_AIR_ENTHALPY.to_name(),
+        "device_class": ThermalComfortDeviceClass.ENTHALPY,
+        "native_unit_of_measurement": "kJ/kg",
+        "state_class": SensorStateClass.MEASUREMENT,
     },
     SensorType.SIMMER_INDEX: {
         "key": SensorType.SIMMER_INDEX,
@@ -379,7 +388,7 @@ class SensorThermalComfort(SensorEntity):
             self.entity_description.name = (
                 f"{self._device.name} {self.entity_description.name}"
             )
-        if not custom_icons:
+        if not custom_icons and self.entity_description.icon is not None:
             if "tc" in self.entity_description.icon:
                 self._attr_icon = None
         self._icon_template = icon_template
@@ -699,6 +708,58 @@ class DeviceThermalComfort:
             return SimmerZone.EXTREME_DANGER_OF_HEATSTROKE
         else:
             return SimmerZone.CIRCULATORY_COLLAPSE_IMMINENT
+
+    @compute_once_lock(SensorType.MOIST_AIR_ENTHALPY)
+    async def moist_air_enthalpy(self) -> float:
+        """Calculate the enthalpy of moist air."""
+        patm = 101325
+        c_to_k = 273.15
+        h_fg = 2501000
+        cp_vapour = 1805.0
+
+        # calculate vapour pressure
+        ta_k = self._temperature + c_to_k
+        c1 = -5674.5359
+        c2 = 6.3925247
+        c3 = -0.9677843 * math.pow(10, -2)
+        c4 = 0.62215701 * math.pow(10, -6)
+        c5 = 0.20747825 * math.pow(10, -8)
+        c6 = -0.9484024 * math.pow(10, -12)
+        c7 = 4.1635019
+        c8 = -5800.2206
+        c9 = 1.3914993
+        c10 = -0.048640239
+        c11 = 0.41764768 * math.pow(10, -4)
+        c12 = -0.14452093 * math.pow(10, -7)
+        c13 = 6.5459673
+
+        if ta_k < c_to_k:
+            pascals = math.exp(
+                c1 / ta_k
+                + c2
+                + ta_k * (c3 + ta_k * (c4 + ta_k * (c5 + c6 * ta_k)))
+                + c7 * math.log(ta_k)
+            )
+        else:
+            pascals = math.exp(
+                c8 / ta_k
+                + c9
+                + ta_k * (c10 + ta_k * (c11 + ta_k * c12))
+                + c13 * math.log(ta_k)
+            )
+
+        # calculate humidity ratio
+        p_saturation = pascals
+        p_vap = self._humidity / 100 * p_saturation
+        hr = 0.62198 * p_vap / (patm - p_vap)
+
+        # calculate enthalpy
+        cp_air = 1004
+        h_dry_air = cp_air * self._temperature
+        h_sat_vap = h_fg + cp_vapour * self._temperature
+        h = h_dry_air + hr * h_sat_vap
+
+        return round(h / 1000, 2)
 
     async def async_update(self):
         """Update the state."""

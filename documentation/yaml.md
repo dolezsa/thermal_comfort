@@ -32,7 +32,7 @@ thermal_comfort:
     <code>heat_index</code>, <code>dew_point</code>,
     <code>thermal_perception</code>, <code>frost_point</code>,
     <code>frost_risk</code>, <code>simmer_index</code>,
-    <code>simmer_zone</code>
+    <code>simmer_zone</code>, <code>moist_air_enthalpy</code>
   </dd>
   <dt><strong>poll</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
   <dd>
