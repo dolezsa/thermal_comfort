@@ -71,6 +71,7 @@ class ThermalComfortDeviceClass(StrEnum):
     FROST_RISK = "thermal_comfort__frost_risk"
     SIMMER_ZONE = "thermal_comfort__simmer_zone"
     THERMAL_PERCEPTION = "thermal_comfort__thermal_perception"
+    HUMIDEX_PERCEPTION = "thermal_comfort__humidex_perception"
     ENTHALPY = "thermal_comfort__enthalpy"
     SCHARLAU_PERCEPTION = "thermal_comfort__scharlau_perception"
 
@@ -83,6 +84,8 @@ class SensorType(StrEnum):
     FROST_POINT = "frost_point"
     FROST_RISK = "frost_risk"
     HEAT_INDEX = "heat_index"
+    HUMIDEX = "humidex"
+    HUMIDEX_PERCEPTION = "humidex_perception"
     MOIST_AIR_ENTHALPY = "moist_air_enthalpy"
     SUMMER_SCHARLAU_PERCEPTION = "summer_scharlau_perception"
     WINTER_SCHARLAU_PERCEPTION = "winter_scharlau_perception"
@@ -143,6 +146,20 @@ SENSOR_TYPES = {
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "tc:heat-index",
+    },
+    SensorType.HUMIDEX: {
+        "key": SensorType.HUMIDEX,
+        "name": SensorType.HUMIDEX.to_name(),
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_unit_of_measurement": TEMP_CELSIUS,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "tc:heat-index",
+    },
+    SensorType.HUMIDEX_PERCEPTION: {
+        "key": SensorType.HUMIDEX_PERCEPTION,
+        "name": SensorType.HUMIDEX_PERCEPTION.to_name(),
+        "device_class": ThermalComfortDeviceClass.HUMIDEX_PERCEPTION,
+        "icon": "tc:thermal-perception",
     },
     SensorType.MOIST_AIR_ENTHALPY: {
         "key": SensorType.MOIST_AIR_ENTHALPY,
@@ -265,6 +282,17 @@ class ScharlauPerception(StrEnum):
     SLIGHTLY_UNCOMFORTABLE = "slightly_uncomfortable"
     MODERATLY_UNCOMFORTABLE = "moderatly_uncomfortable"
     HIGHLY_UNCOMFORTABLE = "highly_uncomfortable"
+
+
+class HumidexPerception(StrEnum):
+    """Humidex Perception."""
+
+    COMFORTABLE = "comfortable"
+    NOTICABLE_DISCOMFORT = "noticable_discomfort"
+    EVIDENT_DISCOMFORT = "evident_discomfort"
+    GREAT_DISCOMFORT = "great_discomfort"
+    DANGEROUS_DISCOMFORT = "dangerous_discomfort"
+    HEAT_STROKE = "heat_stroke"
 
 
 def compute_once_lock(sensor_type):
@@ -637,6 +665,31 @@ class DeviceThermalComfort:
             hi = hi + ((self._humidity - 85) * 0.1) * ((87 - fahrenheit) * 0.2)
 
         return round(util.temperature.fahrenheit_to_celsius(hi), 2)
+
+    @compute_once_lock(SensorType.HUMIDEX)
+    async def humidex(self) -> int:
+        """<https://simple.wikipedia.org/wiki/Humidex#Humidex_formula>."""
+        dewpoint = await self.dew_point()
+        e = 6.11 * math.exp(5417.7530 * ((1 / 273.16) - (1 / (dewpoint + 273.15))))
+        h = (0.5555) * (e - 10.0)
+        return round(self._temperature + h, 2)
+
+    @compute_once_lock(SensorType.HUMIDEX_PERCEPTION)
+    async def humidex_perception(self) -> HumidexPerception:
+        """<https://simple.wikipedia.org/wiki/Humidex#Humidex_formula>."""
+        humidex = await self.humidex()
+        if humidex > 54:
+            return HumidexPerception.HEAT_STROKE
+        elif humidex >= 45:
+            return HumidexPerception.DANGEROUS_DISCOMFORT
+        elif humidex >= 40:
+            return HumidexPerception.GREAT_DISCOMFORT
+        elif humidex >= 35:
+            return HumidexPerception.EVIDENT_DISCOMFORT
+        elif humidex >= 30:
+            return HumidexPerception.NOTICABLE_DISCOMFORT
+        else:
+            return HumidexPerception.COMFORTABLE
 
     @compute_once_lock(SensorType.THERMAL_PERCEPTION)
     async def thermal_perception(self) -> ThermalPerception:

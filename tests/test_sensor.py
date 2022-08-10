@@ -20,6 +20,7 @@ from custom_components.thermal_comfort.sensor import (
     CONF_CUSTOM_ICONS,
     CONF_SENSOR_TYPES,
     DEFAULT_SENSOR_TYPES,
+    HumidexPerception,
     ScharlauPerception,
     SensorType,
     SimmerZone,
@@ -145,6 +146,72 @@ async def test_heatindex(hass, start_ha):
     hass.states.async_set("sensor.test_temperature_sensor", "28.0")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.HEAT_INDEX).state == "26.55"
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_humidex(hass, start_ha):
+    """Test if humidex is calculated correctly."""
+    assert get_sensor(hass, SensorType.HUMIDEX) is not None
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "28.3"
+
+    hass.states.async_set("sensor.test_temperature_sensor", "15.0")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "14.18"
+
+    hass.states.async_set("sensor.test_humidity_sensor", "25.0")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "11.81"
+
+    hass.states.async_set("sensor.test_humidity_sensor", "12.0")
+    await hass.async_block_till_done()
+    hass.states.async_set("sensor.test_temperature_sensor", "28.0")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "24.97"
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_humidex_perception(hass, start_ha):
+    """Test if humidex perception is calculated correctly."""
+    assert get_sensor(hass, SensorType.HUMIDEX_PERCEPTION) is not None
+    assert (
+        get_sensor(hass, SensorType.HUMIDEX_PERCEPTION).state
+        == HumidexPerception.COMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "26.1")
+    hass.states.async_set("sensor.test_humidity_sensor", "50.0")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "30.0"
+    assert (
+        get_sensor(hass, SensorType.HUMIDEX_PERCEPTION).state
+        == HumidexPerception.NOTICABLE_DISCOMFORT
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "29.06")
+    hass.states.async_set("sensor.test_humidity_sensor", "51.0")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "35.0"
+    assert (
+        get_sensor(hass, SensorType.HUMIDEX_PERCEPTION).state
+        == HumidexPerception.EVIDENT_DISCOMFORT
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "34.67")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "45.0"
+    assert (
+        get_sensor(hass, SensorType.HUMIDEX_PERCEPTION).state
+        == HumidexPerception.DANGEROUS_DISCOMFORT
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "35.95")
+    hass.states.async_set("sensor.test_humidity_sensor", "70")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "54.01"
+    assert (
+        get_sensor(hass, SensorType.HUMIDEX_PERCEPTION).state
+        == HumidexPerception.HEAT_STROKE
+    )
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)

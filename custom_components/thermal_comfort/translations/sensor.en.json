@@ -16,6 +16,14 @@
       "extremely_uncomfortable": "Extremely uncomfortable, oppressive",
       "severely_high": "Severely high, even deadly for asthma related illnesses"
     },
+    "thermal_comfort__humidex_perception": {
+      "comfortable": "Comfortable",
+      "noticable_discomfort": "Noticeable discomfort",
+      "evident_discomfort": "Evident discomfort",
+      "great_discomfort": "Great discomfort, avoid exertion",
+      "dangerous_discomfort": "Dangerous discomfort",
+      "heat_stroke": "Heat stroke possible"
+    },
     "thermal_comfort__simmer_zone": {
       "cool": "Cool",
       "slightly_cool": "Slightly cool",
