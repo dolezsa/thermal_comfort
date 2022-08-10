@@ -26,7 +26,7 @@
 * Upstream port of simmer index and simmer zone. Implementing tests for it.
 
 
-# Translators
+# Translators 
 
 **Brazilian Portuguese:**
 [<img src="https://github.com/cvroque.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
@@ -35,6 +35,10 @@
 **Czech:**
 [<img src="https://github.com/mstefany.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @mstefany](https://github.com/mstefany)
+
+**Catalan:**
+[<img src="https://github.com/eretna.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@eretna](https://github.com/eretna)
 
 **Dutch:**
 [<img src="https://github.com/rdwdm.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
