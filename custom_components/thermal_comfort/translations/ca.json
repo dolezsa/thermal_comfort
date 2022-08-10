@@ -1,0 +1,45 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "No s'ha trobat el sensor de temperatura",
+      "humidity_not_found": "No s'ha trobat el sensor d'humitat"
+    },
+    "step": {
+      "init": {
+        "title": "Configuració de Thermal Comfort",
+        "data": {
+          "temperature_sensor": "Sensor de temperatura",
+          "humidity_sensor": "Sensor d'humitat",
+          "poll": "Activar la consulta constant de les dades",
+          "scan_interval": "Interval de consulta (segons)",
+          "custom_icons": "Utilitzar el paquet d'icones personalitzat"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Aquesta combinació de sensors de temperatura i humitat ja està configurada.",
+      "no_sensors": "No s'han trobat sensors de temperatura o humitat. Torna-ho a provar en mode avançat.",
+      "no_sensors_advanced": "No s'han trobat sensors de temperatura o humitat."
+    },
+    "error": {
+      "temperature_not_found": "No s'ha trobat el sensor de temperatura",
+      "humidity_not_found": "No s'ha trobat el sensor d'humitat"
+    },
+    "step": {
+      "user": {
+        "title": "Configuració de Thermal Comfort",
+        "data": {
+          "name": "Nom",
+          "temperature_sensor": "Sensor de temperatura",
+          "humidity_sensor": "Sensor d'humitat",
+          "poll": "Activar la consulta constant de les dades",
+          "scan_interval": "Interval de consulta (segons)",
+          "custom_icons": "Utilitzar el paquet d'icones personalitzat",
+          "enabled_sensors": "Sensors activats"
+        }
+      }
+    }
+  }
+}
