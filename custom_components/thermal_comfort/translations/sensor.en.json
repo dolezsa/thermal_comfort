@@ -26,6 +26,13 @@
       "danger_of_heatstroke": "Danger of heatstroke",
       "extreme_danger_of_heatstroke": "Extreme danger of heatstroke",
       "circulatory_collapse_imminent": "Circulatory collapse imminent"
+    },
+    "thermal_comfort__scharlau_perception": {
+      "outside_calculable_range": "Outside of the calculable range",
+      "comfortable": "Comfortable",
+      "slightly_uncomfortable": "Slightly uncomfortable",
+      "moderatly_uncomfortable": "Moderatly uncomfortable",
+      "highly_uncomfortable": "Highly uncomfortable"
     }
   }
 }
