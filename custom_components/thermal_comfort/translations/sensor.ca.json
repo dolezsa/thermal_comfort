@@ -16,6 +16,14 @@
       "extremely_uncomfortable": "Extremadament incòmode, aclaparador",
       "severely_high": "Molt alt, fins i tot mortal per a persones amb malalties relacionades amb l'asma"
     },
+    "thermal_comfort__humidex_perception": {
+      "comfortable": "Còmode",
+      "noticable_discomfort": "Una mica incòmode",
+      "evident_discomfort": "Bastant incòmode",
+      "great_discomfort": "Molt incòmode, evitar esforços",
+      "dangerous_discomfort": "Malestar perillós",
+      "heat_stroke": "Possible cop de calor"
+    },
     "thermal_comfort__simmer_zone": {
       "cool": "Fred",
       "slightly_cool": "Una mica fred",
@@ -26,6 +34,13 @@
       "danger_of_heatstroke": "Perill de cop de calor",
       "extreme_danger_of_heatstroke": "Perill extrem de cop de calor",
       "circulatory_collapse_imminent": "Colapse circulatori imminent"
+    },
+    "thermal_comfort__scharlau_perception": {
+      "outside_calculable_range": "Fora de l'interval calculable",
+      "comfortable": "Còmode",
+      "slightly_uncomfortable": "Una mica incòmode",
+      "moderatly_uncomfortable": "Bastant incòmode",
+      "highly_uncomfortable": "Molt incòmode"
     }
   }
 }
