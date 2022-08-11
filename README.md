@@ -17,6 +17,10 @@ Thermal Comfort provides the following calculated sensors for Home Assistant.
     The heat index combines air temperature and relative humidity to posit a
     human-perceived equivalent temperature.
   </dd>
+  <dt><strong>Humidex + Perception</strong></dt>
+  <dd>
+    The humidex (humidity index) describes how hot the weather feels to an average person as a result of the combined effect of heat and humidity. It is calculated from the dew point.
+  </dd>
   <dt><strong>Dew Point</strong></dt>
   <dd>
     The dew point is the temperature to which air must be cooled to become

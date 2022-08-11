@@ -30,6 +30,7 @@ thermal_comfort:
     A list of sensors to create. If omitted all will be created.
     Available sensors: <code>absolute_humidity</code>,
     <code>heat_index</code>, <code>dew_point</code>,
+    <code>humidex</code>, <code>humidex_perception</code>,
     <code>thermal_perception</code>, <code>frost_point</code>,
     <code>frost_risk</code>, <code>simmer_index</code>,
     <code>simmer_zone</code>, <code>moist_air_enthalpy</code>
