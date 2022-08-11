@@ -16,6 +16,14 @@
       "extremely_uncomfortable": "Extremadamente incómodo, agobiante",
       "severely_high": "Muy alto, incluso mortal para enfermedades relacionadas con el asma"
     },
+    "thermal_comfort__humidex_perception": {
+      "comfortable": "Cómodo",
+      "noticable_discomfort": "Un poco incómodo",
+      "evident_discomfort": "Bastante incómodo",
+      "great_discomfort": "Muy incómodo, evitar esfuerzos",
+      "dangerous_discomfort": "Incomodidad peligrosa",
+      "heat_stroke": "Posible golpe de calor"
+    },
     "thermal_comfort__simmer_zone": {
       "cool": "Fresco",
       "slightly_cool": "Ligeramente fresco",
@@ -26,6 +34,13 @@
       "danger_of_heatstroke": "Riesgo de golpe de calor",
       "extreme_danger_of_heatstroke": "Riesgo extremo de golpe de calor",
       "circulatory_collapse_imminent": "Colapso circulatorio inminente"
+    },
+    "thermal_comfort__scharlau_perception": {
+      "outside_calculable_range": "Fuera del rango calculable",
+      "comfortable": "Cómodo",
+      "slightly_uncomfortable": "Un poco incómodo",
+      "moderatly_uncomfortable": "Bastante incómodo",
+      "highly_uncomfortable": "Muy incómodo"
     }
   }
 }
