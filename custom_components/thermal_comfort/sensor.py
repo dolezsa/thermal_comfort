@@ -108,6 +108,15 @@ class SensorType(StrEnum):
             )
 
 
+TC_ICONS = {
+    SensorType.DEW_POINT: "tc:dew-point",
+    SensorType.FROST_POINT: "tc:frost-point",
+    SensorType.SUMMER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
+    SensorType.WINTER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
+    SensorType.SIMMER_ZONE: "tc:thermal-perception",
+    SensorType.THERMAL_PERCEPTION: "tc:thermal-perception",
+}
+
 SENSOR_TYPES = {
     SensorType.ABSOLUTE_HUMIDITY: {
         "key": SensorType.ABSOLUTE_HUMIDITY,
@@ -123,7 +132,7 @@ SENSOR_TYPES = {
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "tc:dew-point",
+        "icon": "mdi:thermometer-water",
     },
     SensorType.FROST_POINT: {
         "key": SensorType.FROST_POINT,
@@ -131,7 +140,7 @@ SENSOR_TYPES = {
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "tc:frost-point",
+        "icon": "mdi:snowflake-thermometer",
     },
     SensorType.FROST_RISK: {
         "key": SensorType.FROST_RISK,
@@ -145,7 +154,7 @@ SENSOR_TYPES = {
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "tc:heat-index",
+        "icon": "mdi:sun-thermometer",
     },
     SensorType.HUMIDEX: {
         "key": SensorType.HUMIDEX,
@@ -153,13 +162,13 @@ SENSOR_TYPES = {
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "tc:heat-index",
+        "icon": "mdi:sun-thermometer",
     },
     SensorType.HUMIDEX_PERCEPTION: {
         "key": SensorType.HUMIDEX_PERCEPTION,
         "name": SensorType.HUMIDEX_PERCEPTION.to_name(),
         "device_class": ThermalComfortDeviceClass.HUMIDEX_PERCEPTION,
-        "icon": "tc:thermal-perception",
+        "icon": "mdi:sun-thermometer",
     },
     SensorType.MOIST_AIR_ENTHALPY: {
         "key": SensorType.MOIST_AIR_ENTHALPY,
@@ -167,18 +176,19 @@ SENSOR_TYPES = {
         "device_class": ThermalComfortDeviceClass.ENTHALPY,
         "native_unit_of_measurement": "kJ/kg",
         "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:water-circle",
     },
     SensorType.SUMMER_SCHARLAU_PERCEPTION: {
         "key": SensorType.SUMMER_SCHARLAU_PERCEPTION,
         "name": SensorType.SUMMER_SCHARLAU_PERCEPTION.to_name(),
         "device_class": ThermalComfortDeviceClass.SCHARLAU_PERCEPTION,
-        "icon": "tc:simmer-zone",
+        "icon": "mdi:sun-thermometer",
     },
     SensorType.WINTER_SCHARLAU_PERCEPTION: {
         "key": SensorType.WINTER_SCHARLAU_PERCEPTION,
         "name": SensorType.WINTER_SCHARLAU_PERCEPTION.to_name(),
         "device_class": ThermalComfortDeviceClass.SCHARLAU_PERCEPTION,
-        "icon": "tc:simmer-zone",
+        "icon": "mdi:snowflake-thermometer",
     },
     SensorType.SIMMER_INDEX: {
         "key": SensorType.SIMMER_INDEX,
@@ -186,19 +196,19 @@ SENSOR_TYPES = {
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "tc:simmer-index",
+        "icon": "mdi:sun-thermometer",
     },
     SensorType.SIMMER_ZONE: {
         "key": SensorType.SIMMER_ZONE,
         "name": SensorType.SIMMER_ZONE.to_name(),
         "device_class": ThermalComfortDeviceClass.SIMMER_ZONE,
-        "icon": "tc:simmer-zone",
+        "icon": "mdi:sun-thermometer",
     },
     SensorType.THERMAL_PERCEPTION: {
         "key": SensorType.THERMAL_PERCEPTION,
         "name": SensorType.THERMAL_PERCEPTION.to_name(),
         "device_class": ThermalComfortDeviceClass.THERMAL_PERCEPTION,
-        "icon": "tc:thermal-perception",
+        "icon": "mdi:sun-thermometer",
     },
 }
 
@@ -443,9 +453,9 @@ class SensorThermalComfort(SensorEntity):
             self.entity_description.name = (
                 f"{self._device.name} {self.entity_description.name}"
             )
-        if not custom_icons and self.entity_description.icon is not None:
-            if "tc" in self.entity_description.icon:
-                self._attr_icon = None
+        if custom_icons:
+            if self.entity_description.key in TC_ICONS:
+                self.entity_description.icon = TC_ICONS[self.entity_description.key]
         self._icon_template = icon_template
         self._entity_picture_template = entity_picture_template
         self._attr_native_value = None
