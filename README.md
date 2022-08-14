@@ -39,15 +39,13 @@ Thermal Comfort provides the following calculated sensors for Home Assistant.
   <dd>
     Risk of Frost based on current temperature, frost point and absolute humidity.
   </dd>
-  <dt><strong>Simmer Index</strong></dt>
+  <dt><strong>Summer Simmer Index</strong></dt>
   <dd>
-    An index that combines air temperature and relative humidity. In contrast to
-    the Heat Index it describes the human-perceived equivalent temperature at
-    night and describes a factor of discomfort.
+    Provides a proven indicator of heat stress concerns and discomfort using meaningful equivalent temperature values for general public acceptance and awareness.
   </dd>
-  <dt><strong>Simmer Zone</strong></dt>
+  <dt><strong>Summer Simmer Zone</strong></dt>
   <dd>
-    Human perception of the simmer index.
+    Human perception of the summer simmer index.
   </dd>
   <dt><strong>Moist Air Enthalpy</strong></dt>
   <dd>
