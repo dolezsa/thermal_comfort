@@ -102,10 +102,10 @@ class SensorType(StrEnum):
         """Return the sensor type from string."""
         if string in list(cls):
             return cls(string)
-        else:
-            raise ValueError(
-                f"Unknown sensor type: {string}. Please check https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-options for valid options."
-            )
+        raise ValueError(
+            f"Unknown sensor type: {string}."
+            "Please check https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-options for valid options."
+        )
 
 
 TC_ICONS = {
@@ -322,11 +322,14 @@ def compute_once_lock(sensor_type):
     return wrapper
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+async def async_setup_platform(
+    hass: HomeAssistant, config, async_add_entities, discovery_info=None
+):
     """Set up the Thermal Comfort sensors."""
     if discovery_info is None:
         _LOGGER.warning(
-            "Legacy YAML configuration is unsupported in 2.0. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
+            "Legacy YAML configuration is unsupported in 2.0."
+            "You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
         )
         devices = [
             dict(device_config, **{CONF_NAME: device_name})
@@ -390,7 +393,7 @@ async def async_setup_entry(
         ] = SCAN_INTERVAL_DEFAULT
         data[CONF_SCAN_INTERVAL] = SCAN_INTERVAL_DEFAULT
 
-    _LOGGER.debug(f"async_setup_entry: {data}")
+    _LOGGER.debug("async_setup_entry: %s", data)
     compute_device = DeviceThermalComfort(
         hass=hass,
         name=data[CONF_NAME],
@@ -434,6 +437,8 @@ def id_generator(unique_id: str, sensor_type: str) -> str:
 class SensorThermalComfort(SensorEntity):
     """Representation of a Thermal Comfort Sensor."""
 
+    _attr_should_poll = False
+
     def __init__(
         self,
         device: "DeviceThermalComfort",
@@ -462,7 +467,6 @@ class SensorThermalComfort(SensorEntity):
         self._attr_extra_state_attributes = {}
         if self._device.unique_id is not None:
             self._attr_unique_id = id_generator(self._device.unique_id, sensor_type)
-        self._attr_should_poll = False
 
     @property
     def device_info(self) -> dict[str, Any]:
@@ -520,7 +524,7 @@ class SensorThermalComfort(SensorEntity):
                 ):
                     # Common during HA startup - so just a warning
                     _LOGGER.warning(
-                        "Could not render %s template %s," " the state is unknown.",
+                        "Could not render %s template %s, State is unknown.",
                         friendly_property_name,
                         self.name,
                     )

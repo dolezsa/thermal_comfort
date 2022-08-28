@@ -88,7 +88,7 @@ def get_sensors_by_device_class(
             SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
             SensorDeviceClass.VOLTAGE,
         ]
-        """We are sure that this device classes could not be useful as data source in any case"""
+        # We are sure that this device classes could not be useful as data source in any case
         return filter_by_device_class(
             state, device_class_for_exclude, should_be_in=False
         )
@@ -128,7 +128,7 @@ def get_sensors_by_device_class(
             "timer",
             "zone",
         ]
-        """We are sure that this domains could not be useful as data source in any case"""
+        # We are sure that this domains could not be useful as data source in any case
         return state.domain not in domains_for_exclude
 
     def filter_useless_units(state: State) -> bool:
@@ -138,7 +138,8 @@ def get_sensors_by_device_class(
             "W",
             "kW",
             "VA",
-            "BTU/h" "Wh",
+            "BTU/h",
+            "Wh",
             "kWh",
             "MWh",
             "mA",
@@ -268,7 +269,7 @@ def get_sensors_by_device_class(
             "MiB/s",
             "GiB/s",
         ]
-        """We are sure that entities with this units could not be useful as data source in any case"""
+        # We are sure that entities with this units could not be useful as data source in any case
         additional_units = {
             SensorDeviceClass.HUMIDITY: ["°C", "°F", "K"],
             SensorDeviceClass.TEMPERATURE: ["%"],
@@ -299,7 +300,7 @@ def get_sensors_by_device_class(
     ]
 
     result.sort()
-    _LOGGER.debug(f"Results for {device_class} based on device class: {result}")
+    _LOGGER.debug("Results for %s based on device class: %s", device_class, result)
 
     if include_all:
         additional_sensors = _hass.states.async_all()
@@ -309,7 +310,7 @@ def get_sensors_by_device_class(
         additional_entity_ids = [state.entity_id for state in additional_sensors]
         additional_entity_ids = list(set(additional_entity_ids) - set(result))
         additional_entity_ids.sort()
-        _LOGGER.debug(f"Additional results: {additional_entity_ids}")
+        _LOGGER.debug("Additional results: %s", additional_entity_ids)
         result += additional_entity_ids
 
     result = list(
@@ -319,7 +320,7 @@ def get_sensors_by_device_class(
         )
     )
 
-    _LOGGER.debug(f"Results after cleaning own entities: {result}")
+    _LOGGER.debug("Results after cleaning own entities: %s", result)
 
     return result
 
@@ -440,7 +441,7 @@ def check_input(hass: HomeAssistant, user_input: dict) -> dict:
     :returns: dict with error.
     """
 
-    # ToDo: user_input have ConfigType type, but it in codebase since 2021.12.10
+    # TODO: user_input have ConfigType type, but it in codebase since 2021.12.10
 
     result = {}
 
@@ -453,7 +454,7 @@ def check_input(hass: HomeAssistant, user_input: dict) -> dict:
     if p_sensor is None:
         result["base"] = "humidity_not_found"
 
-    # ToDo: we should not trust user and check:
+    # TODO: we should not trust user and check:
     #  - that CONF_TEMPERATURE_SENSOR is temperature sensor and have state_class measurement
     #  - that CONF_HUMIDITY_SENSOR is humidity sensor and have state_class measurement
     return result
@@ -478,8 +479,8 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 t_sensor = er.async_get(user_input[CONF_TEMPERATURE_SENSOR])
                 p_sensor = er.async_get(user_input[CONF_HUMIDITY_SENSOR])
-                _LOGGER.debug(f"Going to use t_sensor {t_sensor}")
-                _LOGGER.debug(f"Going to use p_sensor {p_sensor}")
+                _LOGGER.debug("Going to use t_sensor %s", t_sensor)
+                _LOGGER.debug("Going to use p_sensor %s", p_sensor)
 
                 if t_sensor is not None and p_sensor is not None:
                     unique_id = f"{t_sensor.unique_id}-{p_sensor.unique_id}"
@@ -514,7 +515,7 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
     """Handle options."""
 
-    def __init__(self, config_entry):
+    def __init__(self, config_entry) -> None:
         """Initialize options flow."""
         self.config_entry = config_entry
 
@@ -523,7 +524,7 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
 
         errors = {}
         if user_input is not None:
-            _LOGGER.debug(f"OptionsFlow: going to update configuration {user_input}")
+            _LOGGER.debug("OptionsFlow: going to update configuration %s", user_input)
             if not (errors := check_input(self.hass, user_input)):
                 return self.async_create_entry(title="", data=user_input)
 
