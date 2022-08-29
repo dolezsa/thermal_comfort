@@ -29,7 +29,7 @@ from homeassistant.const import (
     TEMP_CELSIUS,
     TEMP_FAHRENHEIT,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, State
 from homeassistant.exceptions import TemplateError
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import DeviceInfo
@@ -39,6 +39,7 @@ from homeassistant.helpers.event import (
     async_track_time_interval,
 )
 from homeassistant.helpers.template import Template
+from homeassistant.helpers.typing import ConfigType
 from homeassistant.loader import async_get_custom_components
 import voluptuous as vol
 
@@ -322,7 +323,7 @@ def compute_once_lock(sensor_type):
 
 
 async def async_setup_platform(
-    hass: HomeAssistant, config, async_add_entities, discovery_info=None
+    hass: HomeAssistant, config: ConfigType, async_add_entities: AddEntitiesCallback, discovery_info=None
 ):
     """Set up the Thermal Comfort sensors."""
     if discovery_info is None:
@@ -473,7 +474,7 @@ class SensorThermalComfort(SensorEntity):
         return self._device.device_info
 
     @property
-    def extra_state_attributes(self):
+    def extra_state_attributes(self) -> dict:
         """Return the state attributes."""
         return dict(
             self._device.extra_state_attributes, **self._attr_extra_state_attributes
@@ -560,7 +561,7 @@ class DeviceThermalComfort:
         humidity_entity: str,
         should_poll: bool,
         scan_interval: timedelta,
-    ):
+    ) -> None:
         """Initialize the sensor."""
         self.hass = hass
         self._unique_id = unique_id
@@ -632,7 +633,7 @@ class DeviceThermalComfort:
         """Handle humidity device state changes."""
         await self._new_humidity_state(event.data.get("new_state"))
 
-    async def _new_humidity_state(self, state):
+    async def _new_humidity_state(self, state: State):
         if _is_valid_state(state):
             self._humidity = float(state.state)
             self.extra_state_attributes[ATTR_HUMIDITY] = self._humidity

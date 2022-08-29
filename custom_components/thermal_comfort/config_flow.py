@@ -11,6 +11,7 @@ from homeassistant.helpers import entity_registry
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_registry import EntityRegistry
 from homeassistant.helpers.selector import selector
+from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
 
 from .const import (
@@ -241,15 +242,13 @@ def build_schema(
     return schema
 
 
-def check_input(hass: HomeAssistant, user_input: dict) -> dict:
+def check_input(hass: HomeAssistant, user_input: ConfigType) -> dict:
     """Check that we may use suggested configuration.
 
     :param hass: hass instance
     :param user_input: user input
     :returns: dict with error.
     """
-
-    # TODO: user_input have ConfigType type, but it in codebase since 2021.12.10
 
     result = {}
 
