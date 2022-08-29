@@ -50,7 +50,7 @@ def get_sensors_by_device_class(
             "device_class", _state.attributes.get("original_device_class")
         )
         # XNOR
-        return not ((collected_device_class in _list) ^ should_be_in)
+        return not (collected_device_class in _list) ^ should_be_in
 
     def filter_for_device_class_sensor(state: State) -> bool:
         """Filter states by Platform.SENSOR and required device class."""
@@ -60,7 +60,7 @@ def get_sensors_by_device_class(
 
     def filter_useless_device_class(state: State) -> bool:
         """Filter out states with useless for us device class."""
-        device_class_for_exclude = [
+        device_class_to_exclude = [
             SensorDeviceClass.AQI,
             SensorDeviceClass.BATTERY,
             SensorDeviceClass.CO,
@@ -90,12 +90,12 @@ def get_sensors_by_device_class(
         ]
         # We are sure that this device classes could not be useful as data source in any case
         return filter_by_device_class(
-            state, device_class_for_exclude, should_be_in=False
+            state, device_class_to_exclude, should_be_in=False
         )
 
     def filter_useless_domain(state: State) -> bool:
         """Filter states with useless for us domains."""
-        domains_for_exclude = [
+        domains_to_exclude = [
             Platform.AIR_QUALITY,
             Platform.ALARM_CONTROL_PANEL,
             Platform.BINARY_SENSOR,
@@ -129,11 +129,11 @@ def get_sensors_by_device_class(
             "zone",
         ]
         # We are sure that this domains could not be useful as data source in any case
-        return state.domain not in domains_for_exclude
+        return state.domain not in domains_to_exclude
 
     def filter_useless_units(state: State) -> bool:
         """Filter out states with useless for us units of measurements."""
-        units_for_exclude = [
+        units_to_exclude = [
             # Electric
             "W",
             "kW",
@@ -274,12 +274,12 @@ def get_sensors_by_device_class(
             SensorDeviceClass.HUMIDITY: ["°C", "°F", "K"],
             SensorDeviceClass.TEMPERATURE: ["%"],
         }
-        units_for_exclude += additional_units.get(device_class, [])
+        units_to_exclude += additional_units.get(device_class, [])
 
         unit_of_measurement = state.attributes.get(
             "unit_of_measurement", state.attributes.get("native_unit_of_measurement")
         )
-        return unit_of_measurement not in units_for_exclude
+        return unit_of_measurement not in units_to_exclude
 
     def filter_thermal_comfort_ids(entity_id: str) -> bool:
         """Filter out device_ids containing our SensorType."""
@@ -342,7 +342,7 @@ def get_value(
 
 
 def build_schema(
-    config_entry: config_entries | None,
+    config_entry: config_entries.ConfigEntries | None,
     hass: HomeAssistant,
     show_advanced: bool = False,
     step: str = "user",
@@ -465,7 +465,9 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry):
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> config_entries.OptionsFlow:
         """Get the options flow for this handler."""
         return ThermalComfortOptionsFlow(config_entry)
 
@@ -515,7 +517,7 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
     """Handle options."""
 
-    def __init__(self, config_entry) -> None:
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         """Initialize options flow."""
         self.config_entry = config_entry
 

@@ -1,10 +1,11 @@
 # [![thermal_comfort](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/icons/logo.png)](https://github.com/dolezsa/thermal_comfort)
+
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/dolezsa/thermal_comfort/latest/total?style=for-the-badge&color=f55041)
 
 Thermal Comfort provides the following calculated sensors for Home Assistant.
 
-## Sensors:
+## Sensors
 
 <dl>
   <dt><strong>Absolute Humidity</strong></dt>
@@ -32,7 +33,7 @@ Thermal Comfort provides the following calculated sensors for Home Assistant.
   </dd>
   <dt><strong>Frost Point</strong></dt>
   <dd>
-    Frost point, temperature, below 0° C (32° F), at which moisture in the air 
+    Frost point, temperature, below 0° C (32° F), at which moisture in the air
     will condense as a layer of frost on any exposed surface.
   </dd>
   <dt><strong>Frost Risk</strong></dt>
@@ -64,6 +65,7 @@ Thermal Comfort provides the following calculated sensors for Home Assistant.
 ![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/living_room.png)
 
 ## Usage
+
 To use Thermal Comfort check the documentation for your preferred way to setup
 sensors.
 
@@ -108,6 +110,7 @@ cp -r custom_components $hacs_config_folder
 Finally you need to restart home assistant before you can use it.
 
 ### Custom Icons
+
 [Install](https://github.com/rautesamtr/thermal_comfort_icons#install) Thermal Comforts icon pack.
 
 Enable the custom icons options for your sensor in the

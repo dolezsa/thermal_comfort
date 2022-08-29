@@ -26,8 +26,6 @@ from homeassistant.const import (
     CONF_NAME,
     CONF_SENSORS,
     CONF_UNIQUE_ID,
-    STATE_UNAVAILABLE,
-    STATE_UNKNOWN,
     TEMP_CELSIUS,
     TEMP_FAHRENHEIT,
 )
@@ -45,6 +43,7 @@ from homeassistant.loader import async_get_custom_components
 import voluptuous as vol
 
 from .const import DEFAULT_NAME, DOMAIN
+from .utils import _is_valid_state
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -290,7 +289,7 @@ class ScharlauPerception(StrEnum):
     OUTSIDE_CALCULABLE_RANGE = "outside_calculable_range"
     COMFORTABLE = "comfortable"
     SLIGHTLY_UNCOMFORTABLE = "slightly_uncomfortable"
-    MODERATLY_UNCOMFORTABLE = "moderatly_uncomfortable"
+    MODERATELY_UNCOMFORTABLE = "moderately_uncomfortable"
     HIGHLY_UNCOMFORTABLE = "highly_uncomfortable"
 
 
@@ -298,7 +297,7 @@ class HumidexPerception(StrEnum):
     """Humidex Perception."""
 
     COMFORTABLE = "comfortable"
-    NOTICABLE_DISCOMFORT = "noticable_discomfort"
+    NOTICEABLE_DISCOMFORT = "noticeable_discomfort"
     EVIDENT_DISCOMFORT = "evident_discomfort"
     GREAT_DISCOMFORT = "great_discomfort"
     DANGEROUS_DISCOMFORT = "dangerous_discomfort"
@@ -701,7 +700,7 @@ class DeviceThermalComfort:
         elif humidex >= 35:
             return HumidexPerception.EVIDENT_DISCOMFORT
         elif humidex >= 30:
-            return HumidexPerception.NOTICABLE_DISCOMFORT
+            return HumidexPerception.NOTICEABLE_DISCOMFORT
         else:
             return HumidexPerception.COMFORTABLE
 
@@ -760,8 +759,7 @@ class DeviceThermalComfort:
         if self._temperature <= 1 and frostpoint <= 0:
             if absolutehumidity <= thresholdAbsHumidity:
                 return 1  # Frost unlikely despite the temperature
-            else:
-                return 3  # high probability of frost
+            return 3  # high probability of frost
         elif (
             self._temperature <= 4
             and frostpoint <= 0.5
@@ -781,7 +779,7 @@ class DeviceThermalComfort:
         elif ise <= -3:
             perception = ScharlauPerception.HIGHLY_UNCOMFORTABLE
         elif ise <= -1:
-            perception = ScharlauPerception.MODERATLY_UNCOMFORTABLE
+            perception = ScharlauPerception.MODERATELY_UNCOMFORTABLE
         elif ise < 0:
             perception = ScharlauPerception.SLIGHTLY_UNCOMFORTABLE
         else:
@@ -799,7 +797,7 @@ class DeviceThermalComfort:
         elif ish <= -3:
             perception = ScharlauPerception.HIGHLY_UNCOMFORTABLE
         elif ish <= -1:
-            perception = ScharlauPerception.MODERATLY_UNCOMFORTABLE
+            perception = ScharlauPerception.MODERATELY_UNCOMFORTABLE
         elif ish < 0:
             perception = ScharlauPerception.SLIGHTLY_UNCOMFORTABLE
         else:
@@ -930,13 +928,3 @@ class DeviceThermalComfort:
     def name(self) -> str:
         """Return the name."""
         return self._device_info["name"]
-
-
-def _is_valid_state(state) -> bool:
-    if state is not None:
-        if state.state not in (STATE_UNKNOWN, STATE_UNAVAILABLE):
-            try:
-                return not math.isnan(float(state.state))
-            except ValueError:
-                pass
-    return False

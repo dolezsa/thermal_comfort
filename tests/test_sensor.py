@@ -503,7 +503,7 @@ async def test_summer_scharlau_perception(hass, start_ha):
     )
     assert (
         get_sensor(hass, SensorType.SUMMER_SCHARLAU_PERCEPTION).state
-        == ScharlauPerception.MODERATLY_UNCOMFORTABLE
+        == ScharlauPerception.MODERATELY_UNCOMFORTABLE
     )
 
     hass.states.async_set("sensor.test_temperature_sensor", "35.82")
@@ -596,7 +596,7 @@ async def test_winter_scharlau_perception(hass, start_ha):
     )
     assert (
         get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).state
-        == ScharlauPerception.MODERATLY_UNCOMFORTABLE
+        == ScharlauPerception.MODERATELY_UNCOMFORTABLE
     )
 
     hass.states.async_set("sensor.test_temperature_sensor", "-0.07")
