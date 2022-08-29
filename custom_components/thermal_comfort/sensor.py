@@ -323,7 +323,10 @@ def compute_once_lock(sensor_type):
 
 
 async def async_setup_platform(
-    hass: HomeAssistant, config: ConfigType, async_add_entities: AddEntitiesCallback, discovery_info=None
+    hass: HomeAssistant,
+    config: ConfigType,
+    async_add_entities: AddEntitiesCallback,
+    discovery_info=None,
 ):
     """Set up the Thermal Comfort sensors."""
     if discovery_info is None:
@@ -465,13 +468,9 @@ class SensorThermalComfort(SensorEntity):
         self._entity_picture_template = entity_picture_template
         self._attr_native_value = None
         self._attr_extra_state_attributes = {}
+        self._attr_device_info = self._device.device_info
         if self._device.unique_id is not None:
             self._attr_unique_id = id_generator(self._device.unique_id, sensor_type)
-
-    @property
-    def device_info(self) -> dict[str, Any]:
-        """Return device information."""
-        return self._device.device_info
 
     @property
     def extra_state_attributes(self) -> dict:
@@ -564,13 +563,14 @@ class DeviceThermalComfort:
     ) -> None:
         """Initialize the sensor."""
         self.hass = hass
-        self._unique_id = unique_id
-        self._device_info = DeviceInfo(
-            identifiers={(DOMAIN, self.unique_id)},
+        self._attr_unique_id = unique_id
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, self._attr_unique_id)},
             name=name,
             manufacturer=DEFAULT_NAME,
             model="Virtual Device",
         )
+        self._attr_name = self._attr_device_info["name"]
         self.extra_state_attributes = {}
         self._temperature_entity = temperature_entity
         self._humidity_entity = humidity_entity
@@ -579,8 +579,7 @@ class DeviceThermalComfort:
         self._should_poll = should_poll
         self.sensors = []
         self._compute_states = {
-            sensor_type: ComputeState(lock=Lock())
-            for sensor_type in SENSOR_TYPES.keys()
+            sensor_type: ComputeState(lock=Lock()) for sensor_type in SENSOR_TYPES
         }
 
         async_track_state_change_event(
@@ -610,7 +609,7 @@ class DeviceThermalComfort:
             )
 
     async def _set_version(self):
-        self._device_info["sw_version"] = (
+        self._attr_device_info["sw_version"] = (
             await async_get_custom_components(self.hass)
         )[DOMAIN].version.string
 
@@ -900,7 +899,7 @@ class DeviceThermalComfort:
     async def async_update(self):
         """Update the state."""
         if self._temperature is not None and self._humidity is not None:
-            for sensor_type in SENSOR_TYPES.keys():
+            for sensor_type in SENSOR_TYPES:
                 self._compute_states[sensor_type].needs_update = True
             if not self._should_poll:
                 await self.async_update_sensors(True)
@@ -914,18 +913,3 @@ class DeviceThermalComfort:
     def compute_states(self) -> dict[SensorType, ComputeState]:
         """Compute states of configured sensors."""
         return self._compute_states
-
-    @property
-    def unique_id(self) -> str:
-        """Return a unique ID."""
-        return self._unique_id
-
-    @property
-    def device_info(self) -> dict:
-        """Return the device info."""
-        return self._device_info
-
-    @property
-    def name(self) -> str:
-        """Return the name."""
-        return self._device_info["name"]
