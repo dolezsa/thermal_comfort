@@ -1,11 +1,12 @@
 """Sensor platform for thermal_comfort."""
+from __future__ import annotations
+
 from asyncio import Lock
 from dataclasses import dataclass
 from datetime import timedelta
 from functools import wraps
 import logging
 import math
-from typing import Any
 
 from homeassistant import util
 from homeassistant.backports.enum import StrEnum
@@ -769,7 +770,7 @@ class DeviceThermalComfort:
         return 0  # No risk of frost
 
     @compute_once_lock(SensorType.SUMMER_SCHARLAU_PERCEPTION)
-    async def summer_scharlau_perception(self) -> (float, ScharlauPerception):
+    async def summer_scharlau_perception(self) -> float | ScharlauPerception:
         """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
         tc = -17.089 * math.log(self._humidity) + 94.979
         ise = tc - self._temperature
@@ -788,7 +789,7 @@ class DeviceThermalComfort:
         return round(ise, 2), perception
 
     @compute_once_lock(SensorType.WINTER_SCHARLAU_PERCEPTION)
-    async def winter_scharlau_perception(self) -> (float, ScharlauPerception):
+    async def winter_scharlau_perception(self) -> float | ScharlauPerception:
         """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
         tc = (0.0003 * self._humidity) + (0.1497 * self._humidity) - 7.7133
         ish = self._temperature - tc

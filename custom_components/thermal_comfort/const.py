@@ -13,6 +13,7 @@ CONF_POLL = "poll"
 DEFAULT_NAME = "Thermal Comfort"
 UPDATE_LISTENER = "update_listener"
 
+
 UNITS_TO_EXCLUDE: list[str] = [
     # Electric
     "W",
