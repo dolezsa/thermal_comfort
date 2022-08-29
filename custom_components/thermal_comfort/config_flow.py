@@ -13,7 +13,13 @@ from homeassistant.helpers.entity_registry import EntityRegistry
 from homeassistant.helpers.selector import selector
 import voluptuous as vol
 
-from .const import DEFAULT_NAME, DOMAIN
+from .const import (
+    DEFAULT_NAME,
+    DEVICE_CLASSES_TO_EXCLUDE,
+    DOMAIN,
+    DOMAINS_TO_EXCLUDE,
+    UNITS_TO_EXCLUDE,
+)
 from .sensor import (
     CONF_CUSTOM_ICONS,
     CONF_ENABLED_SENSORS,
@@ -60,216 +66,19 @@ def get_sensors_by_device_class(
 
     def filter_useless_device_class(state: State) -> bool:
         """Filter out states with useless for us device class."""
-        device_class_to_exclude = [
-            SensorDeviceClass.AQI,
-            SensorDeviceClass.BATTERY,
-            SensorDeviceClass.CO,
-            SensorDeviceClass.CO2,
-            SensorDeviceClass.CURRENT,
-            SensorDeviceClass.DATE,
-            SensorDeviceClass.ENERGY,
-            SensorDeviceClass.FREQUENCY,
-            SensorDeviceClass.GAS,
-            SensorDeviceClass.ILLUMINANCE,
-            SensorDeviceClass.MONETARY,
-            SensorDeviceClass.NITROGEN_DIOXIDE,
-            SensorDeviceClass.NITROGEN_MONOXIDE,
-            SensorDeviceClass.NITROUS_OXIDE,
-            SensorDeviceClass.OZONE,
-            SensorDeviceClass.PM1,
-            SensorDeviceClass.PM10,
-            SensorDeviceClass.PM25,
-            SensorDeviceClass.POWER_FACTOR,
-            SensorDeviceClass.POWER,
-            SensorDeviceClass.PRESSURE,
-            SensorDeviceClass.SIGNAL_STRENGTH,
-            SensorDeviceClass.SULPHUR_DIOXIDE,
-            SensorDeviceClass.TIMESTAMP,
-            SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
-            SensorDeviceClass.VOLTAGE,
-        ]
-        # We are sure that this device classes could not be useful as data source in any case
+        device_class_to_exclude = DEVICE_CLASSES_TO_EXCLUDE
         return filter_by_device_class(
             state, device_class_to_exclude, should_be_in=False
         )
 
     def filter_useless_domain(state: State) -> bool:
         """Filter states with useless for us domains."""
-        domains_to_exclude = [
-            Platform.AIR_QUALITY,
-            Platform.ALARM_CONTROL_PANEL,
-            Platform.BINARY_SENSOR,
-            Platform.BUTTON,
-            Platform.CALENDAR,
-            Platform.CAMERA,
-            Platform.CLIMATE,
-            Platform.COVER,
-            Platform.DEVICE_TRACKER,
-            Platform.FAN,
-            Platform.GEO_LOCATION,
-            Platform.IMAGE_PROCESSING,
-            Platform.LIGHT,
-            Platform.LOCK,
-            Platform.MAILBOX,
-            Platform.MEDIA_PLAYER,
-            Platform.NOTIFY,
-            Platform.REMOTE,
-            Platform.SCENE,
-            Platform.SIREN,
-            Platform.STT,
-            Platform.SWITCH,
-            Platform.TTS,
-            Platform.VACUUM,
-            "automation",
-            "person",
-            "script",
-            "scene",
-            "sun",
-            "timer",
-            "zone",
-        ]
-        # We are sure that this domains could not be useful as data source in any case
+        domains_to_exclude = DOMAINS_TO_EXCLUDE
         return state.domain not in domains_to_exclude
 
     def filter_useless_units(state: State) -> bool:
         """Filter out states with useless for us units of measurements."""
-        units_to_exclude = [
-            # Electric
-            "W",
-            "kW",
-            "VA",
-            "BTU/h",
-            "Wh",
-            "kWh",
-            "MWh",
-            "mA",
-            "A",
-            "mV",
-            "V",
-            # Degree units
-            "°",
-            # Currency units
-            "€",
-            "$",
-            "¢",
-            # Time units
-            "μs",
-            "ms",
-            "s",
-            "min",
-            "h",
-            "d",
-            "w",
-            "m",
-            "y",
-            # Length units
-            "mm",
-            "cm",
-            "m",
-            "km",
-            "in",
-            "ft",
-            "yd",
-            "mi",
-            # Frequency units
-            "Hz",
-            "kHz",
-            "MHz",
-            "GHz",
-            # Pressure units
-            "Pa",
-            "hPa",
-            "kPa",
-            "bar",
-            "cbar",
-            "mbar",
-            "mmHg",
-            "inHg",
-            "psi",
-            # Sound pressure units
-            "dB",
-            "dBa",
-            # Volume units
-            "L",
-            "mL",
-            "m³",
-            "ft³",
-            "gal",
-            "fl. oz.",
-            # Volume Flow Rate units
-            "m³/h",
-            "ft³/m",
-            # Area units
-            "m²",
-            # Mass
-            "g",
-            "kg",
-            "mg",
-            "µg",
-            "oz",
-            "lb",
-            #
-            "µS/cm",
-            "lx",
-            "UV index",
-            "W/m²",
-            "BTU/(h×ft²)",
-            # Precipitation units
-            "mm/h",
-            "in",
-            "in/h",
-            # Concentration units
-            "µg/m³",
-            "mg/m³",
-            "μg/ft³",
-            "p/m³",
-            "ppm",
-            "ppb",
-            # Speed units
-            "mm/d",
-            "in/d",
-            "m/s",
-            "in/h",
-            "km/h",
-            "mph",
-            # Signal_strength units
-            "dB",
-            "dBm",
-            # Data units
-            "bit",
-            "kbit",
-            "Mbit",
-            "Gbit",
-            "B",
-            "kB",
-            "MB",
-            "GB",
-            "TB",
-            "PB",
-            "EB",
-            "ZB",
-            "YB",
-            "KiB",
-            "MiB",
-            "GiB",
-            "TiB",
-            "PiB",
-            "EiB",
-            "ZiB",
-            "YiB",
-            "bit/s",
-            "kbit/s",
-            "Mbit/s",
-            "Gbit/s",
-            "B/s",
-            "kB/s",
-            "MB/s",
-            "GB/s",
-            "KiB/s",
-            "MiB/s",
-            "GiB/s",
-        ]
-        # We are sure that entities with this units could not be useful as data source in any case
+        units_to_exclude = UNITS_TO_EXCLUDE
         additional_units = {
             SensorDeviceClass.HUMIDITY: ["°C", "°F", "K"],
             SensorDeviceClass.TEMPERATURE: ["%"],
@@ -337,8 +146,7 @@ def get_value(
     """
     if config_entry is not None:
         return config_entry.options.get(param, config_entry.data.get(param, default))
-    else:
-        return default
+    return default
 
 
 def build_schema(
