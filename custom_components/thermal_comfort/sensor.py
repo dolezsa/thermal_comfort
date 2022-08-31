@@ -564,14 +564,14 @@ class DeviceThermalComfort:
     ) -> None:
         """Initialize the sensor."""
         self.hass = hass
-        self._attr_unique_id = unique_id
-        self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, self._attr_unique_id)},
+        self._unique_id = unique_id
+        self._device_info = DeviceInfo(
+            identifiers={(DOMAIN, self._unique_id)},
             name=name,
             manufacturer=DEFAULT_NAME,
             model="Virtual Device",
         )
-        self._attr_name = self._attr_device_info["name"]
+        self._name = name
         self.extra_state_attributes = {}
         self._temperature_entity = temperature_entity
         self._humidity_entity = humidity_entity
@@ -609,8 +609,23 @@ class DeviceThermalComfort:
                 scan_interval,
             )
 
+    @property
+    def unique_id(self) -> str:
+        """Return a unique ID."""
+        return self._unique_id
+
+    @property
+    def device_info(self) -> dict:
+        """Return the device info."""
+        return self._device_info
+
+    @property
+    def name(self) -> str:
+        """Return the name."""
+        return self._device_info["name"]
+
     async def _set_version(self):
-        self._attr_device_info["sw_version"] = (
+        self._device_info["sw_version"] = (
             await async_get_custom_components(self.hass)
         )[DOMAIN].version.string
 
