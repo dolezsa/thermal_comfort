@@ -566,12 +566,11 @@ class DeviceThermalComfort:
         self.hass = hass
         self._unique_id = unique_id
         self._device_info = DeviceInfo(
-            identifiers={(DOMAIN, self._unique_id)},
+            identifiers={(DOMAIN, self.unique_id)},
             name=name,
             manufacturer=DEFAULT_NAME,
             model="Virtual Device",
         )
-        self._name = name
         self.extra_state_attributes = {}
         self._temperature_entity = temperature_entity
         self._humidity_entity = humidity_entity
