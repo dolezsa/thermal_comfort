@@ -13,7 +13,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.thermal_comfort.const import DOMAIN
 from custom_components.thermal_comfort.sensor import (
-    ATTR_FROST_RISK_LEVEL,
+    ATTR_FROST_POINT,
     ATTR_HUMIDITY,
     ATTR_SUMMER_SCHARLAU_INDEX,
     ATTR_WINTER_SCHARLAU_INDEX,
@@ -323,33 +323,25 @@ async def test_frost_risk(hass, start_ha):
     """Test if frost risk is calculated correctly."""
     assert get_sensor(hass, SensorType.FROST_RISK) is not None
     assert get_sensor(hass, SensorType.FROST_RISK).state == "no_risk"
-    assert (
-        get_sensor(hass, SensorType.FROST_RISK).attributes[ATTR_FROST_RISK_LEVEL] == 0
-    )
+    assert get_sensor(hass, SensorType.FROST_RISK).attributes[ATTR_FROST_POINT] == 10.43
 
     hass.states.async_set("sensor.test_temperature_sensor", "0")
     hass.states.async_set("sensor.test_humidity_sensor", "57.7")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.FROST_RISK).state == "unlikely"
-    assert (
-        get_sensor(hass, SensorType.FROST_RISK).attributes[ATTR_FROST_RISK_LEVEL] == 1
-    )
+    assert get_sensor(hass, SensorType.FROST_RISK).attributes[ATTR_FROST_POINT] == -7.35
 
     hass.states.async_set("sensor.test_temperature_sensor", "4.0")
     hass.states.async_set("sensor.test_humidity_sensor", "80.65")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.FROST_RISK).state == "probable"
-    assert (
-        get_sensor(hass, SensorType.FROST_RISK).attributes[ATTR_FROST_RISK_LEVEL] == 2
-    )
+    assert get_sensor(hass, SensorType.FROST_RISK).attributes[ATTR_FROST_POINT] == 0.5
 
     hass.states.async_set("sensor.test_temperature_sensor", "1.0")
     hass.states.async_set("sensor.test_humidity_sensor", "90.00")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.FROST_RISK).state == "high"
-    assert (
-        get_sensor(hass, SensorType.FROST_RISK).attributes[ATTR_FROST_RISK_LEVEL] == 3
-    )
+    assert get_sensor(hass, SensorType.FROST_RISK).attributes[ATTR_FROST_POINT] == -0.58
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)

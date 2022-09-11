@@ -48,10 +48,13 @@ from .const import DEFAULT_NAME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+ATTR_DEWPOINT = "dew_point"
 ATTR_HUMIDITY = "humidity"
-ATTR_FROST_RISK_LEVEL = "frost_risk_level"
+ATTR_HUMIDEX = "humidex"
+ATTR_FROST_POINT = "frost_point"
 ATTR_SUMMER_SCHARLAU_INDEX = "summer_scharlau_index"
 ATTR_WINTER_SCHARLAU_INDEX = "winter_scharlau_index"
+ATTR_SIMMER_INDEX = "simmer_index"
 CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
@@ -492,15 +495,24 @@ class SensorThermalComfort(SensorEntity):
         if value is None:  # can happen during startup
             return
 
-        if self._sensor_type == SensorType.FROST_RISK:
-            self._attr_extra_state_attributes[ATTR_FROST_RISK_LEVEL] = value
-            self._attr_native_value = list(FrostRisk)[value]
+        if self._sensor_type == SensorType.HUMIDEX_PERCEPTION:
+            self._attr_extra_state_attributes[ATTR_HUMIDEX] = value[1]
+            self._attr_native_value = value[0]
+        elif self._sensor_type == SensorType.THERMAL_PERCEPTION:
+            self._attr_extra_state_attributes[ATTR_DEWPOINT] = value[1]
+            self._attr_native_value = value[0]
+        elif self._sensor_type == SensorType.FROST_RISK:
+            self._attr_extra_state_attributes[ATTR_FROST_POINT] = value[1]
+            self._attr_native_value = value[0]
         elif self._sensor_type == SensorType.SUMMER_SCHARLAU_PERCEPTION:
-            self._attr_extra_state_attributes[ATTR_SUMMER_SCHARLAU_INDEX] = value[0]
-            self._attr_native_value = value[1]
+            self._attr_extra_state_attributes[ATTR_SUMMER_SCHARLAU_INDEX] = value[1]
+            self._attr_native_value = value[0]
         elif self._sensor_type == SensorType.WINTER_SCHARLAU_PERCEPTION:
-            self._attr_extra_state_attributes[ATTR_WINTER_SCHARLAU_INDEX] = value[0]
-            self._attr_native_value = value[1]
+            self._attr_extra_state_attributes[ATTR_WINTER_SCHARLAU_INDEX] = value[1]
+            self._attr_native_value = value[0]
+        elif self._sensor_type == SensorType.SIMMER_ZONE:
+            self._attr_extra_state_attributes[ATTR_SIMMER_INDEX] = value[1]
+            self._attr_native_value = value[0]
         else:
             self._attr_native_value = value
 
@@ -685,42 +697,46 @@ class DeviceThermalComfort:
         return round(self._temperature + h, 2)
 
     @compute_once_lock(SensorType.HUMIDEX_PERCEPTION)
-    async def humidex_perception(self) -> HumidexPerception:
+    async def humidex_perception(self) -> (HumidexPerception, float):
         """<https://simple.wikipedia.org/wiki/Humidex#Humidex_formula>."""
         humidex = await self.humidex()
         if humidex > 54:
-            return HumidexPerception.HEAT_STROKE
+            perception = HumidexPerception.HEAT_STROKE
         elif humidex >= 45:
-            return HumidexPerception.DANGEROUS_DISCOMFORT
+            perception = HumidexPerception.DANGEROUS_DISCOMFORT
         elif humidex >= 40:
-            return HumidexPerception.GREAT_DISCOMFORT
+            perception = HumidexPerception.GREAT_DISCOMFORT
         elif humidex >= 35:
-            return HumidexPerception.EVIDENT_DISCOMFORT
+            perception = HumidexPerception.EVIDENT_DISCOMFORT
         elif humidex >= 30:
-            return HumidexPerception.NOTICABLE_DISCOMFORT
+            perception = HumidexPerception.NOTICABLE_DISCOMFORT
         else:
-            return HumidexPerception.COMFORTABLE
+            perception = HumidexPerception.COMFORTABLE
+
+        return perception, humidex
 
     @compute_once_lock(SensorType.THERMAL_PERCEPTION)
-    async def thermal_perception(self) -> ThermalPerception:
+    async def thermal_perception(self) -> (ThermalPerception, float):
         """Dew Point <https://en.wikipedia.org/wiki/Dew_point>."""
         dewpoint = await self.dew_point()
         if dewpoint < 10:
-            return ThermalPerception.DRY
+            perception = ThermalPerception.DRY
         elif dewpoint < 13:
-            return ThermalPerception.VERY_COMFORTABLE
+            perception = ThermalPerception.VERY_COMFORTABLE
         elif dewpoint < 16:
-            return ThermalPerception.COMFORTABLE
+            perception = ThermalPerception.COMFORTABLE
         elif dewpoint < 18:
-            return ThermalPerception.OK_BUT_HUMID
+            perception = ThermalPerception.OK_BUT_HUMID
         elif dewpoint < 21:
-            return ThermalPerception.SOMEWHAT_UNCOMFORTABLE
+            perception = ThermalPerception.SOMEWHAT_UNCOMFORTABLE
         elif dewpoint < 24:
-            return ThermalPerception.QUITE_UNCOMFORTABLE
+            perception = ThermalPerception.QUITE_UNCOMFORTABLE
         elif dewpoint < 26:
-            return ThermalPerception.EXTREMELY_UNCOMFORTABLE
+            perception = ThermalPerception.EXTREMELY_UNCOMFORTABLE
         else:
-            return ThermalPerception.SEVERELY_HIGH
+            perception = ThermalPerception.SEVERELY_HIGH
+
+        return perception, dewpoint
 
     @compute_once_lock(SensorType.ABSOLUTE_HUMIDITY)
     async def absolute_humidity(self) -> float:
@@ -748,26 +764,29 @@ class DeviceThermalComfort:
         )
 
     @compute_once_lock(SensorType.FROST_RISK)
-    async def frost_risk(self) -> int:
+    async def frost_risk(self) -> (FrostRisk, float):
         """Frost Risk Level."""
         thresholdAbsHumidity = 2.8
         absolutehumidity = await self.absolute_humidity()
         frostpoint = await self.frost_point()
         if self._temperature <= 1 and frostpoint <= 0:
             if absolutehumidity <= thresholdAbsHumidity:
-                return 1  # Frost unlikely despite the temperature
+                frost_risk = FrostRisk.LOW  # Frost unlikely despite the temperature
             else:
-                return 3  # high probability of frost
+                frost_risk = FrostRisk.HIGH  # high probability of frost
         elif (
             self._temperature <= 4
             and frostpoint <= 0.5
             and absolutehumidity > thresholdAbsHumidity
         ):
-            return 2  # Frost probable despite the temperature
-        return 0  # No risk of frost
+            frost_risk = FrostRisk.MEDIUM  # Frost probable despite the temperature
+        else:
+            frost_risk = FrostRisk.NONE  # No risk of frost
+
+        return frost_risk, frostpoint
 
     @compute_once_lock(SensorType.SUMMER_SCHARLAU_PERCEPTION)
-    async def summer_scharlau_perception(self) -> (float, ScharlauPerception):
+    async def summer_scharlau_perception(self) -> (ScharlauPerception, float):
         """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
         tc = -17.089 * math.log(self._humidity) + 94.979
         ise = tc - self._temperature
@@ -783,10 +802,10 @@ class DeviceThermalComfort:
         else:
             perception = ScharlauPerception.COMFORTABLE
 
-        return round(ise, 2), perception
+        return perception, round(ise, 2)
 
     @compute_once_lock(SensorType.WINTER_SCHARLAU_PERCEPTION)
-    async def winter_scharlau_perception(self) -> (float, ScharlauPerception):
+    async def winter_scharlau_perception(self) -> (ScharlauPerception, float):
         """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
         tc = (0.0003 * self._humidity) + (0.1497 * self._humidity) - 7.7133
         ish = self._temperature - tc
@@ -801,7 +820,7 @@ class DeviceThermalComfort:
         else:
             perception = ScharlauPerception.COMFORTABLE
 
-        return round(ish, 2), perception
+        return perception, round(ish, 2)
 
     @compute_once_lock(SensorType.SIMMER_INDEX)
     async def simmer_index(self) -> float:
@@ -820,27 +839,29 @@ class DeviceThermalComfort:
         return round(util.temperature.fahrenheit_to_celsius(si), 2)
 
     @compute_once_lock(SensorType.SIMMER_ZONE)
-    async def simmer_zone(self) -> SimmerZone:
+    async def simmer_zone(self) -> (SimmerZone, float):
         """<http://summersimmer.com/default.asp>."""
         si = await self.simmer_index()
         if si < 21.1:
-            return SimmerZone.COOL
+            simmer_zone = SimmerZone.COOL
         elif si < 25.0:
-            return SimmerZone.SLIGHTLY_COOL
+            simmer_zone = SimmerZone.SLIGHTLY_COOL
         elif si < 28.3:
-            return SimmerZone.COMFORTABLE
+            simmer_zone = SimmerZone.COMFORTABLE
         elif si < 32.8:
-            return SimmerZone.SLIGHTLY_WARM
+            simmer_zone = SimmerZone.SLIGHTLY_WARM
         elif si < 37.8:
-            return SimmerZone.INCREASING_DISCOMFORT
+            simmer_zone = SimmerZone.INCREASING_DISCOMFORT
         elif si < 44.4:
-            return SimmerZone.EXTREMELY_WARM
+            simmer_zone = SimmerZone.EXTREMELY_WARM
         elif si < 51.7:
-            return SimmerZone.DANGER_OF_HEATSTROKE
+            simmer_zone = SimmerZone.DANGER_OF_HEATSTROKE
         elif si < 65.6:
-            return SimmerZone.EXTREME_DANGER_OF_HEATSTROKE
+            simmer_zone = SimmerZone.EXTREME_DANGER_OF_HEATSTROKE
         else:
-            return SimmerZone.CIRCULATORY_COLLAPSE_IMMINENT
+            simmer_zone = SimmerZone.CIRCULATORY_COLLAPSE_IMMINENT
+
+        return simmer_zone, si
 
     @compute_once_lock(SensorType.MOIST_AIR_ENTHALPY)
     async def moist_air_enthalpy(self) -> float:
