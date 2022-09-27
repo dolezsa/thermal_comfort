@@ -52,6 +52,7 @@ ATTR_DEWPOINT = "dew_point"
 ATTR_HUMIDITY = "humidity"
 ATTR_HUMIDEX = "humidex"
 ATTR_FROST_POINT = "frost_point"
+ATTR_RELATIVE_STRAIN_INDEX = "relative_strain_index"
 ATTR_SUMMER_SCHARLAU_INDEX = "summer_scharlau_index"
 ATTR_WINTER_SCHARLAU_INDEX = "winter_scharlau_index"
 ATTR_SIMMER_INDEX = "simmer_index"
@@ -77,6 +78,7 @@ class ThermalComfortDeviceClass(StrEnum):
     HUMIDEX_PERCEPTION = "thermal_comfort__humidex_perception"
     ENTHALPY = "thermal_comfort__enthalpy"
     SCHARLAU_PERCEPTION = "thermal_comfort__scharlau_perception"
+    RELATIVE_STRAIN_PERCEPTION = "thermal_comfort__relative_strain_perception"
 
 
 class SensorType(StrEnum):
@@ -90,6 +92,7 @@ class SensorType(StrEnum):
     HUMIDEX = "humidex"
     HUMIDEX_PERCEPTION = "humidex_perception"
     MOIST_AIR_ENTHALPY = "moist_air_enthalpy"
+    RELATIVE_STRAIN_PERCEPTION = "relative_strain_perception"
     SUMMER_SCHARLAU_PERCEPTION = "summer_scharlau_perception"
     WINTER_SCHARLAU_PERCEPTION = "winter_scharlau_perception"
     SIMMER_INDEX = "simmer_index"
@@ -114,6 +117,7 @@ class SensorType(StrEnum):
 TC_ICONS = {
     SensorType.DEW_POINT: "tc:dew-point",
     SensorType.FROST_POINT: "tc:frost-point",
+    SensorType.RELATIVE_STRAIN_PERCEPTION: "tc:thermal-perception",
     SensorType.SUMMER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
     SensorType.WINTER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
     SensorType.SIMMER_ZONE: "tc:thermal-perception",
@@ -180,6 +184,12 @@ SENSOR_TYPES = {
         "native_unit_of_measurement": "kJ/kg",
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:water-circle",
+    },
+    SensorType.RELATIVE_STRAIN_PERCEPTION: {
+        "key": SensorType.RELATIVE_STRAIN_PERCEPTION,
+        "name": SensorType.RELATIVE_STRAIN_PERCEPTION.to_name(),
+        "device_class": ThermalComfortDeviceClass.RELATIVE_STRAIN_PERCEPTION,
+        "icon": "mdi:sun-thermometer",
     },
     SensorType.SUMMER_SCHARLAU_PERCEPTION: {
         "key": SensorType.SUMMER_SCHARLAU_PERCEPTION,
@@ -285,6 +295,17 @@ class SimmerZone(StrEnum):
     DANGER_OF_HEATSTROKE = "danger_of_heatstroke"
     EXTREME_DANGER_OF_HEATSTROKE = "extreme_danger_of_heatstroke"
     CIRCULATORY_COLLAPSE_IMMINENT = "circulatory_collapse_imminent"
+
+
+class RelativeStrainPerception(StrEnum):
+    """Relative Strain Perception."""
+
+    OUTSIDE_CALCULABLE_RANGE = "outside_calculable_range"
+    COMFORTABLE = "comfortable"
+    SLIGHT_DISCOMFORT = "slight_discomfort"
+    DISCOMFORT = "discomfort"
+    SIGNIFICANT_DISCOMFORT = "significant_discomfort"
+    EXTREME_DISCOMFORT = "extreme_discomfort"
 
 
 class ScharlauPerception(StrEnum):
@@ -495,23 +516,21 @@ class SensorThermalComfort(SensorEntity):
         if value is None:  # can happen during startup
             return
 
-        if self._sensor_type == SensorType.HUMIDEX_PERCEPTION:
-            self._attr_extra_state_attributes[ATTR_HUMIDEX] = value[1]
-            self._attr_native_value = value[0]
-        elif self._sensor_type == SensorType.THERMAL_PERCEPTION:
-            self._attr_extra_state_attributes[ATTR_DEWPOINT] = value[1]
-            self._attr_native_value = value[0]
-        elif self._sensor_type == SensorType.FROST_RISK:
-            self._attr_extra_state_attributes[ATTR_FROST_POINT] = value[1]
-            self._attr_native_value = value[0]
-        elif self._sensor_type == SensorType.SUMMER_SCHARLAU_PERCEPTION:
-            self._attr_extra_state_attributes[ATTR_SUMMER_SCHARLAU_INDEX] = value[1]
-            self._attr_native_value = value[0]
-        elif self._sensor_type == SensorType.WINTER_SCHARLAU_PERCEPTION:
-            self._attr_extra_state_attributes[ATTR_WINTER_SCHARLAU_INDEX] = value[1]
-            self._attr_native_value = value[0]
-        elif self._sensor_type == SensorType.SIMMER_ZONE:
-            self._attr_extra_state_attributes[ATTR_SIMMER_INDEX] = value[1]
+        if type(value) == tuple and len(value) == 2:
+            if self._sensor_type == SensorType.HUMIDEX_PERCEPTION:
+                self._attr_extra_state_attributes[ATTR_HUMIDEX] = value[1]
+            elif self._sensor_type == SensorType.THERMAL_PERCEPTION:
+                self._attr_extra_state_attributes[ATTR_DEWPOINT] = value[1]
+            elif self._sensor_type == SensorType.FROST_RISK:
+                self._attr_extra_state_attributes[ATTR_FROST_POINT] = value[1]
+            elif self._sensor_type == SensorType.RELATIVE_STRAIN_PERCEPTION:
+                self._attr_extra_state_attributes[ATTR_RELATIVE_STRAIN_INDEX] = value[1]
+            elif self._sensor_type == SensorType.SUMMER_SCHARLAU_PERCEPTION:
+                self._attr_extra_state_attributes[ATTR_SUMMER_SCHARLAU_INDEX] = value[1]
+            elif self._sensor_type == SensorType.WINTER_SCHARLAU_PERCEPTION:
+                self._attr_extra_state_attributes[ATTR_WINTER_SCHARLAU_INDEX] = value[1]
+            elif self._sensor_type == SensorType.SIMMER_ZONE:
+                self._attr_extra_state_attributes[ATTR_SIMMER_INDEX] = value[1]
             self._attr_native_value = value[0]
         else:
             self._attr_native_value = value
@@ -784,6 +803,29 @@ class DeviceThermalComfort:
             frost_risk = FrostRisk.NONE  # No risk of frost
 
         return frost_risk, frostpoint
+
+    @compute_once_lock(SensorType.RELATIVE_STRAIN_PERCEPTION)
+    async def relative_strain_perception(self) -> (RelativeStrainPerception, float):
+        """Relative strain perception."""
+
+        vp = 6.112 * pow(10, 7.5 * self._temperature / (237.7 + self._temperature))
+        e = self._humidity * vp / 100
+        rsi = round((self._temperature - 21) / (58 - e), 2)
+
+        if self._temperature < 26 or self._temperature > 35:
+            perception = RelativeStrainPerception.OUTSIDE_CALCULABLE_RANGE
+        elif rsi >= 0.45:
+            perception = RelativeStrainPerception.EXTREME_DISCOMFORT
+        elif rsi >= 0.35:
+            perception = RelativeStrainPerception.SIGNIFICANT_DISCOMFORT
+        elif rsi >= 0.25:
+            perception = RelativeStrainPerception.DISCOMFORT
+        elif rsi >= 0.15:
+            perception = RelativeStrainPerception.SLIGHT_DISCOMFORT
+        else:
+            perception = RelativeStrainPerception.COMFORTABLE
+
+        return perception, rsi
 
     @compute_once_lock(SensorType.SUMMER_SCHARLAU_PERCEPTION)
     async def summer_scharlau_perception(self) -> (ScharlauPerception, float):

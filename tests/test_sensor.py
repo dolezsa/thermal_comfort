@@ -15,12 +15,14 @@ from custom_components.thermal_comfort.const import DOMAIN
 from custom_components.thermal_comfort.sensor import (
     ATTR_FROST_POINT,
     ATTR_HUMIDITY,
+    ATTR_RELATIVE_STRAIN_INDEX,
     ATTR_SUMMER_SCHARLAU_INDEX,
     ATTR_WINTER_SCHARLAU_INDEX,
     CONF_CUSTOM_ICONS,
     CONF_SENSOR_TYPES,
     DEFAULT_SENSOR_TYPES,
     HumidexPerception,
+    RelativeStrainPerception,
     ScharlauPerception,
     SensorType,
     SimmerZone,
@@ -439,6 +441,106 @@ async def test_moist_air_enthalpy(hass, start_ha):
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY) is not None
     assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == "44.45"
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_relative_strain_perception(hass, start_ha):
+    """Test if relative strain perception is calculated correctly."""
+    assert get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION) is not None
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).attributes[
+            ATTR_RELATIVE_STRAIN_INDEX
+        ]
+        == 0.09
+    )
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).state
+        == RelativeStrainPerception.OUTSIDE_CALCULABLE_RANGE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "35.01")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION) is not None
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).attributes[
+            ATTR_RELATIVE_STRAIN_INDEX
+        ]
+        == 0.47
+    )
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).state
+        == RelativeStrainPerception.OUTSIDE_CALCULABLE_RANGE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "26.00")
+    hass.states.async_set("sensor.test_humidity_sensor", "70.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).attributes[
+            ATTR_RELATIVE_STRAIN_INDEX
+        ]
+        == 0.14
+    )
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).state
+        == RelativeStrainPerception.COMFORTABLE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "27.00")
+    hass.states.async_set("sensor.test_humidity_sensor", "50.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).attributes[
+            ATTR_RELATIVE_STRAIN_INDEX
+        ]
+        == 0.15
+    )
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).state
+        == RelativeStrainPerception.SLIGHT_DISCOMFORT
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "31.00")
+    hass.states.async_set("sensor.test_humidity_sensor", "38.40")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).attributes[
+            ATTR_RELATIVE_STRAIN_INDEX
+        ]
+        == 0.25
+    )
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).state
+        == RelativeStrainPerception.DISCOMFORT
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "32.00")
+    hass.states.async_set("sensor.test_humidity_sensor", "56.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).attributes[
+            ATTR_RELATIVE_STRAIN_INDEX
+        ]
+        == 0.35
+    )
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).state
+        == RelativeStrainPerception.SIGNIFICANT_DISCOMFORT
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "31.50")
+    hass.states.async_set("sensor.test_humidity_sensor", "75.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).attributes[
+            ATTR_RELATIVE_STRAIN_INDEX
+        ]
+        == 0.45
+    )
+    assert (
+        get_sensor(hass, SensorType.RELATIVE_STRAIN_PERCEPTION).state
+        == RelativeStrainPerception.EXTREME_DISCOMFORT
+    )
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
