@@ -54,24 +54,6 @@ DEFAULT_TEST_SENSORS = [
     "domains, config",
     [
         (
-            [(PLATFORM_DOMAIN, 3)],
-            {
-                PLATFORM_DOMAIN: [
-                    TEMPERATURE_TEST_SENSOR,
-                    HUMIDITY_TEST_SENSOR,
-                    {
-                        "platform": DOMAIN,
-                        "sensors": {
-                            "test_thermal_comfort": {
-                                "temperature_sensor": "sensor.test_temperature_sensor",
-                                "humidity_sensor": "sensor.test_humidity_sensor",
-                            },
-                        },
-                    },
-                ],
-            },
-        ),
-        (
             [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
             {
                 PLATFORM_DOMAIN: [
