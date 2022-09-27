@@ -39,6 +39,10 @@ Thermal Comfort provides the following calculated sensors for Home Assistant.
   <dd>
     Risk of Frost based on current temperature, frost point and absolute humidity.
   </dd>
+  <dt><strong>Relative Strain Index/Perception</strong></dt>
+  <dd>
+    A measure of discomfort resulting from the combined effect of temperature and humidity. It assumes a person dressed in a light business suit, walking at a moderate pace in a very light air motion. It is applicable to assess heat stress of manual workers under shelter at various metabolic rates. Valid for temperatures between 26 and 35°C (79 to 95°F).
+  </dd>
   <dt><strong>Summer Simmer Index</strong></dt>
   <dd>
     Provides a proven indicator of heat stress concerns and discomfort using meaningful equivalent temperature values for general public acceptance and awareness.

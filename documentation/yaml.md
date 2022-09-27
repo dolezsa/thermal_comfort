@@ -33,7 +33,8 @@ thermal_comfort:
     <code>humidex</code>, <code>humidex_perception</code>,
     <code>thermal_perception</code>, <code>frost_point</code>,
     <code>frost_risk</code>, <code>simmer_index</code>,
-    <code>simmer_zone</code>, <code>moist_air_enthalpy</code>
+    <code>simmer_zone</code>, <code>moist_air_enthalpy</code>,
+    <code>relative_strain_perception</code>,
     <code>summer_scharlau_perception</code>, <code>winter_scharlau_perception</code>
   </dd>
   <dt><strong>poll</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
