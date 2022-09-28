@@ -63,6 +63,10 @@ Thermal Comfort provides the following calculated sensors for Home Assistant.
   <dd>
     Reflects the level of human discomfort caused by cooling. Valid for: temperatures -5 to +6°C (23 to 43°F) and humidity >= 40%.
   </dd>
+  <dt><strong>Thoms discomfort Index/Perception</strong></dt>
+  <dd>
+    Indicates the level of discomfort as a result of high temperature and the combined effect with relative humidity.
+  </dd>
 </dl>
 
 ![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/living_room.png)

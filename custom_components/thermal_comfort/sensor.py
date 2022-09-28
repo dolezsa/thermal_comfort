@@ -56,6 +56,7 @@ ATTR_RELATIVE_STRAIN_INDEX = "relative_strain_index"
 ATTR_SUMMER_SCHARLAU_INDEX = "summer_scharlau_index"
 ATTR_WINTER_SCHARLAU_INDEX = "winter_scharlau_index"
 ATTR_SIMMER_INDEX = "simmer_index"
+ATTR_THOMS_DISCOMFORT_INDEX = "thoms_discomfort_index"
 CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
@@ -86,6 +87,7 @@ class SensorType(StrEnum):
     SIMMER_INDEX = "simmer_index"
     SIMMER_ZONE = "simmer_zone"
     THERMAL_PERCEPTION = "thermal_perception"
+    THOMS_DISCOMFORT_PERCEPTION = "thoms_discomfort_perception"
 
     def to_name(self) -> str:
         """Return the title of the sensor type."""
@@ -110,6 +112,7 @@ TC_ICONS = {
     SensorType.WINTER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
     SensorType.SIMMER_ZONE: "tc:thermal-perception",
     SensorType.THERMAL_PERCEPTION: "tc:thermal-perception",
+    SensorType.THOMS_DISCOMFORT_PERCEPTION: "tc:thermal-perception",
 }
 
 SENSOR_TYPES = {
@@ -209,6 +212,12 @@ SENSOR_TYPES = {
         "key": SensorType.THERMAL_PERCEPTION,
         "name": SensorType.THERMAL_PERCEPTION.to_name(),
         "translation_key": SensorType.THERMAL_PERCEPTION,
+        "icon": "mdi:sun-thermometer",
+    },
+    SensorType.THOMS_DISCOMFORT_PERCEPTION: {
+        "key": SensorType.THOMS_DISCOMFORT_PERCEPTION,
+        "name": SensorType.THOMS_DISCOMFORT_PERCEPTION.to_name(),
+        "translation_key": SensorType.THOMS_DISCOMFORT_PERCEPTION,
         "icon": "mdi:sun-thermometer",
     },
 }
@@ -315,6 +324,17 @@ class HumidexPerception(StrEnum):
     GREAT_DISCOMFORT = "great_discomfort"
     DANGEROUS_DISCOMFORT = "dangerous_discomfort"
     HEAT_STROKE = "heat_stroke"
+
+
+class ThomsDiscomfortPerception(StrEnum):
+    """Thoms Discomfort Perception."""
+
+    NO_DISCOMFORT = "no_discomfort"
+    LESS_THEN_HALF = "less_then_half"
+    MORE_THEN_HALF = "more_then_half"
+    MOST = "most"
+    EVERYONE = "everyone"
+    DANGEROUS = "dangerous"
 
 
 def compute_once_lock(sensor_type):
@@ -519,6 +539,10 @@ class SensorThermalComfort(SensorEntity):
                 self._attr_extra_state_attributes[ATTR_WINTER_SCHARLAU_INDEX] = value[1]
             elif self._sensor_type == SensorType.SIMMER_ZONE:
                 self._attr_extra_state_attributes[ATTR_SIMMER_INDEX] = value[1]
+            elif self._sensor_type == SensorType.THOMS_DISCOMFORT_PERCEPTION:
+                self._attr_extra_state_attributes[ATTR_THOMS_DISCOMFORT_INDEX] = value[
+                    1
+                ]
             self._attr_native_value = value[0]
         else:
             self._attr_native_value = value
@@ -947,6 +971,35 @@ class DeviceThermalComfort:
         h = h_dry_air + hr * h_sat_vap
 
         return round(h / 1000, 2)
+
+    @compute_once_lock(SensorType.THOMS_DISCOMFORT_PERCEPTION)
+    async def thoms_discomfort_perception(self) -> (ThomsDiscomfortPerception, float):
+        """Calculate Thom's discomfort index and perception."""
+        tw = (
+            self._temperature
+            * math.atan(0.151977 * pow(self._humidity + 8.313659, 1 / 2))
+            + math.atan(self._temperature + self._humidity)
+            - math.atan(self._humidity - 1.676331)
+            + pow(0.00391838 * self._humidity, 3 / 2)
+            * math.atan(0.023101 * self._humidity)
+            - 4.686035
+        )
+        tdi = 0.5 * tw + 0.5 * self._temperature
+
+        if tdi >= 32:
+            perception = ThomsDiscomfortPerception.DANGEROUS
+        elif tdi >= 29:
+            perception = ThomsDiscomfortPerception.EVERYONE
+        elif tdi >= 27:
+            perception = ThomsDiscomfortPerception.MOST
+        elif tdi >= 24:
+            perception = ThomsDiscomfortPerception.MORE_THEN_HALF
+        elif tdi >= 21:
+            perception = ThomsDiscomfortPerception.LESS_THEN_HALF
+        else:
+            perception = ThomsDiscomfortPerception.NO_DISCOMFORT
+
+        return perception, round(tdi, 2)
 
     async def async_update(self):
         """Update the state."""

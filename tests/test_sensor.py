@@ -17,6 +17,7 @@ from custom_components.thermal_comfort.sensor import (
     ATTR_HUMIDITY,
     ATTR_RELATIVE_STRAIN_INDEX,
     ATTR_SUMMER_SCHARLAU_INDEX,
+    ATTR_THOMS_DISCOMFORT_INDEX,
     ATTR_WINTER_SCHARLAU_INDEX,
     CONF_CUSTOM_ICONS,
     CONF_SENSOR_TYPES,
@@ -27,6 +28,7 @@ from custom_components.thermal_comfort.sensor import (
     SensorType,
     SimmerZone,
     ThermalPerception,
+    ThomsDiscomfortPerception,
     id_generator,
 )
 
@@ -709,6 +711,92 @@ async def test_winter_scharlau_perception(hass, start_ha):
     assert (
         get_sensor(hass, SensorType.WINTER_SCHARLAU_PERCEPTION).state
         == ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
+    )
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_thoms_discomfort_perception(hass, start_ha):
+    """Test if thoms discomfort perception is calculated correctly."""
+    assert get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION) is not None
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
+            ATTR_THOMS_DISCOMFORT_INDEX
+        ]
+        == 20.94
+    )
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
+        == ThomsDiscomfortPerception.NO_DISCOMFORT
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "25.06")
+    hass.states.async_set("sensor.test_humidity_sensor", "50.05")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
+            ATTR_THOMS_DISCOMFORT_INDEX
+        ]
+        == 21
+    )
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
+        == ThomsDiscomfortPerception.LESS_THEN_HALF
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "27.50")
+    hass.states.async_set("sensor.test_humidity_sensor", "63.80")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
+            ATTR_THOMS_DISCOMFORT_INDEX
+        ]
+        == 24
+    )
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
+        == ThomsDiscomfortPerception.MORE_THEN_HALF
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "30.70")
+    hass.states.async_set("sensor.test_humidity_sensor", "62.70")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
+            ATTR_THOMS_DISCOMFORT_INDEX
+        ]
+        == 27
+    )
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
+        == ThomsDiscomfortPerception.MOST
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "32.30")
+    hass.states.async_set("sensor.test_humidity_sensor", "71.50")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
+            ATTR_THOMS_DISCOMFORT_INDEX
+        ]
+        == 29
+    )
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
+        == ThomsDiscomfortPerception.EVERYONE
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "35.20")
+    hass.states.async_set("sensor.test_humidity_sensor", "75.10")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
+            ATTR_THOMS_DISCOMFORT_INDEX
+        ]
+        == 32
+    )
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
+        == ThomsDiscomfortPerception.DANGEROUS
     )
 
 
