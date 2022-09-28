@@ -716,35 +716,6 @@ async def test_winter_scharlau_perception(hass, start_ha):
     "domains, config",
     [
         (
-            [(PLATFORM_DOMAIN, 3)],
-            {
-                PLATFORM_DOMAIN: [
-                    TEMPERATURE_TEST_SENSOR,
-                    HUMIDITY_TEST_SENSOR,
-                    {
-                        "platform": DOMAIN,
-                        "sensors": {
-                            "test_thermal_comfort": {
-                                "temperature_sensor": "sensor.test_temperature_sensor",
-                                "humidity_sensor": "sensor.test_humidity_sensor",
-                                "unique_id": "unique",
-                            },
-                            "test_thermal_comfort_not_unique1": {
-                                "temperature_sensor": "sensor.test_temperature_sensor",
-                                "humidity_sensor": "sensor.test_humidity_sensor",
-                                "unique_id": "not-so-unique-anymore",
-                            },
-                            "test_thermal_comfort_not_unique2": {
-                                "temperature_sensor": "sensor.test_temperature_sensor",
-                                "humidity_sensor": "sensor.test_humidity_sensor",
-                                "unique_id": "not-so-unique-anymore",
-                            },
-                        },
-                    },
-                ],
-            },
-        ),
-        (
             [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
             {
                 PLATFORM_DOMAIN: [
@@ -806,25 +777,6 @@ async def test_unique_id(hass, start_ha):
     "domains, config",
     [
         (
-            [(PLATFORM_DOMAIN, 3)],
-            {
-                PLATFORM_DOMAIN: [
-                    TEMPERATURE_TEST_SENSOR,
-                    HUMIDITY_TEST_SENSOR,
-                    {
-                        "platform": DOMAIN,
-                        "sensors": {
-                            "test_thermal_comfort": {
-                                "temperature_sensor": "sensor.test_temperature_sensor",
-                                "humidity_sensor": "sensor.test_humidity_sensor",
-                                "icon_template": "mdi:thermometer",
-                            },
-                        },
-                    },
-                ],
-            },
-        ),
-        (
             [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
             {
                 PLATFORM_DOMAIN: [
@@ -864,28 +816,6 @@ async def test_zero_degree_celcius(hass, start_ha):
     "domains, config",
     [
         (
-            [(PLATFORM_DOMAIN, 3)],
-            {
-                PLATFORM_DOMAIN: [
-                    TEMPERATURE_TEST_SENSOR,
-                    HUMIDITY_TEST_SENSOR,
-                    {
-                        "platform": "thermal_comfort",
-                        "sensors": {
-                            "test_thermal_comfort": {
-                                "temperature_sensor": "sensor.test_temperature_sensor",
-                                "humidity_sensor": "sensor.test_humidity_sensor",
-                                "sensor_types": [
-                                    SensorType.ABSOLUTE_HUMIDITY,
-                                    SensorType.DEW_POINT,
-                                ],
-                            },
-                        },
-                    },
-                ],
-            },
-        ),
-        (
             [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
             {
                 PLATFORM_DOMAIN: [
@@ -921,34 +851,6 @@ async def get_sensor_types(hass, start_ha):
 @pytest.mark.parametrize(
     "domains, config",
     [
-        (
-            [(PLATFORM_DOMAIN, 3)],
-            {
-                PLATFORM_DOMAIN: [
-                    {
-                        "platform": COMMAND_LINE_DOMAIN,
-                        "command": "echo 0",
-                        "name": "test_temperature_sensor",
-                        "value_template": "{{ NaN | float }}",
-                    },
-                    {
-                        "platform": COMMAND_LINE_DOMAIN,
-                        "command": "echo 0",
-                        "name": "test_humidity_sensor",
-                        "value_template": "{{ NaN | float }}",
-                    },
-                    {
-                        "platform": DOMAIN,
-                        "sensors": {
-                            "test_thermal_comfort": {
-                                "temperature_sensor": "sensor.test_temperature_sensor",
-                                "humidity_sensor": "sensor.test_humidity_sensor",
-                            },
-                        },
-                    },
-                ],
-            },
-        ),
         (
             [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
             {
@@ -988,34 +890,6 @@ async def get_sensor_is_nan(hass, start_ha):
 @pytest.mark.parametrize(
     "domains, config",
     [
-        (
-            [(PLATFORM_DOMAIN, 3)],
-            {
-                PLATFORM_DOMAIN: [
-                    {
-                        "platform": COMMAND_LINE_DOMAIN,
-                        "command": "echo 0",
-                        "name": "test_temperature_sensor",
-                        "value_template": "{{ 'Unknown' }}",
-                    },
-                    {
-                        "platform": COMMAND_LINE_DOMAIN,
-                        "command": "echo 0",
-                        "name": "test_humidity_sensor",
-                        "value_template": "{{ 'asdf' }}",
-                    },
-                    {
-                        "platform": DOMAIN,
-                        "sensors": {
-                            "test_thermal_comfort": {
-                                "temperature_sensor": "sensor.test_temperature_sensor",
-                                "humidity_sensor": "sensor.test_humidity_sensor",
-                            },
-                        },
-                    },
-                ],
-            },
-        ),
         (
             [(PLATFORM_DOMAIN, 2), (DOMAIN, 1)],
             {
@@ -1096,26 +970,6 @@ async def test_create_sensors(hass: HomeAssistant):
 @pytest.mark.parametrize(
     "domains, config",
     [
-        (
-            [(PLATFORM_DOMAIN, 1)],
-            {
-                PLATFORM_DOMAIN: [
-                    {
-                        "platform": "thermal_comfort",
-                        "sensors": {
-                            "test_thermal_comfort": {
-                                "temperature_sensor": "sensor.test_temperature_sensor",
-                                "humidity_sensor": "sensor.test_humidity_sensor",
-                                "sensor_types": [
-                                    SensorType.THERMAL_PERCEPTION,
-                                    SensorType.ABSOLUTE_HUMIDITY,
-                                ],
-                            },
-                        },
-                    },
-                ],
-            },
-        ),
         (
             [(DOMAIN, 1)],
             {
