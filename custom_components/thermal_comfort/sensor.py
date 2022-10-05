@@ -8,8 +8,10 @@ import math
 from typing import Any
 
 from homeassistant import util
+from homeassistant.util.unit_conversion import TemperatureConverter
 from homeassistant.backports.enum import StrEnum
 from homeassistant.components.sensor import (
+    ENTITY_ID_FORMAT,
     PLATFORM_SCHEMA,
     SensorDeviceClass,
     SensorEntity,
@@ -34,7 +36,7 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import TemplateError
 import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity import DeviceInfo, async_generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import (
     async_track_state_change_event,
@@ -48,14 +50,8 @@ from .const import DEFAULT_NAME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-ATTR_DEWPOINT = "dew_point"
 ATTR_HUMIDITY = "humidity"
-ATTR_HUMIDEX = "humidex"
-ATTR_FROST_POINT = "frost_point"
-ATTR_RELATIVE_STRAIN_INDEX = "relative_strain_index"
-ATTR_SUMMER_SCHARLAU_INDEX = "summer_scharlau_index"
-ATTR_WINTER_SCHARLAU_INDEX = "winter_scharlau_index"
-ATTR_SIMMER_INDEX = "simmer_index"
+ATTR_FROST_RISK_LEVEL = "frost_risk_level"
 CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
@@ -75,12 +71,9 @@ class ThermalComfortDeviceClass(StrEnum):
     FROST_RISK = "thermal_comfort__frost_risk"
     SIMMER_ZONE = "thermal_comfort__simmer_zone"
     THERMAL_PERCEPTION = "thermal_comfort__thermal_perception"
-    HUMIDEX_PERCEPTION = "thermal_comfort__humidex_perception"
-    ENTHALPY = "thermal_comfort__enthalpy"
-    SCHARLAU_PERCEPTION = "thermal_comfort__scharlau_perception"
-    RELATIVE_STRAIN_PERCEPTION = "thermal_comfort__relative_strain_perception"
 
 
+# Deprecate shortform in 2.0
 class SensorType(StrEnum):
     """Sensor type enum."""
 
@@ -89,19 +82,20 @@ class SensorType(StrEnum):
     FROST_POINT = "frost_point"
     FROST_RISK = "frost_risk"
     HEAT_INDEX = "heat_index"
-    HUMIDEX = "humidex"
-    HUMIDEX_PERCEPTION = "humidex_perception"
-    MOIST_AIR_ENTHALPY = "moist_air_enthalpy"
-    RELATIVE_STRAIN_PERCEPTION = "relative_strain_perception"
-    SUMMER_SCHARLAU_PERCEPTION = "summer_scharlau_perception"
-    WINTER_SCHARLAU_PERCEPTION = "winter_scharlau_perception"
     SIMMER_INDEX = "simmer_index"
     SIMMER_ZONE = "simmer_zone"
     THERMAL_PERCEPTION = "thermal_perception"
 
-    def to_name(self) -> str:
+    def to_title(self) -> str:
         """Return the title of the sensor type."""
-        return self.value.replace("_", " ").capitalize()
+        return self.value.replace("_", " ").title()
+
+    def to_shortform(self) -> str:
+        """Return the shortform of the sensor type."""
+        if self.value == "thermal_perception":
+            return "perception"
+        else:
+            return self.value.replace("_", "")
 
     @classmethod
     def from_string(cls, string: str) -> "SensorType":
@@ -109,25 +103,32 @@ class SensorType(StrEnum):
         if string in list(cls):
             return cls(string)
         else:
-            raise ValueError(
-                f"Unknown sensor type: {string}. Please check https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-options for valid options."
+            _LOGGER.warning(
+                "Sensor type shortform and legacy YAML will be removed in 2.0. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
             )
+            if string == "absolutehumidity":
+                return cls.ABSOLUTE_HUMIDITY
+            elif string == "dewpoint":
+                return cls.DEW_POINT
+            elif string == "frostpoint":
+                return cls.FROST_POINT
+            elif string == "frostrisk":
+                return cls.FROST_RISK
+            elif string == "heatindex":
+                return cls.HEAT_INDEX
+            elif string == "simmerindex":
+                return cls.SIMMER_INDEX
+            elif string == "simmerzone":
+                return cls.SIMMER_ZONE
+            elif string == "perception":
+                return cls.THERMAL_PERCEPTION
+            else:
+                raise ValueError(f"Unknown sensor type: {string}")
 
-
-TC_ICONS = {
-    SensorType.DEW_POINT: "tc:dew-point",
-    SensorType.FROST_POINT: "tc:frost-point",
-    SensorType.RELATIVE_STRAIN_PERCEPTION: "tc:thermal-perception",
-    SensorType.SUMMER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
-    SensorType.WINTER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
-    SensorType.SIMMER_ZONE: "tc:thermal-perception",
-    SensorType.THERMAL_PERCEPTION: "tc:thermal-perception",
-}
 
 SENSOR_TYPES = {
     SensorType.ABSOLUTE_HUMIDITY: {
         "key": SensorType.ABSOLUTE_HUMIDITY,
-        "name": SensorType.ABSOLUTE_HUMIDITY.to_name(),
         "device_class": SensorDeviceClass.HUMIDITY,
         "native_unit_of_measurement": "g/m³",
         "state_class": SensorStateClass.MEASUREMENT,
@@ -135,93 +136,46 @@ SENSOR_TYPES = {
     },
     SensorType.DEW_POINT: {
         "key": SensorType.DEW_POINT,
-        "name": SensorType.DEW_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:thermometer-water",
+        "icon": "tc:dew-point",
     },
     SensorType.FROST_POINT: {
         "key": SensorType.FROST_POINT,
-        "name": SensorType.FROST_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:snowflake-thermometer",
+        "icon": "tc:frost-point",
     },
     SensorType.FROST_RISK: {
         "key": SensorType.FROST_RISK,
-        "name": SensorType.FROST_RISK.to_name(),
         "device_class": ThermalComfortDeviceClass.FROST_RISK,
         "icon": "mdi:snowflake-alert",
     },
     SensorType.HEAT_INDEX: {
         "key": SensorType.HEAT_INDEX,
-        "name": SensorType.HEAT_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.HUMIDEX: {
-        "key": SensorType.HUMIDEX,
-        "name": SensorType.HUMIDEX.to_name(),
-        "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": TEMP_CELSIUS,
-        "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.HUMIDEX_PERCEPTION: {
-        "key": SensorType.HUMIDEX_PERCEPTION,
-        "name": SensorType.HUMIDEX_PERCEPTION.to_name(),
-        "device_class": ThermalComfortDeviceClass.HUMIDEX_PERCEPTION,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.MOIST_AIR_ENTHALPY: {
-        "key": SensorType.MOIST_AIR_ENTHALPY,
-        "name": SensorType.MOIST_AIR_ENTHALPY.to_name(),
-        "device_class": ThermalComfortDeviceClass.ENTHALPY,
-        "native_unit_of_measurement": "kJ/kg",
-        "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:water-circle",
-    },
-    SensorType.RELATIVE_STRAIN_PERCEPTION: {
-        "key": SensorType.RELATIVE_STRAIN_PERCEPTION,
-        "name": SensorType.RELATIVE_STRAIN_PERCEPTION.to_name(),
-        "device_class": ThermalComfortDeviceClass.RELATIVE_STRAIN_PERCEPTION,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.SUMMER_SCHARLAU_PERCEPTION: {
-        "key": SensorType.SUMMER_SCHARLAU_PERCEPTION,
-        "name": SensorType.SUMMER_SCHARLAU_PERCEPTION.to_name(),
-        "device_class": ThermalComfortDeviceClass.SCHARLAU_PERCEPTION,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.WINTER_SCHARLAU_PERCEPTION: {
-        "key": SensorType.WINTER_SCHARLAU_PERCEPTION,
-        "name": SensorType.WINTER_SCHARLAU_PERCEPTION.to_name(),
-        "device_class": ThermalComfortDeviceClass.SCHARLAU_PERCEPTION,
-        "icon": "mdi:snowflake-thermometer",
+        "icon": "tc:heat-index",
     },
     SensorType.SIMMER_INDEX: {
         "key": SensorType.SIMMER_INDEX,
-        "name": SensorType.SIMMER_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": TEMP_CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:sun-thermometer",
+        "icon": "tc:simmer-index",
     },
     SensorType.SIMMER_ZONE: {
         "key": SensorType.SIMMER_ZONE,
-        "name": SensorType.SIMMER_ZONE.to_name(),
         "device_class": ThermalComfortDeviceClass.SIMMER_ZONE,
-        "icon": "mdi:sun-thermometer",
+        "icon": "tc:simmer-zone",
     },
     SensorType.THERMAL_PERCEPTION: {
         "key": SensorType.THERMAL_PERCEPTION,
-        "name": SensorType.THERMAL_PERCEPTION.to_name(),
         "device_class": ThermalComfortDeviceClass.THERMAL_PERCEPTION,
-        "icon": "mdi:sun-thermometer",
+        "icon": "tc:thermal-perception",
     },
 }
 
@@ -297,38 +251,6 @@ class SimmerZone(StrEnum):
     CIRCULATORY_COLLAPSE_IMMINENT = "circulatory_collapse_imminent"
 
 
-class RelativeStrainPerception(StrEnum):
-    """Relative Strain Perception."""
-
-    OUTSIDE_CALCULABLE_RANGE = "outside_calculable_range"
-    COMFORTABLE = "comfortable"
-    SLIGHT_DISCOMFORT = "slight_discomfort"
-    DISCOMFORT = "discomfort"
-    SIGNIFICANT_DISCOMFORT = "significant_discomfort"
-    EXTREME_DISCOMFORT = "extreme_discomfort"
-
-
-class ScharlauPerception(StrEnum):
-    """Scharlau Winter and Summer Index Perception."""
-
-    OUTSIDE_CALCULABLE_RANGE = "outside_calculable_range"
-    COMFORTABLE = "comfortable"
-    SLIGHTLY_UNCOMFORTABLE = "slightly_uncomfortable"
-    MODERATLY_UNCOMFORTABLE = "moderatly_uncomfortable"
-    HIGHLY_UNCOMFORTABLE = "highly_uncomfortable"
-
-
-class HumidexPerception(StrEnum):
-    """Humidex Perception."""
-
-    COMFORTABLE = "comfortable"
-    NOTICABLE_DISCOMFORT = "noticable_discomfort"
-    EVIDENT_DISCOMFORT = "evident_discomfort"
-    GREAT_DISCOMFORT = "great_discomfort"
-    DANGEROUS_DISCOMFORT = "dangerous_discomfort"
-    HEAT_STROKE = "heat_stroke"
-
-
 def compute_once_lock(sensor_type):
     """Only compute if sensor_type needs update, return just the value otherwise."""
 
@@ -350,7 +272,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     """Set up the Thermal Comfort sensors."""
     if discovery_info is None:
         _LOGGER.warning(
-            "Legacy YAML configuration is unsupported in 2.0. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
+            "Legacy YAML configuration support will be removed in 2.0. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
         )
         devices = [
             dict(device_config, **{CONF_NAME: device_name})
@@ -386,8 +308,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
                 icon_template=device_config.get(CONF_ICON_TEMPLATE),
                 entity_picture_template=device_config.get(CONF_ENTITY_PICTURE_TEMPLATE),
                 sensor_type=SensorType.from_string(sensor_type),
+                friendly_name=device_config.get(CONF_FRIENDLY_NAME),
                 custom_icons=device_config.get(CONF_CUSTOM_ICONS, False),
-                is_config_entry=False,
             )
             for sensor_type in device_config.get(
                 CONF_SENSOR_TYPES, DEFAULT_SENSOR_TYPES
@@ -405,7 +327,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up entity configured via user interface.
 
-    Called via async_forward_entry_setups(, SENSOR) from __init__.py
+    Called via async_setup_platforms(, SENSOR) from __init__.py
     """
     data = hass.data[DOMAIN][config_entry.entry_id]
     if data.get(CONF_SCAN_INTERVAL) is None:
@@ -465,21 +387,31 @@ class SensorThermalComfort(SensorEntity):
         entity_description: SensorEntityDescription,
         icon_template: Template = None,
         entity_picture_template: Template = None,
+        friendly_name: str = None,
         custom_icons: bool = False,
-        is_config_entry: bool = True,
     ) -> None:
         """Initialize the sensor."""
         self._device = device
+        # TODO deprecate shortform in 2.0
         self._sensor_type = sensor_type
         self.entity_description = entity_description
-        self.entity_description.has_entity_name = is_config_entry
-        if not is_config_entry:
+        if friendly_name is None:
             self.entity_description.name = (
-                f"{self._device.name} {self.entity_description.name}"
+                f"{self._device.name} {self._sensor_type.to_title()}"
             )
-        if custom_icons:
-            if self.entity_description.key in TC_ICONS:
-                self.entity_description.icon = TC_ICONS[self.entity_description.key]
+        else:
+            self.entity_description.name = (
+                f"{friendly_name} {self._sensor_type.to_title()}"
+            )
+        # TODO deprecate shortform in 2.0
+        self.entity_id = async_generate_entity_id(
+            ENTITY_ID_FORMAT,
+            f"{self._device.name}_{self._sensor_type.to_shortform()}",
+            hass=self._device.hass,
+        )
+        if not custom_icons:
+            if "tc" in self.entity_description.icon:
+                self._attr_icon = None
         self._icon_template = icon_template
         self._entity_picture_template = entity_picture_template
         self._attr_native_value = None
@@ -516,22 +448,9 @@ class SensorThermalComfort(SensorEntity):
         if value is None:  # can happen during startup
             return
 
-        if type(value) == tuple and len(value) == 2:
-            if self._sensor_type == SensorType.HUMIDEX_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_HUMIDEX] = value[1]
-            elif self._sensor_type == SensorType.THERMAL_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_DEWPOINT] = value[1]
-            elif self._sensor_type == SensorType.FROST_RISK:
-                self._attr_extra_state_attributes[ATTR_FROST_POINT] = value[1]
-            elif self._sensor_type == SensorType.RELATIVE_STRAIN_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_RELATIVE_STRAIN_INDEX] = value[1]
-            elif self._sensor_type == SensorType.SUMMER_SCHARLAU_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_SUMMER_SCHARLAU_INDEX] = value[1]
-            elif self._sensor_type == SensorType.WINTER_SCHARLAU_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_WINTER_SCHARLAU_INDEX] = value[1]
-            elif self._sensor_type == SensorType.SIMMER_ZONE:
-                self._attr_extra_state_attributes[ATTR_SIMMER_INDEX] = value[1]
-            self._attr_native_value = value[0]
+        if self._sensor_type == SensorType.FROST_RISK:
+            self._attr_extra_state_attributes[ATTR_FROST_RISK_LEVEL] = value
+            self._attr_native_value = list(FrostRisk)[value]
         else:
             self._attr_native_value = value
 
@@ -652,7 +571,7 @@ class DeviceThermalComfort:
             self.extra_state_attributes[ATTR_TEMPERATURE] = temp
             # convert to celsius if necessary
             if unit == TEMP_FAHRENHEIT:
-                temp = util.temperature.fahrenheit_to_celsius(temp)
+                temp = TemperatureConverter.convert(temp, TEMP_FAHRENHEIT, TEMP_CELSIUS)
             self._temperature = temp
             await self.async_update()
 
@@ -683,7 +602,7 @@ class DeviceThermalComfort:
     @compute_once_lock(SensorType.HEAT_INDEX)
     async def heat_index(self) -> float:
         """Heat Index <http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml>."""
-        fahrenheit = util.temperature.celsius_to_fahrenheit(self._temperature)
+        fahrenheit = TemperatureConverter.convert(self._temperature, TEMP_CELSIUS, TEMP_FAHRENHEIT)
         hi = 0.5 * (
             fahrenheit + 61.0 + ((fahrenheit - 68.0) * 1.2) + (self._humidity * 0.094)
         )
@@ -705,57 +624,28 @@ class DeviceThermalComfort:
         elif self._humidity > 85 and fahrenheit >= 80 and fahrenheit <= 87:
             hi = hi + ((self._humidity - 85) * 0.1) * ((87 - fahrenheit) * 0.2)
 
-        return round(util.temperature.fahrenheit_to_celsius(hi), 2)
-
-    @compute_once_lock(SensorType.HUMIDEX)
-    async def humidex(self) -> int:
-        """<https://simple.wikipedia.org/wiki/Humidex#Humidex_formula>."""
-        dewpoint = await self.dew_point()
-        e = 6.11 * math.exp(5417.7530 * ((1 / 273.16) - (1 / (dewpoint + 273.15))))
-        h = (0.5555) * (e - 10.0)
-        return round(self._temperature + h, 2)
-
-    @compute_once_lock(SensorType.HUMIDEX_PERCEPTION)
-    async def humidex_perception(self) -> (HumidexPerception, float):
-        """<https://simple.wikipedia.org/wiki/Humidex#Humidex_formula>."""
-        humidex = await self.humidex()
-        if humidex > 54:
-            perception = HumidexPerception.HEAT_STROKE
-        elif humidex >= 45:
-            perception = HumidexPerception.DANGEROUS_DISCOMFORT
-        elif humidex >= 40:
-            perception = HumidexPerception.GREAT_DISCOMFORT
-        elif humidex >= 35:
-            perception = HumidexPerception.EVIDENT_DISCOMFORT
-        elif humidex >= 30:
-            perception = HumidexPerception.NOTICABLE_DISCOMFORT
-        else:
-            perception = HumidexPerception.COMFORTABLE
-
-        return perception, humidex
+        return round(TemperatureConverter.convert(hi, TEMP_FAHRENHEIT, TEMP_CELSIUS), 2)
 
     @compute_once_lock(SensorType.THERMAL_PERCEPTION)
-    async def thermal_perception(self) -> (ThermalPerception, float):
+    async def thermal_perception(self) -> ThermalPerception:
         """Dew Point <https://en.wikipedia.org/wiki/Dew_point>."""
         dewpoint = await self.dew_point()
         if dewpoint < 10:
-            perception = ThermalPerception.DRY
+            return ThermalPerception.DRY
         elif dewpoint < 13:
-            perception = ThermalPerception.VERY_COMFORTABLE
+            return ThermalPerception.VERY_COMFORTABLE
         elif dewpoint < 16:
-            perception = ThermalPerception.COMFORTABLE
+            return ThermalPerception.COMFORTABLE
         elif dewpoint < 18:
-            perception = ThermalPerception.OK_BUT_HUMID
+            return ThermalPerception.OK_BUT_HUMID
         elif dewpoint < 21:
-            perception = ThermalPerception.SOMEWHAT_UNCOMFORTABLE
+            return ThermalPerception.SOMEWHAT_UNCOMFORTABLE
         elif dewpoint < 24:
-            perception = ThermalPerception.QUITE_UNCOMFORTABLE
+            return ThermalPerception.QUITE_UNCOMFORTABLE
         elif dewpoint < 26:
-            perception = ThermalPerception.EXTREMELY_UNCOMFORTABLE
+            return ThermalPerception.EXTREMELY_UNCOMFORTABLE
         else:
-            perception = ThermalPerception.SEVERELY_HIGH
-
-        return perception, dewpoint
+            return ThermalPerception.SEVERELY_HIGH
 
     @compute_once_lock(SensorType.ABSOLUTE_HUMIDITY)
     async def absolute_humidity(self) -> float:
@@ -783,91 +673,28 @@ class DeviceThermalComfort:
         )
 
     @compute_once_lock(SensorType.FROST_RISK)
-    async def frost_risk(self) -> (FrostRisk, float):
+    async def frost_risk(self) -> int:
         """Frost Risk Level."""
         thresholdAbsHumidity = 2.8
         absolutehumidity = await self.absolute_humidity()
         frostpoint = await self.frost_point()
         if self._temperature <= 1 and frostpoint <= 0:
             if absolutehumidity <= thresholdAbsHumidity:
-                frost_risk = FrostRisk.LOW  # Frost unlikely despite the temperature
+                return 1  # Frost unlikely despite the temperature
             else:
-                frost_risk = FrostRisk.HIGH  # high probability of frost
+                return 3  # high probability of frost
         elif (
             self._temperature <= 4
             and frostpoint <= 0.5
             and absolutehumidity > thresholdAbsHumidity
         ):
-            frost_risk = FrostRisk.MEDIUM  # Frost probable despite the temperature
-        else:
-            frost_risk = FrostRisk.NONE  # No risk of frost
-
-        return frost_risk, frostpoint
-
-    @compute_once_lock(SensorType.RELATIVE_STRAIN_PERCEPTION)
-    async def relative_strain_perception(self) -> (RelativeStrainPerception, float):
-        """Relative strain perception."""
-
-        vp = 6.112 * pow(10, 7.5 * self._temperature / (237.7 + self._temperature))
-        e = self._humidity * vp / 100
-        rsi = round((self._temperature - 21) / (58 - e), 2)
-
-        if self._temperature < 26 or self._temperature > 35:
-            perception = RelativeStrainPerception.OUTSIDE_CALCULABLE_RANGE
-        elif rsi >= 0.45:
-            perception = RelativeStrainPerception.EXTREME_DISCOMFORT
-        elif rsi >= 0.35:
-            perception = RelativeStrainPerception.SIGNIFICANT_DISCOMFORT
-        elif rsi >= 0.25:
-            perception = RelativeStrainPerception.DISCOMFORT
-        elif rsi >= 0.15:
-            perception = RelativeStrainPerception.SLIGHT_DISCOMFORT
-        else:
-            perception = RelativeStrainPerception.COMFORTABLE
-
-        return perception, rsi
-
-    @compute_once_lock(SensorType.SUMMER_SCHARLAU_PERCEPTION)
-    async def summer_scharlau_perception(self) -> (ScharlauPerception, float):
-        """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
-        tc = -17.089 * math.log(self._humidity) + 94.979
-        ise = tc - self._temperature
-
-        if self._temperature < 17 or self._temperature > 39 or self._humidity < 30:
-            perception = ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
-        elif ise <= -3:
-            perception = ScharlauPerception.HIGHLY_UNCOMFORTABLE
-        elif ise <= -1:
-            perception = ScharlauPerception.MODERATLY_UNCOMFORTABLE
-        elif ise < 0:
-            perception = ScharlauPerception.SLIGHTLY_UNCOMFORTABLE
-        else:
-            perception = ScharlauPerception.COMFORTABLE
-
-        return perception, round(ise, 2)
-
-    @compute_once_lock(SensorType.WINTER_SCHARLAU_PERCEPTION)
-    async def winter_scharlau_perception(self) -> (ScharlauPerception, float):
-        """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
-        tc = (0.0003 * self._humidity) + (0.1497 * self._humidity) - 7.7133
-        ish = self._temperature - tc
-        if self._temperature < -5 or self._temperature > 6 or self._humidity < 40:
-            perception = ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
-        elif ish <= -3:
-            perception = ScharlauPerception.HIGHLY_UNCOMFORTABLE
-        elif ish <= -1:
-            perception = ScharlauPerception.MODERATLY_UNCOMFORTABLE
-        elif ish < 0:
-            perception = ScharlauPerception.SLIGHTLY_UNCOMFORTABLE
-        else:
-            perception = ScharlauPerception.COMFORTABLE
-
-        return perception, round(ish, 2)
+            return 2  # Frost probable despite the temperature
+        return 0  # No risk of frost
 
     @compute_once_lock(SensorType.SIMMER_INDEX)
     async def simmer_index(self) -> float:
         """<https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index>."""
-        fahrenheit = util.temperature.celsius_to_fahrenheit(self._temperature)
+        fahrenheit = TemperatureConverter.convert(self._temperature, TEMP_FAHRENHEIT, TEMP_CELSIUS)
 
         si = (
             1.98
@@ -878,84 +705,30 @@ class DeviceThermalComfort:
         if fahrenheit < 70:
             si = fahrenheit
 
-        return round(util.temperature.fahrenheit_to_celsius(si), 2)
+        return round(TemperatureConverter.convert(si, TEMP_FAHRENHEIT, TEMP_CELSIUS), 2)
 
     @compute_once_lock(SensorType.SIMMER_ZONE)
-    async def simmer_zone(self) -> (SimmerZone, float):
+    async def simmer_zone(self) -> SimmerZone:
         """<http://summersimmer.com/default.asp>."""
         si = await self.simmer_index()
         if si < 21.1:
-            simmer_zone = SimmerZone.COOL
+            return SimmerZone.COOL
         elif si < 25.0:
-            simmer_zone = SimmerZone.SLIGHTLY_COOL
+            return SimmerZone.SLIGHTLY_COOL
         elif si < 28.3:
-            simmer_zone = SimmerZone.COMFORTABLE
+            return SimmerZone.COMFORTABLE
         elif si < 32.8:
-            simmer_zone = SimmerZone.SLIGHTLY_WARM
+            return SimmerZone.SLIGHTLY_WARM
         elif si < 37.8:
-            simmer_zone = SimmerZone.INCREASING_DISCOMFORT
+            return SimmerZone.INCREASING_DISCOMFORT
         elif si < 44.4:
-            simmer_zone = SimmerZone.EXTREMELY_WARM
+            return SimmerZone.EXTREMELY_WARM
         elif si < 51.7:
-            simmer_zone = SimmerZone.DANGER_OF_HEATSTROKE
+            return SimmerZone.DANGER_OF_HEATSTROKE
         elif si < 65.6:
-            simmer_zone = SimmerZone.EXTREME_DANGER_OF_HEATSTROKE
+            return SimmerZone.EXTREME_DANGER_OF_HEATSTROKE
         else:
-            simmer_zone = SimmerZone.CIRCULATORY_COLLAPSE_IMMINENT
-
-        return simmer_zone, si
-
-    @compute_once_lock(SensorType.MOIST_AIR_ENTHALPY)
-    async def moist_air_enthalpy(self) -> float:
-        """Calculate the enthalpy of moist air."""
-        patm = 101325
-        c_to_k = 273.15
-        h_fg = 2501000
-        cp_vapour = 1805.0
-
-        # calculate vapour pressure
-        ta_k = self._temperature + c_to_k
-        c1 = -5674.5359
-        c2 = 6.3925247
-        c3 = -0.9677843 * math.pow(10, -2)
-        c4 = 0.62215701 * math.pow(10, -6)
-        c5 = 0.20747825 * math.pow(10, -8)
-        c6 = -0.9484024 * math.pow(10, -12)
-        c7 = 4.1635019
-        c8 = -5800.2206
-        c9 = 1.3914993
-        c10 = -0.048640239
-        c11 = 0.41764768 * math.pow(10, -4)
-        c12 = -0.14452093 * math.pow(10, -7)
-        c13 = 6.5459673
-
-        if ta_k < c_to_k:
-            pascals = math.exp(
-                c1 / ta_k
-                + c2
-                + ta_k * (c3 + ta_k * (c4 + ta_k * (c5 + c6 * ta_k)))
-                + c7 * math.log(ta_k)
-            )
-        else:
-            pascals = math.exp(
-                c8 / ta_k
-                + c9
-                + ta_k * (c10 + ta_k * (c11 + ta_k * c12))
-                + c13 * math.log(ta_k)
-            )
-
-        # calculate humidity ratio
-        p_saturation = pascals
-        p_vap = self._humidity / 100 * p_saturation
-        hr = 0.62198 * p_vap / (patm - p_vap)
-
-        # calculate enthalpy
-        cp_air = 1004
-        h_dry_air = cp_air * self._temperature
-        h_sat_vap = h_fg + cp_vapour * self._temperature
-        h = h_dry_air + hr * h_sat_vap
-
-        return round(h / 1000, 2)
+            return SimmerZone.CIRCULATORY_COLLAPSE_IMMINENT
 
     async def async_update(self):
         """Update the state."""
