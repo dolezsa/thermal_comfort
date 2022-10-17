@@ -652,8 +652,8 @@ class DeviceThermalComfort:
             temp = convert(state.state, float)
             self.extra_state_attributes[ATTR_TEMPERATURE] = temp
             # convert to celsius if necessary
-            if unit == TEMP_FAHRENHEIT:
-                temp = TemperatureConverter.convert(temp, TEMP_FAHRENHEIT, TEMP_CELSIUS)
+            if unit is not None:
+                temp = TemperatureConverter.convert(temp, unit, TEMP_CELSIUS)
             self._temperature = temp
             await self.async_update()
 
