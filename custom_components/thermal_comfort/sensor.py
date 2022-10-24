@@ -7,7 +7,6 @@ import logging
 import math
 from typing import Any
 
-from homeassistant.util.unit_conversion import TemperatureConverter
 from homeassistant import util
 from homeassistant.backports.enum import StrEnum
 from homeassistant.components.sensor import (
@@ -43,6 +42,7 @@ from homeassistant.helpers.event import (
 )
 from homeassistant.helpers.template import Template
 from homeassistant.loader import async_get_custom_components
+from homeassistant.util.unit_conversion import TemperatureConverter
 import voluptuous as vol
 
 from .const import DEFAULT_NAME, DOMAIN
@@ -684,7 +684,9 @@ class DeviceThermalComfort:
     @compute_once_lock(SensorType.HEAT_INDEX)
     async def heat_index(self) -> float:
         """Heat Index <http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml>."""
-        fahrenheit = TemperatureConverter.convert(self._temperature, TEMP_CELSIUS, TEMP_FAHRENHEIT)
+        fahrenheit = TemperatureConverter.convert(
+            self._temperature, TEMP_CELSIUS, TEMP_FAHRENHEIT
+        )
         hi = 0.5 * (
             fahrenheit + 61.0 + ((fahrenheit - 68.0) * 1.2) + (self._humidity * 0.094)
         )
@@ -868,7 +870,9 @@ class DeviceThermalComfort:
     @compute_once_lock(SensorType.SIMMER_INDEX)
     async def simmer_index(self) -> float:
         """<https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index>."""
-        fahrenheit = TemperatureConverter.convert(self._temperature, TEMP_CELSIUS, TEMP_FAHRENHEIT)
+        fahrenheit = TemperatureConverter.convert(
+            self._temperature, TEMP_CELSIUS, TEMP_FAHRENHEIT
+        )
 
         si = (
             1.98
