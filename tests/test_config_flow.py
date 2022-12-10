@@ -3,8 +3,9 @@
 import json
 from unittest.mock import MagicMock, patch
 
-from homeassistant import config_entries, data_entry_flow
+from homeassistant import config_entries
 from homeassistant.const import CONF_NAME
+from homeassistant.data_entry_flow import FlowResultType
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 import voluptuous as vol
@@ -56,12 +57,12 @@ async def test_successful_config_flow(hass, start_ha):
     result = await _flow_init(hass)
 
     # Check that the config flow shows the user form as the first step
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == FlowResultType.FORM
     assert result["step_id"] == "user"
 
     result = await _flow_configure(hass, result)
 
-    assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
+    assert result["type"] == FlowResultType.CREATE_ENTRY
 
     assert result["title"] == ADVANCED_USER_INPUT[CONF_NAME]
     assert result["data"] == ADVANCED_USER_INPUT
@@ -77,7 +78,7 @@ async def test_failed_config_flow(hass, start_ha):
         result = await _flow_init(hass)
         result = await _flow_configure(hass, result)
 
-    assert result["type"] == data_entry_flow.RESULT_TYPE_ABORT
+    assert result["type"] == FlowResultType.ABORT
     assert result["reason"] == "already_configured"
 
 
@@ -94,7 +95,7 @@ async def test_options_flow(hass, start_ha):
     )
 
     # Verify that the first options step is a user form
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == FlowResultType.FORM
     assert result["step_id"] == "init"
 
     # Enter some data into the form
@@ -104,7 +105,7 @@ async def test_options_flow(hass, start_ha):
     )
 
     # Verify that the flow finishes
-    assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
+    assert result["type"] == FlowResultType.CREATE_ENTRY
     assert result["title"] == ""
 
     # Verify that the options were updated
@@ -127,7 +128,7 @@ async def test_missed_sensors(hass, sensor, start_ha):
     result = await _flow_init(hass)
 
     # Check that the config flow shows the user form as the first step
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == FlowResultType.FORM
     assert result["step_id"] == "user"
 
     no_sensor = dict(ADVANCED_USER_INPUT)
@@ -135,4 +136,4 @@ async def test_missed_sensors(hass, sensor, start_ha):
     with pytest.raises(vol.error.MultipleInvalid):
         result = await _flow_configure(hass, result, no_sensor)
 
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == FlowResultType.FORM
