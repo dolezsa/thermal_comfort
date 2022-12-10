@@ -28,10 +28,9 @@ from homeassistant.const import (
     CONF_UNIQUE_ID,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
-    TEMP_CELSIUS,
-    TEMP_FAHRENHEIT,
+    UnitOfTemperature,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, async_get_hass
 from homeassistant.exceptions import TemplateError
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import DeviceInfo
@@ -138,7 +137,7 @@ SENSOR_TYPES = {
         "key": SensorType.DEW_POINT,
         "name": SensorType.DEW_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": TEMP_CELSIUS,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:thermometer-water",
     },
@@ -146,7 +145,7 @@ SENSOR_TYPES = {
         "key": SensorType.FROST_POINT,
         "name": SensorType.FROST_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": TEMP_CELSIUS,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:snowflake-thermometer",
     },
@@ -160,7 +159,7 @@ SENSOR_TYPES = {
         "key": SensorType.HEAT_INDEX,
         "name": SensorType.HEAT_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": TEMP_CELSIUS,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
     },
@@ -168,7 +167,7 @@ SENSOR_TYPES = {
         "key": SensorType.HUMIDEX,
         "name": SensorType.HUMIDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": TEMP_CELSIUS,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
     },
@@ -208,7 +207,7 @@ SENSOR_TYPES = {
         "key": SensorType.SIMMER_INDEX,
         "name": SensorType.SIMMER_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": TEMP_CELSIUS,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
     },
@@ -648,13 +647,12 @@ class DeviceThermalComfort:
 
     async def _new_temperature_state(self, state):
         if _is_valid_state(state):
-            unit = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
+            hass = async_get_hass()
+            unit = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT, hass.config.units.temperature_unit)
             temp = util.convert(state.state, float)
             self.extra_state_attributes[ATTR_TEMPERATURE] = temp
             # convert to celsius if necessary
-            if unit == TEMP_FAHRENHEIT:
-                temp = TemperatureConverter.convert(temp, TEMP_FAHRENHEIT, TEMP_CELSIUS)
-            self._temperature = temp
+            self._temperature = TemperatureConverter.convert(temp, unit, UnitOfTemperature.CELSIUS)
             await self.async_update()
 
     async def humidity_state_listener(self, event):
@@ -685,7 +683,7 @@ class DeviceThermalComfort:
     async def heat_index(self) -> float:
         """Heat Index <http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml>."""
         fahrenheit = TemperatureConverter.convert(
-            self._temperature, TEMP_CELSIUS, TEMP_FAHRENHEIT
+            self._temperature, UnitOfTemperature.CELSIUS, UnitOfTemperature.FAHRENHEIT
         )
         hi = 0.5 * (
             fahrenheit + 61.0 + ((fahrenheit - 68.0) * 1.2) + (self._humidity * 0.094)
@@ -708,7 +706,7 @@ class DeviceThermalComfort:
         elif self._humidity > 85 and fahrenheit >= 80 and fahrenheit <= 87:
             hi = hi + ((self._humidity - 85) * 0.1) * ((87 - fahrenheit) * 0.2)
 
-        return round(TemperatureConverter.convert(hi, TEMP_FAHRENHEIT, TEMP_CELSIUS), 2)
+        return round(TemperatureConverter.convert(hi, UnitOfTemperature.FAHRENHEIT, UnitOfTemperature.CELSIUS), 2)
 
     @compute_once_lock(SensorType.HUMIDEX)
     async def humidex(self) -> int:
@@ -871,7 +869,7 @@ class DeviceThermalComfort:
     async def simmer_index(self) -> float:
         """<https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index>."""
         fahrenheit = TemperatureConverter.convert(
-            self._temperature, TEMP_CELSIUS, TEMP_FAHRENHEIT
+            self._temperature, UnitOfTemperature.CELSIUS, UnitOfTemperature.FAHRENHEIT
         )
 
         si = (
@@ -883,7 +881,7 @@ class DeviceThermalComfort:
         if fahrenheit < 70:
             si = fahrenheit
 
-        return round(TemperatureConverter.convert(si, TEMP_FAHRENHEIT, TEMP_CELSIUS), 2)
+        return round(TemperatureConverter.convert(si, UnitOfTemperature.FAHRENHEIT, UnitOfTemperature.CELSIUS), 2)
 
     @compute_once_lock(SensorType.SIMMER_ZONE)
     async def simmer_zone(self) -> (SimmerZone, float):
