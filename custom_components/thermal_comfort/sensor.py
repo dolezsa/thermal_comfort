@@ -42,6 +42,7 @@ from homeassistant.helpers.event import (
 )
 from homeassistant.helpers.template import Template
 from homeassistant.loader import async_get_custom_components
+from homeassistant.util.unit_conversion import TemperatureConverter
 import voluptuous as vol
 
 from .const import DEFAULT_NAME, DOMAIN
@@ -652,7 +653,7 @@ class DeviceThermalComfort:
             self.extra_state_attributes[ATTR_TEMPERATURE] = temp
             # convert to celsius if necessary
             if unit == TEMP_FAHRENHEIT:
-                temp = util.temperature.fahrenheit_to_celsius(temp)
+                temp = TemperatureConverter.convert(temp, TEMP_FAHRENHEIT, TEMP_CELSIUS)
             self._temperature = temp
             await self.async_update()
 
@@ -683,7 +684,9 @@ class DeviceThermalComfort:
     @compute_once_lock(SensorType.HEAT_INDEX)
     async def heat_index(self) -> float:
         """Heat Index <http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml>."""
-        fahrenheit = util.temperature.celsius_to_fahrenheit(self._temperature)
+        fahrenheit = TemperatureConverter.convert(
+            self._temperature, TEMP_CELSIUS, TEMP_FAHRENHEIT
+        )
         hi = 0.5 * (
             fahrenheit + 61.0 + ((fahrenheit - 68.0) * 1.2) + (self._humidity * 0.094)
         )
@@ -705,7 +708,7 @@ class DeviceThermalComfort:
         elif self._humidity > 85 and fahrenheit >= 80 and fahrenheit <= 87:
             hi = hi + ((self._humidity - 85) * 0.1) * ((87 - fahrenheit) * 0.2)
 
-        return round(util.temperature.fahrenheit_to_celsius(hi), 2)
+        return round(TemperatureConverter.convert(hi, TEMP_FAHRENHEIT, TEMP_CELSIUS), 2)
 
     @compute_once_lock(SensorType.HUMIDEX)
     async def humidex(self) -> int:
@@ -867,7 +870,9 @@ class DeviceThermalComfort:
     @compute_once_lock(SensorType.SIMMER_INDEX)
     async def simmer_index(self) -> float:
         """<https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index>."""
-        fahrenheit = util.temperature.celsius_to_fahrenheit(self._temperature)
+        fahrenheit = TemperatureConverter.convert(
+            self._temperature, TEMP_CELSIUS, TEMP_FAHRENHEIT
+        )
 
         si = (
             1.98
@@ -878,7 +883,7 @@ class DeviceThermalComfort:
         if fahrenheit < 70:
             si = fahrenheit
 
-        return round(util.temperature.fahrenheit_to_celsius(si), 2)
+        return round(TemperatureConverter.convert(si, TEMP_FAHRENHEIT, TEMP_CELSIUS), 2)
 
     @compute_once_lock(SensorType.SIMMER_ZONE)
     async def simmer_zone(self) -> (SimmerZone, float):
