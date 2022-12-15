@@ -1,6 +1,6 @@
 {
   "name": "Thermal Comfort",
-  "homeassistant": "2021.12.0",
+  "homeassistant": "2022.10.0",
   "render_readme": true,
   "filename": "thermal_comfort.zip"
 }

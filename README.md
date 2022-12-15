@@ -54,20 +54,20 @@ To use Thermal Comfort check the documentation for your preferred way to setup
 sensors.
 
 **UI/Frontend (Config Flow)
- [1.5.3](https://github.com/dolezsa/thermal_comfort/blob/1.5.3/documentation/config_flow.md) /
+ [1.5.4](https://github.com/dolezsa/thermal_comfort/blob/1.5.4/documentation/config_flow.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)**
 
 **YAML
- [1.5.3](https://github.com/dolezsa/thermal_comfort/blob/1.5.3/documentation/yaml.md) /
+ [1.5.4](https://github.com/dolezsa/thermal_comfort/blob/1.5.4/documentation/yaml.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md)**
 
-*Legacy YAML [1.5.3](https://github.com/dolezsa/thermal_comfort/blob/1.5.3/documentation/legacy_yaml.md)*
+*Legacy YAML [1.5.4](https://github.com/dolezsa/thermal_comfort/blob/1.5.4/documentation/legacy_yaml.md)*
 
 ## Installation
 
 ### Requirements
 
-Home Assistant >= 2021.12.0
+Home Assistant >= 2022.10.0
 
 ### Using [HACS](https://hacs.xyz/) (recommended)
 
