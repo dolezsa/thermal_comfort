@@ -1,0 +1,39 @@
+{
+  "entity": {
+    "sensor": {
+      "frost_risk": {
+        "state": {
+          "no_risk": "Sem risco",
+          "unlikely": "Improvável",
+          "probable": "Provável",
+          "high": "Muito provável"
+        }
+      },
+      "thermal_perception": {
+        "state": {
+          "dry": "Seco",
+          "very_comfortable": "Muito confortável",
+          "comfortable": "Confortável",
+          "ok_but_humid": "Confortável mas úmido",
+          "somewhat_uncomfortable": "Um pouco desconfortável",
+          "quite_uncomfortable": "Muito desconfortável",
+          "extremely_uncomfortable": "Extremamente desconfortável",
+          "severely_high": "Severamente úmido"
+        }
+      },
+      "simmer_zone": {
+        "state": {
+          "cool": "Frio",
+          "slightly_cool": "Um pouco frio",
+          "comfortable": "Confortável",
+          "slightly_warm": "Um pouco quente",
+          "increasing_discomfort": "Desconforto crescente",
+          "extremely_warm": "Muito quente",
+          "danger_of_heatstroke": "Perigo de insolação",
+          "extreme_danger_of_heatstroke": "Perigo extremo de insolação",
+          "circulatory_collapse_imminent": "Colapso circulatório iminente"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "entity": {
+    "sensor": {
+      "frost_risk": {
+        "state": {
+          "no_risk": "Nessun rischio",
+          "unlikely": "Improbabile",
+          "probable": "Probabile",
+          "high": "Alta probabilità"
+        }
+      },
+      "thermal_perception": {
+        "state": {
+          "dry": "Un po' secco",
+          "very_comfortable": "Molto confortevole",
+          "comfortable": "Confortevole",
+          "ok_but_humid": "Gradevole ma umido",
+          "somewhat_uncomfortable": "Possibile disagio",
+          "quite_uncomfortable": "Molto umido, abbastanza a disagio",
+          "extremely_uncomfortable": "Particolarmente a disagio e opprimente",
+          "severely_high": "Estremamente a disagio, rischioso per malattie correlati all'asma"
+        }
+      },
+      "simmer_zone": {
+        "state": {
+          "cool": "Cool",
+          "slightly_cool": "Slightly cool",
+          "comfortable": "Comfortable",
+          "slightly_warm": "Slightly warm",
+          "increasing_discomfort": "Increasing discomfort",
+          "extremely_warm": "Extremely warm",
+          "danger_of_heatstroke": "Danger of heatstroke",
+          "extreme_danger_of_heatstroke": "Extreme danger of heatstroke",
+          "circulatory_collapse_imminent": "Circulatory collapse imminent"
+        }
+      }
+    }
+  }
+}

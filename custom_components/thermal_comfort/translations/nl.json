@@ -1,0 +1,39 @@
+{
+  "entity": {
+    "sensor": {
+      "frost_risk": {
+        "state": {
+           "no_risk": "Geen",
+           "unlikely": "Onwaarschijnlijk",
+           "probable": "Waarschijnlijk",
+           "high": "Hoogstwaarschijnlijk"
+        }
+      },
+      "thermal_perception": {
+        "state": {
+           "dry": "Droog",
+           "very_comfortable": "Erg aangenaam",
+           "comfortable": "Aangenaam",
+           "ok_but_humid": "Goed, maar vochtig",
+           "somewhat_uncomfortable": "Minder aangenaam",
+           "quite_uncomfortable": "Erg vochtig, niet aangenaam",
+           "extremely_uncomfortable": "Erg onaangenaam, benauwd",
+           "severely_high": "Erg hoog, gevaarlijk voor astma gerelateerde ziekten"
+        }
+      },
+      "simmer_zone": {
+        "state": {
+           "cool": "Koel",
+           "slightly_cool": "Beetje koel",
+           "comfortable": "Aangenaam",
+           "slightly_warm": "Beetje warm",
+           "increasing_discomfort": "Toenemend onbehagelijk",
+           "extremely_warm": "Extreem warm",
+           "danger_of_heatstroke": "Gevaar voor zonnesteek",
+           "extreme_danger_of_heatstroke": "Extreem gevaar voor een zonnesteek",
+           "circulatory_collapse_imminent": "Gevaar voor de bloedsomloop"
+        }
+      }
+    }
+  }
+}
