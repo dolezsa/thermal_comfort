@@ -666,6 +666,8 @@ class DeviceThermalComfort:
             # convert to celsius if necessary
             self._temperature = TemperatureConverter.convert(temp, unit, UnitOfTemperature.CELSIUS)
             await self.async_update()
+        else:
+            _LOGGER.warning(f"Temperature has an invalid value: {state}. Can't calculate new states.")
 
     async def humidity_state_listener(self, event):
         """Handle humidity device state changes."""
@@ -673,9 +675,13 @@ class DeviceThermalComfort:
 
     async def _new_humidity_state(self, state):
         if _is_valid_state(state):
-            self._humidity = float(state.state)
-            self.extra_state_attributes[ATTR_HUMIDITY] = self._humidity
-            await self.async_update()
+            humidity = float(state.state)
+            if humidity > 0:
+                self._humidity = float(state.state)
+                self.extra_state_attributes[ATTR_HUMIDITY] = self._humidity
+                await self.async_update()
+        else:
+            _LOGGER.warning(f"Relative humidity has an invalid value: {state}. Can't calculate new states.")
 
     @compute_once_lock(SensorType.DEW_POINT)
     async def dew_point(self) -> float:
