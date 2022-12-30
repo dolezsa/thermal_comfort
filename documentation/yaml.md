@@ -68,7 +68,7 @@ thermal_comfort:
   <dd>Defines a template for the icon of the sensor.</dd>
   <dt><strong>entity_picture_template</strong> <code>template</code> <code>(optional)</code></dt>
   <dd>Defines a template for the entity picture of the sensor.</dd>
-  <dt><strong>unique_id</strong> <code>string</code> <code>(optional)</code></dt>
+  <dt><strong>unique_id</strong> <code>string</code> <code>REQUIRED</code></dt>
   <dd>
     An ID that uniquely identifies the sensors. Set this to a unique value to
     allow customization through the UI.
