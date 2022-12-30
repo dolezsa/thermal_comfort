@@ -74,6 +74,16 @@
           "heat_stroke": "Heat stroke possible"
         }
       },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Outside of the calculable range",
+          "comfortable": "Comfortable",
+          "slight_discomfort": "Slight discomfort",
+          "discomfort": "Discomfort",
+          "significant_discomfort": "Significant discomfort",
+          "extreme_discomfort": "Extreme discomfort"
+        }
+      },
       "simmer_zone": {
         "state": {
           "cool": "Cool",
