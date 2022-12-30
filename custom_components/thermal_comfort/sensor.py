@@ -232,7 +232,7 @@ LEGACY_SENSOR_SCHEMA = vol.Schema(
         vol.Optional(CONF_ICON_TEMPLATE): cv.template,
         vol.Optional(CONF_ENTITY_PICTURE_TEMPLATE): cv.template,
         vol.Optional(CONF_FRIENDLY_NAME): cv.string,
-        vol.Optional(CONF_UNIQUE_ID): cv.string,
+        vol.Required(CONF_UNIQUE_ID): cv.string,
     }
 )
 
