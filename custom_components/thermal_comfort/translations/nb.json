@@ -1,0 +1,18 @@
+{
+  "entity": {
+    "sensor": {
+      "thermal_perception": {
+        "state": {
+          "dry": "A bit dry for some",
+          "very_comfortable": "Very comfortable",
+          "comfortable": "Comfortable",
+          "ok_but_humid": "OK for most, but humid",
+          "somewhat_uncomfortable": "Somewhat uncomfortable",
+          "quite_uncomfortable": "Very humid, quite uncomfortable",
+          "extremely_uncomfortable": "Extremely uncomfortable, oppressive",
+          "severely_high": "Severely high, even deadly for asthma related illnesses"
+        }
+      }
+    }
+  }
+}

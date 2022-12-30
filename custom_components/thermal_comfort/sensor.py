@@ -69,18 +69,6 @@ POLL_DEFAULT = False
 SCAN_INTERVAL_DEFAULT = 30
 
 
-class ThermalComfortDeviceClass(StrEnum):
-    """State class for thermal comfort sensors."""
-
-    FROST_RISK = "thermal_comfort__frost_risk"
-    SIMMER_ZONE = "thermal_comfort__simmer_zone"
-    THERMAL_PERCEPTION = "thermal_comfort__thermal_perception"
-    HUMIDEX_PERCEPTION = "thermal_comfort__humidex_perception"
-    ENTHALPY = "thermal_comfort__enthalpy"
-    SCHARLAU_PERCEPTION = "thermal_comfort__scharlau_perception"
-    RELATIVE_STRAIN_PERCEPTION = "thermal_comfort__relative_strain_perception"
-
-
 class SensorType(StrEnum):
     """Sensor type enum."""
 
@@ -152,7 +140,7 @@ SENSOR_TYPES = {
     SensorType.FROST_RISK: {
         "key": SensorType.FROST_RISK,
         "name": SensorType.FROST_RISK.to_name(),
-        "device_class": ThermalComfortDeviceClass.FROST_RISK,
+        "translation_key": SensorType.FROST_RISK,
         "icon": "mdi:snowflake-alert",
     },
     SensorType.HEAT_INDEX: {
@@ -174,13 +162,13 @@ SENSOR_TYPES = {
     SensorType.HUMIDEX_PERCEPTION: {
         "key": SensorType.HUMIDEX_PERCEPTION,
         "name": SensorType.HUMIDEX_PERCEPTION.to_name(),
-        "device_class": ThermalComfortDeviceClass.HUMIDEX_PERCEPTION,
+        "translation_key": SensorType.HUMIDEX_PERCEPTION,
         "icon": "mdi:sun-thermometer",
     },
     SensorType.MOIST_AIR_ENTHALPY: {
         "key": SensorType.MOIST_AIR_ENTHALPY,
         "name": SensorType.MOIST_AIR_ENTHALPY.to_name(),
-        "device_class": ThermalComfortDeviceClass.ENTHALPY,
+        "translation_key": SensorType.MOIST_AIR_ENTHALPY,
         "native_unit_of_measurement": "kJ/kg",
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:water-circle",
@@ -188,19 +176,19 @@ SENSOR_TYPES = {
     SensorType.RELATIVE_STRAIN_PERCEPTION: {
         "key": SensorType.RELATIVE_STRAIN_PERCEPTION,
         "name": SensorType.RELATIVE_STRAIN_PERCEPTION.to_name(),
-        "device_class": ThermalComfortDeviceClass.RELATIVE_STRAIN_PERCEPTION,
+        "translation_key": SensorType.RELATIVE_STRAIN_PERCEPTION,
         "icon": "mdi:sun-thermometer",
     },
     SensorType.SUMMER_SCHARLAU_PERCEPTION: {
         "key": SensorType.SUMMER_SCHARLAU_PERCEPTION,
         "name": SensorType.SUMMER_SCHARLAU_PERCEPTION.to_name(),
-        "device_class": ThermalComfortDeviceClass.SCHARLAU_PERCEPTION,
+        "translation_key": "scharlau_perception",
         "icon": "mdi:sun-thermometer",
     },
     SensorType.WINTER_SCHARLAU_PERCEPTION: {
         "key": SensorType.WINTER_SCHARLAU_PERCEPTION,
         "name": SensorType.WINTER_SCHARLAU_PERCEPTION.to_name(),
-        "device_class": ThermalComfortDeviceClass.SCHARLAU_PERCEPTION,
+        "translation_key": "scharlau_perception",
         "icon": "mdi:snowflake-thermometer",
     },
     SensorType.SIMMER_INDEX: {
@@ -214,13 +202,13 @@ SENSOR_TYPES = {
     SensorType.SIMMER_ZONE: {
         "key": SensorType.SIMMER_ZONE,
         "name": SensorType.SIMMER_ZONE.to_name(),
-        "device_class": ThermalComfortDeviceClass.SIMMER_ZONE,
+        "translation_key": SensorType.SIMMER_ZONE,
         "icon": "mdi:sun-thermometer",
     },
     SensorType.THERMAL_PERCEPTION: {
         "key": SensorType.THERMAL_PERCEPTION,
         "name": SensorType.THERMAL_PERCEPTION.to_name(),
-        "device_class": ThermalComfortDeviceClass.THERMAL_PERCEPTION,
+        "translation_key": SensorType.THERMAL_PERCEPTION,
         "icon": "mdi:sun-thermometer",
     },
 }

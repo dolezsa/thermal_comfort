@@ -41,5 +41,51 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "frost_risk": {
+        "state": {
+          "no_risk": "Kein Risiko",
+          "unlikely": "Unwahrscheinlich",
+          "probable": "Wahrscheinlich",
+          "high": "Sehr wahrscheinlich"
+        }
+      },
+      "thermal_perception": {
+        "state": {
+          "dry": "Etwas trocken",
+          "very_comfortable": "Sehr angenehm",
+          "comfortable": "Angenehm",
+          "ok_but_humid": "Angenehm aber schwül",
+          "somewhat_uncomfortable": "Etwas unangenehm",
+          "quite_uncomfortable": "Unangenehm und sehr schwül",
+          "extremely_uncomfortable": "Äußerst unangenehm und drückend",
+          "severely_high":"Extrem hoch, tödlich für asthmabedingte Erkrankungen"
+        }
+      },
+      "simmer_zone": {
+        "state": {
+          "cool": "Kühl",
+          "slightly_cool": "Etwas kühl",
+          "comfortable": "Angenehm",
+          "slightly_warm": "Etwas warm",
+          "increasing_discomfort": "Zunehmend unbehaglich",
+          "extremely_warm": "Äußerst warm",
+          "danger_of_heatstroke": "Hitzschlaggefahr",
+          "extreme_danger_of_heatstroke": "Extreme Hitzschlaggefahr",
+          "circulatory_collapse_imminent": "Drohender Kreislaufkollaps"
+        }
+      },
+      "scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Outside of the calculable range",
+          "comfortable": "Comfortable",
+          "slightly_uncomfortable": "Slightly uncomfortable",
+          "moderatly_uncomfortable": "Moderatly uncomfortable",
+          "highly_uncomfortable": "Highly uncomfortable"
+        }
+      }
+    }
   }
 }

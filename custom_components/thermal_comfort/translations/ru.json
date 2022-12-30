@@ -1,0 +1,39 @@
+{
+  "entity": {
+    "sensor": {
+      "frost_risk": {
+        "state": {
+          "no_risk": "Не опасно",
+          "unlikely": "Маловероятно",
+          "probable": "Вероятно",
+          "high": "Очень вероятно"
+        }
+      },
+      "thermal_perception": {
+        "state": {
+          "dry": "Сухо",
+          "very_comfortable": "Очень комфортно",
+          "comfortable": "Комфортно",
+          "ok_but_humid": "Нормально, но сыровато",
+          "somewhat_uncomfortable": "Слегка некомфортно",
+          "quite_uncomfortable": "Довольно влажно, некомфортно",
+          "extremely_uncomfortable": "Очень влажно, угнетающе",
+          "severely_high": "Очень высокая влажность, опасно для астматиков"
+        }
+      },
+      "simmer_zone": {
+        "state": {
+          "cool": "Холодно",
+          "slightly_cool": "Прохладно",
+          "comfortable": "Комфортно",
+          "slightly_warm": "Тепло",
+          "increasing_discomfort": "Жарко",
+          "extremely_warm": "Очень жарко",
+          "danger_of_heatstroke": "Риск теплового удара",
+          "extreme_danger_of_heatstroke": "Серьёзный риск теплового удара",
+          "circulatory_collapse_imminent": "Возможны сосудистые нарушения"
+        }
+      }
+    }
+  }
+}

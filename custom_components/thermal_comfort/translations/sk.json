@@ -1,0 +1,39 @@
+{
+  "entity": {
+    "sensor": {
+      "frost_risk": {
+        "state": {
+          "no_risk": "Žiadne riziko",
+          "unlikely": "Nepravdepodobné",
+          "probable": "Pravdepodobné",
+          "high": "Vysoká pravdepodobnosť"
+        }
+      },
+      "thermal_perception": {
+        "state": {
+          "dry": "Pre niekoho suché",
+          "very_comfortable": "Velmi komfortné",
+          "comfortable": "Príjemné",
+          "ok_but_humid": "Pre vǎcsinu OK, ale vlhké",
+          "somewhat_uncomfortable": "Trochu nepríjemné",
+          "quite_uncomfortable": "Veľmi vlhké, dosť nepríjemné",
+          "extremely_uncomfortable": "Extrémne nekomfortné, tiesnivé",
+          "severely_high": "Veľmi vysoká, pre astmatikov smrteľná vlhkosť"
+        }
+      },
+      "simmer_zone": {
+        "state": {
+          "cool": "Chladno",
+          "slightly_cool": "Mierne chladno",
+          "comfortable": "Príjemne",
+          "slightly_warm": "Mierne teplo",
+          "increasing_discomfort": "Stupňujúce sa nepohodlie",
+          "extremely_warm": "Extrémne teplo",
+          "danger_of_heatstroke": "Nebezpečenstvo úpalu",
+          "extreme_danger_of_heatstroke": "Extrémne nebezpečenstvo úpalu",
+          "circulatory_collapse_imminent": "Hroziaci kolaps krvného obehu"
+        }
+      }
+    }
+  }
+}

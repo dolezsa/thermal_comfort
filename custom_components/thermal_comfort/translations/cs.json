@@ -1,0 +1,39 @@
+{
+  "entity": {
+    "sensor": {
+      "frost_risk": {
+        "state": {
+          "no_risk": "Žádné riziko",
+          "unlikely": "Nepravděpodobné",
+          "probable": "Pravděpodobné",
+          "high": "Vysoce pravděpodobné"
+        }
+      },
+      "thermal_perception": {
+        "state": {
+          "dry": "Pro někoho sucho",
+          "very_comfortable": "Velmi přijemně",
+          "comfortable": "Příjemně",
+          "ok_but_humid": "OK pro většinu, ale vlhko",
+          "somewhat_uncomfortable": "Poněkud nepříjemně",
+          "quite_uncomfortable": "Velmi vlhko, docela nepříjemně",
+          "extremely_uncomfortable": "Extrémně nepříjemně, tísnivě",
+          "severely_high": "Velmi vysoká vlhkost, dokonce smrtelná pro jedince s nemocemi související s astmatem"
+        }
+      },
+      "simmer_zone": {
+        "state": {
+          "cool": "Chladno",
+          "slightly_cool": "Mírně chladno",
+          "comfortable": "Příjemně",
+          "slightly_warm": "Mírně teplo",
+          "increasing_discomfort": "Narůstající nepohodlí",
+          "extremely_warm": "Extrémně teplo",
+          "danger_of_heatstroke": "Nebezpečí úpalu",
+          "extreme_danger_of_heatstroke": "Extrémní nebezpečí úpalu",
+          "circulatory_collapse_imminent": "Hrozící kolaps krevního oběhu"
+        }
+      }
+    }
+  }
+}

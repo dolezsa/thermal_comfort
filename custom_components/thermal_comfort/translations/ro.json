@@ -41,5 +41,42 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "frost_risk": {
+        "state": {
+          "no_risk": "Niciun risc",
+          "unlikely": "Improbabil",
+          "probable": "Probabil",
+          "high": "Probabilitate mare"
+        }
+      },
+      "thermal_perception": {
+        "state": {
+          "dry": "Cam uscat pentru unii",
+          "very_comfortable": "Foarte confortabil",
+          "comfortable": "Confortabil",
+          "ok_but_humid": "OK pentru majoritatea, dar umed",
+          "somewhat_uncomfortable": "Oarecum inconfortabil",
+          "quite_uncomfortable": "Foarte umed, destul de inconfortabil",
+          "extremely_uncomfortable": "Extrem de inconfortabil, opresiv",
+          "severely_high": "Sever ridicat, chiar mortal pentru bolile legate de astm"
+        }
+      },
+      "simmer_zone": {
+        "state": {
+          "cool": "Rece",
+          "slightly_cool": "Ușor rece",
+          "comfortable": "Confortabil",
+          "slightly_warm": "Ușor cald",
+          "increasing_discomfort": "Creșterea disconfortului",
+          "extremely_warm": "Extrem de cald",
+          "danger_of_heatstroke": "Pericol de insolație",
+          "extreme_danger_of_heatstroke": "Pericol extrem de insolație",
+          "circulatory_collapse_imminent": "Colapsul circulator iminent"
+        }
+      }
+    }
   }
 }
