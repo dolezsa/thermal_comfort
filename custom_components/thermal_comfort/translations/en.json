@@ -95,6 +95,16 @@
           "moderatly_uncomfortable": "Moderatly uncomfortable",
           "highly_uncomfortable": "Highly uncomfortable"
         }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "No discomfort",
+          "less_then_half": "Less than half of the population feels discomfort",
+          "more_then_half": "More than half of the population feels discomfort",
+          "most": "Most individuals feel discomfort and deterioration of psychophysical conditions",
+          "everyone": "Everyone feels significant discomfort",
+          "dangerous": "Dangerous, very strong discomfort which may cause heat strokes"
+        }
       }
     }
   }
