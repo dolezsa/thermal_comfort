@@ -119,7 +119,6 @@ SENSOR_TYPES = {
     SensorType.ABSOLUTE_HUMIDITY: {
         "key": SensorType.ABSOLUTE_HUMIDITY,
         "name": SensorType.ABSOLUTE_HUMIDITY.to_name(),
-        "device_class": SensorDeviceClass.HUMIDITY,
         "native_unit_of_measurement": "g/m³",
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:water",
