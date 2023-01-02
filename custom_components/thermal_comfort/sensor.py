@@ -48,7 +48,7 @@ from .const import DEFAULT_NAME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-ATTR_DEWPOINT = "dew_point"
+ATTR_DEW_POINT = "dew_point"
 ATTR_HUMIDITY = "humidity"
 ATTR_HUMIDEX = "humidex"
 ATTR_FROST_POINT = "frost_point"
@@ -86,7 +86,7 @@ class SensorType(StrEnum):
     WINTER_SCHARLAU_PERCEPTION = "winter_scharlau_perception"
     SIMMER_INDEX = "simmer_index"
     SIMMER_ZONE = "simmer_zone"
-    THERMAL_PERCEPTION = "thermal_perception"
+    DEW_POINT_PERCEPTION = "dew_point_perception"
     THOMS_DISCOMFORT_PERCEPTION = "thoms_discomfort_perception"
 
     def to_name(self) -> str:
@@ -104,7 +104,7 @@ class SensorType(StrEnum):
             )
 
 
-class ThermalPerception(StrEnum):
+class DewPointPerception(StrEnum):
     """Thermal Perception."""
 
     DRY = "dry"
@@ -190,7 +190,7 @@ TC_ICONS = {
     SensorType.SUMMER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
     SensorType.WINTER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
     SensorType.SIMMER_ZONE: "tc:thermal-perception",
-    SensorType.THERMAL_PERCEPTION: "tc:thermal-perception",
+    SensorType.DEW_POINT_PERCEPTION: "tc:thermal-perception",
     SensorType.THOMS_DISCOMFORT_PERCEPTION: "tc:thermal-perception",
 }
 
@@ -298,12 +298,12 @@ SENSOR_TYPES = {
         "translation_key": SensorType.SIMMER_ZONE,
         "icon": "mdi:sun-thermometer",
     },
-    SensorType.THERMAL_PERCEPTION: {
-        "key": SensorType.THERMAL_PERCEPTION,
-        "name": SensorType.THERMAL_PERCEPTION.to_name(),
+    SensorType.DEW_POINT_PERCEPTION: {
+        "key": SensorType.DEW_POINT_PERCEPTION,
+        "name": SensorType.DEW_POINT_PERCEPTION.to_name(),
         "device_class": SensorDeviceClass.ENUM,
-        "options": list(map(str, ThermalPerception)),
-        "translation_key": SensorType.THERMAL_PERCEPTION,
+        "options": list(map(str, DewPointPerception)),
+        "translation_key": SensorType.DEW_POINT_PERCEPTION,
         "icon": "mdi:sun-thermometer",
     },
     SensorType.THOMS_DISCOMFORT_PERCEPTION: {
@@ -542,8 +542,8 @@ class SensorThermalComfort(SensorEntity):
         if type(value) == tuple and len(value) == 2:
             if self._sensor_type == SensorType.HUMIDEX_PERCEPTION:
                 self._attr_extra_state_attributes[ATTR_HUMIDEX] = value[1]
-            elif self._sensor_type == SensorType.THERMAL_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_DEWPOINT] = value[1]
+            elif self._sensor_type == SensorType.DEW_POINT_PERCEPTION:
+                self._attr_extra_state_attributes[ATTR_DEW_POINT] = value[1]
             elif self._sensor_type == SensorType.FROST_RISK:
                 self._attr_extra_state_attributes[ATTR_FROST_POINT] = value[1]
             elif self._sensor_type == SensorType.RELATIVE_STRAIN_PERCEPTION:
@@ -770,26 +770,26 @@ class DeviceThermalComfort:
 
         return perception, humidex
 
-    @compute_once_lock(SensorType.THERMAL_PERCEPTION)
-    async def thermal_perception(self) -> (ThermalPerception, float):
+    @compute_once_lock(SensorType.DEW_POINT_PERCEPTION)
+    async def dew_point_perception(self) -> (DewPointPerception, float):
         """Dew Point <https://en.wikipedia.org/wiki/Dew_point>."""
         dewpoint = await self.dew_point()
         if dewpoint < 10:
-            perception = ThermalPerception.DRY
+            perception = DewPointPerception.DRY
         elif dewpoint < 13:
-            perception = ThermalPerception.VERY_COMFORTABLE
+            perception = DewPointPerception.VERY_COMFORTABLE
         elif dewpoint < 16:
-            perception = ThermalPerception.COMFORTABLE
+            perception = DewPointPerception.COMFORTABLE
         elif dewpoint < 18:
-            perception = ThermalPerception.OK_BUT_HUMID
+            perception = DewPointPerception.OK_BUT_HUMID
         elif dewpoint < 21:
-            perception = ThermalPerception.SOMEWHAT_UNCOMFORTABLE
+            perception = DewPointPerception.SOMEWHAT_UNCOMFORTABLE
         elif dewpoint < 24:
-            perception = ThermalPerception.QUITE_UNCOMFORTABLE
+            perception = DewPointPerception.QUITE_UNCOMFORTABLE
         elif dewpoint < 26:
-            perception = ThermalPerception.EXTREMELY_UNCOMFORTABLE
+            perception = DewPointPerception.EXTREMELY_UNCOMFORTABLE
         else:
-            perception = ThermalPerception.SEVERELY_HIGH
+            perception = DewPointPerception.SEVERELY_HIGH
 
         return perception, dewpoint
 

@@ -52,7 +52,7 @@
           "high": "Alta probabilidad"
         }
       },
-      "thermal_perception": {
+      "dew_point_perception": {
         "state": {
           "dry": "Un poco seco para algunos",
           "very_comfortable": "Muy cómodo",

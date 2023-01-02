@@ -22,12 +22,12 @@ from custom_components.thermal_comfort.sensor import (
     CONF_CUSTOM_ICONS,
     CONF_SENSOR_TYPES,
     DEFAULT_SENSOR_TYPES,
+    DewPointPerception,
     HumidexPerception,
     RelativeStrainPerception,
     ScharlauPerception,
     SensorType,
     SimmerZone,
-    ThermalPerception,
     ThomsDiscomfortPerception,
     id_generator,
 )
@@ -221,42 +221,43 @@ async def test_perception(hass, start_ha):
     """Test if perception is calculated correctly."""
     hass.states.async_set("sensor.test_temperature_sensor", "20.77")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.THERMAL_PERCEPTION) is not None
+    assert get_sensor(hass, SensorType.DEW_POINT_PERCEPTION) is not None
     assert get_sensor(hass, SensorType.DEW_POINT).state == "9.99"
     assert (
-        get_sensor(hass, SensorType.THERMAL_PERCEPTION).state == ThermalPerception.DRY
+        get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
+        == DewPointPerception.DRY
     )
 
     hass.states.async_set("sensor.test_temperature_sensor", "24.0")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.DEW_POINT).state == "12.96"
     assert (
-        get_sensor(hass, SensorType.THERMAL_PERCEPTION).state
-        == ThermalPerception.VERY_COMFORTABLE
+        get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
+        == DewPointPerception.VERY_COMFORTABLE
     )
 
     hass.states.async_set("sensor.test_humidity_sensor", "60.82")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.DEW_POINT).state == "15.99"
     assert (
-        get_sensor(hass, SensorType.THERMAL_PERCEPTION).state
-        == ThermalPerception.COMFORTABLE
+        get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
+        == DewPointPerception.COMFORTABLE
     )
 
     hass.states.async_set("sensor.test_temperature_sensor", "24.01")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.DEW_POINT).state == "16.0"
     assert (
-        get_sensor(hass, SensorType.THERMAL_PERCEPTION).state
-        == ThermalPerception.OK_BUT_HUMID
+        get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
+        == DewPointPerception.OK_BUT_HUMID
     )
 
     hass.states.async_set("sensor.test_humidity_sensor", "69.03")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.DEW_POINT).state == "18.0"
     assert (
-        get_sensor(hass, SensorType.THERMAL_PERCEPTION).state
-        == ThermalPerception.SOMEWHAT_UNCOMFORTABLE
+        get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
+        == DewPointPerception.SOMEWHAT_UNCOMFORTABLE
     )
 
     hass.states.async_set("sensor.test_humidity_sensor", "79.6")
@@ -265,8 +266,8 @@ async def test_perception(hass, start_ha):
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.DEW_POINT).state == "22.22"
     assert (
-        get_sensor(hass, SensorType.THERMAL_PERCEPTION).state
-        == ThermalPerception.QUITE_UNCOMFORTABLE
+        get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
+        == DewPointPerception.QUITE_UNCOMFORTABLE
     )
 
     hass.states.async_set("sensor.test_humidity_sensor", "85.0")
@@ -275,8 +276,8 @@ async def test_perception(hass, start_ha):
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.DEW_POINT).state == "24.13"
     assert (
-        get_sensor(hass, SensorType.THERMAL_PERCEPTION).state
-        == ThermalPerception.EXTREMELY_UNCOMFORTABLE
+        get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
+        == DewPointPerception.EXTREMELY_UNCOMFORTABLE
     )
 
     hass.states.async_set("sensor.test_humidity_sensor", "95.0")
@@ -285,8 +286,8 @@ async def test_perception(hass, start_ha):
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.DEW_POINT).state == "26.0"
     assert (
-        get_sensor(hass, SensorType.THERMAL_PERCEPTION).state
-        == ThermalPerception.SEVERELY_HIGH
+        get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
+        == DewPointPerception.SEVERELY_HIGH
     )
 
 
@@ -933,7 +934,7 @@ async def get_sensor_types(hass, start_ha):
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 4
 
     assert get_sensor(hass, SensorType.HEAT_INDEX) is None
-    assert get_sensor(hass, SensorType.THERMAL_PERCEPTION) is None
+    assert get_sensor(hass, SensorType.DEW_POINT_PERCEPTION) is None
 
     assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY) is not None
     assert get_sensor(hass, SensorType.DEW_POINT) is not None
@@ -1071,7 +1072,7 @@ async def test_create_sensors(hass: HomeAssistant):
                         "temperature_sensor": "sensor.test_temperature_sensor",
                         "humidity_sensor": "sensor.test_humidity_sensor",
                         "sensor_types": [
-                            SensorType.THERMAL_PERCEPTION,
+                            SensorType.DEW_POINT_PERCEPTION,
                             SensorType.ABSOLUTE_HUMIDITY,
                         ],
                         "unique_id": "unique_thermal_comfort_id",
@@ -1085,8 +1086,8 @@ async def test_sensor_type_names(hass: HomeAssistant, start_ha: Callable) -> Non
     """Test if sensor types shortform can be used."""
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 2
     assert (
-        SensorType.THERMAL_PERCEPTION.to_name()
-        in get_sensor(hass, SensorType.THERMAL_PERCEPTION).name
+        SensorType.DEW_POINT_PERCEPTION.to_name()
+        in get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).name
     )
 
 
@@ -1107,7 +1108,7 @@ async def test_sensor_type_names(hass: HomeAssistant, start_ha: Callable) -> Non
                             "temperature_sensor": "sensor.test_temperature_sensor",
                             "humidity_sensor": "sensor.test_humidity_sensor",
                             "sensor_types": [
-                                SensorType.THERMAL_PERCEPTION,
+                                SensorType.DEW_POINT_PERCEPTION,
                                 SensorType.ABSOLUTE_HUMIDITY,
                             ],
                             "unique_id": "unique_thermal_comfort_id",
@@ -1128,6 +1129,6 @@ async def test_global_options(hass: HomeAssistant, start_ha: Callable) -> None:
     """Test if global options are correctly set."""
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 3
     assert (
-        get_sensor(hass, SensorType.THERMAL_PERCEPTION).attributes["icon"]
-        == f"tc:{SensorType.THERMAL_PERCEPTION.replace('_', '-')}"
+        get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).attributes["icon"]
+        == "tc:thermal-perception"
     )

@@ -9,7 +9,7 @@
            "high": "Hoogstwaarschijnlijk"
         }
       },
-      "thermal_perception": {
+      "dew_point_perception": {
         "state": {
            "dry": "Droog",
            "very_comfortable": "Erg aangenaam",
