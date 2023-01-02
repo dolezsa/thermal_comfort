@@ -17,7 +17,7 @@ thermal_comfort:
       sensor_types:
         - absolute_humidity
         - heat_index
-        - thermal_perception
+        - dew_point_perception
     - name: Bedroom
 …
 ```
@@ -31,7 +31,7 @@ thermal_comfort:
     Available sensors: <code>absolute_humidity</code>,
     <code>heat_index</code>, <code>dew_point</code>,
     <code>humidex</code>, <code>humidex_perception</code>,
-    <code>thermal_perception</code>, <code>frost_point</code>,
+    <code>dew_point_perception</code>, <code>frost_point</code>,
     <code>frost_risk</code>, <code>simmer_index</code>,
     <code>simmer_zone</code>, <code>moist_air_enthalpy</code>,
     <code>relative_strain_perception</code>,

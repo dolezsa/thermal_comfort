@@ -52,7 +52,7 @@
           "high": "Probabilitate mare"
         }
       },
-      "thermal_perception": {
+      "dew_point_perception": {
         "state": {
           "dry": "Cam uscat pentru unii",
           "very_comfortable": "Foarte confortabil",

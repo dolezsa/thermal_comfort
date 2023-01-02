@@ -9,7 +9,7 @@
           "high": "Vysoká pravdepodobnosť"
         }
       },
-      "thermal_perception": {
+      "dew_point_perception": {
         "state": {
           "dry": "Pre niekoho suché",
           "very_comfortable": "Velmi komfortné",
