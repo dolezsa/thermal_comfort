@@ -9,7 +9,7 @@
           "high": "Stor risk"
         }
       },
-      "thermal_perception": {
+      "dew_point_perception": {
         "state": {
           "dry": "Lite torrt",
           "very_comfortable": "Väldigt bekväm",
