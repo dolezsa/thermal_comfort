@@ -104,159 +104,6 @@ class SensorType(StrEnum):
             )
 
 
-TC_ICONS = {
-    SensorType.DEW_POINT: "tc:dew-point",
-    SensorType.FROST_POINT: "tc:frost-point",
-    SensorType.RELATIVE_STRAIN_PERCEPTION: "tc:thermal-perception",
-    SensorType.SUMMER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
-    SensorType.WINTER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
-    SensorType.SIMMER_ZONE: "tc:thermal-perception",
-    SensorType.THERMAL_PERCEPTION: "tc:thermal-perception",
-    SensorType.THOMS_DISCOMFORT_PERCEPTION: "tc:thermal-perception",
-}
-
-SENSOR_TYPES = {
-    SensorType.ABSOLUTE_HUMIDITY: {
-        "key": SensorType.ABSOLUTE_HUMIDITY,
-        "name": SensorType.ABSOLUTE_HUMIDITY.to_name(),
-        "native_unit_of_measurement": "g/m³",
-        "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:water",
-    },
-    SensorType.DEW_POINT: {
-        "key": SensorType.DEW_POINT,
-        "name": SensorType.DEW_POINT.to_name(),
-        "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
-        "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:thermometer-water",
-    },
-    SensorType.FROST_POINT: {
-        "key": SensorType.FROST_POINT,
-        "name": SensorType.FROST_POINT.to_name(),
-        "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
-        "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:snowflake-thermometer",
-    },
-    SensorType.FROST_RISK: {
-        "key": SensorType.FROST_RISK,
-        "name": SensorType.FROST_RISK.to_name(),
-        "translation_key": SensorType.FROST_RISK,
-        "icon": "mdi:snowflake-alert",
-    },
-    SensorType.HEAT_INDEX: {
-        "key": SensorType.HEAT_INDEX,
-        "name": SensorType.HEAT_INDEX.to_name(),
-        "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
-        "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.HUMIDEX: {
-        "key": SensorType.HUMIDEX,
-        "name": SensorType.HUMIDEX.to_name(),
-        "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
-        "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.HUMIDEX_PERCEPTION: {
-        "key": SensorType.HUMIDEX_PERCEPTION,
-        "name": SensorType.HUMIDEX_PERCEPTION.to_name(),
-        "translation_key": SensorType.HUMIDEX_PERCEPTION,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.MOIST_AIR_ENTHALPY: {
-        "key": SensorType.MOIST_AIR_ENTHALPY,
-        "name": SensorType.MOIST_AIR_ENTHALPY.to_name(),
-        "translation_key": SensorType.MOIST_AIR_ENTHALPY,
-        "native_unit_of_measurement": "kJ/kg",
-        "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:water-circle",
-    },
-    SensorType.RELATIVE_STRAIN_PERCEPTION: {
-        "key": SensorType.RELATIVE_STRAIN_PERCEPTION,
-        "name": SensorType.RELATIVE_STRAIN_PERCEPTION.to_name(),
-        "translation_key": SensorType.RELATIVE_STRAIN_PERCEPTION,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.SUMMER_SCHARLAU_PERCEPTION: {
-        "key": SensorType.SUMMER_SCHARLAU_PERCEPTION,
-        "name": SensorType.SUMMER_SCHARLAU_PERCEPTION.to_name(),
-        "translation_key": "scharlau_perception",
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.WINTER_SCHARLAU_PERCEPTION: {
-        "key": SensorType.WINTER_SCHARLAU_PERCEPTION,
-        "name": SensorType.WINTER_SCHARLAU_PERCEPTION.to_name(),
-        "translation_key": "scharlau_perception",
-        "icon": "mdi:snowflake-thermometer",
-    },
-    SensorType.SIMMER_INDEX: {
-        "key": SensorType.SIMMER_INDEX,
-        "name": SensorType.SIMMER_INDEX.to_name(),
-        "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
-        "state_class": SensorStateClass.MEASUREMENT,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.SIMMER_ZONE: {
-        "key": SensorType.SIMMER_ZONE,
-        "name": SensorType.SIMMER_ZONE.to_name(),
-        "translation_key": SensorType.SIMMER_ZONE,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.THERMAL_PERCEPTION: {
-        "key": SensorType.THERMAL_PERCEPTION,
-        "name": SensorType.THERMAL_PERCEPTION.to_name(),
-        "translation_key": SensorType.THERMAL_PERCEPTION,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.THOMS_DISCOMFORT_PERCEPTION: {
-        "key": SensorType.THOMS_DISCOMFORT_PERCEPTION,
-        "name": SensorType.THOMS_DISCOMFORT_PERCEPTION.to_name(),
-        "translation_key": SensorType.THOMS_DISCOMFORT_PERCEPTION,
-        "icon": "mdi:sun-thermometer",
-    },
-}
-
-DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
-
-PLATFORM_OPTIONS_SCHEMA = vol.Schema(
-    {
-        vol.Optional(CONF_POLL): cv.boolean,
-        vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
-        vol.Optional(CONF_CUSTOM_ICONS): cv.boolean,
-        vol.Optional(CONF_SENSOR_TYPES): cv.ensure_list,
-    },
-    extra=vol.REMOVE_EXTRA,
-)
-
-LEGACY_SENSOR_SCHEMA = vol.Schema(
-    {
-        vol.Required(CONF_TEMPERATURE_SENSOR): cv.entity_id,
-        vol.Required(CONF_HUMIDITY_SENSOR): cv.entity_id,
-        vol.Optional(CONF_ICON_TEMPLATE): cv.template,
-        vol.Optional(CONF_ENTITY_PICTURE_TEMPLATE): cv.template,
-        vol.Optional(CONF_FRIENDLY_NAME): cv.string,
-        vol.Required(CONF_UNIQUE_ID): cv.string,
-    }
-)
-
-SENSOR_SCHEMA = LEGACY_SENSOR_SCHEMA.extend(
-    {
-        vol.Optional(CONF_NAME): cv.string,
-    }
-).extend(PLATFORM_OPTIONS_SCHEMA.schema)
-
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
-    {
-        vol.Required(CONF_SENSORS): cv.schema_with_slug_keys(SENSOR_SCHEMA),
-    }
-).extend(PLATFORM_OPTIONS_SCHEMA.schema)
-
-
 class ThermalPerception(StrEnum):
     """Thermal Perception."""
 
@@ -334,6 +181,175 @@ class ThomsDiscomfortPerception(StrEnum):
     MOST = "most"
     EVERYONE = "everyone"
     DANGEROUS = "dangerous"
+
+
+TC_ICONS = {
+    SensorType.DEW_POINT: "tc:dew-point",
+    SensorType.FROST_POINT: "tc:frost-point",
+    SensorType.RELATIVE_STRAIN_PERCEPTION: "tc:thermal-perception",
+    SensorType.SUMMER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
+    SensorType.WINTER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
+    SensorType.SIMMER_ZONE: "tc:thermal-perception",
+    SensorType.THERMAL_PERCEPTION: "tc:thermal-perception",
+    SensorType.THOMS_DISCOMFORT_PERCEPTION: "tc:thermal-perception",
+}
+
+SENSOR_TYPES = {
+    SensorType.ABSOLUTE_HUMIDITY: {
+        "key": SensorType.ABSOLUTE_HUMIDITY,
+        "name": SensorType.ABSOLUTE_HUMIDITY.to_name(),
+        "native_unit_of_measurement": "g/m³",
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:water",
+    },
+    SensorType.DEW_POINT: {
+        "key": SensorType.DEW_POINT,
+        "name": SensorType.DEW_POINT.to_name(),
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:thermometer-water",
+    },
+    SensorType.FROST_POINT: {
+        "key": SensorType.FROST_POINT,
+        "name": SensorType.FROST_POINT.to_name(),
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:snowflake-thermometer",
+    },
+    SensorType.FROST_RISK: {
+        "key": SensorType.FROST_RISK,
+        "name": SensorType.FROST_RISK.to_name(),
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, FrostRisk)),
+        "translation_key": SensorType.FROST_RISK,
+        "icon": "mdi:snowflake-alert",
+    },
+    SensorType.HEAT_INDEX: {
+        "key": SensorType.HEAT_INDEX,
+        "name": SensorType.HEAT_INDEX.to_name(),
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:sun-thermometer",
+    },
+    SensorType.HUMIDEX: {
+        "key": SensorType.HUMIDEX,
+        "name": SensorType.HUMIDEX.to_name(),
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:sun-thermometer",
+    },
+    SensorType.HUMIDEX_PERCEPTION: {
+        "key": SensorType.HUMIDEX_PERCEPTION,
+        "name": SensorType.HUMIDEX_PERCEPTION.to_name(),
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, HumidexPerception)),
+        "translation_key": SensorType.HUMIDEX_PERCEPTION,
+        "icon": "mdi:sun-thermometer",
+    },
+    SensorType.MOIST_AIR_ENTHALPY: {
+        "key": SensorType.MOIST_AIR_ENTHALPY,
+        "name": SensorType.MOIST_AIR_ENTHALPY.to_name(),
+        "translation_key": SensorType.MOIST_AIR_ENTHALPY,
+        "native_unit_of_measurement": "kJ/kg",
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:water-circle",
+    },
+    SensorType.RELATIVE_STRAIN_PERCEPTION: {
+        "key": SensorType.RELATIVE_STRAIN_PERCEPTION,
+        "name": SensorType.RELATIVE_STRAIN_PERCEPTION.to_name(),
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, RelativeStrainPerception)),
+        "translation_key": SensorType.RELATIVE_STRAIN_PERCEPTION,
+        "icon": "mdi:sun-thermometer",
+    },
+    SensorType.SUMMER_SCHARLAU_PERCEPTION: {
+        "key": SensorType.SUMMER_SCHARLAU_PERCEPTION,
+        "name": SensorType.SUMMER_SCHARLAU_PERCEPTION.to_name(),
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, ScharlauPerception)),
+        "translation_key": "scharlau_perception",
+        "icon": "mdi:sun-thermometer",
+    },
+    SensorType.WINTER_SCHARLAU_PERCEPTION: {
+        "key": SensorType.WINTER_SCHARLAU_PERCEPTION,
+        "name": SensorType.WINTER_SCHARLAU_PERCEPTION.to_name(),
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, ScharlauPerception)),
+        "translation_key": "scharlau_perception",
+        "icon": "mdi:snowflake-thermometer",
+    },
+    SensorType.SIMMER_INDEX: {
+        "key": SensorType.SIMMER_INDEX,
+        "name": SensorType.SIMMER_INDEX.to_name(),
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:sun-thermometer",
+    },
+    SensorType.SIMMER_ZONE: {
+        "key": SensorType.SIMMER_ZONE,
+        "name": SensorType.SIMMER_ZONE.to_name(),
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, SimmerZone)),
+        "translation_key": SensorType.SIMMER_ZONE,
+        "icon": "mdi:sun-thermometer",
+    },
+    SensorType.THERMAL_PERCEPTION: {
+        "key": SensorType.THERMAL_PERCEPTION,
+        "name": SensorType.THERMAL_PERCEPTION.to_name(),
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, ThermalPerception)),
+        "translation_key": SensorType.THERMAL_PERCEPTION,
+        "icon": "mdi:sun-thermometer",
+    },
+    SensorType.THOMS_DISCOMFORT_PERCEPTION: {
+        "key": SensorType.THOMS_DISCOMFORT_PERCEPTION,
+        "name": SensorType.THOMS_DISCOMFORT_PERCEPTION.to_name(),
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, ThomsDiscomfortPerception)),
+        "translation_key": SensorType.THOMS_DISCOMFORT_PERCEPTION,
+        "icon": "mdi:sun-thermometer",
+    },
+}
+
+DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
+
+PLATFORM_OPTIONS_SCHEMA = vol.Schema(
+    {
+        vol.Optional(CONF_POLL): cv.boolean,
+        vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
+        vol.Optional(CONF_CUSTOM_ICONS): cv.boolean,
+        vol.Optional(CONF_SENSOR_TYPES): cv.ensure_list,
+    },
+    extra=vol.REMOVE_EXTRA,
+)
+
+LEGACY_SENSOR_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_TEMPERATURE_SENSOR): cv.entity_id,
+        vol.Required(CONF_HUMIDITY_SENSOR): cv.entity_id,
+        vol.Optional(CONF_ICON_TEMPLATE): cv.template,
+        vol.Optional(CONF_ENTITY_PICTURE_TEMPLATE): cv.template,
+        vol.Optional(CONF_FRIENDLY_NAME): cv.string,
+        vol.Required(CONF_UNIQUE_ID): cv.string,
+    }
+)
+
+SENSOR_SCHEMA = LEGACY_SENSOR_SCHEMA.extend(
+    {
+        vol.Optional(CONF_NAME): cv.string,
+    }
+).extend(PLATFORM_OPTIONS_SCHEMA.schema)
+
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+    {
+        vol.Required(CONF_SENSORS): cv.schema_with_slug_keys(SENSOR_SCHEMA),
+    }
+).extend(PLATFORM_OPTIONS_SCHEMA.schema)
 
 
 def compute_once_lock(sensor_type):
