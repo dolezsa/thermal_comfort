@@ -55,7 +55,7 @@ ATTR_FROST_POINT = "frost_point"
 ATTR_RELATIVE_STRAIN_INDEX = "relative_strain_index"
 ATTR_SUMMER_SCHARLAU_INDEX = "summer_scharlau_index"
 ATTR_WINTER_SCHARLAU_INDEX = "winter_scharlau_index"
-ATTR_SIMMER_INDEX = "simmer_index"
+ATTR_SUMMER_SIMMER_INDEX = "summer_simmer_index"
 ATTR_THOMS_DISCOMFORT_INDEX = "thoms_discomfort_index"
 CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
@@ -84,8 +84,8 @@ class SensorType(StrEnum):
     RELATIVE_STRAIN_PERCEPTION = "relative_strain_perception"
     SUMMER_SCHARLAU_PERCEPTION = "summer_scharlau_perception"
     WINTER_SCHARLAU_PERCEPTION = "winter_scharlau_perception"
-    SIMMER_INDEX = "simmer_index"
-    SIMMER_ZONE = "simmer_zone"
+    SUMMER_SIMMER_INDEX = "summer_simmer_index"
+    SUMMER_SIMMER_PERCEPTION = "summer_simmer_perception"
     DEW_POINT_PERCEPTION = "dew_point_perception"
     THOMS_DISCOMFORT_PERCEPTION = "thoms_discomfort_perception"
 
@@ -126,7 +126,7 @@ class FrostRisk(StrEnum):
     HIGH = "high"
 
 
-class SimmerZone(StrEnum):
+class SummerSimmerPerception(StrEnum):
     """Simmer Zone."""
 
     COOL = "cool"
@@ -189,7 +189,7 @@ TC_ICONS = {
     SensorType.RELATIVE_STRAIN_PERCEPTION: "tc:thermal-perception",
     SensorType.SUMMER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
     SensorType.WINTER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
-    SensorType.SIMMER_ZONE: "tc:thermal-perception",
+    SensorType.SUMMER_SIMMER_PERCEPTION: "tc:thermal-perception",
     SensorType.DEW_POINT_PERCEPTION: "tc:thermal-perception",
     SensorType.THOMS_DISCOMFORT_PERCEPTION: "tc:thermal-perception",
 }
@@ -282,20 +282,20 @@ SENSOR_TYPES = {
         "translation_key": "scharlau_perception",
         "icon": "mdi:snowflake-thermometer",
     },
-    SensorType.SIMMER_INDEX: {
-        "key": SensorType.SIMMER_INDEX,
-        "name": SensorType.SIMMER_INDEX.to_name(),
+    SensorType.SUMMER_SIMMER_INDEX: {
+        "key": SensorType.SUMMER_SIMMER_INDEX,
+        "name": SensorType.SUMMER_SIMMER_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
     },
-    SensorType.SIMMER_ZONE: {
-        "key": SensorType.SIMMER_ZONE,
-        "name": SensorType.SIMMER_ZONE.to_name(),
+    SensorType.SUMMER_SIMMER_PERCEPTION: {
+        "key": SensorType.SUMMER_SIMMER_PERCEPTION,
+        "name": SensorType.SUMMER_SIMMER_PERCEPTION.to_name(),
         "device_class": SensorDeviceClass.ENUM,
-        "options": list(map(str, SimmerZone)),
-        "translation_key": SensorType.SIMMER_ZONE,
+        "options": list(map(str, SummerSimmerPerception)),
+        "translation_key": SensorType.SUMMER_SIMMER_PERCEPTION,
         "icon": "mdi:sun-thermometer",
     },
     SensorType.DEW_POINT_PERCEPTION: {
@@ -552,8 +552,8 @@ class SensorThermalComfort(SensorEntity):
                 self._attr_extra_state_attributes[ATTR_SUMMER_SCHARLAU_INDEX] = value[1]
             elif self._sensor_type == SensorType.WINTER_SCHARLAU_PERCEPTION:
                 self._attr_extra_state_attributes[ATTR_WINTER_SCHARLAU_INDEX] = value[1]
-            elif self._sensor_type == SensorType.SIMMER_ZONE:
-                self._attr_extra_state_attributes[ATTR_SIMMER_INDEX] = value[1]
+            elif self._sensor_type == SensorType.SUMMER_SIMMER_PERCEPTION:
+                self._attr_extra_state_attributes[ATTR_SUMMER_SIMMER_INDEX] = value[1]
             elif self._sensor_type == SensorType.THOMS_DISCOMFORT_PERCEPTION:
                 self._attr_extra_state_attributes[ATTR_THOMS_DISCOMFORT_INDEX] = value[
                     1
@@ -900,8 +900,8 @@ class DeviceThermalComfort:
 
         return perception, round(ish, 2)
 
-    @compute_once_lock(SensorType.SIMMER_INDEX)
-    async def simmer_index(self) -> float:
+    @compute_once_lock(SensorType.SUMMER_SIMMER_INDEX)
+    async def summer_simmer_index(self) -> float:
         """<https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index>."""
         fahrenheit = TemperatureConverter.convert(
             self._temperature, UnitOfTemperature.CELSIUS, UnitOfTemperature.FAHRENHEIT
@@ -918,30 +918,30 @@ class DeviceThermalComfort:
 
         return round(TemperatureConverter.convert(si, UnitOfTemperature.FAHRENHEIT, UnitOfTemperature.CELSIUS), 2)
 
-    @compute_once_lock(SensorType.SIMMER_ZONE)
-    async def simmer_zone(self) -> (SimmerZone, float):
+    @compute_once_lock(SensorType.SUMMER_SIMMER_PERCEPTION)
+    async def summer_simmer_perception(self) -> (SummerSimmerPerception, float):
         """<http://summersimmer.com/default.asp>."""
-        si = await self.simmer_index()
+        si = await self.summer_simmer_index()
         if si < 21.1:
-            simmer_zone = SimmerZone.COOL
+            summer_simmer_perception = SummerSimmerPerception.COOL
         elif si < 25.0:
-            simmer_zone = SimmerZone.SLIGHTLY_COOL
+            summer_simmer_perception = SummerSimmerPerception.SLIGHTLY_COOL
         elif si < 28.3:
-            simmer_zone = SimmerZone.COMFORTABLE
+            summer_simmer_perception = SummerSimmerPerception.COMFORTABLE
         elif si < 32.8:
-            simmer_zone = SimmerZone.SLIGHTLY_WARM
+            summer_simmer_perception = SummerSimmerPerception.SLIGHTLY_WARM
         elif si < 37.8:
-            simmer_zone = SimmerZone.INCREASING_DISCOMFORT
+            summer_simmer_perception = SummerSimmerPerception.INCREASING_DISCOMFORT
         elif si < 44.4:
-            simmer_zone = SimmerZone.EXTREMELY_WARM
+            summer_simmer_perception = SummerSimmerPerception.EXTREMELY_WARM
         elif si < 51.7:
-            simmer_zone = SimmerZone.DANGER_OF_HEATSTROKE
+            summer_simmer_perception = SummerSimmerPerception.DANGER_OF_HEATSTROKE
         elif si < 65.6:
-            simmer_zone = SimmerZone.EXTREME_DANGER_OF_HEATSTROKE
+            summer_simmer_perception = SummerSimmerPerception.EXTREME_DANGER_OF_HEATSTROKE
         else:
-            simmer_zone = SimmerZone.CIRCULATORY_COLLAPSE_IMMINENT
+            summer_simmer_perception = SummerSimmerPerception.CIRCULATORY_COLLAPSE_IMMINENT
 
-        return simmer_zone, si
+        return summer_simmer_perception, si
 
     @compute_once_lock(SensorType.MOIST_AIR_ENTHALPY)
     async def moist_air_enthalpy(self) -> float:

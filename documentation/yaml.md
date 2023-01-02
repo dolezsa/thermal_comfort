@@ -32,8 +32,8 @@ thermal_comfort:
     <code>heat_index</code>, <code>dew_point</code>,
     <code>humidex</code>, <code>humidex_perception</code>,
     <code>dew_point_perception</code>, <code>frost_point</code>,
-    <code>frost_risk</code>, <code>simmer_index</code>,
-    <code>simmer_zone</code>, <code>moist_air_enthalpy</code>,
+    <code>frost_risk</code>, <code>summer_simmer_index</code>,
+    <code>summer_simmer_perception</code>, <code>moist_air_enthalpy</code>,
     <code>relative_strain_perception</code>,
     <code>summer_scharlau_perception</code>, <code>winter_scharlau_perception</code>
   </dd>

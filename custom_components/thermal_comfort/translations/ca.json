@@ -74,7 +74,7 @@
           "heat_stroke": "Possible cop de calor"
         }
       },
-      "simmer_zone": {
+      "summer_simmer_perception": {
         "state": {
           "cool": "Fred",
           "slightly_cool": "Una mica fred",

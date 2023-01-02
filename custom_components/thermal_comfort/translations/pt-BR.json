@@ -21,7 +21,7 @@
           "severely_high": "Severamente úmido"
         }
       },
-      "simmer_zone": {
+      "summer_simmer_perception": {
         "state": {
           "cool": "Frio",
           "slightly_cool": "Um pouco frio",
