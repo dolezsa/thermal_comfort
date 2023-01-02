@@ -74,7 +74,7 @@
           "heat_stroke": "Posible golpe de calor"
         }
       },
-      "simmer_zone": {
+      "summer_simmer_perception": {
         "state": {
           "cool": "Fresco",
           "slightly_cool": "Ligeramente fresco",

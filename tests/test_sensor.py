@@ -27,7 +27,7 @@ from custom_components.thermal_comfort.sensor import (
     RelativeStrainPerception,
     ScharlauPerception,
     SensorType,
-    SimmerZone,
+    SummerSimmerPerception,
     ThomsDiscomfortPerception,
     id_generator,
 )
@@ -333,86 +333,104 @@ async def test_frost_risk(hass, start_ha):
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
-async def test_simmer_index(hass, start_ha):
+async def test_summer_simmer_index(hass, start_ha):
     """Test if simmer index is calculated correctly."""
-    assert get_sensor(hass, SensorType.SIMMER_INDEX) is not None
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "29.6"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX) is not None
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "29.6"
 
     hass.states.async_set("sensor.test_temperature_sensor", "15.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "15.0"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "15.0"
 
     hass.states.async_set("sensor.test_humidity_sensor", "35.0")
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "25.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "27.88"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "27.88"
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
-async def test_simmer_zone(hass, start_ha):
+async def test_summer_simmer_perception(hass, start_ha):
     """Test if simmer zone is calculated correctly."""
     hass.states.async_set("sensor.test_temperature_sensor", "20.77")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_ZONE) is not None
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "20.77"
-    assert get_sensor(hass, SensorType.SIMMER_ZONE).state == SimmerZone.COOL
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION) is not None
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "20.77"
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.COOL
+    )
 
     hass.states.async_set("sensor.test_temperature_sensor", "24.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "28.17"
-    assert get_sensor(hass, SensorType.SIMMER_ZONE).state == SimmerZone.COMFORTABLE
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "28.17"
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.COMFORTABLE
+    )
 
     hass.states.async_set("sensor.test_humidity_sensor", "60.82")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "29.29"
-    assert get_sensor(hass, SensorType.SIMMER_ZONE).state == SimmerZone.SLIGHTLY_WARM
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "29.29"
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.SLIGHTLY_WARM
+    )
 
     hass.states.async_set("sensor.test_temperature_sensor", "24.01")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "29.31"
-    assert get_sensor(hass, SensorType.SIMMER_ZONE).state == SimmerZone.SLIGHTLY_WARM
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "29.31"
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.SLIGHTLY_WARM
+    )
 
     hass.states.async_set("sensor.test_humidity_sensor", "69.03")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "30.16"
-    assert get_sensor(hass, SensorType.SIMMER_ZONE).state == SimmerZone.SLIGHTLY_WARM
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "30.16"
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.SLIGHTLY_WARM
+    )
 
     hass.states.async_set("sensor.test_humidity_sensor", "79.6")
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "26.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "34.76"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "34.76"
     assert (
-        get_sensor(hass, SensorType.SIMMER_ZONE).state
-        == SimmerZone.INCREASING_DISCOMFORT
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.INCREASING_DISCOMFORT
     )
 
     hass.states.async_set("sensor.test_humidity_sensor", "85.0")
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "26.85")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "36.99"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "36.99"
     assert (
-        get_sensor(hass, SensorType.SIMMER_ZONE).state
-        == SimmerZone.INCREASING_DISCOMFORT
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.INCREASING_DISCOMFORT
     )
 
     hass.states.async_set("sensor.test_humidity_sensor", "80.0")
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "29.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "40.1"
-    assert get_sensor(hass, SensorType.SIMMER_ZONE).state == SimmerZone.EXTREMELY_WARM
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "40.1"
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.EXTREMELY_WARM
+    )
 
     hass.states.async_set("sensor.test_humidity_sensor", "45.0")
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "40.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "49.74"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "49.74"
     assert (
-        get_sensor(hass, SensorType.SIMMER_ZONE).state
-        == SimmerZone.DANGER_OF_HEATSTROKE
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.DANGER_OF_HEATSTROKE
     )
 
 
@@ -899,8 +917,8 @@ async def test_zero_degree_celcius(hass, start_ha):
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.DEW_POINT) is not None
     assert get_sensor(hass, SensorType.DEW_POINT).state == "-9.19"
-    assert get_sensor(hass, SensorType.SIMMER_INDEX) is not None
-    assert get_sensor(hass, SensorType.SIMMER_INDEX).state == "0.0"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX) is not None
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "0.0"
 
 
 @pytest.mark.parametrize(

@@ -21,7 +21,7 @@
           "severely_high": "Очень высокая влажность, опасно для астматиков"
         }
       },
-      "simmer_zone": {
+      "summer_simmer_perception": {
         "state": {
           "cool": "Холодно",
           "slightly_cool": "Прохладно",

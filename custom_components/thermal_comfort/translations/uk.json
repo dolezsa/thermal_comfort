@@ -21,7 +21,7 @@
           "severely_high": "Дуже висока вологість, може бути смертельною для для астматиків"
         }
       },
-      "simmer_zone": {
+      "summer_simmer_perception": {
         "state": {
           "cool": "Холодно",
           "slightly_cool": "Прохолодно",
