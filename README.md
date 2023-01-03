@@ -2,50 +2,21 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/dolezsa/thermal_comfort/latest/total?style=for-the-badge&color=f55041)
 
-Thermal Comfort provides the following calculated sensors for Home Assistant.
+Thermal Comfort provides a variety of thermal indices and thermal perceptions including feels like temperatures in numeric and textual representation for Home Assistant.
 
 ## Sensors:
 
-<dl>
-  <dt><strong>Absolute Humidity</strong></dt>
-  <dd>
-    Absolute humidity is a measure of the actual amount of water vapor
-      (moisture) in the air.
-  </dd>
-  <dt><strong>Heat Index</strong></dt>
-  <dd>
-    The heat index combines air temperature and relative humidity to posit a
-    human-perceived equivalent temperature.
-  </dd>
-  <dt><strong>Dew Point</strong></dt>
-  <dd>
-    The dew point is the temperature to which air must be cooled to become
-    saturated with water vapor and dew forms on surfaces.
-  </dd>
-  <dt><strong>Thermal Perception</strong></dt>
-  <dd>
-    Human perception of the dew point.
-  </dd>
-  <dt><strong>Frost Point</strong></dt>
-  <dd>
-    Frost point, temperature, below 0° C (32° F), at which moisture in the air 
-    will condense as a layer of frost on any exposed surface.
-  </dd>
-  <dt><strong>Frost Risk</strong></dt>
-  <dd>
-    Risk of Frost based on current temperature, frost point and absolute humidity.
-  </dd>
-  <dt><strong>Simmer Index</strong></dt>
-  <dd>
-    An index that combines air temperature and relative humidity. In contrast to
-    the Heat Index it describes the human-perceived equivalent temperature at
-    night and describes a factor of discomfort.
-  </dd>
-  <dt><strong>Simmer Zone</strong></dt>
-  <dd>
-    Human perception of the simmer index.
-  </dd>
-</dl>
+**Full list
+ [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/sensors.md) /
+ [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)**
+
+### Numeric Indices
+
+Thermal Comfort provides numerical indices like `dew point`, `frost point` and `absolute humidity` that are numeric values usable for further automations but also human readable. e.g. dew point tells the temperature to which air must be cooled to produce dew on a surface.
+
+### Bio Indices / Perception
+
+Thermal Comfort also provides a variety of bio indices like `heat index` giving numeric values of human perceived temperatures (feels like temperature). In addition we also provide textual perception sensors that describe the range of an index in human readable form e.g. comfortable or uncomfortable.
 
 ![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/living_room.png)
 
@@ -54,20 +25,24 @@ To use Thermal Comfort check the documentation for your preferred way to setup
 sensors.
 
 **UI/Frontend (Config Flow)
- [1.5.4](https://github.com/dolezsa/thermal_comfort/blob/1.5.4/documentation/config_flow.md) /
+ [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/config_flow.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)**
 
 **YAML
- [1.5.4](https://github.com/dolezsa/thermal_comfort/blob/1.5.4/documentation/yaml.md) /
+ [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/yaml.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md)**
 
-*Legacy YAML [1.5.4](https://github.com/dolezsa/thermal_comfort/blob/1.5.4/documentation/legacy_yaml.md)*
+*Legacy YAML [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/legacy_yaml.md)*
 
 ## Installation
 
 ### Requirements
 
-Home Assistant >= 2022.10.0
+#### 1.5
+Home Assistant >= 2021.12.0
+
+#### master
+Home Assistant >= 2023.1.0
 
 ### Using [HACS](https://hacs.xyz/) (recommended)
 
