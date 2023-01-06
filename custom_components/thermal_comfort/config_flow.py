@@ -462,6 +462,8 @@ def check_input(hass: HomeAssistant, user_input: dict) -> dict:
 class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Configuration flow for setting up new thermal_comfort entry."""
 
+    VERSION = 2
+
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
