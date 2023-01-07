@@ -194,6 +194,7 @@ class ThomsDiscomfortPerception(StrEnum):
 TC_ICONS = {
     SensorType.DEW_POINT: "tc:dew-point",
     SensorType.FROST_POINT: "tc:frost-point",
+    SensorType.HUMIDEX_PERCEPTION: "tc:thermal-perception",
     SensorType.RELATIVE_STRAIN_PERCEPTION: "tc:thermal-perception",
     SensorType.SUMMER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
     SensorType.WINTER_SCHARLAU_PERCEPTION: "tc:thermal-perception",
