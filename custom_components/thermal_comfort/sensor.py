@@ -10,6 +10,7 @@ from typing import Any
 from homeassistant import util
 from homeassistant.backports.enum import StrEnum
 from homeassistant.components.sensor import (
+    DOMAIN as SENSOR_DOMAIN,
     PLATFORM_SCHEMA,
     SensorDeviceClass,
     SensorEntity,
@@ -32,6 +33,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant, async_get_hass
 from homeassistant.exceptions import TemplateError
+from homeassistant.helpers import entity_registry
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -500,6 +502,16 @@ class SensorThermalComfort(SensorEntity):
             self.entity_description.name = (
                 f"{self._device.name} {self.entity_description.name}"
             )
+            if sensor_type in [SensorType.DEW_POINT_PERCEPTION, SensorType.SUMMER_SIMMER_INDEX, SensorType.SUMMER_SIMMER_PERCEPTION]:
+                registry = entity_registry.async_get(self._device.hass)
+                if sensor_type is SensorType.DEW_POINT_PERCEPTION:
+                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, self._device.unique_id + "thermal_perception")
+                elif sensor_type is SensorType.SUMMER_SIMMER_INDEX:
+                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, self._device.unique_id + "simmer_index")
+                elif sensor_type is SensorType.SUMMER_SIMMER_PERCEPTION:
+                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, self._device.unique_id + "simmer_zone")
+                if entity_id is not None:
+                    registry.async_update_entity(entity_id, new_unique_id=id_generator(self._device.unique_id, sensor_type))
         if custom_icons:
             if self.entity_description.key in TC_ICONS:
                 self.entity_description.icon = TC_ICONS[self.entity_description.key]
@@ -507,8 +519,7 @@ class SensorThermalComfort(SensorEntity):
         self._entity_picture_template = entity_picture_template
         self._attr_native_value = None
         self._attr_extra_state_attributes = {}
-        if self._device.unique_id is not None:
-            self._attr_unique_id = id_generator(self._device.unique_id, sensor_type)
+        self._attr_unique_id = id_generator(self._device.unique_id, sensor_type)
         self._attr_should_poll = False
 
     @property
