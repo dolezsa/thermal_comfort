@@ -72,6 +72,12 @@ POLL_DEFAULT = False
 SCAN_INTERVAL_DEFAULT = 30
 
 
+class LegacySensorType(StrEnum):
+    THERMAL_PERCEPTION = "thermal_perception"
+    SIMMER_INDEX = "simmer_index"
+    SIMMER_ZONE = "simmer_zone"
+
+
 class SensorType(StrEnum):
     """Sensor type enum."""
 
@@ -505,11 +511,14 @@ class SensorThermalComfort(SensorEntity):
             if sensor_type in [SensorType.DEW_POINT_PERCEPTION, SensorType.SUMMER_SIMMER_INDEX, SensorType.SUMMER_SIMMER_PERCEPTION]:
                 registry = entity_registry.async_get(self._device.hass)
                 if sensor_type is SensorType.DEW_POINT_PERCEPTION:
-                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, self._device.unique_id + "thermal_perception")
+                    unique_id = id_generator(self._device.unique_id, LegacySensorType.THERMAL_PERCEPTION)
+                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, unique_id)
                 elif sensor_type is SensorType.SUMMER_SIMMER_INDEX:
-                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, self._device.unique_id + "simmer_index")
+                    unique_id = id_generator(self._device.unique_id, LegacySensorType.SIMMER_INDEX)
+                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, unique_id)
                 elif sensor_type is SensorType.SUMMER_SIMMER_PERCEPTION:
-                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, self._device.unique_id + "simmer_zone")
+                    unique_id = id_generator(self._device.unique_id, LegacySensorType.SIMMER_ZONE)
+                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, unique_id)
                 if entity_id is not None:
                     registry.async_update_entity(entity_id, new_unique_id=id_generator(self._device.unique_id, sensor_type))
         if custom_icons:
