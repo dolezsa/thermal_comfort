@@ -7,6 +7,7 @@ Thermal Comfort provides a variety of thermal indices and thermal perceptions in
 ## Sensors:
 
 **Full list
+ [2.0](https://github.com/dolezsa/thermal_comfort/blob/2.0.0/documentation/sensors.md) /
  [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/sensors.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)**
 
@@ -18,25 +19,28 @@ Thermal Comfort provides numerical indices like `dew point`, `frost point`, `abs
 
 Thermal Comfort also provides a variety of bio indices like `humidex` or `heat index` giving numeric values of human perceived temperatures (feels like temperature). In addition we also provide textual perception sensors that describe the range of an index in human readable form e.g. comfortable or uncomfortable.
 
-![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/living_room.png)
+![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/outside.png)
 
 ## Usage
 To use Thermal Comfort check the documentation for your preferred way to setup
 sensors.
 
 **UI/Frontend (Config Flow)
+ [2.0](https://github.com/dolezsa/thermal_comfort/blob/2.0/documentation/config_flow.md) /
  [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/config_flow.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)**
 
 **YAML
+ [2.0](https://github.com/dolezsa/thermal_comfort/blob/2.0/documentation/yaml.md) /
  [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/yaml.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md)**
-
-*Legacy YAML [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/legacy_yaml.md)*
 
 ## Installation
 
 ### Requirements
+
+#### 2.0
+Home Assistant >= 2023.1.0
 
 #### 1.5
 Home Assistant >= 2021.12.0

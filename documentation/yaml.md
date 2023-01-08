@@ -28,14 +28,7 @@ thermal_comfort:
   <dt><strong>sensor_types</strong> <code>list</code> <code>(optional)</code></dt>
   <dd>
     A list of sensors to create. If omitted all will be created.
-    Available sensors: <code>absolute_humidity</code>,
-    <code>heat_index</code>, <code>dew_point</code>,
-    <code>humidex</code>, <code>humidex_perception</code>,
-    <code>dew_point_perception</code>, <code>frost_point</code>,
-    <code>frost_risk</code>, <code>summer_simmer_index</code>,
-    <code>summer_simmer_perception</code>, <code>moist_air_enthalpy</code>,
-    <code>relative_strain_perception</code>,
-    <code>summer_scharlau_perception</code>, <code>winter_scharlau_perception</code>
+    <a href="https://github.com/dolezsa/thermal_comfort/blob/2.0.0/documentation/sensors.md">Available sensors</a>
   </dd>
   <dt><strong>poll</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
   <dd>
