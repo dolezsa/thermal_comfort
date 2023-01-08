@@ -25,6 +25,9 @@
 [<img src="https://github.com/ahmadtawakol.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @ahmadtawakol](https://github.com/ahmadtawakol)
 * Upstream port of simmer index and simmer zone. Implementing tests for it.
 
+[<img src="https://github.com/ejpenney.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @ejpenney](https://github.com/ejpenney)
+* Fix deprecated converter
+
 
 # Translators 
 
@@ -80,6 +83,10 @@
 [<img src="https://github.com/pejotigrek.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @pejotigrek](https://github.com/pejotigrek)
 
+**Romanian:**
+[<img src="https://github.com/ovimano.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@ovimano](https://github.com/ovimano)
+
 **Russian:**
 [<img src="https://github.com/drts-sv.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @drts-sv](https://github.com/drts-sv)
@@ -95,6 +102,8 @@
 @RaulVKoNe](https://github.com/RaulVKoNe)
 [<img src="https://github.com/alceasan.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @alceasan](https://github.com/alceasan)
+[<img src="https://github.com/eretna.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@eretna](https://github.com/eretna)
 
 **Swedish:**
 [<img src="https://github.com/filikun.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
