@@ -7,7 +7,7 @@ Thermal Comfort provides a variety of thermal indices and thermal perceptions in
 ## Sensors:
 
 **Full list
- [2.0](https://github.com/dolezsa/thermal_comfort/blob/2.0.0/documentation/sensors.md) /
+ [2.0](https://github.com/dolezsa/thermal_comfort/blob/2.0/documentation/sensors.md) /
  [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/sensors.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)**
 
