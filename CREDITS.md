@@ -43,6 +43,10 @@
 [<img src="https://github.com/eretna.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @eretna](https://github.com/eretna)
 
+**Danish:**
+[<img src="https://github.com/Tntdruid.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@Tntdruid](https://github.com/Tntdruid) 
+
 **Dutch:**
 [<img src="https://github.com/rdwdm.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @rdwdm](https://github.com/rdwdm)
