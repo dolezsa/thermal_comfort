@@ -79,11 +79,11 @@
       },
       "scharlau_perception": {
         "state": {
-          "outside_calculable_range": "Outside of the calculable range",
-          "comfortable": "Comfortable",
-          "slightly_uncomfortable": "Slightly uncomfortable",
-          "moderatly_uncomfortable": "Moderatly uncomfortable",
-          "highly_uncomfortable": "Highly uncomfortable"
+          "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
+          "comfortable": "Angenehm",
+          "slightly_uncomfortable": "Leicht unangenehm",
+          "moderatly_uncomfortable": "Unangenehm",
+          "highly_uncomfortable": "Sehr unangenehm"
         }
       }
     }
