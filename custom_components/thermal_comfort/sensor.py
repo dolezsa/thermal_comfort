@@ -31,7 +31,7 @@ from homeassistant.const import (
     STATE_UNKNOWN,
     UnitOfTemperature,
 )
-from homeassistant.core import HomeAssistant, async_get_hass
+from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import TemplateError
 from homeassistant.helpers import entity_registry
 import homeassistant.helpers.config_validation as cv
@@ -695,7 +695,7 @@ class DeviceThermalComfort:
 
     async def _new_temperature_state(self, state):
         if _is_valid_state(state):
-            hass = async_get_hass()
+            hass = self.hass
             unit = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT, hass.config.units.temperature_unit)
             temp = util.convert(state.state, float)
             # convert to celsius if necessary
