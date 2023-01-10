@@ -358,7 +358,7 @@ async def test_summer_simmer_perception(hass, start_ha):
     assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "23.53"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
-        == SummerSimmerPerception.COOL
+        == SummerSimmerPerception.SLIGHTLY_COOL
     )
 
     hass.states.async_set("sensor.test_temperature_sensor", "24.0")
