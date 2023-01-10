@@ -64,6 +64,26 @@
           "severely_high": "Sever ridicat, chiar mortal pentru bolile legate de astm"
         }
       },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Confortabil",
+          "noticable_discomfort": "Disconfort perceptibil",
+          "evident_discomfort": "Disconfort evident",
+          "great_discomfort": "Disconfort mare, evitați eforturile",
+          "dangerous_discomfort": "Disconfort periculos",
+          "heat_stroke": "Posibil accident vascular cerebral datorat căldură"
+        }
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "În afara intervalului calculabil",
+          "comfortable": "Confortabil",
+          "slight_discomfort": "Ușor disconfort",
+          "discomfort": "Disconfort",
+          "significant_discomfort": "Disconfort semnificativ",
+          "extreme_discomfort": "Disconfort extrem"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Rece",
@@ -75,6 +95,25 @@
           "danger_of_heatstroke": "Pericol de insolație",
           "extreme_danger_of_heatstroke": "Pericol extrem de insolație",
           "circulatory_collapse_imminent": "Colapsul circulator iminent"
+        }
+      },
+      "scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "În afara intervalului calculabil",
+          "comfortable": "Confortabil",
+          "slightly_uncomfortable": "Ușor inconfortabil",
+          "moderatly_uncomfortable": "Moderat inconfortabil",
+          "highly_uncomfortable": "Foarte inconfortabil"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Niciun disconfort",
+          "less_then_half": "Mai puțin de jumătate din populație simte disconfort",
+          "more_then_half": "Mai mult de jumătate din populație simte disconfort",
+          "most": "Majoritatea persoanelor simt disconfort și deteriorarea condițiilor psihofizice",
+          "everyone": "Toată lumea simte disconfort semnificativ",
+          "dangerous": "Disconfort periculos, foarte puternic, care poate provoca epuizare termică"
         }
       }
     }
