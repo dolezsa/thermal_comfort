@@ -1,4 +1,47 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Nie znaleziono czujnika temperatury",
+      "humidity_not_found": "Nie znaleziono czujnika wilgotności"
+    },
+    "step": {
+      "init": {
+        "title": "Ustawienia komfortu cieplnego",
+        "data": {
+          "temperature_sensor": "Czujnik temperatury",
+          "humidity_sensor": "Czujnik wilgotności",
+          "poll": "Włącz odpytywanie",
+          "scan_interval": "Interwał odpytywania (sekundy)",
+          "custom_icons": "Użyj niestandardowego pakietu ikon"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Ta kombinacja czujników temperatury i wilgotności jest już skonfigurowana",
+      "no_sensors": "Nie znaleziono czujników temperatury ani wilgotności. Spróbuj ponownie w trybie zaawansowanym.",
+      "no_sensors_advanced": "Nie znaleziono czujników temperatury ani wilgotności."
+    },
+    "error": {
+      "temperature_not_found": "Nie znaleziono czujnika temperatury",
+      "humidity_not_found": "Nie znaleziono czujnika wilgotności"
+    },
+    "step": {
+      "user": {
+        "title": "Ustawienia komfortu cieplnego",
+        "data": {
+          "name": "Nazwa",
+          "temperature_sensor": "Czujnik temperatury",
+          "humidity_sensor": "Czujnik wilgotności",
+          "poll": "Włącz odpytywanie",
+          "scan_interval": "Interwał odpytywania (sekundy)",
+          "custom_icons": "Użyj niestandardowego pakietu ikon",
+          "enabled_sensors": "Włączone czujniki"
+        }
+      }
+    }
+  },  
   "entity": {
     "sensor": {
       "frost_risk": {
@@ -21,6 +64,26 @@
           "severely_high": "Wysoce niebezpieczne dla astmatyków, bardzo uciążliwe"
         }
       },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Komfortowo",
+          "noticable_discomfort": "Zauważalny dyskomfort",
+          "evident_discomfort": "Widoczny dyskomfort",
+          "great_discomfort": "Duży dyskomfort, unikaj wysiłku",
+          "dangerous_discomfort": "Niebezpieczny dyskomfort",
+          "heat_stroke": "Możliwy udar cieplny"
+        }
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Poza obliczalnym zakresem",
+          "comfortable": "Komfortowo",
+          "slight_discomfort": "Nieznaczny dyskomfort",
+          "discomfort": "Dyskomfort",
+          "significant_discomfort": "Znaczący dyskomfort",
+          "extreme_discomfort": "Ekstremalny dyskomfort"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Zimno",
@@ -32,6 +95,25 @@
           "danger_of_heatstroke": "Możliwy udar cieplny",
           "extreme_danger_of_heatstroke": "Wysokie niebezpieczeństwo udaru",
           "circulatory_collapse_imminent": "Zdecydowane problemy z krążeniem, zapaść"
+        }
+      },
+      "scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Poza obliczalnym zakresem",
+          "comfortable": "Komfortowo",
+          "slightly_uncomfortable": "Dyskomfort",
+          "moderatly_uncomfortable": "Umiarkowany dyskomfort",
+          "highly_uncomfortable": "Wysoki dyskomfort"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Bez dyskomfortu",
+          "less_then_half": "Mniej niż połowa populacji odczuwa dyskomfort",
+          "more_then_half": "Ponad połowa populacji odczuwa dyskomfort",
+          "most": "Większość osób odczuwa dyskomfort i pogorszenie warunków psychofizycznych",
+          "everyone": "Wszyscy odczuwają znaczny dyskomfort",
+          "dangerous": "Niebezpieczny, bardzo silny dyskomfort, który może powodować udary cieplne"
         }
       }
     }
