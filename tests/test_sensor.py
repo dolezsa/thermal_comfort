@@ -340,7 +340,7 @@ async def test_summer_simmer_index(hass, start_ha):
 
     hass.states.async_set("sensor.test_temperature_sensor", "15.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "15.0"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "15.25"
 
     hass.states.async_set("sensor.test_humidity_sensor", "35.0")
     await hass.async_block_till_done()
@@ -355,7 +355,7 @@ async def test_summer_simmer_perception(hass, start_ha):
     hass.states.async_set("sensor.test_temperature_sensor", "20.77")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION) is not None
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "20.77"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "23.53"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
         == SummerSimmerPerception.COOL
