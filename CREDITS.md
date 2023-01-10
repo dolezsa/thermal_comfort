@@ -50,6 +50,8 @@
 **Dutch:**
 [<img src="https://github.com/rdwdm.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @rdwdm](https://github.com/rdwdm)
+[<img src="https://github.com/BebeMischa.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@BebeMischa](https://github.com/BebeMischa)
 
 **French:**
 [<img src="https://github.com/papo-o.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
@@ -60,6 +62,8 @@
 **German:**
 [<img src="https://github.com/rautesamtr.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @rautesamtr](https://github.com/rautesamtr)
+[<img src="https://github.com/vwccvr6.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@vwccvr6](https://github.com/vwccvr6) 
 
 **Hungarian:**
 [<img src="https://github.com/dolezsa.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%;border: solid 0.1px grey;" width="24"/>
@@ -78,6 +82,8 @@
 @rautesamtr](https://github.com/rautesamtr)
 [<img src="https://github.com/wlady75.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @wlady75](https://github.com/wlady75)
+[<img src="https://github.com/ovimano.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@ovimano](https://github.com/ovimano)
 
 **Norwegian:**
 [<img src="https://github.com/kongjudas.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
@@ -86,6 +92,8 @@
 **Polish:**
 [<img src="https://github.com/pejotigrek.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @pejotigrek](https://github.com/pejotigrek)
+[<img src="https://github.com/marcin77.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@marcin77](https://github.com/marcin77) 
 
 **Romanian:**
 [<img src="https://github.com/ovimano.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
