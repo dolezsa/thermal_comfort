@@ -10,18 +10,18 @@
         "data": {
           "temperature_sensor": "Sensore di temperatura",
           "humidity_sensor": "Sensore di umidità",
-          "poll": "Abilita il polling",
+          "poll": "Abilita polling",
           "scan_interval": "Intervallo di polling (secondi)",
-          "custom_icons": "Utilizzare un pacchetto di icone personalizzato"
+          "custom_icons": "Usa il pacchetto di icone personalizzate"
         }
       }
     }
   },
   "config": {
     "abort": {
-      "already_configured": "Questa combinazione di sensori di temperatura e di umidità è già configurata",
-      "no_sensors": "Non sono stati trovati sensori di temperatura o umidità. Riprovare in modalità avanzata.",
-      "no_sensors_advanced": "Non sono stati trovati sensori di temperatura o umidità."
+      "already_configured": "Questa combinazione di sensori di temperatura e umidità è già configurata",
+      "no_sensors": "Nessun sensore di temperatura o umidità trovato. Riprova in modalità avanzata.",
+      "no_sensors_advanced": "Nessun sensore di temperatura o umidità trovato."
     },
     "error": {
       "temperature_not_found": "Sensore di temperatura non trovato",
@@ -34,9 +34,9 @@
           "name": "Nome",
           "temperature_sensor": "Sensore di temperatura",
           "humidity_sensor": "Sensore di umidità",
-          "poll": "Abilita il polling",
+          "poll": "Abilita polling",
           "scan_interval": "Intervallo di polling (secondi)",
-          "custom_icons": "Utilizzare un pacchetto di icone personalizzato",
+          "custom_icons": "Usa pacchetto icone personalizzato",
           "enabled_sensors": "Sensori abilitati"
         }
       }
@@ -54,66 +54,66 @@
       },
       "dew_point_perception": {
         "state": {
-          "dry": "Un po' secco per alcuni",
+          "dry": "Secco per qualcuno",
           "very_comfortable": "Molto confortevole",
           "comfortable": "Confortevole",
-          "ok_but_humid": "OK per la maggior parte, ma umido",
-          "somewhat_uncomfortable": "Un po' scomodo",
-          "quite_uncomfortable": "Molto umido, abbastanza scomodo",
-          "extremely_uncomfortable": "Estremamente scomodo, oppressivo",
-          "severely_high": "Gravemente elevato, addirittura mortale per le malattie legate all'asma"
+          "ok_but_humid": "Confortevole ma umido",
+          "somewhat_uncomfortable": "Leggero disagio",
+          "quite_uncomfortable": "Significativo disagio, molto umido",
+          "extremely_uncomfortable": "Disagio forte, opprimente",
+          "severely_high": "Disagio estremo, rischioso per malattie correlate all'asma"
         }
       },
       "humidex_perception": {
         "state": {
           "comfortable": "Confortevole",
-          "noticable_discomfort": "Notevole disagio",
-          "evident_discomfort": "Disagio evidente",
-          "great_discomfort": "Grande disagio, evitare lo sforzo",
+          "noticable_discomfort": "Disagio ",
+          "evident_discomfort": "Disagio significativo",
+          "great_discomfort": "Enorme disagio enorme, evitare affaticamenti",
           "dangerous_discomfort": "Disagio pericoloso",
-          "heat_stroke": "Possibilità di un colpo di calore"
+          "heat_stroke": "Probabile colpo di calore"
         }
       },
       "relative_strain_perception": {
         "state": {
-          "outside_calculable_range": "Fuori dall'intervallo calcolabile",
+          "outside_calculable_range": "Fuori scala",
           "comfortable": "Confortevole",
-          "slight_discomfort": "Leggero disagio",
+          "slight_discomfort": "Disagio leggero",
           "discomfort": "Disagio",
           "significant_discomfort": "Disagio significativo",
-          "extreme_discomfort": "Estremo disagio"
+          "extreme_discomfort": "Disagio estremo"
         }
       },
       "summer_simmer_perception": {
         "state": {
-          "cool": "Fresco",
-          "slightly_cool": "Leggermente fresco",
+          "cool": "Freddo",
+          "slightly_cool": "Leggermente freddo",
           "comfortable": "Confortevole",
           "slightly_warm": "Leggermente caldo",
-          "increasing_discomfort": "Disagio crescente",
+          "increasing_discomfort": "Aumento del disagio",
           "extremely_warm": "Estremamente caldo",
-          "danger_of_heatstroke": "Pericolo di un colpo di calore",
-          "extreme_danger_of_heatstroke": "Estremo pericolo di un colpo di calore",
-          "circulatory_collapse_imminent": "Collasso circolatorio imminente"
+          "danger_of_heatstroke": "Pericolo colpo di calore",
+          "extreme_danger_of_heatstroke": "Probabile colpo di calore",
+          "circulatory_collapse_imminent": "Imminente colasso circolatorio"
         }
       },
       "scharlau_perception": {
         "state": {
-          "outside_calculable_range": "Fuori dall'intervallo calcolabile",
+          "outside_calculable_range": "Fuori scala",
           "comfortable": "Confortevole",
-          "slightly_uncomfortable": "Leggermente scomodo",
-          "moderatly_uncomfortable": "Moderatamente scomodo",
-          "highly_uncomfortable": "Estremamente scomodo"
+          "slightly_uncomfortable": "Leggero disagio",
+          "moderatly_uncomfortable": "Moderato disagio",
+          "highly_uncomfortable": "Forte disagio"
         }
       },
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "Nessun disagio",
-          "less_then_half": "Meno della metà della popolazione avverte un disagio",
-          "more_then_half": "Più della metà della popolazione prova disagio",
-          "most": "La maggior parte degli individui avverte disagio e deterioramento delle condizioni psicofisiche",
-          "everyone": "Tutti avvertono un disagio significativo",
-          "dangerous": "Disagio pericoloso e molto forte che può provocare colpi di calore"
+          "less_then_half": "Meno della metà della popolazione avverte disagio",
+          "more_then_half": "Più della metà della popolazione avverte disagio",
+          "most": "La maggior parte delle persone avverte disagio e deterioramento delle condizioni psicofisiche",
+          "everyone": "Forte disagio per chiunque",
+          "dangerous": "Stato di emergenza medica, disagio molto forte che può causare colpi di calore"
         }
       }
     }
