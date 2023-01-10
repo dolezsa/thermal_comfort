@@ -934,7 +934,7 @@ class DeviceThermalComfort:
             - 56.83
         )
 
-        if fahrenheit < 70:
+        if fahrenheit < 58:  # Summer Simmer Index is only valid above 58°F
             si = fahrenheit
 
         return round(TemperatureConverter.convert(si, UnitOfTemperature.FAHRENHEIT, UnitOfTemperature.CELSIUS), 2)
