@@ -1,4 +1,47 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Sensore di temperatura non trovato",
+      "humidity_not_found": "Sensore di umidità non trovato"
+    },
+    "step": {
+      "init": {
+        "title": "Impostazioni di comfort termico",
+        "data": {
+          "temperature_sensor": "Sensore di temperatura",
+          "humidity_sensor": "Sensore di umidità",
+          "poll": "Abilita il polling",
+          "scan_interval": "Intervallo di polling (secondi)",
+          "custom_icons": "Utilizzare un pacchetto di icone personalizzato"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Questa combinazione di sensori di temperatura e di umidità è già configurata",
+      "no_sensors": "Non sono stati trovati sensori di temperatura o umidità. Riprovare in modalità avanzata.",
+      "no_sensors_advanced": "Non sono stati trovati sensori di temperatura o umidità."
+    },
+    "error": {
+      "temperature_not_found": "Sensore di temperatura non trovato",
+      "humidity_not_found": "Sensore di umidità non trovato"
+    },
+    "step": {
+      "user": {
+        "title": "Impostazioni di comfort termico",
+        "data": {
+          "name": "Nome",
+          "temperature_sensor": "Sensore di temperatura",
+          "humidity_sensor": "Sensore di umidità",
+          "poll": "Abilita il polling",
+          "scan_interval": "Intervallo di polling (secondi)",
+          "custom_icons": "Utilizzare un pacchetto di icone personalizzato",
+          "enabled_sensors": "Sensori abilitati"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
       "frost_risk": {
@@ -11,27 +54,66 @@
       },
       "dew_point_perception": {
         "state": {
-          "dry": "Un po' secco",
+          "dry": "Un po' secco per alcuni",
           "very_comfortable": "Molto confortevole",
           "comfortable": "Confortevole",
-          "ok_but_humid": "Gradevole ma umido",
-          "somewhat_uncomfortable": "Possibile disagio",
-          "quite_uncomfortable": "Molto umido, abbastanza a disagio",
-          "extremely_uncomfortable": "Particolarmente a disagio e opprimente",
-          "severely_high": "Estremamente a disagio, rischioso per malattie correlati all'asma"
+          "ok_but_humid": "OK per la maggior parte, ma umido",
+          "somewhat_uncomfortable": "Un po' scomodo",
+          "quite_uncomfortable": "Molto umido, abbastanza scomodo",
+          "extremely_uncomfortable": "Estremamente scomodo, oppressivo",
+          "severely_high": "Gravemente elevato, addirittura mortale per le malattie legate all'asma"
+        }
+      },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Confortevole",
+          "noticable_discomfort": "Notevole disagio",
+          "evident_discomfort": "Disagio evidente",
+          "great_discomfort": "Grande disagio, evitare lo sforzo",
+          "dangerous_discomfort": "Disagio pericoloso",
+          "heat_stroke": "Possibilità di un colpo di calore"
+        }
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Fuori dall'intervallo calcolabile",
+          "comfortable": "Confortevole",
+          "slight_discomfort": "Leggero disagio",
+          "discomfort": "Disagio",
+          "significant_discomfort": "Disagio significativo",
+          "extreme_discomfort": "Estremo disagio"
         }
       },
       "summer_simmer_perception": {
         "state": {
-          "cool": "Cool",
-          "slightly_cool": "Slightly cool",
-          "comfortable": "Comfortable",
-          "slightly_warm": "Slightly warm",
-          "increasing_discomfort": "Increasing discomfort",
-          "extremely_warm": "Extremely warm",
-          "danger_of_heatstroke": "Danger of heatstroke",
-          "extreme_danger_of_heatstroke": "Extreme danger of heatstroke",
-          "circulatory_collapse_imminent": "Circulatory collapse imminent"
+          "cool": "Fresco",
+          "slightly_cool": "Leggermente fresco",
+          "comfortable": "Confortevole",
+          "slightly_warm": "Leggermente caldo",
+          "increasing_discomfort": "Disagio crescente",
+          "extremely_warm": "Estremamente caldo",
+          "danger_of_heatstroke": "Pericolo di un colpo di calore",
+          "extreme_danger_of_heatstroke": "Estremo pericolo di un colpo di calore",
+          "circulatory_collapse_imminent": "Collasso circolatorio imminente"
+        }
+      },
+      "scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Fuori dall'intervallo calcolabile",
+          "comfortable": "Confortevole",
+          "slightly_uncomfortable": "Leggermente scomodo",
+          "moderatly_uncomfortable": "Moderatamente scomodo",
+          "highly_uncomfortable": "Estremamente scomodo"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Nessun disagio",
+          "less_then_half": "Meno della metà della popolazione avverte un disagio",
+          "more_then_half": "Più della metà della popolazione prova disagio",
+          "most": "La maggior parte degli individui avverte disagio e deterioramento delle condizioni psicofisiche",
+          "everyone": "Tutti avvertono un disagio significativo",
+          "dangerous": "Disagio pericoloso e molto forte che può provocare colpi di calore"
         }
       }
     }
