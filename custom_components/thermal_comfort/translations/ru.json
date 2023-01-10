@@ -1,4 +1,47 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Датчик температуры не найден",
+      "humidity_not_found": "Датчик влажности не найден"
+    },
+    "step": {
+      "init": {
+        "title": "Настройки теплового комфорта",
+        "data": {
+          "temperature_sensor": "Датчик температуры",
+          "humidity_sensor": "Датчик влажности",
+          "poll": "Включить опрос датчиков",
+          "scan_interval": "Интервал опроса (секунды)",
+          "custom_icons": "Использовать иконки от интеграции (требуется установка Thermal Comfort Icons)"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Эта комбинация датчиков температуры и влажности уже настроена.",
+      "no_sensors": "Не найдено ни одного подходящего датчика температуры или влажности. Попробуйте настройку в Расширеном режиме.",
+      "no_sensors_advanced": "Не найдено ни одного датчика температуры или влажности."
+    },
+    "error": {
+      "temperature_not_found": "Датчик температуры не найден",
+      "humidity_not_found": "Датчик влажности не найден"
+    },
+    "step": {
+      "user": {
+        "title": "Настройки теплового комфорта",
+        "data": {
+          "name": "Название",
+          "temperature_sensor": "Датчик температуры",
+          "humidity_sensor": "Датчик влажности",
+          "poll": "Включить опрос датчиков",
+          "scan_interval": "Интервал опроса (секунды)",
+          "custom_icons": "Использовать иконки от интеграции (требуется установка Thermal Comfort Icons)",
+          "enabled_sensors": "Используемые датчики"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
       "frost_risk": {
@@ -21,6 +64,26 @@
           "severely_high": "Очень высокая влажность, опасно для астматиков"
         }
       },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Комфортно",
+          "noticable_discomfort": "Заметный дискомфорт",
+          "evident_discomfort": "Дискомфотно",
+          "great_discomfort": "Серьезный дискомфорт, избегайте физических нагрузок",
+          "dangerous_discomfort": "Опасный дискомфорт",
+          "heat_stroke": "Возможен тепловой удар"
+        }
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
+          "comfortable": "Комфортно",
+          "slight_discomfort": "Слегка некомфортно",
+          "discomfort": "Некомфортно",
+          "significant_discomfort": "Очень некомфортно",
+          "extreme_discomfort": "Черезвычайно некомфортно"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Холодно",
@@ -32,6 +95,25 @@
           "danger_of_heatstroke": "Риск теплового удара",
           "extreme_danger_of_heatstroke": "Серьёзный риск теплового удара",
           "circulatory_collapse_imminent": "Возможны сосудистые нарушения"
+        }
+      },
+      "scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
+          "comfortable": "Комфортно",
+          "slightly_uncomfortable": "Слегка некомфортно",
+          "moderatly_uncomfortable": "Некомфортно",
+          "highly_uncomfortable": "Очень некомфортно"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Нет дискомфорта",
+          "less_then_half": "Менее половины населения испытывает дискомфорт",
+          "more_then_half": "Больше половины населения испытывает дискомфорт",
+          "most": "Большинство испытывает дискомфорт и ухудшение психофизического состояния",
+          "everyone": "Все испытывают существенный дискомфорт",
+          "dangerous": "Опасно, очень сильный дискомфорт, который может вызвать тепловой удар"
         }
       }
     }
