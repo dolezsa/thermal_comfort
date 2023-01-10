@@ -64,6 +64,26 @@
           "severely_high":"Extrem hoch, tödlich für asthmabedingte Erkrankungen"
         }
       },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Angenehm",
+          "noticable_discomfort": "Spürbares Unbehagen",
+          "evident_discomfort": "Offensichtliches Unbehagen",
+          "great_discomfort": "Großes Unbehagen, Anstrengung vermeiden",
+          "dangerous_discomfort": "Gefährliches Unbehagen unangenehm",
+          "heat_stroke": "Hitzschlag möglich"
+        }
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
+          "comfortable": "Angenehm",
+          "slight_discomfort": "Etwas unbehaglich",
+          "discomfort": "Unbehaglich",
+          "significant_discomfort": "Erhebliches Unbehagen",
+          "extreme_discomfort": "Extremes Unbehagen"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Kühl",
@@ -79,11 +99,21 @@
       },
       "scharlau_perception": {
         "state": {
-          "outside_calculable_range": "Outside of the calculable range",
-          "comfortable": "Comfortable",
-          "slightly_uncomfortable": "Slightly uncomfortable",
-          "moderatly_uncomfortable": "Moderatly uncomfortable",
-          "highly_uncomfortable": "Highly uncomfortable"
+          "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
+          "comfortable": "Angenehm",
+          "slightly_uncomfortable": "Leicht unangenehm",
+          "moderatly_uncomfortable": "Unangenehm",
+          "highly_uncomfortable": "Sehr unangenehm"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Kein Unbehagen",
+          "less_then_half": "Weniger als die Hälfte der Bevölkerung fühlt sich unwohl",
+          "more_then_half": "Mehr als die Hälfte der Bevölkerung fühlt sich unwohl",
+          "most": "Die meisten Menschen fühlen sich unwohl und einen verschlechterten psychophysischen Zustand",
+          "everyone": "Jeder fühlt sich unwohl",
+          "dangerous": "Gefährlich, sehr starke Beschwerden die zu Hitzschlägen führen können"
         }
       }
     }
