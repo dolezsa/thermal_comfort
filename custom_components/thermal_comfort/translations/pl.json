@@ -68,7 +68,7 @@
         "state": {
           "comfortable": "Komfortowo",
           "noticable_discomfort": "Zauważalny dyskomfort",
-          "evident_discomfort": "Widoczny dyskomfort",
+          "evident_discomfort": "Wyraźny dyskomfort",
           "great_discomfort": "Duży dyskomfort, unikaj wysiłku",
           "dangerous_discomfort": "Niebezpieczny dyskomfort",
           "heat_stroke": "Możliwy udar cieplny"
@@ -108,7 +108,7 @@
       },
       "thoms_discomfort_perception": {
         "state": {
-          "no_discomfort": "Bez dyskomfortu",
+          "no_discomfort": "Brak dyskomfortu",
           "less_then_half": "Mniej niż połowa populacji odczuwa dyskomfort",
           "more_then_half": "Ponad połowa populacji odczuwa dyskomfort",
           "most": "Większość osób odczuwa dyskomfort i pogorszenie warunków psychofizycznych",
