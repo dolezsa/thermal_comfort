@@ -84,6 +84,8 @@
 @wlady75](https://github.com/wlady75)
 [<img src="https://github.com/ovimano.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @ovimano](https://github.com/ovimano)
+[<img src="https://github.com/uroh.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@uroh](https://github.com/uroh) 
 
 **Norwegian:**
 [<img src="https://github.com/kongjudas.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
