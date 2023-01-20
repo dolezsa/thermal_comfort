@@ -1,4 +1,47 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Teplotný snímač nenájdený",
+      "humidity_not_found": "Snímač vlhkosti nenájdený"
+    },
+    "step": {
+      "init": {
+        "title": "Nastavenia tepelnej pohody",
+        "data": {
+          "temperature_sensor": "Teplotný snímač",
+          "humidity_sensor": "Snímač vlhkosti",
+          "poll": "Povoliť dotazovanie",
+          "scan_interval": "Interval dotazovania (sekundy)",
+          "custom_icons": "Používanie vlastného balíka ikon"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Táto kombinácia snímačov teploty a vlhkosti je už nakonfigurovaná",
+      "no_sensors": "Nenašli sa žiadne snímače teploty alebo vlhkosti. Skúste to znova v rozšírenom režime.",
+      "no_sensors_advanced": "Nenašli sa žiadne snímače teploty alebo vlhkosti."
+    },
+    "error": {
+      "temperature_not_found": "Teplotný snímač nenájdený",
+      "humidity_not_found": "Snímač vlhkosti nenájdený"
+    },
+    "step": {
+      "user": {
+        "title": "Nastavenia tepelnej pohody",
+        "data": {
+          "name": "Názov",
+          "temperature_sensor": "Teplotný snímač",
+          "humidity_sensor": "Snímač vlhkosti",
+          "poll": "Povoliť dotazovanie",
+          "scan_interval": "Interval dotazovania (sekundy)",
+          "custom_icons": "Používanie vlastného balíka ikon",
+          "enabled_sensors": "Povolené senzory"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
       "frost_risk": {
@@ -12,15 +55,35 @@
       "dew_point_perception": {
         "state": {
           "dry": "Pre niekoho suché",
-          "very_comfortable": "Velmi komfortné",
+          "very_comfortable": "Veľmi komfortné",
           "comfortable": "Príjemné",
-          "ok_but_humid": "Pre vǎcsinu OK, ale vlhké",
+          "ok_but_humid": "Pre vǎčšinu OK, ale vlhké",
           "somewhat_uncomfortable": "Trochu nepríjemné",
           "quite_uncomfortable": "Veľmi vlhké, dosť nepríjemné",
           "extremely_uncomfortable": "Extrémne nekomfortné, tiesnivé",
           "severely_high": "Veľmi vysoká, pre astmatikov smrteľná vlhkosť"
         }
       },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Príjemne",
+          "noticable_discomfort": "Noticeable discomfort",
+          "evident_discomfort": "Evident discomfort",
+          "great_discomfort": "Great discomfort, avoid exertion",
+          "dangerous_discomfort": "Dangerous discomfort",
+          "heat_stroke": "Heat stroke possible"
+        }
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Outside of the calculable range",
+          "comfortable": "Príjemne",
+          "slight_discomfort": "Mierne nepohodlie",
+          "discomfort": "Diskomfort",
+          "significant_discomfort": "Významný diskomfort",
+          "extreme_discomfort": "Extrémny discomfort"
+        }
+      },      
       "summer_simmer_perception": {
         "state": {
           "cool": "Chladno",
@@ -32,6 +95,25 @@
           "danger_of_heatstroke": "Nebezpečenstvo úpalu",
           "extreme_danger_of_heatstroke": "Extrémne nebezpečenstvo úpalu",
           "circulatory_collapse_imminent": "Hroziaci kolaps krvného obehu"
+        }
+      },
+      "scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Mimo vypočítateľného rozsahu",
+          "comfortable": "Príjemne",
+          "slightly_uncomfortable": "Mierny diskomfort",
+          "moderatly_uncomfortable": "Stredne nepríjemné",
+          "highly_uncomfortable": "Veľmy nepríjemné"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Žiadne nepohodlie",
+          "less_then_half": "Menej ako polovica populácie pociťuje nepríjemné pocity",
+          "more_then_half": "Viac ako polovica populácie pociťuje nepohodlie",
+          "most": "Väčšina jednotlivcov pociťuje nepohodlie a zhoršenie psychofyzických podmienok",
+          "everyone": "Každý pociťuje výrazné nepohodlie",
+          "dangerous": "Nebezpečné, veľmi silné nepohodlie, ktoré môže spôsobiť úpal"
         }
       }
     }
