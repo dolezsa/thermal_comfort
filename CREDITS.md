@@ -106,10 +106,13 @@
 @drts-sv](https://github.com/drts-sv)
 [<img src="https://github.com/MoonlightGuest.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @MoonlightGuest](https://github.com/MoonlightGuest)
+[<img src="https://github.com/IATkachenko.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @IATkachenko](https://github.com/IATkachenko)
 
 **Slovak:**
 [<img src="https://github.com/dolezsa.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%;border: solid 0.1px grey;" width="24"/>
 @dolezsa](https://github.com/dolezsa)
+[<img src="https://github.com/misa1515.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%;border: solid 0.1px grey;" width="24"/>
+@misa1515](https://github.com/misa1515)
 
 **Spanish:**
 [<img src="https://github.com/RaulVKoNe.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
