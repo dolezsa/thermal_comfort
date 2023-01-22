@@ -60,16 +60,16 @@
           "ok_but_humid": "Confortevole ma umido",
           "somewhat_uncomfortable": "Leggero disagio",
           "quite_uncomfortable": "Significativo disagio, molto umido",
-          "extremely_uncomfortable": "Disagio forte, opprimente",
-          "severely_high": "Disagio estremo, rischioso per malattie correlate all'asma"
+          "extremely_uncomfortable": "Forte disagio, opprimente",
+          "severely_high": "Estremo disagio, rischioso per malattie correlate all'asma"
         }
       },
       "humidex_perception": {
         "state": {
           "comfortable": "Confortevole",
-          "noticable_discomfort": "Disagio ",
+          "noticable_discomfort": "Disagio",
           "evident_discomfort": "Disagio significativo",
-          "great_discomfort": "Enorme disagio enorme, evitare affaticamenti",
+          "great_discomfort": "Disagio enorme, evitare affaticamenti",
           "dangerous_discomfort": "Disagio pericoloso",
           "heat_stroke": "Probabile colpo di calore"
         }
@@ -108,7 +108,7 @@
       },
       "thoms_discomfort_perception": {
         "state": {
-          "no_discomfort": "Nessun disagio",
+          "no_discomfort": "Confortevole",
           "less_then_half": "Meno della metà della popolazione avverte disagio",
           "more_then_half": "Più della metà della popolazione avverte disagio",
           "most": "La maggior parte delle persone avverte disagio e deterioramento delle condizioni psicofisiche",
