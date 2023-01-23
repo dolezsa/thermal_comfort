@@ -1,0 +1,121 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "Δεν βρέθηκε αισθητήρας θερμοκρασίας",
+      "humidity_not_found": "Δεν βρέθηκε αισθητήρας υγρασίας"
+    },
+    "step": {
+      "init": {
+        "title": "Ρυθμίσεις θερμικής άνεσης",
+        "data": {
+          "temperature_sensor": "Αισθητήρας θερμοκρασίας",
+          "humidity_sensor": "Αισθητήρας υγρασίας",
+          "poll": "Ενεργοποίηση ανανέωσης",
+          "scan_interval": "Ρυθμός ανανέωσης (δευτερόλεπτα)",
+          "custom_icons": "Χρήση προσαρμοσμένου πακέτου εικονιδίων"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Αυτός ο συνδιασμός αισθητήρων θερμοκρασίας και υγρασίας είναι ήδη διαμορφωμένος",
+      "no_sensors": "Δεν βρέθηκε κανένας αισθητήρας θερμοκρασίας ή υγρασίας. Δοκιμάστε πάλι σε προχωρημένη λειτουργία.",
+      "no_sensors_advanced": "Δεν βρέθηκε κανένας αισθητήρας θερμοκρασίας ή υγρασίας."
+    },
+    "error": {
+      "temperature_not_found": "Δεν βρέθηκε αισθητήρας θερμοκρασίας",
+      "humidity_not_found": "Δεν βρέθηκε αισθητήρας υγρασίας"
+    },
+    "step": {
+      "user": {
+        "title": "Ρυθμίσεις θερμικής άνεσης",
+        "data": {
+          "name": "Όνομα",
+          "temperature_sensor": "Αισθητήρας θερμοκρασίας",
+          "humidity_sensor": "Αισθητήρας υγρασίας",
+          "poll": "Ενεργοποίηση ανανέωσης",
+          "scan_interval": "Ρυθμός ανανέωσης (δευτερόλεπτα)",
+          "custom_icons": "Χρησιμοποίηση προσαρμοσμένης ομάδας εικονιδίων",
+          "enabled_sensors": "Ενεργοποιημένοι αισθητήρες"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "frost_risk": {
+        "state": {
+          "no_risk": "Κανένας κίνδυνος",
+          "unlikely": "Απίθανο",
+          "probable": "Πιθανό",
+          "high": "Μεγάλη πιθανότητα"
+        }
+      },
+      "dew_point_perception": {
+        "state": {
+          "dry": "Λίγο ξηρή για κάποιους",
+          "very_comfortable": "Πολύ άνετη",
+          "comfortable": "Άνετη",
+          "ok_but_humid": "OK για κάποιους , αλλά με υγρασία",
+          "somewhat_uncomfortable": "Κάπως άβολη",
+          "quite_uncomfortable": "Πολύ υγρό, αρκετά άβολη",
+          "extremely_uncomfortable": "Εξαιρετικά άβολα, καταπιεστική",
+          "severely_high": "Σοβαρά υψηλή, ακόμη και θανατηφόρα για ασθένειες που σχετίζονται με το άσθμα"
+        }
+      },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Άνετη",
+          "noticable_discomfort": "Αισθητή δυσφορία",
+          "evident_discomfort": "Εμφανής δυσφορία",
+          "great_discomfort": "Μεγάλη δυσφορία, αποφύγετε την άσκηση",
+          "dangerous_discomfort": "Επικίνδυνη δυσφορία",
+          "heat_stroke": "Πιθανή θερμοπληξία"
+        }
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Εκτός του υπολογίσιμου εύρους",
+          "comfortable": "Άνετη",
+          "slight_discomfort": "Ελαφρά δυσφορία",
+          "discomfort": "Δυσφορία",
+          "significant_discomfort": "Σημαντική δυσφορία",
+          "extreme_discomfort": "Ακραία δυσφορία"
+        }
+      },
+      "summer_simmer_perception": {
+        "state": {
+          "cool": "Δροσερή",
+          "slightly_cool": "Ελαφρώς δροσερή",
+          "comfortable": "Άνετη",
+          "slightly_warm": "Ελαφρώς ζεστή",
+          "increasing_discomfort": "Αυξανόμενη δυσφορία",
+          "extremely_warm": "Εξαιρετικά ζεστή",
+          "danger_of_heatstroke": "Κίνδυνος θερμοπληξίας",
+          "extreme_danger_of_heatstroke": "Ακραίος κίνδυνος θερμοπληξίας",
+          "circulatory_collapse_imminent": "Επικείμενη κυκλοφορική κατάρρευση"
+        }
+      },
+      "scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Εκτός του υπολογίσιμου εύρους",
+          "comfortable": "Άνετη",
+          "slightly_uncomfortable": "Ελαφρώς άβολη",
+          "moderatly_uncomfortable": "Μέτρια άβολη",
+          "highly_uncomfortable": "Ιδιαίτερα άβολη"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Καμία ενόχληση",
+          "less_then_half": "Λιγότερο από το ήμισυ του πληθυσμού αισθάνεται δυσφορία",
+          "more_then_half": "Περισσότερο από το ήμισυ του πληθυσμού αισθάνεται δυσφορία",
+          "most": "Τα περισσότερα άτομα αισθάνονται δυσφορία και επιδείνωση των ψυχοφυσικών συνθηκών",
+          "everyone": "Όλοι αισθάνονται σημαντική δυσφορία",
+          "dangerous": "Επικίνδυνη, πολύ έντονη δυσφορία που μπορεί να προκαλέσει θερμοπληξία"
+        }
+      }
+    }
+  }
+}
