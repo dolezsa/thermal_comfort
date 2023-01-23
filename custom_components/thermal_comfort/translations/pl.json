@@ -67,7 +67,7 @@
       "humidex_perception": {
         "state": {
           "comfortable": "Komfortowo",
-          "noticable_discomfort": "Nieznaczny dyskomfort",
+          "noticable_discomfort": "Lekki dyskomfort",
           "evident_discomfort": "Wyraźny dyskomfort",
           "great_discomfort": "Duży dyskomfort, unikaj wysiłku",
           "dangerous_discomfort": "Niebezpieczny dyskomfort",
