@@ -67,7 +67,7 @@
       "humidex_perception": {
         "state": {
           "comfortable": "Komfortowo",
-          "noticable_discomfort": "Zauważalny dyskomfort",
+          "noticable_discomfort": "Lekki dyskomfort",
           "evident_discomfort": "Wyraźny dyskomfort",
           "great_discomfort": "Duży dyskomfort, unikaj wysiłku",
           "dangerous_discomfort": "Niebezpieczny dyskomfort",
@@ -78,7 +78,7 @@
         "state": {
           "outside_calculable_range": "Poza obliczalnym zakresem",
           "comfortable": "Komfortowo",
-          "slight_discomfort": "Nieznaczny dyskomfort",
+          "slight_discomfort": "Lekki dyskomfort",
           "discomfort": "Dyskomfort",
           "significant_discomfort": "Znaczący dyskomfort",
           "extreme_discomfort": "Ekstremalny dyskomfort"
@@ -101,8 +101,8 @@
         "state": {
           "outside_calculable_range": "Poza obliczalnym zakresem",
           "comfortable": "Komfortowo",
-          "slightly_uncomfortable": "Dyskomfort",
-          "moderatly_uncomfortable": "Umiarkowany dyskomfort",
+          "slightly_uncomfortable": "Lekki dyskomfort",
+          "moderatly_uncomfortable": "Dyskomfort",
           "highly_uncomfortable": "Wysoki dyskomfort"
         }
       },
