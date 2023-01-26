@@ -10,7 +10,7 @@
         "data": {
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor de humedad",
-          "poll": "Activar consulta de datos",
+          "poll": "Activar consulta recurrente de datos",
           "scan_interval": "Intervalo de consulta (segundos)",
           "custom_icons": "Usar paquete de iconos personalizado"
         }
@@ -34,7 +34,7 @@
           "name": "Nombre",
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor de humedad",
-          "poll": "Activar consulta de datos",
+          "poll": "Activar consulta recurrente de datos",
           "scan_interval": "Intervalo de consulta (segundos)",
           "custom_icons": "Usar paquete de iconos personalizado",
           "enabled_sensors": "Sensores activados"
@@ -74,6 +74,16 @@
           "heat_stroke": "Posible golpe de calor"
         }
       },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Fuera del rango calculable",
+          "comfortable": "Cómodo",
+          "slight_discomfort": "Un poco incómodo",
+          "discomfort": "Incómodo",
+          "significant_discomfort": "Bastante incómodo",
+          "extreme_discomfort": "Muy incómodo"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Fresco",
@@ -94,6 +104,16 @@
           "slightly_uncomfortable": "Un poco incómodo",
           "moderatly_uncomfortable": "Bastante incómodo",
           "highly_uncomfortable": "Muy incómodo"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Sin molestias",
+          "less_then_half": "Menos de la mitad de la población siente malestar",
+          "more_then_half": "Más de la mitad de la población siente malestar",
+          "most": "La mayoría de personas sienten malestar y deterioro de las condiciones psicofísicas",
+          "everyone": "Todos sienten malestar significativo",
+          "dangerous": "Peligro, malestar muy fuerte que puede provocar golpes de calor"
         }
       }
     }
