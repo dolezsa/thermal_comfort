@@ -10,7 +10,7 @@
         "data": {
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor d'humitat",
-          "poll": "Activar la consulta constant de les dades",
+          "poll": "Activar la consulta recurrent de les dades",
           "scan_interval": "Interval de consulta (segons)",
           "custom_icons": "Utilitzar el paquet d'icones personalitzat"
         }
@@ -34,7 +34,7 @@
           "name": "Nom",
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor d'humitat",
-          "poll": "Activar la consulta constant de les dades",
+          "poll": "Activar la consulta recurrent de les dades",
           "scan_interval": "Interval de consulta (segons)",
           "custom_icons": "Utilitzar el paquet d'icones personalitzat",
           "enabled_sensors": "Sensors activats"
@@ -74,6 +74,16 @@
           "heat_stroke": "Possible cop de calor"
         }
       },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Fora de l'interval calculable",
+          "comfortable": "Còmode",
+          "slight_discomfort": "Una mica incòmode",
+          "discomfort": "Incòmode",
+          "significant_discomfort": "Bastant incòmode",
+          "extreme_discomfort": "Molt incòmode"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Fred",
@@ -94,6 +104,16 @@
           "slightly_uncomfortable": "Una mica incòmode",
           "moderatly_uncomfortable": "Bastant incòmode",
           "highly_uncomfortable": "Molt incòmode"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "No és incòmode",
+          "less_then_half": "Menys de la meitat de la població sent malestar",
+          "more_then_half": "Més de la meitat de la població sent malestar",
+          "most": "La majoria de les persones senten malestar i deteriorament de les condicions psicofísiques",
+          "everyone": "Tothom sent un malestar important",
+          "dangerous": "Perill, malestar molt fort que pot provocar cops de calor"
         }
       }
     }
