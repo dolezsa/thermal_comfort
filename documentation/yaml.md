@@ -10,6 +10,7 @@ thermal_comfort:
       temperature_sensor: sensor.temperature_livingroom
       humidity_sensor: sensor.humidity_livingroom
       custom_icons: false  # override entry option for sensor
+      unique_id: 2f842c63-051a-4c49-9da2-4f04ee677514
     - name: Bathroom
       poll: true
       temperature_sensor: sensor.temperature_bathroom
@@ -18,6 +19,7 @@ thermal_comfort:
         - absolute_humidity
         - heat_index
         - dew_point_perception
+      unique_id: 11adccb5-5029-4d26-bbec-c1b45910c27c
     - name: Bedroom
 …
 ```
