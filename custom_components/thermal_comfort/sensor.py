@@ -70,6 +70,7 @@ CONF_POLL = "poll"
 # Default values
 POLL_DEFAULT = False
 SCAN_INTERVAL_DEFAULT = 30
+NATIVE_PRECISION = 2
 
 
 class LegacySensorType(StrEnum):
@@ -207,6 +208,7 @@ SENSOR_TYPES = {
     SensorType.ABSOLUTE_HUMIDITY: {
         "key": SensorType.ABSOLUTE_HUMIDITY,
         "name": SensorType.ABSOLUTE_HUMIDITY.to_name(),
+        "native_precision": NATIVE_PRECISION,
         "native_unit_of_measurement": "g/m³",
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:water",
@@ -215,6 +217,7 @@ SENSOR_TYPES = {
         "key": SensorType.DEW_POINT,
         "name": SensorType.DEW_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_precision": NATIVE_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:thermometer-water",
@@ -223,6 +226,7 @@ SENSOR_TYPES = {
         "key": SensorType.FROST_POINT,
         "name": SensorType.FROST_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_precision": NATIVE_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:snowflake-thermometer",
@@ -239,6 +243,7 @@ SENSOR_TYPES = {
         "key": SensorType.HEAT_INDEX,
         "name": SensorType.HEAT_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_precision": NATIVE_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
@@ -247,6 +252,7 @@ SENSOR_TYPES = {
         "key": SensorType.HUMIDEX,
         "name": SensorType.HUMIDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_precision": NATIVE_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
@@ -263,6 +269,7 @@ SENSOR_TYPES = {
         "key": SensorType.MOIST_AIR_ENTHALPY,
         "name": SensorType.MOIST_AIR_ENTHALPY.to_name(),
         "translation_key": SensorType.MOIST_AIR_ENTHALPY,
+        "native_precision": NATIVE_PRECISION,
         "native_unit_of_measurement": "kJ/kg",
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:water-circle",
@@ -295,6 +302,7 @@ SENSOR_TYPES = {
         "key": SensorType.SUMMER_SIMMER_INDEX,
         "name": SensorType.SUMMER_SIMMER_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
+        "native_precision": NATIVE_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
@@ -733,7 +741,7 @@ class DeviceThermalComfort:
         VP = pow(10, SUM - 3) * self._humidity
         Td = math.log(VP / 0.61078)
         Td = (241.88 * Td) / (17.558 - Td)
-        return round(Td, 2)
+        return Td
 
     @compute_once_lock(SensorType.HEAT_INDEX)
     async def heat_index(self) -> float:
@@ -762,7 +770,7 @@ class DeviceThermalComfort:
         elif self._humidity > 85 and fahrenheit >= 80 and fahrenheit <= 87:
             hi = hi + ((self._humidity - 85) * 0.1) * ((87 - fahrenheit) * 0.2)
 
-        return round(TemperatureConverter.convert(hi, UnitOfTemperature.FAHRENHEIT, UnitOfTemperature.CELSIUS), 2)
+        return TemperatureConverter.convert(hi, UnitOfTemperature.FAHRENHEIT, UnitOfTemperature.CELSIUS)
 
     @compute_once_lock(SensorType.HUMIDEX)
     async def humidex(self) -> int:
@@ -770,7 +778,7 @@ class DeviceThermalComfort:
         dewpoint = await self.dew_point()
         e = 6.11 * math.exp(5417.7530 * ((1 / 273.16) - (1 / (dewpoint + 273.15))))
         h = (0.5555) * (e - 10.0)
-        return round(self._temperature + h, 2)
+        return self._temperature + h
 
     @compute_once_lock(SensorType.HUMIDEX_PERCEPTION)
     async def humidex_perception(self) -> (HumidexPerception, float):
@@ -825,7 +833,7 @@ class DeviceThermalComfort:
         abs_humidity *= self._humidity
         abs_humidity *= 2.1674
         abs_humidity /= abs_temperature
-        return round(abs_humidity, 2)
+        return abs_humidity
 
     @compute_once_lock(SensorType.FROST_POINT)
     async def frost_point(self) -> float:
@@ -833,11 +841,7 @@ class DeviceThermalComfort:
         dewpoint = await self.dew_point()
         T = self._temperature + 273.15
         Td = dewpoint + 273.15
-        return round(
-            (Td + (2671.02 / ((2954.61 / T) + 2.193665 * math.log(T) - 13.3448)) - T)
-            - 273.15,
-            2,
-        )
+        return (Td + (2671.02 / ((2954.61 / T) + 2.193665 * math.log(T) - 13.3448)) - T) - 273.15
 
     @compute_once_lock(SensorType.FROST_RISK)
     async def frost_risk(self) -> (FrostRisk, float):
@@ -937,7 +941,7 @@ class DeviceThermalComfort:
         if fahrenheit < 58:  # Summer Simmer Index is only valid above 58°F
             si = fahrenheit
 
-        return round(TemperatureConverter.convert(si, UnitOfTemperature.FAHRENHEIT, UnitOfTemperature.CELSIUS), 2)
+        return TemperatureConverter.convert(si, UnitOfTemperature.FAHRENHEIT, UnitOfTemperature.CELSIUS)
 
     @compute_once_lock(SensorType.SUMMER_SIMMER_PERCEPTION)
     async def summer_simmer_perception(self) -> (SummerSimmerPerception, float):
@@ -1014,7 +1018,7 @@ class DeviceThermalComfort:
         h_sat_vap = h_fg + cp_vapour * self._temperature
         h = h_dry_air + hr * h_sat_vap
 
-        return round(h / 1000, 2)
+        return h / 1000
 
     @compute_once_lock(SensorType.THOMS_DISCOMFORT_PERCEPTION)
     async def thoms_discomfort_perception(self) -> (ThomsDiscomfortPerception, float):
