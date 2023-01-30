@@ -485,7 +485,9 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 if t_sensor is not None and p_sensor is not None:
                     unique_id = f"{t_sensor.unique_id}-{p_sensor.unique_id}"
-                    await self.async_set_unique_id(unique_id)
+                    entry = await self.async_set_unique_id(unique_id)
+                    if entry is not None:
+                        _LOGGER.debug(f"An entry with the unique_id {unique_id} already exists: {entry.data}")
                     self._abort_if_unique_id_configured()
 
                 return self.async_create_entry(
