@@ -40,7 +40,7 @@ sensors.
 ### Requirements
 
 #### 2.0
-Home Assistant >= 2023.2.0
+Home Assistant >= 2023.1.0
 
 #### 1.5
 Home Assistant >= 2021.12.0
