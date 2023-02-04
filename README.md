@@ -7,7 +7,7 @@ Thermal Comfort provides a variety of thermal indices and thermal perceptions in
 ## Sensors:
 
 **Full list
- [2.0](https://github.com/dolezsa/thermal_comfort/blob/2.0/documentation/sensors.md) /
+ [2.1](https://github.com/dolezsa/thermal_comfort/blob/2.1/documentation/sensors.md) /
  [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/sensors.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)**
 
@@ -26,12 +26,12 @@ To use Thermal Comfort check the documentation for your preferred way to setup
 sensors.
 
 **UI/Frontend (Config Flow)
- [2.0](https://github.com/dolezsa/thermal_comfort/blob/2.0/documentation/config_flow.md) /
+ [2.1](https://github.com/dolezsa/thermal_comfort/blob/2.1/documentation/config_flow.md) /
  [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/config_flow.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)**
 
 **YAML
- [2.0](https://github.com/dolezsa/thermal_comfort/blob/2.0/documentation/yaml.md) /
+ [2.1](https://github.com/dolezsa/thermal_comfort/blob/2.1/documentation/yaml.md) /
  [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/yaml.md) /
  [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md)**
 
@@ -39,8 +39,8 @@ sensors.
 
 ### Requirements
 
-#### 2.0
-Home Assistant >= 2023.1.0
+#### 2.1
+Home Assistant >= 2023.2.0
 
 #### 1.5
 Home Assistant >= 2021.12.0

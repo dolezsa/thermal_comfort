@@ -30,7 +30,7 @@ thermal_comfort:
   <dt><strong>sensor_types</strong> <code>list</code> <code>(optional)</code></dt>
   <dd>
     A list of sensors to create. If omitted all will be created.
-    <a href="https://github.com/dolezsa/thermal_comfort/blob/2.0/documentation/sensors.md">Available sensors</a>
+    <a href="https://github.com/dolezsa/thermal_comfort/blob/2.1/documentation/sensors.md">Available sensors</a>
   </dd>
   <dt><strong>poll</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
   <dd>
