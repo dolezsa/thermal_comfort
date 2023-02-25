@@ -1,10 +1,10 @@
 {
   "domain": "thermal_comfort",
   "name": "Thermal Comfort",
-  "version": "2.1.0",
-  "documentation": "https://github.com/dolezsa/thermal_comfort/blob/master/README.md",
-  "issue_tracker": "https://github.com/dolezsa/thermal_comfort/issues",
   "codeowners": ["@dolezsa"],
+  "config_flow": true,
+  "documentation": "https://github.com/dolezsa/thermal_comfort/blob/master/README.md",
   "iot_class": "calculated",
-  "config_flow": true
+  "issue_tracker": "https://github.com/dolezsa/thermal_comfort/issues",
+  "version": "2.1.0"
 }
