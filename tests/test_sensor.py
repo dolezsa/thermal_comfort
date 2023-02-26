@@ -104,57 +104,57 @@ async def test_properties(hass, start_ha):
 async def test_absolutehumidity(hass, start_ha):
     """Test if absolute humidity is calculted correctly."""
     assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY) is not None
-    assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY).state == "11.51"
+    assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY).state == "11.5128065738593"
 
     hass.states.async_set("sensor.test_temperature_sensor", "15.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY).state == "6.41"
+    assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY).state == "6.40873986839343"
 
     hass.states.async_set("sensor.test_humidity_sensor", "25.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY).state == "3.20"
+    assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY).state == "3.20436993419671"
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_heatindex(hass, start_ha):
     """Test if heat index is calculated correctly."""
     assert get_sensor(hass, SensorType.HEAT_INDEX) is not None
-    assert get_sensor(hass, SensorType.HEAT_INDEX).state == "24.86"
+    assert get_sensor(hass, SensorType.HEAT_INDEX).state == "24.8611111111111"
 
     hass.states.async_set("sensor.test_temperature_sensor", "15.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.HEAT_INDEX).state == "13.86"
+    assert get_sensor(hass, SensorType.HEAT_INDEX).state == "13.8611111111111"
 
     hass.states.async_set("sensor.test_humidity_sensor", "25.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.HEAT_INDEX).state == "13.21"
+    assert get_sensor(hass, SensorType.HEAT_INDEX).state == "13.2083333333333"
 
     hass.states.async_set("sensor.test_humidity_sensor", "12.0")
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "28.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.HEAT_INDEX).state == "26.55"
+    assert get_sensor(hass, SensorType.HEAT_INDEX).state == "26.5451914107181"
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_humidex(hass, start_ha):
     """Test if humidex is calculated correctly."""
     assert get_sensor(hass, SensorType.HUMIDEX) is not None
-    assert get_sensor(hass, SensorType.HUMIDEX).state == "28.29"
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "28.2925656121491"
 
     hass.states.async_set("sensor.test_temperature_sensor", "15.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.HUMIDEX).state == "14.18"
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "14.18042805384"
 
     hass.states.async_set("sensor.test_humidity_sensor", "25.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.HUMIDEX).state == "11.81"
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "11.8124622223777"
 
     hass.states.async_set("sensor.test_humidity_sensor", "12.0")
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "28.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.HUMIDEX).state == "24.96"
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "24.9644772432578"
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
@@ -169,7 +169,7 @@ async def test_humidex_perception(hass, start_ha):
     hass.states.async_set("sensor.test_temperature_sensor", "26.1")
     hass.states.async_set("sensor.test_humidity_sensor", "50.03")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.HUMIDEX).state == "30.00"
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "30.0035339225107"
     assert (
         get_sensor(hass, SensorType.HUMIDEX_PERCEPTION).state
         == HumidexPerception.NOTICABLE_DISCOMFORT
@@ -178,7 +178,7 @@ async def test_humidex_perception(hass, start_ha):
     hass.states.async_set("sensor.test_temperature_sensor", "29.06")
     hass.states.async_set("sensor.test_humidity_sensor", "51.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.HUMIDEX).state == "35.00"
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "35.0014998241678"
     assert (
         get_sensor(hass, SensorType.HUMIDEX_PERCEPTION).state
         == HumidexPerception.EVIDENT_DISCOMFORT
@@ -186,7 +186,7 @@ async def test_humidex_perception(hass, start_ha):
 
     hass.states.async_set("sensor.test_temperature_sensor", "34.67")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.HUMIDEX).state == "45.00"
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "45.0017649028272"
     assert (
         get_sensor(hass, SensorType.HUMIDEX_PERCEPTION).state
         == HumidexPerception.DANGEROUS_DISCOMFORT
@@ -195,7 +195,7 @@ async def test_humidex_perception(hass, start_ha):
     hass.states.async_set("sensor.test_temperature_sensor", "35.95")
     hass.states.async_set("sensor.test_humidity_sensor", "70")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.HUMIDEX).state == "54.01"
+    assert get_sensor(hass, SensorType.HUMIDEX).state == "54.0070687092117"
     assert (
         get_sensor(hass, SensorType.HUMIDEX_PERCEPTION).state
         == HumidexPerception.HEAT_STROKE
@@ -206,15 +206,15 @@ async def test_humidex_perception(hass, start_ha):
 async def test_dew_point(hass, start_ha):
     """Test if dew point is calculated correctly."""
     assert get_sensor(hass, SensorType.DEW_POINT) is not None
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "13.88"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "13.8753224672013"
 
     hass.states.async_set("sensor.test_temperature_sensor", "15.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "4.68"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "4.67503901377299"
 
     hass.states.async_set("sensor.test_humidity_sensor", "25.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "-4.86"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "-4.86267786296348"
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
@@ -223,7 +223,7 @@ async def test_dew_point_perception(hass, start_ha):
     hass.states.async_set("sensor.test_temperature_sensor", "20.77")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.DEW_POINT_PERCEPTION) is not None
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "9.99"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "9.98817292919442"
     assert (
         get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
         == DewPointPerception.DRY
@@ -231,7 +231,7 @@ async def test_dew_point_perception(hass, start_ha):
 
     hass.states.async_set("sensor.test_temperature_sensor", "24.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "12.96"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "12.9570044368822"
     assert (
         get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
         == DewPointPerception.VERY_COMFORTABLE
@@ -239,7 +239,7 @@ async def test_dew_point_perception(hass, start_ha):
 
     hass.states.async_set("sensor.test_humidity_sensor", "60.83")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "15.99"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "15.9907471577538"
     assert (
         get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
         == DewPointPerception.COMFORTABLE
@@ -247,7 +247,7 @@ async def test_dew_point_perception(hass, start_ha):
 
     hass.states.async_set("sensor.test_temperature_sensor", "24.01")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "16.00"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "16.0001522929822"
     assert (
         get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
         == DewPointPerception.OK_BUT_HUMID
@@ -255,7 +255,7 @@ async def test_dew_point_perception(hass, start_ha):
 
     hass.states.async_set("sensor.test_humidity_sensor", "69.05")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "18.00"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "18.0002749607952"
     assert (
         get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
         == DewPointPerception.SOMEWHAT_UNCOMFORTABLE
@@ -265,7 +265,7 @@ async def test_dew_point_perception(hass, start_ha):
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "26.00")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "22.22"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "22.2150631359531"
     assert (
         get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
         == DewPointPerception.QUITE_UNCOMFORTABLE
@@ -275,7 +275,7 @@ async def test_dew_point_perception(hass, start_ha):
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "26.85")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "24.13"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "24.1299575993527"
     assert (
         get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
         == DewPointPerception.EXTREMELY_UNCOMFORTABLE
@@ -285,7 +285,7 @@ async def test_dew_point_perception(hass, start_ha):
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "26.856")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "26.00"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "26.0021323711165"
     assert (
         get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).state
         == DewPointPerception.SEVERELY_HIGH
@@ -296,15 +296,15 @@ async def test_dew_point_perception(hass, start_ha):
 async def test_frost_point(hass, start_ha):
     """Test if frost point is calculated correctly."""
     assert get_sensor(hass, SensorType.FROST_POINT) is not None
-    assert get_sensor(hass, SensorType.FROST_POINT).state == "10.42"
+    assert get_sensor(hass, SensorType.FROST_POINT).state == "10.4218508495602"
 
     hass.states.async_set("sensor.test_temperature_sensor", "15.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.FROST_POINT).state == "2.73"
+    assert get_sensor(hass, SensorType.FROST_POINT).state == "2.72509864924086"
 
     hass.states.async_set("sensor.test_humidity_sensor", "25.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.FROST_POINT).state == "-6.81"
+    assert get_sensor(hass, SensorType.FROST_POINT).state == "-6.8126182274957"
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
@@ -349,17 +349,17 @@ async def test_frost_risk(hass, start_ha):
 async def test_summer_simmer_index(hass, start_ha):
     """Test if simmer index is calculated correctly."""
     assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX) is not None
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "29.60"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "29.6025"
 
     hass.states.async_set("sensor.test_temperature_sensor", "15.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "15.25"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "15.2475"
 
     hass.states.async_set("sensor.test_humidity_sensor", "35.0")
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "25.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "27.88"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "27.87825"
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
@@ -368,7 +368,7 @@ async def test_summer_simmer_perception(hass, start_ha):
     hass.states.async_set("sensor.test_temperature_sensor", "20.77")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION) is not None
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "23.53"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "23.530335"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
         == SummerSimmerPerception.SLIGHTLY_COOL
@@ -376,7 +376,7 @@ async def test_summer_simmer_perception(hass, start_ha):
 
     hass.states.async_set("sensor.test_temperature_sensor", "24.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "28.17"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "28.167"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
         == SummerSimmerPerception.COMFORTABLE
@@ -384,7 +384,7 @@ async def test_summer_simmer_perception(hass, start_ha):
 
     hass.states.async_set("sensor.test_humidity_sensor", "60.82")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "29.29"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "29.2929292"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
         == SummerSimmerPerception.SLIGHTLY_WARM
@@ -392,7 +392,7 @@ async def test_summer_simmer_perception(hass, start_ha):
 
     hass.states.async_set("sensor.test_temperature_sensor", "24.01")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "29.31"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "29.308462498"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
         == SummerSimmerPerception.SLIGHTLY_WARM
@@ -400,7 +400,7 @@ async def test_summer_simmer_perception(hass, start_ha):
 
     hass.states.async_set("sensor.test_humidity_sensor", "69.03")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "30.16"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "30.163689167"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
         == SummerSimmerPerception.SLIGHTLY_WARM
@@ -410,7 +410,7 @@ async def test_summer_simmer_perception(hass, start_ha):
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "26.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "34.76"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "34.762864"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
         == SummerSimmerPerception.INCREASING_DISCOMFORT
@@ -420,7 +420,7 @@ async def test_summer_simmer_perception(hass, start_ha):
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "26.85")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "36.99"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "36.9865525"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
         == SummerSimmerPerception.INCREASING_DISCOMFORT
@@ -430,7 +430,7 @@ async def test_summer_simmer_perception(hass, start_ha):
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "29.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "40.10"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "40.0998"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
         == SummerSimmerPerception.EXTREMELY_WARM
@@ -440,7 +440,7 @@ async def test_summer_simmer_perception(hass, start_ha):
     await hass.async_block_till_done()
     hass.states.async_set("sensor.test_temperature_sensor", "40.0")
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "49.74"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "49.7435"
     assert (
         get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
         == SummerSimmerPerception.DANGER_OF_HEATSTROKE
@@ -451,13 +451,13 @@ async def test_summer_simmer_perception(hass, start_ha):
 async def test_moist_air_enthalpy(hass, start_ha):
     """Test if moist air enthalpy is calculated correctly."""
     assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY) is not None
-    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == "50.26"
+    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == "50.2597881563401"
 
     hass.states.async_set("sensor.test_temperature_sensor", "20.77")
     hass.states.async_set("sensor.test_humidity_sensor", "60.82")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY) is not None
-    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == "44.45"
+    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == "44.4453600572196"
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
@@ -929,9 +929,9 @@ async def test_zero_degree_celcius(hass, start_ha):
     hass.states.async_set("sensor.test_temperature_sensor", "0")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.DEW_POINT) is not None
-    assert get_sensor(hass, SensorType.DEW_POINT).state == "-9.19"
+    assert get_sensor(hass, SensorType.DEW_POINT).state == "-9.18867399785112"
     assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX) is not None
-    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "0.00"
+    assert get_sensor(hass, SensorType.SUMMER_SIMMER_INDEX).state == "0.0"
 
 
 @pytest.mark.parametrize(

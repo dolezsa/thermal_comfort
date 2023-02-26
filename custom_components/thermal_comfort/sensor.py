@@ -70,7 +70,7 @@ CONF_POLL = "poll"
 # Default values
 POLL_DEFAULT = False
 SCAN_INTERVAL_DEFAULT = 30
-NATIVE_PRECISION = 2
+DISPLAY_PRECISION = 2
 
 
 class LegacySensorType(StrEnum):
@@ -208,7 +208,7 @@ SENSOR_TYPES = {
     SensorType.ABSOLUTE_HUMIDITY: {
         "key": SensorType.ABSOLUTE_HUMIDITY,
         "name": SensorType.ABSOLUTE_HUMIDITY.to_name(),
-        "native_precision": NATIVE_PRECISION,
+        "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": "g/m³",
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:water",
@@ -217,7 +217,7 @@ SENSOR_TYPES = {
         "key": SensorType.DEW_POINT,
         "name": SensorType.DEW_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_precision": NATIVE_PRECISION,
+        "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:thermometer-water",
@@ -226,7 +226,7 @@ SENSOR_TYPES = {
         "key": SensorType.FROST_POINT,
         "name": SensorType.FROST_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_precision": NATIVE_PRECISION,
+        "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:snowflake-thermometer",
@@ -243,7 +243,7 @@ SENSOR_TYPES = {
         "key": SensorType.HEAT_INDEX,
         "name": SensorType.HEAT_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_precision": NATIVE_PRECISION,
+        "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
@@ -252,7 +252,7 @@ SENSOR_TYPES = {
         "key": SensorType.HUMIDEX,
         "name": SensorType.HUMIDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_precision": NATIVE_PRECISION,
+        "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
@@ -269,7 +269,7 @@ SENSOR_TYPES = {
         "key": SensorType.MOIST_AIR_ENTHALPY,
         "name": SensorType.MOIST_AIR_ENTHALPY.to_name(),
         "translation_key": SensorType.MOIST_AIR_ENTHALPY,
-        "native_precision": NATIVE_PRECISION,
+        "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": "kJ/kg",
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:water-circle",
@@ -302,7 +302,7 @@ SENSOR_TYPES = {
         "key": SensorType.SUMMER_SIMMER_INDEX,
         "name": SensorType.SUMMER_SIMMER_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
-        "native_precision": NATIVE_PRECISION,
+        "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
