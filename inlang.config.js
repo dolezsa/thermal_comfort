@@ -13,7 +13,7 @@ export async function defineConfig(env) {
   );
 
   const pluginConfig = {
-    pathPattern: "./custom_components/thermal_comfort.json/translations/{language}.json",
+    pathPattern: "./custom_components/thermal_comfort/translations/{language}.json",
   };
 
   return {
