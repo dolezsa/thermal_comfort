@@ -80,6 +80,6 @@ Enable the custom icons options for your sensor in the
  or in [yaml](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables).
 
 ## Localization 🌎🗺
-Have a change you want to make with our translations? We have a frontend for updating localizations in our app easily, all you need is a GitHub account.
+Contribute translations directly with PRs or via inlang's web-editor.
 
 [![translation badge](https://inlang.com/badge?url=github.com/dolezsa/thermal_comfort)](https://inlang.com/editor/github.com/dolezsa/thermal_comfort?ref=badge)
