@@ -12,7 +12,7 @@
           "humidity_sensor": "Sensor de Humidade",
           "poll": "Ativar Atualização",
           "scan_interval": "Intervalo de atualização (segundos)",
-          "custom_icons": "Usar Pack de icones personalizados"
+          "custom_icons": "Usar ícones personalizados"
         }
       }
     }
@@ -36,7 +36,7 @@
           "humidity_sensor": "Sensor de Humidade",
           "poll": "Ativar Atualização",
           "scan_interval": "Intervalo de atualização (segundos)",
-          "custom_icons": "Usar Pack de icones personalizados",
+          "custom_icons": "Usar ícones personalizados",
           "enabled_sensors": "Sensores ligados"
         }
       }
@@ -54,34 +54,34 @@
       },
       "dew_point_perception": {
         "state": {
-          "dry": "A bit dry for some",
-          "very_comfortable": "Very comfortable",
-          "comfortable": "Comfortable",
-          "ok_but_humid": "OK for most, but humid",
-          "somewhat_uncomfortable": "Somewhat uncomfortable",
-          "quite_uncomfortable": "Very humid, quite uncomfortable",
-          "extremely_uncomfortable": "Extremely uncomfortable, oppressive",
-          "severely_high": "Severely high, even deadly for asthma related illnesses"
+          "dry": "Um pouco seco para alguns",
+          "very_comfortable": "Muito confortável",
+          "comfortable": "Confortável",
+          "ok_but_humid": "Confortável para a maioria, mas húmido",
+          "somewhat_uncomfortable": "Um pouco desconfortável",
+          "quite_uncomfortable": "Muito húmido e bastante desconfortável",
+          "extremely_uncomfortable": "Extremamente desconfortável, opressivo",
+          "severely_high": "Extremamente alto, até mortal para doenças relacionadas com asma"
         }
       },
       "humidex_perception": {
         "state": {
-          "comfortable": "Comfortable",
-          "noticable_discomfort": "Noticeable discomfort",
-          "evident_discomfort": "Evident discomfort",
-          "great_discomfort": "Great discomfort, avoid exertion",
-          "dangerous_discomfort": "Dangerous discomfort",
-          "heat_stroke": "Heat stroke possible"
+          "comfortable": "Confortável",
+          "noticable_discomfort": "Algum desconforto",
+          "evident_discomfort": "Desconforto evidente",
+          "great_discomfort": "Grande desconforto, evitar esforços",
+          "dangerous_discomfort": "Desconforto perigoso",
+          "heat_stroke": "Posibilidade de insolação"
         }
       },
       "relative_strain_perception": {
         "state": {
-          "outside_calculable_range": "Outside of the calculable range",
-          "comfortable": "Comfortable",
-          "slight_discomfort": "Slight discomfort",
-          "discomfort": "Discomfort",
-          "significant_discomfort": "Significant discomfort",
-          "extreme_discomfort": "Extreme discomfort"
+          "outside_calculable_range": "Fora do interválo de cálculo",
+          "comfortable": "Confortável",
+          "slight_discomfort": "Ligeiro desconforto",
+          "discomfort": "Desconforto",
+          "significant_discomfort": "Desconforto significativo",
+          "extreme_discomfort": "Extremo desconforto"
         }
       },
       "summer_simmer_perception": {
@@ -89,7 +89,7 @@
           "cool": "Frio",
           "slightly_cool": "Frio ligeiro",
           "comfortable": "Confortável",
-          "slightly_warm": "Calor ligeiro",
+          "slightly_warm": "calor ligueiro",
           "increasing_discomfort": "Desconforto crescente",
           "extremely_warm": "Extremamente quente",
           "danger_of_heatstroke": "Perigo de insolação",
