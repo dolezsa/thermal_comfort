@@ -78,3 +78,8 @@ Finally you need to restart home assistant before you can use it.
 Enable the custom icons options for your sensor in the
  [frontend](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md#configuration-options)
  or in [yaml](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables).
+
+## Localization 🌎🗺
+Contribute translations directly with PRs or via inlang's web-editor.
+
+[![translation badge](https://inlang.com/badge?url=github.com/dolezsa/thermal_comfort)](https://inlang.com/editor/github.com/dolezsa/thermal_comfort?ref=badge)
