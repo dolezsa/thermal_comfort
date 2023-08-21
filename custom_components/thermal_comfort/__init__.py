@@ -1,5 +1,4 @@
-"""
-Custom integration to integrate thermal_comfort with Home Assistant.
+"""Custom integration to integrate thermal_comfort with Home Assistant.
 
 For more details about this integration, please refer to
 https://github.com/dolezsa/thermal_comfort
@@ -89,7 +88,7 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     if config_entry.version == 1:
 
         def update_unique_id(entry: RegistryEntry):
-            """Update unique_id of changed sensor names"""
+            """Update unique_id of changed sensor names."""
             if LegacySensorType.THERMAL_PERCEPTION in entry.unique_id:
                 return {"new_unique_id": entry.unique_id.replace(LegacySensorType.THERMAL_PERCEPTION, SensorType.DEW_POINT_PERCEPTION)}
             if LegacySensorType.SIMMER_INDEX in entry.unique_id:

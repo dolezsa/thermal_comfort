@@ -3,9 +3,6 @@
 import json
 from unittest.mock import MagicMock, patch
 
-from homeassistant import config_entries
-from homeassistant.const import CONF_NAME
-from homeassistant.data_entry_flow import FlowResultType
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 import voluptuous as vol
@@ -15,6 +12,9 @@ from custom_components.thermal_comfort.const import (
     CONF_TEMPERATURE_SENSOR,
     DOMAIN,
 )
+from homeassistant import config_entries
+from homeassistant.const import CONF_NAME
+from homeassistant.data_entry_flow import FlowResultType
 
 from .const import ADVANCED_USER_INPUT, USER_INPUT
 from .test_sensor import DEFAULT_TEST_SENSORS

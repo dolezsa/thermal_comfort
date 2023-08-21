@@ -28,7 +28,7 @@ async def test_setup_update_unload_entry(hass):
     assert DOMAIN in hass.data and config_entry.entry_id in hass.data[DOMAIN]
 
     # check user input is in config
-    for key in ADVANCED_USER_INPUT.keys():
+    for key in ADVANCED_USER_INPUT:
         if key in hass.data[DOMAIN][config_entry.entry_id]:
             assert (
                 hass.data[DOMAIN][config_entry.entry_id][key]

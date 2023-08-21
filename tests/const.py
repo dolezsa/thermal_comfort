@@ -1,6 +1,4 @@
 """General test constants."""
-from homeassistant.const import CONF_NAME
-
 from custom_components.thermal_comfort.const import (
     CONF_HUMIDITY_SENSOR,
     CONF_POLL,
@@ -11,6 +9,7 @@ from custom_components.thermal_comfort.sensor import (
     CONF_ENABLED_SENSORS,
     CONF_SCAN_INTERVAL,
 )
+from homeassistant.const import CONF_NAME
 
 USER_INPUT = {
     CONF_NAME: "New name",

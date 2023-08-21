@@ -1,10 +1,11 @@
 """template conftest."""
-from homeassistant.setup import async_setup_component
 import pytest
 from pytest_homeassistant_custom_component.common import (
     assert_setup_component,
     async_mock_service,
 )
+
+from homeassistant.setup import async_setup_component
 
 pytest_plugins = "pytest_homeassistant_custom_component"
 
