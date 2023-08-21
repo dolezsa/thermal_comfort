@@ -1,121 +1,121 @@
 {
-	"options": {
-		"error": {
-			"temperature_not_found": "未找到温度传感器",
-			"humidity_not_found": "未找到湿度传感器"
-		},
-		"step": {
-			"init": {
-				"title": "热舒适设置",
-				"data": {
-					"temperature_sensor": "温度传感器",
-					"humidity_sensor": "湿度传感器",
-					"poll": "启用轮询",
-					"scan_interval": "轮询间隔（秒）",
-					"custom_icons": "使用自定义图标包"
-				}
-			}
-		}
-	},
-	"config": {
-		"abort": {
-			"already_configured": "此温度和湿度传感器组合已配置",
-			"no_sensors": "未找到温度或湿度传感器。请在高级模式下重试。",
-			"no_sensors_advanced": "未找到温度或湿度传感器。"
-		},
-		"error": {
-			"temperature_not_found": "未找到温度传感器",
-			"humidity_not_found": "未找到湿度传感器"
-		},
-		"step": {
-			"user": {
-				"title": "热舒适设置",
-				"data": {
-					"name": "名称",
-					"temperature_sensor": "温度传感器",
-					"humidity_sensor": "湿度传感器",
-					"poll": "启用轮询",
-					"scan_interval": "轮询间隔（秒）",
-					"custom_icons": "使用自定义图标包",
-					"enabled_sensors": "已启用的传感器"
-				}
-			}
-		}
-	},
-	"entity": {
-		"sensor": {
-			"frost_risk": {
-				"state": {
-					"no_risk": "无风险",
-					"unlikely": "风险较小",
-					"probable": "风险较大",
-					"high": "大概率"
-				}
-			},
-			"dew_point_perception": {
-				"state": {
-					"dry": "有点干燥",
-					"very_comfortable": "非常舒适",
-					"comfortable": "舒适",
-					"ok_but_humid": "对大多数人来说还可以，但湿度较高",
-					"somewhat_uncomfortable": "有些不舒服",
-					"quite_uncomfortable": "非常潮湿，相当不舒服",
-					"extremely_uncomfortable": "极其不舒服，令人压抑",
-					"severely_high": "极高，对哮喘等疾病有致命风险"
-				}
-			},
-			"humidex_perception": {
-				"state": {
-					"comfortable": "舒适",
-					"noticable_discomfort": "明显不适",
-					"evident_discomfort": "明显不适",
-					"great_discomfort": "极度不适，请避免运动",
-					"dangerous_discomfort": "不适且危险",
-					"heat_stroke": "可能发生中暑"
-				}
-			},
-			"relative_strain_perception": {
-				"state": {
-					"outside_calculable_range": "超出可计算范围",
-					"comfortable": "舒适",
-					"slight_discomfort": "轻微不适",
-					"discomfort": "不适",
-					"significant_discomfort": "明显不适",
-					"extreme_discomfort": "极度不适"
-				}
-			},
-			"summer_simmer_perception": {
-				"state": {
-					"cool": "凉爽",
-					"slightly_cool": "稍微凉爽",
-					"comfortable": "舒适",
-					"slightly_warm": "稍微温暖",
-					"increasing_discomfort": "不适感增加",
-					"extremely_warm": "极度温暖",
-					"danger_of_heatstroke": "有中暑的危险",
-					"extreme_danger_of_heatstroke": "极度中暑的危险",
-					"circulatory_collapse_imminent": "循环系统即将崩溃"
-				}
-			},
-			"scharlau_perception": {
-				"state": {
-					"outside_calculable_range": "超出可计算范围",
-					"comfortable": "舒适",
-					"slightly_uncomfortable": "稍微不舒服",
-					"moderatly_uncomfortable": "相当不舒服",
-					"highly_uncomfortable": "极不舒服"
-				}
-			},
-			"thoms_discomfort_perception": {
-				"state": {
-					"no_discomfort": "无不适",
-					"less_then_half": "不到一半的人感到不适",
-					"more_then_half": "超过一半的人感到不适",
-					"most": "大多数人感到不适",
-					"everyone": "每个人都感到明显不适",
-					"dangerous": "危险，可能导致中暑"
-				}
-			}
-		}
-	}
+  "options": {
+    "error": {
+      "temperature_not_found": "未找到温度传感器",
+      "humidity_not_found": "未找到湿度传感器"
+    },
+    "step": {
+      "init": {
+        "title": "热舒适设置",
+        "data": {
+          "temperature_sensor": "温度传感器",
+          "humidity_sensor": "湿度传感器",
+          "poll": "启用轮询",
+          "scan_interval": "轮询间隔（秒）",
+          "custom_icons": "使用自定义图标包"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "此温度和湿度传感器组合已配置",
+      "no_sensors": "未找到温度或湿度传感器。请在高级模式下重试。",
+      "no_sensors_advanced": "未找到温度或湿度传感器。"
+    },
+    "error": {
+      "temperature_not_found": "未找到温度传感器",
+      "humidity_not_found": "未找到湿度传感器"
+    },
+    "step": {
+      "user": {
+        "title": "热舒适设置",
+        "data": {
+          "name": "名称",
+          "temperature_sensor": "温度传感器",
+          "humidity_sensor": "湿度传感器",
+          "poll": "启用轮询",
+          "scan_interval": "轮询间隔（秒）",
+          "custom_icons": "使用自定义图标包",
+          "enabled_sensors": "已启用的传感器"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "frost_risk": {
+        "state": {
+          "no_risk": "无风险",
+          "unlikely": "风险较小",
+          "probable": "风险较大",
+          "high": "大概率"
+        }
+      },
+      "dew_point_perception": {
+        "state": {
+          "dry": "有点干燥",
+          "very_comfortable": "非常舒适",
+          "comfortable": "舒适",
+          "ok_but_humid": "对大多数人来说还可以，但湿度较高",
+          "somewhat_uncomfortable": "有些不舒服",
+          "quite_uncomfortable": "非常潮湿，相当不舒服",
+          "extremely_uncomfortable": "极其不舒服，令人压抑",
+          "severely_high": "极高，对哮喘等疾病有致命风险"
+        }
+      },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "舒适",
+          "noticable_discomfort": "明显不适",
+          "evident_discomfort": "明显不适",
+          "great_discomfort": "极度不适，请避免运动",
+          "dangerous_discomfort": "不适且危险",
+          "heat_stroke": "可能发生中暑"
+        }
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "超出可计算范围",
+          "comfortable": "舒适",
+          "slight_discomfort": "轻微不适",
+          "discomfort": "不适",
+          "significant_discomfort": "明显不适",
+          "extreme_discomfort": "极度不适"
+        }
+      },
+      "summer_simmer_perception": {
+        "state": {
+          "cool": "凉爽",
+          "slightly_cool": "稍微凉爽",
+          "comfortable": "舒适",
+          "slightly_warm": "稍微温暖",
+          "increasing_discomfort": "不适感增加",
+          "extremely_warm": "极度温暖",
+          "danger_of_heatstroke": "有中暑的危险",
+          "extreme_danger_of_heatstroke": "极度中暑的危险",
+          "circulatory_collapse_imminent": "循环系统即将崩溃"
+        }
+      },
+      "scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "超出可计算范围",
+          "comfortable": "舒适",
+          "slightly_uncomfortable": "稍微不舒服",
+          "moderatly_uncomfortable": "相当不舒服",
+          "highly_uncomfortable": "极不舒服"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "无不适",
+          "less_then_half": "不到一半的人感到不适",
+          "more_then_half": "超过一半的人感到不适",
+          "most": "大多数人感到不适",
+          "everyone": "每个人都感到明显不适",
+          "dangerous": "危险，可能导致中暑"
+        }
+      }
+    }
+  }
 }

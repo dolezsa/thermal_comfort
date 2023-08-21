@@ -61,7 +61,7 @@
           "somewhat_uncomfortable": "Etwas unangenehm",
           "quite_uncomfortable": "Unangenehm und sehr schwül",
           "extremely_uncomfortable": "Äußerst unangenehm und drückend",
-          "severely_high":"Extrem hoch, tödlich für asthmabedingte Erkrankungen"
+          "severely_high": "Extrem hoch, tödlich für asthmabedingte Erkrankungen"
         }
       },
       "humidex_perception": {

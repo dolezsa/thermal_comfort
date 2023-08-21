@@ -13,14 +13,17 @@ export async function defineConfig(env) {
   );
 
   const pluginConfig = {
-    pathPattern: "./custom_components/thermal_comfort/translations/{language}.json",
+    pathPattern:
+      "./custom_components/thermal_comfort/translations/{language}.json",
   };
 
   return {
     referenceLanguage: "en",
     languages: await plugin.getLanguages({ ...env, pluginConfig }),
-    readResources: (args) => plugin.readResources({ ...args, ...env, pluginConfig }),
-    writeResources: (args) => plugin.writeResources({ ...args, ...env, pluginConfig }),
+    readResources: (args) =>
+      plugin.readResources({ ...args, ...env, pluginConfig }),
+    writeResources: (args) =>
+      plugin.writeResources({ ...args, ...env, pluginConfig }),
     lint: {
       rules: [standardLintRules()],
     },
