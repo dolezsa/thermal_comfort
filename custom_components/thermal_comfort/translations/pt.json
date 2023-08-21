@@ -1,4 +1,47 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Sensor de temperatura não encontrado",
+      "humidity_not_found": "Sensor de humidade não encontrado"
+    },
+    "step": {
+      "init": {
+        "title": "Definições de Conforto Térmico",
+        "data": {
+          "temperature_sensor": "Sensor de Temperatura",
+          "humidity_sensor": "Sensor de Humidade",
+          "poll": "Ativar Atualização",
+          "scan_interval": "Intervalo de atualização (segundos)",
+          "custom_icons": "Usar ícones personalizados"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Esta combinação de sensores de humidade e temperatura já está configurada.",
+      "no_sensors": "Não foram encontrados sensores de humidade e/ou temperatura. Tente de novo no modo avançado.",
+      "no_sensors_advanced": "Não foram encontrados sensores de humidade e/ou temperatura."
+    },
+    "error": {
+      "temperature_not_found": "Sensor de temperatura não encontrado",
+      "humidity_not_found": "Sensor de humidade não encontrado"
+    },
+    "step": {
+      "user": {
+        "title": "Definições de Conforto Térmico",
+        "data": {
+          "name": "Nome",
+          "temperature_sensor": "Sensor de Temperatura",
+          "humidity_sensor": "Sensor de Humidade",
+          "poll": "Ativar Atualização",
+          "scan_interval": "Intervalo de atualização (segundos)",
+          "custom_icons": "Usar ícones personalizados",
+          "enabled_sensors": "Sensores ligados"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
       "frost_risk": {
@@ -6,32 +49,71 @@
           "no_risk": "Sem risco",
           "unlikely": "Improvável",
           "probable": "Provável",
-          "high": "Muito provável"
+          "high": "Alta probabilidade"
         }
       },
       "dew_point_perception": {
         "state": {
-          "dry": "Um pouco seco",
+          "dry": "Um pouco seco para alguns",
           "very_comfortable": "Muito confortável",
           "comfortable": "Confortável",
-          "ok_but_humid": "Um pouco húmido",
-          "somewhat_uncomfortable": "Algo desconfortável",
-          "quite_uncomfortable": "Muito húmido, muito desconfortável",
+          "ok_but_humid": "Confortável para a maioria, mas húmido",
+          "somewhat_uncomfortable": "Um pouco desconfortável",
+          "quite_uncomfortable": "Muito húmido e bastante desconfortável",
           "extremely_uncomfortable": "Extremamente desconfortável, opressivo",
-          "severely_high": "Alto risco para a saúde, mortal em caso de asma"
+          "severely_high": "Extremamente alto, até mortal para doenças relacionadas com asma"
+        }
+      },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Confortável",
+          "noticable_discomfort": "Algum desconforto",
+          "evident_discomfort": "Desconforto evidente",
+          "great_discomfort": "Grande desconforto, evitar esforços",
+          "dangerous_discomfort": "Desconforto perigoso",
+          "heat_stroke": "Posibilidade de insolação"
+        }
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Fora do interválo de cálculo",
+          "comfortable": "Confortável",
+          "slight_discomfort": "Ligeiro desconforto",
+          "discomfort": "Desconforto",
+          "significant_discomfort": "Desconforto significativo",
+          "extreme_discomfort": "Extremo desconforto"
         }
       },
       "summer_simmer_perception": {
         "state": {
           "cool": "Frio",
-          "slightly_cool": "Um pouco frio",
+          "slightly_cool": "Frio ligeiro",
           "comfortable": "Confortável",
-          "slightly_warm": "Um pouco quente",
+          "slightly_warm": "calor ligueiro",
           "increasing_discomfort": "Desconforto crescente",
-          "extremely_warm": "Muito quente",
+          "extremely_warm": "Extremamente quente",
           "danger_of_heatstroke": "Perigo de insolação",
           "extreme_danger_of_heatstroke": "Perigo extremo de insolação",
-          "circulatory_collapse_imminent": "Colapso circulatório iminente"
+          "circulatory_collapse_imminent": "Colapso circulatório eminente"
+        }
+      },
+      "scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Fora do interválo de cálculo",
+          "comfortable": "Confortável",
+          "slightly_uncomfortable": "Ligeiramente desconfortável",
+          "moderatly_uncomfortable": "Desconforto moderado",
+          "highly_uncomfortable": "Muito desconfortável"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Sem desconforto",
+          "less_then_half": "Menos de metade da população sente desconforto",
+          "more_then_half": "Mais de metade da população sente desconforto",
+          "most": "A maioria dos indivíduos sente desconforto e deterioração da condição psíquica e física",
+          "everyone": "Todos sentem desconforto significativo",
+          "dangerous": "Perigoso, desconforto muito forte que pode causar insolações"
         }
       }
     }
