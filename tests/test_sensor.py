@@ -1,13 +1,8 @@
 """The test for the Thermal Comfort sensor platform."""
 
+from collections.abc import Callable
 import logging
-from typing import Callable
 
-from homeassistant.components.command_line.const import DOMAIN as COMMAND_LINE_DOMAIN
-from homeassistant.components.sensor import DOMAIN as PLATFORM_DOMAIN
-from homeassistant.const import ATTR_TEMPERATURE
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers import entity_registry
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -32,6 +27,11 @@ from custom_components.thermal_comfort.sensor import (
     ThomsDiscomfortPerception,
     id_generator,
 )
+from homeassistant.components.command_line.const import DOMAIN as COMMAND_LINE_DOMAIN
+from homeassistant.components.sensor import DOMAIN as PLATFORM_DOMAIN
+from homeassistant.const import ATTR_TEMPERATURE
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 
 from .const import ADVANCED_USER_INPUT
 
@@ -873,7 +873,7 @@ async def test_unique_id(hass, start_ha):
     """Test if unique id is working as expected."""
     assert len(hass.states.async_all()) == 2 * LEN_DEFAULT_SENSORS + 2
 
-    ent_reg = entity_registry.async_get(hass)
+    ent_reg = er.async_get(hass)
 
     assert len(ent_reg.entities) == 2 * LEN_DEFAULT_SENSORS
 
@@ -1072,12 +1072,12 @@ async def test_create_sensors(hass: HomeAssistant):
     :param hass: HomeAssistant: Home Assistant object
     """
 
-    def get_eid(registry: entity_registry, _id):
+    def get_eid(registry: er, _id):
         return registry.async_get_entity_id(
             domain="sensor", platform=DOMAIN, unique_id=_id
         )
 
-    er = entity_registry.async_get(hass)
+    registry = er.async_get(hass)
 
     entry = MockConfigEntry(
         domain=DOMAIN, data=ADVANCED_USER_INPUT, entry_id="test", unique_id="uniqueid"
@@ -1088,7 +1088,7 @@ async def test_create_sensors(hass: HomeAssistant):
 
     # Make sure that sensors in registry
     for s in SensorType:
-        assert get_eid(er, id_generator(entry.unique_id, s)) is not None
+        assert get_eid(registry, id_generator(entry.unique_id, s)) is not None
 
 
 @pytest.mark.parametrize(

@@ -1,11 +1,12 @@
 """Thermal Comfort config validator."""
 
+import voluptuous as vol
+
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.config import async_log_exception, config_without_domain
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
-import voluptuous as vol
 
 from . import sensor as sensor_platform
 from .const import DOMAIN

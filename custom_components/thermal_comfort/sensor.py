@@ -7,6 +7,8 @@ import logging
 import math
 from typing import Any
 
+import voluptuous as vol
+
 from homeassistant import util
 from homeassistant.backports.enum import StrEnum
 from homeassistant.components.sensor import (
@@ -33,7 +35,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import TemplateError
-from homeassistant.helpers import entity_registry
+from homeassistant.helpers import entity_registry as er
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -44,7 +46,6 @@ from homeassistant.helpers.event import (
 from homeassistant.helpers.template import Template
 from homeassistant.loader import async_get_custom_components
 from homeassistant.util.unit_conversion import TemperatureConverter
-import voluptuous as vol
 
 from .const import DEFAULT_NAME, DOMAIN
 
@@ -74,6 +75,8 @@ DISPLAY_PRECISION = 2
 
 
 class LegacySensorType(StrEnum):
+    """Sensors names from thermal comfort < 2.0."""
+
     THERMAL_PERCEPTION = "thermal_perception"
     SIMMER_INDEX = "simmer_index"
     SIMMER_ZONE = "simmer_zone"
@@ -454,7 +457,7 @@ async def async_setup_entry(
         ] = SCAN_INTERVAL_DEFAULT
         data[CONF_SCAN_INTERVAL] = SCAN_INTERVAL_DEFAULT
 
-    _LOGGER.debug(f"async_setup_entry: {data}")
+    _LOGGER.debug("async_setup_entry: %s", data)
     compute_device = DeviceThermalComfort(
         hass=hass,
         name=data[CONF_NAME],
@@ -518,7 +521,7 @@ class SensorThermalComfort(SensorEntity):
                 f"{self._device.name} {self.entity_description.name}"
             )
             if sensor_type in [SensorType.DEW_POINT_PERCEPTION, SensorType.SUMMER_SIMMER_INDEX, SensorType.SUMMER_SIMMER_PERCEPTION]:
-                registry = entity_registry.async_get(self._device.hass)
+                registry = er.async_get(self._device.hass)
                 if sensor_type is SensorType.DEW_POINT_PERCEPTION:
                     unique_id = id_generator(self._device.unique_id, LegacySensorType.THERMAL_PERCEPTION)
                     entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, unique_id)
@@ -607,7 +610,7 @@ class SensorThermalComfort(SensorEntity):
                 ):
                     # Common during HA startup - so just a warning
                     _LOGGER.warning(
-                        "Could not render %s template %s," " the state is unknown.",
+                        "Could not render %s template %s, the state is unknown.",
                         friendly_property_name,
                         self.name,
                     )
@@ -663,7 +666,7 @@ class DeviceThermalComfort:
         self.sensors = []
         self._compute_states = {
             sensor_type: ComputeState(lock=Lock())
-            for sensor_type in SENSOR_TYPES.keys()
+            for sensor_type in SENSOR_TYPES
         }
 
         async_track_state_change_event(
@@ -713,7 +716,7 @@ class DeviceThermalComfort:
                 self._temperature = temperature
                 await self.async_update()
         else:
-            _LOGGER.info(f"Temperature has an invalid value: {state}. Can't calculate new states.")
+            _LOGGER.info("Temperature has an invalid value: %s. Can't calculate new states.", state)
 
     async def humidity_state_listener(self, event):
         """Handle humidity device state changes."""
@@ -727,7 +730,7 @@ class DeviceThermalComfort:
                 self.extra_state_attributes[ATTR_HUMIDITY] = self._humidity
                 await self.async_update()
         else:
-            _LOGGER.info(f"Relative humidity has an invalid value: {state}. Can't calculate new states.")
+            _LOGGER.info("Relative humidity has an invalid value: %s. Can't calculate new states.", state)
 
     @compute_once_lock(SensorType.DEW_POINT)
     async def dew_point(self) -> float:
@@ -1052,7 +1055,7 @@ class DeviceThermalComfort:
     async def async_update(self):
         """Update the state."""
         if self._temperature is not None and self._humidity is not None:
-            for sensor_type in SENSOR_TYPES.keys():
+            for sensor_type in SENSOR_TYPES:
                 self._compute_states[sensor_type].needs_update = True
             if not self._should_poll:
                 await self.async_update_sensors(True)
