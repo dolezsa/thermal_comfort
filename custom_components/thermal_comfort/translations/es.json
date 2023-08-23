@@ -84,6 +84,24 @@
           "extreme_discomfort": "Muy incómodo"
         }
       },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Fuera del rango calculable",
+          "comfortable": "Cómodo",
+          "slightly_uncomfortable": "Un poco incómodo",
+          "moderatly_uncomfortable": "Bastante incómodo",
+          "highly_uncomfortable": "Muy incómodo"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Fuera del rango calculable",
+          "comfortable": "Cómodo",
+          "slightly_uncomfortable": "Un poco incómodo",
+          "moderatly_uncomfortable": "Bastante incómodo",
+          "highly_uncomfortable": "Muy incómodo"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Fresco",
@@ -95,15 +113,6 @@
           "danger_of_heatstroke": "Riesgo de golpe de calor",
           "extreme_danger_of_heatstroke": "Riesgo extremo de golpe de calor",
           "circulatory_collapse_imminent": "Colapso circulatorio inminente"
-        }
-      },
-      "scharlau_perception": {
-        "state": {
-          "outside_calculable_range": "Fuera del rango calculable",
-          "comfortable": "Cómodo",
-          "slightly_uncomfortable": "Un poco incómodo",
-          "moderatly_uncomfortable": "Bastante incómodo",
-          "highly_uncomfortable": "Muy incómodo"
         }
       },
       "thoms_discomfort_perception": {

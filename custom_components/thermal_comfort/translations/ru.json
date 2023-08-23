@@ -84,6 +84,24 @@
           "extreme_discomfort": "Черезвычайно некомфортно"
         }
       },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
+          "comfortable": "Комфортно",
+          "slightly_uncomfortable": "Слегка некомфортно",
+          "moderatly_uncomfortable": "Некомфортно",
+          "highly_uncomfortable": "Очень некомфортно"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
+          "comfortable": "Комфортно",
+          "slightly_uncomfortable": "Слегка некомфортно",
+          "moderatly_uncomfortable": "Некомфортно",
+          "highly_uncomfortable": "Очень некомфортно"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Холодно",
@@ -95,15 +113,6 @@
           "danger_of_heatstroke": "Риск теплового удара",
           "extreme_danger_of_heatstroke": "Серьёзный риск теплового удара",
           "circulatory_collapse_imminent": "Возможны сосудистые нарушения"
-        }
-      },
-      "scharlau_perception": {
-        "state": {
-          "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
-          "comfortable": "Комфортно",
-          "slightly_uncomfortable": "Слегка некомфортно",
-          "moderatly_uncomfortable": "Некомфортно",
-          "highly_uncomfortable": "Очень некомфортно"
         }
       },
       "thoms_discomfort_perception": {

@@ -44,6 +44,9 @@
   },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Absolute Luftfeuchtigkeit"
+      },
       "frost_risk": {
         "state": {
           "no_risk": "Kein Risiko",
@@ -84,6 +87,24 @@
           "extreme_discomfort": "Extremes Unbehagen"
         }
       },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
+          "comfortable": "Angenehm",
+          "slightly_uncomfortable": "Leicht unangenehm",
+          "moderatly_uncomfortable": "Unangenehm",
+          "highly_uncomfortable": "Sehr unangenehm"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
+          "comfortable": "Angenehm",
+          "slightly_uncomfortable": "Leicht unangenehm",
+          "moderatly_uncomfortable": "Unangenehm",
+          "highly_uncomfortable": "Sehr unangenehm"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Kühl",
@@ -95,15 +116,6 @@
           "danger_of_heatstroke": "Hitzschlaggefahr",
           "extreme_danger_of_heatstroke": "Extreme Hitzschlaggefahr",
           "circulatory_collapse_imminent": "Drohender Kreislaufkollaps"
-        }
-      },
-      "scharlau_perception": {
-        "state": {
-          "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
-          "comfortable": "Angenehm",
-          "slightly_uncomfortable": "Leicht unangenehm",
-          "moderatly_uncomfortable": "Unangenehm",
-          "highly_uncomfortable": "Sehr unangenehm"
         }
       },
       "thoms_discomfort_perception": {
