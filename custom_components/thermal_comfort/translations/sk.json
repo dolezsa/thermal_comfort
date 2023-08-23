@@ -84,6 +84,24 @@
           "extreme_discomfort": "Extrémny discomfort"
         }
       },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Mimo vypočítateľného rozsahu",
+          "comfortable": "Príjemne",
+          "slightly_uncomfortable": "Mierny diskomfort",
+          "moderatly_uncomfortable": "Stredne nepríjemné",
+          "highly_uncomfortable": "Veľmy nepríjemné"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Mimo vypočítateľného rozsahu",
+          "comfortable": "Príjemne",
+          "slightly_uncomfortable": "Mierny diskomfort",
+          "moderatly_uncomfortable": "Stredne nepríjemné",
+          "highly_uncomfortable": "Veľmy nepríjemné"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Chladno",
@@ -95,15 +113,6 @@
           "danger_of_heatstroke": "Nebezpečenstvo úpalu",
           "extreme_danger_of_heatstroke": "Extrémne nebezpečenstvo úpalu",
           "circulatory_collapse_imminent": "Hroziaci kolaps krvného obehu"
-        }
-      },
-      "scharlau_perception": {
-        "state": {
-          "outside_calculable_range": "Mimo vypočítateľného rozsahu",
-          "comfortable": "Príjemne",
-          "slightly_uncomfortable": "Mierny diskomfort",
-          "moderatly_uncomfortable": "Stredne nepríjemné",
-          "highly_uncomfortable": "Veľmy nepríjemné"
         }
       },
       "thoms_discomfort_perception": {

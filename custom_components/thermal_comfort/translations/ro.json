@@ -84,6 +84,24 @@
           "extreme_discomfort": "Disconfort extrem"
         }
       },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "În afara intervalului calculabil",
+          "comfortable": "Confortabil",
+          "slightly_uncomfortable": "Ușor inconfortabil",
+          "moderatly_uncomfortable": "Moderat inconfortabil",
+          "highly_uncomfortable": "Foarte inconfortabil"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "În afara intervalului calculabil",
+          "comfortable": "Confortabil",
+          "slightly_uncomfortable": "Ușor inconfortabil",
+          "moderatly_uncomfortable": "Moderat inconfortabil",
+          "highly_uncomfortable": "Foarte inconfortabil"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Rece",
@@ -95,15 +113,6 @@
           "danger_of_heatstroke": "Pericol de insolație",
           "extreme_danger_of_heatstroke": "Pericol extrem de insolație",
           "circulatory_collapse_imminent": "Colapsul circulator iminent"
-        }
-      },
-      "scharlau_perception": {
-        "state": {
-          "outside_calculable_range": "În afara intervalului calculabil",
-          "comfortable": "Confortabil",
-          "slightly_uncomfortable": "Ușor inconfortabil",
-          "moderatly_uncomfortable": "Moderat inconfortabil",
-          "highly_uncomfortable": "Foarte inconfortabil"
         }
       },
       "thoms_discomfort_perception": {

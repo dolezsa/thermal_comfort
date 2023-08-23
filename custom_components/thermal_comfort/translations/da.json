@@ -84,6 +84,24 @@
           "extreme_discomfort": "Ekstremt ubehag"
         }
       },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Uden for det beregnelige område",
+          "comfortable": "Komfortabel",
+          "slightly_uncomfortable": "Lidt ubehageligt",
+          "moderatly_uncomfortable": "Moderat ubehageligt",
+          "highly_uncomfortable": "Meget ubehageligt"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Uden for det beregnelige område",
+          "comfortable": "Komfortabel",
+          "slightly_uncomfortable": "Lidt ubehageligt",
+          "moderatly_uncomfortable": "Moderat ubehageligt",
+          "highly_uncomfortable": "Meget ubehageligt"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Køligt",
@@ -95,15 +113,6 @@
           "danger_of_heatstroke": "Fare for hedeslag",
           "extreme_danger_of_heatstroke": "Ekstrem fare for hedeslag",
           "circulatory_collapse_imminent": "Kredsløbskollaps nært forestående"
-        }
-      },
-      "scharlau_perception": {
-        "state": {
-          "outside_calculable_range": "Uden for det beregnelige område",
-          "comfortable": "Komfortabel",
-          "slightly_uncomfortable": "Lidt ubehageligt",
-          "moderatly_uncomfortable": "Moderat ubehageligt",
-          "highly_uncomfortable": "Meget ubehageligt"
         }
       },
       "thoms_discomfort_perception": {

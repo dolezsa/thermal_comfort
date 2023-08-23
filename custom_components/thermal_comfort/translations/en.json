@@ -44,15 +44,14 @@
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "No risk",
-          "unlikely": "Unlikely",
-          "probable": "Probable",
-          "high": "High probability"
-        }
+      "absolute_humidity": {
+        "name": "Absolute humidity"
+      },
+      "dew_point": {
+        "name": "Dew point"
       },
       "dew_point_perception": {
+        "name": "Dew point perception",
         "state": {
           "dry": "A bit dry for some",
           "very_comfortable": "Very comfortable",
@@ -64,7 +63,26 @@
           "severely_high": "Severely high, even deadly for asthma related illnesses"
         }
       },
+      "frost_point": {
+        "name": "Frost point"
+      },
+      "frost_risk": {
+        "name": "Frost risk",
+        "state": {
+          "no_risk": "No risk",
+          "unlikely": "Unlikely",
+          "probable": "Probable",
+          "high": "High probability"
+        }
+      },
+      "heat_index": {
+        "name": "Heat index"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
       "humidex_perception": {
+        "name": "Humidex perception",
         "state": {
           "comfortable": "Comfortable",
           "noticable_discomfort": "Noticeable discomfort",
@@ -74,7 +92,11 @@
           "heat_stroke": "Heat stroke possible"
         }
       },
+      "moist_air_enthalpy": {
+        "name": "Moist air enthalpy"
+      },
       "relative_strain_perception": {
+        "name": "Relative strain perception",
         "state": {
           "outside_calculable_range": "Outside of the calculable range",
           "comfortable": "Comfortable",
@@ -84,7 +106,28 @@
           "extreme_discomfort": "Extreme discomfort"
         }
       },
+      "summer_scharlau_perception": {
+        "name": "Summer scharlau perception",
+        "state": {
+          "outside_calculable_range": "Outside of the calculable range",
+          "comfortable": "Comfortable",
+          "slightly_uncomfortable": "Slightly uncomfortable",
+          "moderatly_uncomfortable": "Moderatly uncomfortable",
+          "highly_uncomfortable": "Highly uncomfortable"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Winter scharlau perception",
+        "state": {
+          "outside_calculable_range": "Outside of the calculable range",
+          "comfortable": "Comfortable",
+          "slightly_uncomfortable": "Slightly uncomfortable",
+          "moderatly_uncomfortable": "Moderatly uncomfortable",
+          "highly_uncomfortable": "Highly uncomfortable"
+        }
+      },
       "summer_simmer_perception": {
+        "name": "Summer simmer perception",
         "state": {
           "cool": "Cool",
           "slightly_cool": "Slightly cool",
@@ -97,16 +140,8 @@
           "circulatory_collapse_imminent": "Circulatory collapse imminent"
         }
       },
-      "scharlau_perception": {
-        "state": {
-          "outside_calculable_range": "Outside of the calculable range",
-          "comfortable": "Comfortable",
-          "slightly_uncomfortable": "Slightly uncomfortable",
-          "moderatly_uncomfortable": "Moderatly uncomfortable",
-          "highly_uncomfortable": "Highly uncomfortable"
-        }
-      },
       "thoms_discomfort_perception": {
+        "name": "Thoms discomfort perception",
         "state": {
           "no_discomfort": "No discomfort",
           "less_then_half": "Less than half of the population feels discomfort",

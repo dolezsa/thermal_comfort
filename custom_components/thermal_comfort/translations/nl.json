@@ -84,6 +84,24 @@
           "extreme_discomfort": "Extreem ongemakkelijk"
         }
       },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Buiten het berekenbare bereik",
+          "comfortable": "Gemakkelijk",
+          "slightly_uncomfortable": "Licht ongemakkelijk",
+          "moderatly_uncomfortable": "Matig ongemakkelijk",
+          "highly_uncomfortable": "Zeer ongemakkelijk"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Buiten het berekenbare bereik",
+          "comfortable": "Gemakkelijk",
+          "slightly_uncomfortable": "Licht ongemakkelijk",
+          "moderatly_uncomfortable": "Matig ongemakkelijk",
+          "highly_uncomfortable": "Zeer ongemakkelijk"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Koel",
@@ -95,15 +113,6 @@
           "danger_of_heatstroke": "Gevaar voor een zonnesteek",
           "extreme_danger_of_heatstroke": "Extreem gevaar voor een zonnesteek",
           "circulatory_collapse_imminent": "Instorting van de bloedsomloop dreigt"
-        }
-      },
-      "scharlau_perception": {
-        "state": {
-          "outside_calculable_range": "Buiten het berekenbare bereik",
-          "comfortable": "Gemakkelijk",
-          "slightly_uncomfortable": "Licht ongemakkelijk",
-          "moderatly_uncomfortable": "Matig ongemakkelijk",
-          "highly_uncomfortable": "Zeer ongemakkelijk"
         }
       },
       "thoms_discomfort_perception": {

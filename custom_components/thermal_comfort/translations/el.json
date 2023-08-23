@@ -84,6 +84,24 @@
           "extreme_discomfort": "Ακραία δυσφορία"
         }
       },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Εκτός του υπολογίσιμου εύρους",
+          "comfortable": "Άνετη",
+          "slightly_uncomfortable": "Ελαφρώς άβολη",
+          "moderatly_uncomfortable": "Μέτρια άβολη",
+          "highly_uncomfortable": "Ιδιαίτερα άβολη"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Εκτός του υπολογίσιμου εύρους",
+          "comfortable": "Άνετη",
+          "slightly_uncomfortable": "Ελαφρώς άβολη",
+          "moderatly_uncomfortable": "Μέτρια άβολη",
+          "highly_uncomfortable": "Ιδιαίτερα άβολη"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Δροσερή",
@@ -95,15 +113,6 @@
           "danger_of_heatstroke": "Κίνδυνος θερμοπληξίας",
           "extreme_danger_of_heatstroke": "Ακραίος κίνδυνος θερμοπληξίας",
           "circulatory_collapse_imminent": "Επικείμενη κυκλοφορική κατάρρευση"
-        }
-      },
-      "scharlau_perception": {
-        "state": {
-          "outside_calculable_range": "Εκτός του υπολογίσιμου εύρους",
-          "comfortable": "Άνετη",
-          "slightly_uncomfortable": "Ελαφρώς άβολη",
-          "moderatly_uncomfortable": "Μέτρια άβολη",
-          "highly_uncomfortable": "Ιδιαίτερα άβολη"
         }
       },
       "thoms_discomfort_perception": {

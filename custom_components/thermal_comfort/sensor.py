@@ -87,6 +87,7 @@ class SensorType(StrEnum):
 
     ABSOLUTE_HUMIDITY = "absolute_humidity"
     DEW_POINT = "dew_point"
+    DEW_POINT_PERCEPTION = "dew_point_perception"
     FROST_POINT = "frost_point"
     FROST_RISK = "frost_risk"
     HEAT_INDEX = "heat_index"
@@ -98,7 +99,6 @@ class SensorType(StrEnum):
     WINTER_SCHARLAU_PERCEPTION = "winter_scharlau_perception"
     SUMMER_SIMMER_INDEX = "summer_simmer_index"
     SUMMER_SIMMER_PERCEPTION = "summer_simmer_perception"
-    DEW_POINT_PERCEPTION = "dew_point_perception"
     THOMS_DISCOMFORT_PERCEPTION = "thoms_discomfort_perception"
 
     def to_name(self) -> str:
@@ -210,7 +210,6 @@ TC_ICONS = {
 SENSOR_TYPES = {
     SensorType.ABSOLUTE_HUMIDITY: {
         "key": SensorType.ABSOLUTE_HUMIDITY,
-        "name": SensorType.ABSOLUTE_HUMIDITY.to_name(),
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": "g/m³",
         "state_class": SensorStateClass.MEASUREMENT,
@@ -218,16 +217,20 @@ SENSOR_TYPES = {
     },
     SensorType.DEW_POINT: {
         "key": SensorType.DEW_POINT,
-        "name": SensorType.DEW_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:thermometer-water",
     },
+    SensorType.DEW_POINT_PERCEPTION: {
+        "key": SensorType.DEW_POINT_PERCEPTION,
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, DewPointPerception)),
+        "icon": "mdi:sun-thermometer",
+    },
     SensorType.FROST_POINT: {
         "key": SensorType.FROST_POINT,
-        "name": SensorType.FROST_POINT.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -236,15 +239,12 @@ SENSOR_TYPES = {
     },
     SensorType.FROST_RISK: {
         "key": SensorType.FROST_RISK,
-        "name": SensorType.FROST_RISK.to_name(),
         "device_class": SensorDeviceClass.ENUM,
         "options": list(map(str, FrostRisk)),
-        "translation_key": SensorType.FROST_RISK,
         "icon": "mdi:snowflake-alert",
     },
     SensorType.HEAT_INDEX: {
         "key": SensorType.HEAT_INDEX,
-        "name": SensorType.HEAT_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -253,7 +253,6 @@ SENSOR_TYPES = {
     },
     SensorType.HUMIDEX: {
         "key": SensorType.HUMIDEX,
-        "name": SensorType.HUMIDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -262,16 +261,12 @@ SENSOR_TYPES = {
     },
     SensorType.HUMIDEX_PERCEPTION: {
         "key": SensorType.HUMIDEX_PERCEPTION,
-        "name": SensorType.HUMIDEX_PERCEPTION.to_name(),
         "device_class": SensorDeviceClass.ENUM,
         "options": list(map(str, HumidexPerception)),
-        "translation_key": SensorType.HUMIDEX_PERCEPTION,
         "icon": "mdi:sun-thermometer",
     },
     SensorType.MOIST_AIR_ENTHALPY: {
         "key": SensorType.MOIST_AIR_ENTHALPY,
-        "name": SensorType.MOIST_AIR_ENTHALPY.to_name(),
-        "translation_key": SensorType.MOIST_AIR_ENTHALPY,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": "kJ/kg",
         "state_class": SensorStateClass.MEASUREMENT,
@@ -279,31 +274,24 @@ SENSOR_TYPES = {
     },
     SensorType.RELATIVE_STRAIN_PERCEPTION: {
         "key": SensorType.RELATIVE_STRAIN_PERCEPTION,
-        "name": SensorType.RELATIVE_STRAIN_PERCEPTION.to_name(),
         "device_class": SensorDeviceClass.ENUM,
         "options": list(map(str, RelativeStrainPerception)),
-        "translation_key": SensorType.RELATIVE_STRAIN_PERCEPTION,
         "icon": "mdi:sun-thermometer",
     },
     SensorType.SUMMER_SCHARLAU_PERCEPTION: {
         "key": SensorType.SUMMER_SCHARLAU_PERCEPTION,
-        "name": SensorType.SUMMER_SCHARLAU_PERCEPTION.to_name(),
         "device_class": SensorDeviceClass.ENUM,
         "options": list(map(str, ScharlauPerception)),
-        "translation_key": "scharlau_perception",
         "icon": "mdi:sun-thermometer",
     },
     SensorType.WINTER_SCHARLAU_PERCEPTION: {
         "key": SensorType.WINTER_SCHARLAU_PERCEPTION,
-        "name": SensorType.WINTER_SCHARLAU_PERCEPTION.to_name(),
         "device_class": SensorDeviceClass.ENUM,
         "options": list(map(str, ScharlauPerception)),
-        "translation_key": "scharlau_perception",
         "icon": "mdi:snowflake-thermometer",
     },
     SensorType.SUMMER_SIMMER_INDEX: {
         "key": SensorType.SUMMER_SIMMER_INDEX,
-        "name": SensorType.SUMMER_SIMMER_INDEX.to_name(),
         "device_class": SensorDeviceClass.TEMPERATURE,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -312,26 +300,14 @@ SENSOR_TYPES = {
     },
     SensorType.SUMMER_SIMMER_PERCEPTION: {
         "key": SensorType.SUMMER_SIMMER_PERCEPTION,
-        "name": SensorType.SUMMER_SIMMER_PERCEPTION.to_name(),
         "device_class": SensorDeviceClass.ENUM,
         "options": list(map(str, SummerSimmerPerception)),
-        "translation_key": SensorType.SUMMER_SIMMER_PERCEPTION,
-        "icon": "mdi:sun-thermometer",
-    },
-    SensorType.DEW_POINT_PERCEPTION: {
-        "key": SensorType.DEW_POINT_PERCEPTION,
-        "name": SensorType.DEW_POINT_PERCEPTION.to_name(),
-        "device_class": SensorDeviceClass.ENUM,
-        "options": list(map(str, DewPointPerception)),
-        "translation_key": SensorType.DEW_POINT_PERCEPTION,
         "icon": "mdi:sun-thermometer",
     },
     SensorType.THOMS_DISCOMFORT_PERCEPTION: {
         "key": SensorType.THOMS_DISCOMFORT_PERCEPTION,
-        "name": SensorType.THOMS_DISCOMFORT_PERCEPTION.to_name(),
         "device_class": SensorDeviceClass.ENUM,
         "options": list(map(str, ThomsDiscomfortPerception)),
-        "translation_key": SensorType.THOMS_DISCOMFORT_PERCEPTION,
         "icon": "mdi:sun-thermometer",
     },
 }
@@ -515,11 +491,14 @@ class SensorThermalComfort(SensorEntity):
         self._device = device
         self._sensor_type = sensor_type
         self.entity_description = entity_description
-        self.entity_description.has_entity_name = is_config_entry
+        self.entity_description.translation_key = sensor_type
+        self.entity_description.has_entity_name = True
         if not is_config_entry:
-            self.entity_description.name = (
-                f"{self._device.name} {self.entity_description.name}"
-            )
+            if self._device.name is not None:
+                self.entity_description.has_entity_name = False
+                self.entity_description.name = (
+                    f"{self._device.name} {self._sensor_type.to_name()}"
+                )
             if sensor_type in [SensorType.DEW_POINT_PERCEPTION, SensorType.SUMMER_SIMMER_INDEX, SensorType.SUMMER_SIMMER_PERCEPTION]:
                 registry = er.async_get(self._device.hass)
                 if sensor_type is SensorType.DEW_POINT_PERCEPTION:
