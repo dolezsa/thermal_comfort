@@ -2,15 +2,15 @@
 from asyncio import Lock
 from dataclasses import dataclass
 from datetime import timedelta
+from enum import StrEnum
 from functools import wraps
 import logging
 import math
-from typing import Any
+from typing import Any, Self
 
 import voluptuous as vol
 
 from homeassistant import util
-from homeassistant.backports.enum import StrEnum
 from homeassistant.components.sensor import (
     DOMAIN as SENSOR_DOMAIN,
     PLATFORM_SCHEMA,
@@ -106,7 +106,7 @@ class SensorType(StrEnum):
         return self.value.replace("_", " ").capitalize()
 
     @classmethod
-    def from_string(cls, string: str) -> "SensorType":
+    def from_string(cls, string: str) -> Self:
         """Return the sensor type from string."""
         if string in list(cls):
             return cls(string)
@@ -501,15 +501,14 @@ class SensorThermalComfort(SensorEntity):
                 )
             if sensor_type in [SensorType.DEW_POINT_PERCEPTION, SensorType.SUMMER_SIMMER_INDEX, SensorType.SUMMER_SIMMER_PERCEPTION]:
                 registry = er.async_get(self._device.hass)
-                if sensor_type is SensorType.DEW_POINT_PERCEPTION:
-                    unique_id = id_generator(self._device.unique_id, LegacySensorType.THERMAL_PERCEPTION)
-                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, unique_id)
-                elif sensor_type is SensorType.SUMMER_SIMMER_INDEX:
-                    unique_id = id_generator(self._device.unique_id, LegacySensorType.SIMMER_INDEX)
-                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, unique_id)
-                elif sensor_type is SensorType.SUMMER_SIMMER_PERCEPTION:
-                    unique_id = id_generator(self._device.unique_id, LegacySensorType.SIMMER_ZONE)
-                    entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, unique_id)
+                match sensor_type:
+                    case SensorType.DEW_POINT_PERCEPTION:
+                        unique_id = id_generator(self._device.unique_id, LegacySensorType.THERMAL_PERCEPTION)
+                    case SensorType.SUMMER_SIMMER_INDEX:
+                        unique_id = id_generator(self._device.unique_id, LegacySensorType.SIMMER_INDEX)
+                    case SensorType.SUMMER_SIMMER_PERCEPTION:
+                        unique_id = id_generator(self._device.unique_id, LegacySensorType.SIMMER_ZONE)
+                entity_id = registry.async_get_entity_id(SENSOR_DOMAIN, DOMAIN, unique_id)
                 if entity_id is not None:
                     registry.async_update_entity(entity_id, new_unique_id=id_generator(self._device.unique_id, sensor_type))
         if custom_icons:
