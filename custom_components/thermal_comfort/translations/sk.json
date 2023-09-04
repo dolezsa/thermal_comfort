@@ -44,15 +44,14 @@
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Žiadne riziko",
-          "unlikely": "Nepravdepodobné",
-          "probable": "Pravdepodobné",
-          "high": "Vysoká pravdepodobnosť"
-        }
+      "absolute_humidity": {
+        "name": "Absolútna vlhkosť"
+      },
+      "dew_point": {
+        "name": "Rosný bod"
       },
       "dew_point_perception": {
+        "name": "Rosný bod predpoveď",
         "state": {
           "dry": "Pre niekoho suché",
           "very_comfortable": "Veľmi komfortné",
@@ -64,19 +63,42 @@
           "severely_high": "Veľmi vysoká, pre astmatikov smrteľná vlhkosť"
         }
       },
-      "humidex_perception": {
+      "frost_point": {
+        "name": "Bod mrznutia"
+      },
+      "frost_risk": {
+        "name": "Riziko zamrznutia,
         "state": {
-          "comfortable": "Príjemne",
-          "noticable_discomfort": "Noticeable discomfort",
-          "evident_discomfort": "Evident discomfort",
-          "great_discomfort": "Great discomfort, avoid exertion",
-          "dangerous_discomfort": "Dangerous discomfort",
-          "heat_stroke": "Heat stroke possible"
+          "no_risk": "Žiadne riziko",
+          "unlikely": "Nepravdepodobné",
+          "probable": "Pravdepodobné",
+          "high": "Vysoká pravdepodobnosť"
         }
       },
-      "relative_strain_perception": {
+      "heat_index": {
+        "name": "Teplotný index"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
+      "humidex_perception": {
+        "name": "Humidex prepoveď",
         "state": {
-          "outside_calculable_range": "Outside of the calculable range",
+          "comfortable": "Príjemne",
+          "noticable_discomfort": "Znateľné nepohodlie",
+          "evident_discomfort": "Evidentné nepohodlie",
+          "great_discomfort": "Veľké nepohodlie, vyhýbajte sa námahe",
+          "dangerous_discomfort": "Nebezpečné nepohodlie",
+          "heat_stroke": "Úpal možný"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Entalpia vlhkého vzduchu"
+      },
+      "relative_strain_perception": {
+        "name": "Vnímanie relatívnej záťaže",
+        "state": {
+          "outside_calculable_range": "Mimo vypočítateľného rozsahu",
           "comfortable": "Príjemne",
           "slight_discomfort": "Mierne nepohodlie",
           "discomfort": "Diskomfort",
@@ -85,6 +107,7 @@
         }
       },
       "summer_scharlau_perception": {
+        "name": "Vnímanie letného scharlau",
         "state": {
           "outside_calculable_range": "Mimo vypočítateľného rozsahu",
           "comfortable": "Príjemne",
@@ -94,6 +117,7 @@
         }
       },
       "winter_scharlau_perception": {
+        "name": "Zimné vnímanie scharlau",
         "state": {
           "outside_calculable_range": "Mimo vypočítateľného rozsahu",
           "comfortable": "Príjemne",
@@ -103,6 +127,7 @@
         }
       },
       "summer_simmer_perception": {
+        "name": "Vnímanie letného varu",
         "state": {
           "cool": "Chladno",
           "slightly_cool": "Mierne chladno",
@@ -116,6 +141,7 @@
         }
       },
       "thoms_discomfort_perception": {
+        "name": "Vnímanie nepohodlia podľa Thoma",
         "state": {
           "no_discomfort": "Žiadne nepohodlie",
           "less_then_half": "Menej ako polovica populácie pociťuje nepríjemné pocity",
