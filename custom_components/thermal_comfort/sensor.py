@@ -550,27 +550,11 @@ class SensorThermalComfort(SensorEntity):
             return
 
         if type(value) == tuple and len(value) == 2:
-            if self._sensor_type == SensorType.HUMIDEX_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_HUMIDEX] = value[1]
-            elif self._sensor_type == SensorType.DEW_POINT_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_DEW_POINT] = value[1]
-            elif self._sensor_type == SensorType.FROST_RISK:
-                self._attr_extra_state_attributes[ATTR_FROST_POINT] = value[1]
-            elif self._sensor_type == SensorType.RELATIVE_STRAIN_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_RELATIVE_STRAIN_INDEX] = value[1]
-            elif self._sensor_type == SensorType.SUMMER_SCHARLAU_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_SUMMER_SCHARLAU_INDEX] = value[1]
-            elif self._sensor_type == SensorType.WINTER_SCHARLAU_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_WINTER_SCHARLAU_INDEX] = value[1]
-            elif self._sensor_type == SensorType.SUMMER_SIMMER_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_SUMMER_SIMMER_INDEX] = value[1]
-            elif self._sensor_type == SensorType.THOMS_DISCOMFORT_PERCEPTION:
-                self._attr_extra_state_attributes[ATTR_THOMS_DISCOMFORT_INDEX] = value[
-                    1
-                ]
-            self._attr_native_value = value[0]
-        else:
-            self._attr_native_value = value
+            self._attr_extra_state_attributes.update(value[1])
+            value = value[0]
+
+        self._attr_native_value = value
+
 
         for property_name, template in (
             ("_attr_icon", self._icon_template),
@@ -762,7 +746,7 @@ class DeviceThermalComfort:
         return self._temperature + h
 
     @compute_once_lock(SensorType.HUMIDEX_PERCEPTION)
-    async def humidex_perception(self) -> (HumidexPerception, float):
+    async def humidex_perception(self) -> (HumidexPerception, dict):
         """<https://simple.wikipedia.org/wiki/Humidex#Humidex_formula>."""
         humidex = await self.humidex()
         if humidex > 54:
@@ -778,10 +762,10 @@ class DeviceThermalComfort:
         else:
             perception = HumidexPerception.COMFORTABLE
 
-        return perception, humidex
+        return perception, {ATTR_HUMIDEX: humidex}
 
     @compute_once_lock(SensorType.DEW_POINT_PERCEPTION)
-    async def dew_point_perception(self) -> (DewPointPerception, float):
+    async def dew_point_perception(self) -> (DewPointPerception, dict):
         """Dew Point <https://en.wikipedia.org/wiki/Dew_point>."""
         dewpoint = await self.dew_point()
         if dewpoint < 10:
@@ -801,7 +785,7 @@ class DeviceThermalComfort:
         else:
             perception = DewPointPerception.SEVERELY_HIGH
 
-        return perception, dewpoint
+        return perception, {ATTR_DEW_POINT: dewpoint}
 
     @compute_once_lock(SensorType.ABSOLUTE_HUMIDITY)
     async def absolute_humidity(self) -> float:
@@ -825,7 +809,7 @@ class DeviceThermalComfort:
         return (Td + (2671.02 / ((2954.61 / T) + 2.193665 * math.log(T) - 13.3448)) - T) - 273.15
 
     @compute_once_lock(SensorType.FROST_RISK)
-    async def frost_risk(self) -> (FrostRisk, float):
+    async def frost_risk(self) -> (FrostRisk, dict):
         """Frost Risk Level."""
         thresholdAbsHumidity = 2.8
         absolutehumidity = await self.absolute_humidity()
@@ -844,10 +828,10 @@ class DeviceThermalComfort:
         else:
             frost_risk = FrostRisk.NONE  # No risk of frost
 
-        return frost_risk, frostpoint
+        return frost_risk, {ATTR_FROST_POINT: frostpoint}
 
     @compute_once_lock(SensorType.RELATIVE_STRAIN_PERCEPTION)
-    async def relative_strain_perception(self) -> (RelativeStrainPerception, float):
+    async def relative_strain_perception(self) -> (RelativeStrainPerception, dict):
         """Relative strain perception."""
 
         vp = 6.112 * pow(10, 7.5 * self._temperature / (237.7 + self._temperature))
@@ -867,10 +851,10 @@ class DeviceThermalComfort:
         else:
             perception = RelativeStrainPerception.COMFORTABLE
 
-        return perception, rsi
+        return perception, {ATTR_RELATIVE_STRAIN_INDEX: rsi}
 
     @compute_once_lock(SensorType.SUMMER_SCHARLAU_PERCEPTION)
-    async def summer_scharlau_perception(self) -> (ScharlauPerception, float):
+    async def summer_scharlau_perception(self) -> (ScharlauPerception, dict):
         """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
         tc = -17.089 * math.log(self._humidity) + 94.979
         ise = tc - self._temperature
@@ -886,10 +870,10 @@ class DeviceThermalComfort:
         else:
             perception = ScharlauPerception.COMFORTABLE
 
-        return perception, round(ise, 2)
+        return perception, {ATTR_SUMMER_SCHARLAU_INDEX: round(ise, 2)}
 
     @compute_once_lock(SensorType.WINTER_SCHARLAU_PERCEPTION)
-    async def winter_scharlau_perception(self) -> (ScharlauPerception, float):
+    async def winter_scharlau_perception(self) -> (ScharlauPerception, dict):
         """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
         tc = (0.0003 * self._humidity) + (0.1497 * self._humidity) - 7.7133
         ish = self._temperature - tc
@@ -904,7 +888,7 @@ class DeviceThermalComfort:
         else:
             perception = ScharlauPerception.COMFORTABLE
 
-        return perception, round(ish, 2)
+        return perception, {ATTR_WINTER_SCHARLAU_INDEX: round(ish, 2)}
 
     @compute_once_lock(SensorType.SUMMER_SIMMER_INDEX)
     async def summer_simmer_index(self) -> float:
@@ -925,7 +909,7 @@ class DeviceThermalComfort:
         return TemperatureConverter.convert(si, UnitOfTemperature.FAHRENHEIT, UnitOfTemperature.CELSIUS)
 
     @compute_once_lock(SensorType.SUMMER_SIMMER_PERCEPTION)
-    async def summer_simmer_perception(self) -> (SummerSimmerPerception, float):
+    async def summer_simmer_perception(self) -> (SummerSimmerPerception, dict):
         """<http://summersimmer.com/default.asp>."""
         si = await self.summer_simmer_index()
         if si < 21.1:
@@ -947,7 +931,7 @@ class DeviceThermalComfort:
         else:
             summer_simmer_perception = SummerSimmerPerception.CIRCULATORY_COLLAPSE_IMMINENT
 
-        return summer_simmer_perception, si
+        return summer_simmer_perception, {ATTR_SUMMER_SIMMER_INDEX: si}
 
     @compute_once_lock(SensorType.MOIST_AIR_ENTHALPY)
     async def moist_air_enthalpy(self) -> float:
@@ -1002,7 +986,7 @@ class DeviceThermalComfort:
         return h / 1000
 
     @compute_once_lock(SensorType.THOMS_DISCOMFORT_PERCEPTION)
-    async def thoms_discomfort_perception(self) -> (ThomsDiscomfortPerception, float):
+    async def thoms_discomfort_perception(self) -> (ThomsDiscomfortPerception, dict):
         """Calculate Thom's discomfort index and perception."""
         tw = (
             self._temperature
@@ -1028,7 +1012,7 @@ class DeviceThermalComfort:
         else:
             perception = ThomsDiscomfortPerception.NO_DISCOMFORT
 
-        return perception, round(tdi, 2)
+        return perception, {ATTR_THOMS_DISCOMFORT_INDEX: round(tdi, 2)}
 
     async def async_update(self):
         """Update the state."""
