@@ -773,7 +773,7 @@ async def test_thoms_discomfort_perception(hass, start_ha):
     )
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
-        == ThomsDiscomfortPerception.LESS_THEN_HALF
+        == ThomsDiscomfortPerception.LESS_THAN_HALF
     )
 
     hass.states.async_set("sensor.test_temperature_sensor", "27.50")
@@ -787,7 +787,7 @@ async def test_thoms_discomfort_perception(hass, start_ha):
     )
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
-        == ThomsDiscomfortPerception.MORE_THEN_HALF
+        == ThomsDiscomfortPerception.MORE_THAN_HALF
     )
 
     hass.states.async_set("sensor.test_temperature_sensor", "30.70")

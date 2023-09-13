@@ -118,8 +118,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "No és incòmode",
-          "less_then_half": "Menys de la meitat de la població sent malestar",
-          "more_then_half": "Més de la meitat de la població sent malestar",
+          "less_than_half": "Menys de la meitat de la població sent malestar",
+          "more_than_half": "Més de la meitat de la població sent malestar",
           "most": "La majoria de les persones senten malestar i deteriorament de les condicions psicofísiques",
           "everyone": "Tothom sent un malestar important",
           "dangerous": "Perill, malestar molt fort que pot provocar cops de calor"

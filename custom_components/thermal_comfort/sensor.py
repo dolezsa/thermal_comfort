@@ -188,8 +188,8 @@ class ThomsDiscomfortPerception(StrEnum):
     """Thoms Discomfort Perception."""
 
     NO_DISCOMFORT = "no_discomfort"
-    LESS_THEN_HALF = "less_then_half"
-    MORE_THEN_HALF = "more_then_half"
+    LESS_THAN_HALF = "less_than_half"
+    MORE_THAN_HALF = "more_than_half"
     MOST = "most"
     EVERYONE = "everyone"
     DANGEROUS = "dangerous"
@@ -1006,9 +1006,9 @@ class DeviceThermalComfort:
         elif tdi >= 27:
             perception = ThomsDiscomfortPerception.MOST
         elif tdi >= 24:
-            perception = ThomsDiscomfortPerception.MORE_THEN_HALF
+            perception = ThomsDiscomfortPerception.MORE_THAN_HALF
         elif tdi >= 21:
-            perception = ThomsDiscomfortPerception.LESS_THEN_HALF
+            perception = ThomsDiscomfortPerception.LESS_THAN_HALF
         else:
             perception = ThomsDiscomfortPerception.NO_DISCOMFORT
 

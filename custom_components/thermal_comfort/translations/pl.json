@@ -118,8 +118,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "Brak dyskomfortu",
-          "less_then_half": "Mniej niż połowa populacji odczuwa dyskomfort",
-          "more_then_half": "Ponad połowa populacji odczuwa dyskomfort",
+          "less_than_half": "Mniej niż połowa populacji odczuwa dyskomfort",
+          "more_than_half": "Ponad połowa populacji odczuwa dyskomfort",
           "most": "Większość osób odczuwa dyskomfort i pogorszenie warunków psychofizycznych",
           "everyone": "Wszyscy odczuwają znaczny dyskomfort",
           "dangerous": "Niebezpieczny, bardzo silny dyskomfort, który może powodować udary cieplne"

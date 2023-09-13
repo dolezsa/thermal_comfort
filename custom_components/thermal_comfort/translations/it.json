@@ -118,8 +118,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "Confortevole",
-          "less_then_half": "Meno della metà della popolazione avverte disagio",
-          "more_then_half": "Più della metà della popolazione avverte disagio",
+          "less_than_half": "Meno della metà della popolazione avverte disagio",
+          "more_than_half": "Più della metà della popolazione avverte disagio",
           "most": "La maggior parte delle persone avverte disagio e deterioramento delle condizioni psicofisiche",
           "everyone": "Forte disagio per chiunque",
           "dangerous": "Stato di emergenza medica, disagio molto forte che può causare colpi di calore"

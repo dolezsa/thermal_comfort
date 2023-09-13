@@ -118,8 +118,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "无不适",
-          "less_then_half": "不到一半的人感到不适",
-          "more_then_half": "超过一半的人感到不适",
+          "less_than_half": "不到一半的人感到不适",
+          "more_than_half": "超过一半的人感到不适",
           "most": "大多数人感到不适",
           "everyone": "每个人都感到明显不适",
           "dangerous": "危险，可能导致中暑"

@@ -118,8 +118,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "Intet ubehag",
-          "less_then_half": "Mindre end halvdelen af befolkningen føler ubehag",
-          "more_then_half": "Mere end halvdelen af befolkningen føler ubehag",
+          "less_than_half": "Mindre end halvdelen af befolkningen føler ubehag",
+          "more_than_half": "Mere end halvdelen af befolkningen føler ubehag",
           "most": "De fleste individer føler ubehag og forværring af psykofysiske tilstande",
           "everyone": "Alle føler betydeligt ubehag",
           "dangerous": "Farligt, meget stærkt ubehag, som kan forårsage hedeslag"

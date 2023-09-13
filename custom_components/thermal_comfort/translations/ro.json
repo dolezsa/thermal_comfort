@@ -118,8 +118,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "Niciun disconfort",
-          "less_then_half": "Mai puțin de jumătate din populație simte disconfort",
-          "more_then_half": "Mai mult de jumătate din populație simte disconfort",
+          "less_than_half": "Mai puțin de jumătate din populație simte disconfort",
+          "more_than_half": "Mai mult de jumătate din populație simte disconfort",
           "most": "Majoritatea persoanelor simt disconfort și deteriorarea condițiilor psihofizice",
           "everyone": "Toată lumea simte disconfort semnificativ",
           "dangerous": "Disconfort periculos, foarte puternic, care poate provoca epuizare termică"
