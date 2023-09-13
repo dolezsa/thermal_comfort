@@ -118,8 +118,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "Niet ongemakkelijk",
-          "less_then_half": "Minder, dan de helft van de populatie voelt ongemakkelijk",
-          "more_then_half": "Meer, dan de helft van de populatie voelt ongemakkelijk",
+          "less_than_half": "Minder, dan de helft van de populatie voelt ongemakkelijk",
+          "more_than_half": "Meer, dan de helft van de populatie voelt ongemakkelijk",
           "most": "De meeste mensen voelen ongemak en verslechtering van psychofysische omstandigheden",
           "everyone": "Iedereen ervaart behoorlijk ongemak",
           "dangerous": "Gevaarlijk, zeer sterk ongemak dat hitteberoerte kan veroorzaken"

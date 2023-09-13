@@ -144,8 +144,8 @@
         "name": "Vnímanie nepohodlia podľa Thoma",
         "state": {
           "no_discomfort": "Žiadne nepohodlie",
-          "less_then_half": "Menej ako polovica populácie pociťuje nepríjemné pocity",
-          "more_then_half": "Viac ako polovica populácie pociťuje nepohodlie",
+          "less_than_half": "Menej ako polovica populácie pociťuje nepríjemné pocity",
+          "more_than_half": "Viac ako polovica populácie pociťuje nepohodlie",
           "most": "Väčšina jednotlivcov pociťuje nepohodlie a zhoršenie psychofyzických podmienok",
           "everyone": "Každý pociťuje výrazné nepohodlie",
           "dangerous": "Nebezpečné, veľmi silné nepohodlie, ktoré môže spôsobiť úpal"

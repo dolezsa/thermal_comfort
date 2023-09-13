@@ -118,8 +118,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "Pas de gêne",
-          "less_then_half": "Moins de la moitié de la population ressent un inconfort",
-          "more_then_half": "Plus de la moitié de la population ressent un inconfort",
+          "less_than_half": "Moins de la moitié de la population ressent un inconfort",
+          "more_than_half": "Plus de la moitié de la population ressent un inconfort",
           "most": "La plupart des individus ressentent un inconfort et une détérioration des conditions psychophysiques",
           "everyone": "Tout le monde ressent un inconfort important",
           "dangerous": "Dangereux, inconfort très important qui peut causer des coups de chaleur"

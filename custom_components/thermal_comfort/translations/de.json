@@ -128,8 +128,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "Kein Unbehagen",
-          "less_then_half": "Weniger als die Hälfte der Bevölkerung fühlt sich unwohl",
-          "more_then_half": "Mehr als die Hälfte der Bevölkerung fühlt sich unwohl",
+          "less_than_half": "Weniger als die Hälfte der Bevölkerung fühlt sich unwohl",
+          "more_than_half": "Mehr als die Hälfte der Bevölkerung fühlt sich unwohl",
           "most": "Die meisten Menschen fühlen sich unwohl und einen verschlechterten psychophysischen Zustand",
           "everyone": "Jeder fühlt sich unwohl",
           "dangerous": "Gefährlich, sehr starke Beschwerden die zu Hitzschlägen führen können"

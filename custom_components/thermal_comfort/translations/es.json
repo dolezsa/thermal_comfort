@@ -118,8 +118,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "Sin molestias",
-          "less_then_half": "Menos de la mitad de la población siente malestar",
-          "more_then_half": "Más de la mitad de la población siente malestar",
+          "less_than_half": "Menos de la mitad de la población siente malestar",
+          "more_than_half": "Más de la mitad de la población siente malestar",
           "most": "La mayoría de personas sienten malestar y deterioro de las condiciones psicofísicas",
           "everyone": "Todos sienten malestar significativo",
           "dangerous": "Peligro, malestar muy fuerte que puede provocar golpes de calor"

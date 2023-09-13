@@ -118,8 +118,8 @@
       "thoms_discomfort_perception": {
         "state": {
           "no_discomfort": "Sem desconforto",
-          "less_then_half": "Menos de metade da população sente desconforto",
-          "more_then_half": "Mais de metade da população sente desconforto",
+          "less_than_half": "Menos de metade da população sente desconforto",
+          "more_than_half": "Mais de metade da população sente desconforto",
           "most": "A maioria dos indivíduos sente desconforto e deterioração da condição psíquica e física",
           "everyone": "Todos sentem desconforto significativo",
           "dangerous": "Perigoso, desconforto muito forte que pode causar insolações"
