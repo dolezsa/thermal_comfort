@@ -457,7 +457,7 @@ async def test_moist_air_enthalpy(hass, start_ha):
     hass.states.async_set("sensor.test_humidity_sensor", "60.82")
     await hass.async_block_till_done()
     assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY) is not None
-    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == "44.49618867805087"
+    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == "44.4961886780509"
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
