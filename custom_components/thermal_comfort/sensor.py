@@ -960,7 +960,7 @@ class DeviceThermalComfort:
         p_ws = (
             # ASHRAE fundamentals 2021 pg 1.5 eq 5
             math.exp(c1 / T + c2 + c3 * T + c4 * T**2 + c5 * T**3 + c6 * T**4 + c7 * math.log(T))
-            if T < c_to_k
+            if T < c_to_k  # noqa: SIM300
             # ASHRAE fundamentals 2021 pg 1.5 eq 6
             else math.exp(c8 / T + c9 + c10 * T + c11 * T**2 + c12 * T**3 + c13 * math.log(T))
         )
