@@ -936,54 +936,43 @@ class DeviceThermalComfort:
     @compute_once_lock(SensorType.MOIST_AIR_ENTHALPY)
     async def moist_air_enthalpy(self) -> float:
         """Calculate the enthalpy of moist air."""
-        patm = 101325
+        patm = 101325  # standard pressure at sea-level
         c_to_k = 273.15
-        h_fg = 2501000
-        cp_vapour = 1805.0
 
-        # calculate vapour pressure
-        ta_k = self._temperature + c_to_k
-        c1 = -5674.5359
-        c2 = 6.3925247
-        c3 = -0.9677843 * math.pow(10, -2)
-        c4 = 0.62215701 * math.pow(10, -6)
-        c5 = 0.20747825 * math.pow(10, -8)
-        c6 = -0.9484024 * math.pow(10, -12)
-        c7 = 4.1635019
-        c8 = -5800.2206
-        c9 = 1.3914993
-        c10 = -0.048640239
-        c11 = 0.41764768 * math.pow(10, -4)
-        c12 = -0.14452093 * math.pow(10, -7)
-        c13 = 6.5459673
+        # ASHRAE fundamentals 2021 pg 1.5
+        c1 = -5.6745359e03
+        c2 = 6.3925247e00
+        c3 = -9.6778430e-03
+        c4 = 6.2215701e-07
+        c5 = 2.0747825e-09
+        c6 = -9.4840240e-13
+        c7 = 4.1635019e00
+        c8 = -5.8002206e03
+        c9 = 1.3914993e00
+        c10 = -4.8640239e-02
+        c11 = 4.1764768e-05
+        c12 = -1.4452093e-08
+        c13 = 6.5459673e00
 
-        if ta_k < c_to_k:
-            pascals = math.exp(
-                c1 / ta_k
-                + c2
-                + ta_k * (c3 + ta_k * (c4 + ta_k * (c5 + c6 * ta_k)))
-                + c7 * math.log(ta_k)
-            )
-        else:
-            pascals = math.exp(
-                c8 / ta_k
-                + c9
-                + ta_k * (c10 + ta_k * (c11 + ta_k * c12))
-                + c13 * math.log(ta_k)
-            )
+        T = self._temperature + c_to_k
 
-        # calculate humidity ratio
-        p_saturation = pascals
-        p_vap = self._humidity / 100 * p_saturation
-        hr = 0.62198 * p_vap / (patm - p_vap)
+        # calculate saturation vapor pressure for temperature
+        p_ws = (
+            # ASHRAE fundamentals 2021 pg 1.5 eq 5
+            math.exp(c1 / T + c2 + c3 * T + c4 * T**2 + c5 * T**3 + c6 * T**4 + c7 * math.log(T))
+            if T < c_to_k  # noqa: SIM300
+            # ASHRAE fundamentals 2021 pg 1.5 eq 6
+            else math.exp(c8 / T + c9 + c10 * T + c11 * T**2 + c12 * T**3 + c13 * math.log(T))
+        )
 
-        # calculate enthalpy
-        cp_air = 1004
-        h_dry_air = cp_air * self._temperature
-        h_sat_vap = h_fg + cp_vapour * self._temperature
-        h = h_dry_air + hr * h_sat_vap
+        # calculate vapor pressure for RH % (ASHRAE fundamentals 2021 pg 1.9 eq 22)
+        p_w = self._humidity / 100 * p_ws
 
-        return h / 1000
+        # calculate humidity ratio (ASHRAE fundamentals 2021 pg 1.9 eq 20)
+        W = 0.621945 * p_w / (patm - p_w)
+
+        # calculate enthalpy (ASHRAE fundamentals 2021 pg 1.10 eq 30)
+        return 1.006 * self._temperature + W * (2501 + 1.86 * self._temperature)
 
     @compute_once_lock(SensorType.THOMS_DISCOMFORT_PERCEPTION)
     async def thoms_discomfort_perception(self) -> (ThomsDiscomfortPerception, dict):
