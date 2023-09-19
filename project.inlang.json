@@ -1,8 +1,26 @@
 {
   "sourceLanguageTag": "en",
   "languageTags": [
+    "ca",
+    "cs",
+    "da",
+    "el",
     "en",
-    "ca"
+    "es",
+    "fr",
+    "hu",
+    "it",
+    "nb",
+    "nl",
+    "pl",
+    "pt-BR",
+    "pt",
+    "ro",
+    "ru",
+    "sk",
+    "sv",
+    "uk",
+    "zh-Hans"
   ],
   "modules": [
     "https://cdn.jsdelivr.net/npm/@inlang/message-lint-rule-empty-pattern/dist/index.js",
