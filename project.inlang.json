@@ -33,10 +33,7 @@
     "plugin.inlang.json": {
       "pathPattern": "./custom_components/thermal_comfort/translations/{languageTag}.json",
       "ignore": [],
-      "variableReferencePattern": [
-        "{",
-        "}"
-      ]
+      "variableReferencePattern": ["{", "}"]
     }
   }
 }
