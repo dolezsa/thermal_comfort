@@ -1,0 +1,39 @@
+{
+  "sourceLanguageTag": "en",
+  "languageTags": [
+    "ca",
+    "cs",
+    "da",
+    "el",
+    "en",
+    "es",
+    "fr",
+    "hu",
+    "it",
+    "nb",
+    "nl",
+    "pl",
+    "pt-BR",
+    "pt",
+    "ro",
+    "ru",
+    "sk",
+    "sv",
+    "uk",
+    "zh-Hans"
+  ],
+  "modules": [
+    "https://cdn.jsdelivr.net/npm/@inlang/message-lint-rule-empty-pattern/dist/index.js",
+    "https://cdn.jsdelivr.net/npm/@inlang/message-lint-rule-identical-pattern/dist/index.js",
+    "https://cdn.jsdelivr.net/npm/@inlang/message-lint-rule-without-source/dist/index.js",
+    "https://cdn.jsdelivr.net/npm/@inlang/message-lint-rule-missing-translation/dist/index.js",
+    "https://cdn.jsdelivr.net/npm/@inlang/plugin-json@4/dist/index.js"
+  ],
+  "settings": {
+    "plugin.inlang.json": {
+      "pathPattern": "./custom_components/thermal_comfort/translations/{languageTag}.json",
+      "ignore": [],
+      "variableReferencePattern": ["{", "}"]
+    }
+  }
+}
