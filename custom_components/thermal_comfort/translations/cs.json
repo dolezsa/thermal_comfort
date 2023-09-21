@@ -1,14 +1,6 @@
 {
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Žádné riziko",
-          "unlikely": "Nepravděpodobné",
-          "probable": "Pravděpodobné",
-          "high": "Vysoce pravděpodobné"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Pro někoho sucho",
@@ -19,6 +11,14 @@
           "quite_uncomfortable": "Velmi vlhko, docela nepříjemně",
           "extremely_uncomfortable": "Extrémně nepříjemně, tísnivě",
           "severely_high": "Velmi vysoká vlhkost, dokonce smrtelná pro jedince s nemocemi související s astmatem"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Žádné riziko",
+          "unlikely": "Nepravděpodobné",
+          "probable": "Pravděpodobné",
+          "high": "Vysoce pravděpodobné"
         }
       },
       "summer_simmer_perception": {
