@@ -1,14 +1,6 @@
 {
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Nincs kockázat",
-          "unlikely": "Nem valószínű",
-          "probable": "Valószínű",
-          "high": "Nagy valószínűség"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Egyeseknek kissé száraz",
@@ -19,6 +11,14 @@
           "quite_uncomfortable": "Nagyon nedves, eléggé kellemetlen",
           "extremely_uncomfortable": "Rendkívül kellemetlen, nyomasztó",
           "severely_high": "Különösen magas, az asztmás betegségek számára életveszélyes"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Nincs kockázat",
+          "unlikely": "Nem valószínű",
+          "probable": "Valószínű",
+          "high": "Nagy valószínűség"
         }
       },
       "summer_simmer_perception": {

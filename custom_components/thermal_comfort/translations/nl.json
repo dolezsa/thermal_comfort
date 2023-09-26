@@ -2,14 +2,14 @@
   "options": {
     "error": {
       "temperature_not_found": "Temperatuursensor niet gevonden",
-      "humidity_not_found": "Vochtigheidsensor niet gevonden"
+      "humidity_not_found": "Luchtvochtigheidssensor niet gevonden"
     },
     "step": {
       "init": {
         "title": "Thermal comfort instellingen",
         "data": {
           "temperature_sensor": "Temperatuursensor",
-          "humidity_sensor": "vochtigheidsensor",
+          "humidity_sensor": "Luchtvochtigheidssensor",
           "poll": "Zet polling aan",
           "scan_interval": "Poll interval (seconden)",
           "custom_icons": "Gebruik custom icons pack"
@@ -19,13 +19,13 @@
   },
   "config": {
     "abort": {
-      "already_configured": "Deze combinatie van temperatuur en vochtigheid sensors is reeds geconfigureerd",
-      "no_sensors": "Geen temperatuur of vochtigheid sensors gevonden. Probeer nog eens in geadvanceerd modus.",
-      "no_sensors_advanced": "Geen temperatuur of vochtigheid sensoren gevonden."
+      "already_configured": "Deze combinatie van temperatuur- en luchtvochtigheidssensors is reeds geconfigureerd",
+      "no_sensors": "Geen temperatuur- of luchtvochtigheidssensors gevonden. Probeer nog eens in geadvanceerd modus.",
+      "no_sensors_advanced": "Geen temperatuur- of luchtvochtigheidssensors gevonden."
     },
     "error": {
       "temperature_not_found": "Temperatuursensor niet gevonden",
-      "humidity_not_found": "Vochtigheidsensor niet gevonden"
+      "humidity_not_found": "Luchtvochtigheidssensor niet gevonden"
     },
     "step": {
       "user": {
@@ -33,7 +33,7 @@
         "data": {
           "name": "Naam",
           "temperature_sensor": "Temperatuursensor",
-          "humidity_sensor": "Vochtigheidsensor",
+          "humidity_sensor": "Luchtvochtigheidssensor",
           "poll": "Zet Polling aan",
           "scan_interval": "Poll interval (seconden)",
           "custom_icons": "Gebruik custom icons pack",
@@ -44,13 +44,11 @@
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Geen risico",
-          "unlikely": "Onwaarschijnlijk",
-          "probable": "Waarschijnlijk",
-          "high": "Hoogstwaarschijnlijk"
-        }
+      "absolute_humidity": {
+        "name": "Absolute luchtvochtigheid"
+      },
+      "dew_point": {
+        "name": "Dauwpunt"
       },
       "dew_point_perception": {
         "state": {
@@ -64,6 +62,24 @@
           "severely_high": "Zeer hoog, zelfs gevaarlijk bij astma gerelateerde ziekten"
         }
       },
+      "frost_point": {
+        "name": "Rijptemperatuur"
+      },
+      "frost_risk": {
+        "name": "Rijprisico",
+        "state": {
+          "no_risk": "Geen risico",
+          "unlikely": "Onwaarschijnlijk",
+          "probable": "Waarschijnlijk",
+          "high": "Hoogstwaarschijnlijk"
+        }
+      },
+      "heat_index": {
+        "name": "Hitte-index"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
       "humidex_perception": {
         "state": {
           "comfortable": "Gemakkelijk",
@@ -73,6 +89,9 @@
           "dangerous_discomfort": "Gevaarlijk ongemak",
           "heat_stroke": "Hitteberoerte mogelijk"
         }
+      },
+      "moist_air_enthalpy": {
+        "name": "Enthalpie van vochtige lucht"
       },
       "relative_strain_perception": {
         "state": {

@@ -44,14 +44,6 @@
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Κανένας κίνδυνος",
-          "unlikely": "Απίθανο",
-          "probable": "Πιθανό",
-          "high": "Μεγάλη πιθανότητα"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Λίγο ξηρή για κάποιους",
@@ -62,6 +54,14 @@
           "quite_uncomfortable": "Πολύ υγρό, αρκετά άβολη",
           "extremely_uncomfortable": "Εξαιρετικά άβολα, καταπιεστική",
           "severely_high": "Σοβαρά υψηλή, ακόμη και θανατηφόρα για ασθένειες που σχετίζονται με το άσθμα"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Κανένας κίνδυνος",
+          "unlikely": "Απίθανο",
+          "probable": "Πιθανό",
+          "high": "Μεγάλη πιθανότητα"
         }
       },
       "humidex_perception": {
