@@ -47,16 +47,11 @@
       "absolute_humidity": {
         "name": "Absolute Luftfeuchtigkeit"
       },
-      "frost_risk": {
-        "state": {
-          "no_risk": "Kein Risiko",
-          "unlikely": "Unwahrscheinlich",
-          "probable": "Wahrscheinlich",
-          "high": "Sehr wahrscheinlich"
-        },
-        "name": "Frostgefahr"
+      "dew_point": {
+        "name": "Taupunkt"
       },
       "dew_point_perception": {
+        "name": "Taupunkt gefühlt",
         "state": {
           "dry": "Etwas trocken",
           "very_comfortable": "Sehr angenehm",
@@ -66,10 +61,28 @@
           "quite_uncomfortable": "Unangenehm und sehr schwül",
           "extremely_uncomfortable": "Äußerst unangenehm und drückend",
           "severely_high": "Extrem hoch, tödlich für asthmabedingte Erkrankungen"
-        },
-        "name": "Taupunkt gefühlt"
+        }
+      },
+      "frost_point": {
+        "name": "Frostpunkt"
+      },
+      "frost_risk": {
+        "name": "Frostgefahr",
+        "state": {
+          "no_risk": "Kein Risiko",
+          "unlikely": "Unwahrscheinlich",
+          "probable": "Wahrscheinlich",
+          "high": "Sehr wahrscheinlich"
+        }
+      },
+      "heat_index": {
+        "name": "Hitzeindex"
+      },
+      "humidex": {
+        "name": "Humidex"
       },
       "humidex_perception": {
+        "name": "Humidex gefühlt",
         "state": {
           "comfortable": "Angenehm",
           "noticable_discomfort": "Spürbares Unbehagen",
@@ -77,10 +90,13 @@
           "great_discomfort": "Großes Unbehagen, Anstrengung vermeiden",
           "dangerous_discomfort": "Gefährliches Unbehagen unangenehm",
           "heat_stroke": "Hitzschlag möglich"
-        },
-        "name": "Humidex gefühlt"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Enthalpie feuchter Luft"
       },
       "relative_strain_perception": {
+        "name": "Gefühlte relative Belastung",
         "state": {
           "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
           "comfortable": "Angenehm",
@@ -88,30 +104,30 @@
           "discomfort": "Unbehaglich",
           "significant_discomfort": "Erhebliches Unbehagen",
           "extreme_discomfort": "Extremes Unbehagen"
-        },
-        "name": "Gefühlte relative Belastung"
+        }
       },
       "summer_scharlau_perception": {
+        "name": "Sommer Scharlau gefühlt",
         "state": {
           "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
           "comfortable": "Angenehm",
           "slightly_uncomfortable": "Leicht unangenehm",
           "moderatly_uncomfortable": "Unangenehm",
           "highly_uncomfortable": "Sehr unangenehm"
-        },
-        "name": "Sommer Scharlau gefühlt"
+        }
       },
       "winter_scharlau_perception": {
+        "name": "Winter Scharlau gefühlt",
         "state": {
           "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
           "comfortable": "Angenehm",
           "slightly_uncomfortable": "Leicht unangenehm",
           "moderatly_uncomfortable": "Unangenehm",
           "highly_uncomfortable": "Sehr unangenehm"
-        },
-        "name": "Winter Scharlau gefühlt"
+        }
       },
       "summer_simmer_perception": {
+        "name": "Sommer Simmer gefühlt",
         "state": {
           "cool": "Kühl",
           "slightly_cool": "Etwas kühl",
@@ -122,10 +138,10 @@
           "danger_of_heatstroke": "Hitzschlaggefahr",
           "extreme_danger_of_heatstroke": "Extreme Hitzschlaggefahr",
           "circulatory_collapse_imminent": "Drohender Kreislaufkollaps"
-        },
-        "name": "Sommer Simmer gefühlt"
+        }
       },
       "thoms_discomfort_perception": {
+        "name": "Thoms Discomfort gefühlt",
         "state": {
           "no_discomfort": "Kein Unbehagen",
           "less_than_half": "Weniger als die Hälfte der Bevölkerung fühlt sich unwohl",
@@ -133,23 +149,7 @@
           "most": "Die meisten Menschen fühlen sich unwohl und einen verschlechterten psychophysischen Zustand",
           "everyone": "Jeder fühlt sich unwohl",
           "dangerous": "Gefährlich, sehr starke Beschwerden die zu Hitzschlägen führen können"
-        },
-        "name": "Thoms Discomfort gefühlt"
-      },
-      "dew_point": {
-        "name": "Taupunkt"
-      },
-      "frost_point": {
-        "name": "Frostpunkt"
-      },
-      "heat_index": {
-        "name": "Hitzeindex"
-      },
-      "humidex": {
-        "name": "Humidex"
-      },
-      "moist_air_enthalpy": {
-        "name": "Enthalpie feuchter Luft"
+        }
       }
     }
   }

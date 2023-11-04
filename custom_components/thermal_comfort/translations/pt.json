@@ -44,14 +44,6 @@
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Sem risco",
-          "unlikely": "Improvável",
-          "probable": "Provável",
-          "high": "Alta probabilidade"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Um pouco seco para alguns",
@@ -62,6 +54,14 @@
           "quite_uncomfortable": "Muito húmido e bastante desconfortável",
           "extremely_uncomfortable": "Extremamente desconfortável, opressivo",
           "severely_high": "Extremamente alto, até mortal para doenças relacionadas com asma"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Sem risco",
+          "unlikely": "Improvável",
+          "probable": "Provável",
+          "high": "Alta probabilidade"
         }
       },
       "humidex_perception": {

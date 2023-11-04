@@ -1,14 +1,6 @@
 {
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Безпечно",
-          "unlikely": "Малоймовірно",
-          "probable": "Ймовірно",
-          "high": "Висока ймовірність"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Сухо",
@@ -19,6 +11,14 @@
           "quite_uncomfortable": "Досить волого, некомфортно",
           "extremely_uncomfortable": "Дуже волого, гнітюче",
           "severely_high": "Дуже висока вологість, може бути смертельною для для астматиків"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Безпечно",
+          "unlikely": "Малоймовірно",
+          "probable": "Ймовірно",
+          "high": "Висока ймовірність"
         }
       },
       "summer_simmer_perception": {

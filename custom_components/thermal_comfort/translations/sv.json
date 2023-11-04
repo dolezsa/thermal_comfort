@@ -1,14 +1,6 @@
 {
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Ingen risk",
-          "unlikely": "Osannolikt",
-          "probable": "Sannolikt",
-          "high": "Stor risk"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Lite torrt",
@@ -19,6 +11,14 @@
           "quite_uncomfortable": "Väldigt fuktigt, ganska obekvämt",
           "extremely_uncomfortable": "Tryckande, extremt obekvämt",
           "severely_high": "Allvarligt högt, kan vara dödlig för astmarelaterade sjukdomar"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Ingen risk",
+          "unlikely": "Osannolikt",
+          "probable": "Sannolikt",
+          "high": "Stor risk"
         }
       },
       "summer_simmer_perception": {
