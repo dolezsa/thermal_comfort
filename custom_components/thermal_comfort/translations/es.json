@@ -6,7 +6,7 @@
     },
     "step": {
       "init": {
-        "title": "Ajustes de confort termal",
+        "title": "Ajustes de Thermal Comfort",
         "data": {
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor de humedad",
@@ -29,7 +29,7 @@
     },
     "step": {
       "user": {
-        "title": "Ajustes de confort termal",
+        "title": "Ajustes de Thermal Comfort",
         "data": {
           "name": "Nombre",
           "temperature_sensor": "Sensor de temperatura",
@@ -37,31 +37,37 @@
           "poll": "Activar consulta recurrente de datos",
           "scan_interval": "Intervalo de consulta (segundos)",
           "custom_icons": "Usar paquete de iconos personalizado",
-          "enabled_sensors": "Sensores activados"
+          "enabled_sensors": "Sensores habilitados"
         }
       }
     }
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Sin riesgo",
-          "unlikely": "Poco probable",
-          "probable": "Probable",
-          "high": "Alta probabilidad"
-        }
+      "absolute_humidity": {
+        "name": "Humedad absoluta"
+      },
+      "dew_point": {
+        "name": "Punto de Rocío"
       },
       "dew_point_perception": {
         "state": {
           "dry": "Un poco seco para algunos",
           "very_comfortable": "Muy cómodo",
           "comfortable": "Cómodo",
-          "ok_but_humid": "Bien para la mayoria, pero algo húmedo",
+          "ok_but_humid": "Cómodo para la mayoria, pero algo húmedo",
           "somewhat_uncomfortable": "Algo incómodo",
           "quite_uncomfortable": "Muy húmedo, bastante incómodo",
           "extremely_uncomfortable": "Extremadamente incómodo, agobiante",
-          "severely_high": "Muy alto, incluso mortal para enfermedades relacionadas con el asma"
+          "severely_high": "Muy incómodo, incluso mortal para enfermedades relacionadas con el asma"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Sin riesgo",
+          "unlikely": "Poco probable",
+          "probable": "Probable",
+          "high": "Muy probable"
         }
       },
       "humidex_perception": {

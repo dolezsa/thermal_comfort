@@ -44,14 +44,6 @@
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Geen risico",
-          "unlikely": "Onwaarschijnlijk",
-          "probable": "Waarschijnlijk",
-          "high": "Hoogstwaarschijnlijk"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Beetje droog voor sommigen",
@@ -62,6 +54,14 @@
           "quite_uncomfortable": "Zeer vochtig, best ongemakkelijk",
           "extremely_uncomfortable": "Extreem ongemakkelijk, drukkend",
           "severely_high": "Zeer hoog, zelfs gevaarlijk bij astma gerelateerde ziekten"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Geen risico",
+          "unlikely": "Onwaarschijnlijk",
+          "probable": "Waarschijnlijk",
+          "high": "Hoogstwaarschijnlijk"
         }
       },
       "humidex_perception": {
