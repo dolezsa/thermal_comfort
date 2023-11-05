@@ -62,7 +62,11 @@
           "severely_high": "Muy incómodo, incluso mortal para enfermedades relacionadas con el asma"
         }
       },
+      "frost_point": {
+        "name": "Punto de escarcha"
+      },
       "frost_risk": {
+        "name": "Riesgo de helada",
         "state": {
           "no_risk": "Sin riesgo",
           "unlikely": "Poco probable",
@@ -70,14 +74,21 @@
           "high": "Muy probable"
         }
       },
+      "heat_index": {
+        "name": "Temperatura de Bochorno"
+      },
+      "humidex": {
+        "name": "Índice de humedad"
+      },
       "humidex_perception": {
+        "name": "Confort por índice de humedad",
         "state": {
           "comfortable": "Cómodo",
           "noticable_discomfort": "Un poco incómodo",
-          "evident_discomfort": "Bastante incómodo",
+          "evident_discomfort": "Bastante molesto",
           "great_discomfort": "Muy incómodo, evitar esfuerzos",
-          "dangerous_discomfort": "Incomodidad peligrosa",
-          "heat_stroke": "Posible golpe de calor"
+          "dangerous_discomfort": "Peligroso",
+          "heat_stroke": "golpe de calor bastante probable"
         }
       },
       "relative_strain_perception": {
