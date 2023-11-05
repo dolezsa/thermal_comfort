@@ -44,14 +44,6 @@
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Ingen risiko",
-          "unlikely": "Usandsynlig",
-          "probable": "Sandsynlig",
-          "high": "Høj sandsynlighed"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Lidt tørt for nogle",
@@ -62,6 +54,14 @@
           "quite_uncomfortable": "Meget fugtigt, ret ubehageligt",
           "extremely_uncomfortable": "Ekstremt ubehageligt, undertrykkende",
           "severely_high": "Alvorligt høj, endda dødelig for astmarelaterede sygdomme"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Ingen risiko",
+          "unlikely": "Usandsynlig",
+          "probable": "Sandsynlig",
+          "high": "Høj sandsynlighed"
         }
       },
       "humidex_perception": {

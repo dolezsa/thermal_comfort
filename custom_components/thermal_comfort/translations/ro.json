@@ -44,14 +44,6 @@
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Niciun risc",
-          "unlikely": "Improbabil",
-          "probable": "Probabil",
-          "high": "Probabilitate mare"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Cam uscat pentru unii",
@@ -62,6 +54,14 @@
           "quite_uncomfortable": "Foarte umed, destul de inconfortabil",
           "extremely_uncomfortable": "Extrem de inconfortabil, opresiv",
           "severely_high": "Sever ridicat, chiar mortal pentru bolile legate de astm"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Niciun risc",
+          "unlikely": "Improbabil",
+          "probable": "Probabil",
+          "high": "Probabilitate mare"
         }
       },
       "humidex_perception": {

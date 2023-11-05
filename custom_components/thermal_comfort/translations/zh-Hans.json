@@ -44,14 +44,6 @@
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "无风险",
-          "unlikely": "风险较小",
-          "probable": "风险较大",
-          "high": "大概率"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "有点干燥",
@@ -62,6 +54,14 @@
           "quite_uncomfortable": "非常潮湿，相当不舒服",
           "extremely_uncomfortable": "极其不舒服，令人压抑",
           "severely_high": "极高，对哮喘等疾病有致命风险"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "无风险",
+          "unlikely": "风险较小",
+          "probable": "风险较大",
+          "high": "大概率"
         }
       },
       "humidex_perception": {
