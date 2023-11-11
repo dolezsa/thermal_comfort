@@ -51,6 +51,7 @@
         "name": "Punto de Rocío"
       },
       "dew_point_perception": {
+        "name": "Sensación de humedad ambiental",
         "state": {
           "dry": "Un poco seco para algunos",
           "very_comfortable": "Muy cómodo",
@@ -91,7 +92,11 @@
           "heat_stroke": "golpe de calor bastante probable"
         }
       },
+      "moist_air_enthalpy": {
+        "name": "Entalpía del aire húmedo"
+      },
       "relative_strain_perception": {
+        "name": "Índice de tensin relativa",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
@@ -102,6 +107,7 @@
         }
       },
       "summer_scharlau_perception": {
+        "name": "Índice de verano de Scharlau",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
@@ -111,6 +117,7 @@
         }
       },
       "winter_scharlau_perception": {
+        "name": "Índice de invierno de Scharlau",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
@@ -120,6 +127,7 @@
         }
       },
       "summer_simmer_perception": {
+        "name": "Índice de calor Simmer",
         "state": {
           "cool": "Fresco",
           "slightly_cool": "Ligeramente fresco",
@@ -133,6 +141,7 @@
         }
       },
       "thoms_discomfort_perception": {
+        "name": "Índice de malestar de Thom",
         "state": {
           "no_discomfort": "Sin molestias",
           "less_than_half": "Menos de la mitad de la población siente malestar",
