@@ -10,7 +10,7 @@
         "data": {
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor de humedad",
-          "poll": "Habilitar el modo 'Polling' o lectura perióodica",
+          "poll": "Habilitar el modo 'Polling' o lectura perióddica",
           "scan_interval": "Intervalo de consulta (segundos)",
           "custom_icons": "Usar paquete de iconos personalizado"
         }
@@ -34,7 +34,7 @@
           "name": "Nombre",
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor de humedad",
-          "poll": "Habilitar el modo 'Polling' o lectura periódica",
+          "poll": "Habilitar el modo 'Polling' o lectura periódódica",
           "scan_interval": "Intervalo de consulta (segundos)",
           "custom_icons": "Usar paquete de iconos personalizado",
           "enabled_sensors": "Sensores habilitados"
