@@ -60,7 +60,7 @@
           "somewhat_uncomfortable": "Algo incómodo",
           "quite_uncomfortable": "Muy húmedo, bastante incómodo",
           "extremely_uncomfortable": "Extremadamente incómodo, agobiante",
-          "severely_high": "Muy incómodo, incluso mortal para enfermedades relacionadas con el asma"
+          "severely_high": "Riesgo alto, incluso mortal para enfermedades relacionadas con el asma"
         }
       },
       "frost_point": {
@@ -96,7 +96,7 @@
         "name": "Entalpía del aire húmedo"
       },
       "relative_strain_perception": {
-        "name": "Índice de tensióón relativa",
+        "name": "Índice de tensión relativa",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
