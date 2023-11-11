@@ -96,7 +96,7 @@
         "name": "Entalpía del aire húmedo"
       },
       "relative_strain_perception": {
-        "name": "Índice de tensin relativa",
+        "name": "Índice de tensióón relativa",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
