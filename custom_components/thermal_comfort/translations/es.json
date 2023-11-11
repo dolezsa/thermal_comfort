@@ -1,8 +1,8 @@
 {
   "options": {
     "error": {
-      "temperature_not_found": "No se ha encontrado sensor de temperatura",
-      "humidity_not_found": "No se ha encontrado sensor de humedad"
+      "temperature_not_found": "No se ha encontrado esensor de temperatura",
+      "humidity_not_found": "No se ha encontrado esensor de humedad"
     },
     "step": {
       "init": {
@@ -10,7 +10,7 @@
         "data": {
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor de humedad",
-          "poll": "Activar consulta recurrente de datos",
+          "poll": "Habilitar el modo 'Polling' o lectura perióodica",
           "scan_interval": "Intervalo de consulta (segundos)",
           "custom_icons": "Usar paquete de iconos personalizado"
         }
@@ -20,12 +20,12 @@
   "config": {
     "abort": {
       "already_configured": "Esta combinación de sensores de temperatura y humedad ya ha sido configurada.",
-      "no_sensors": "No se han encontrado sensores de temperatura o humedad. Prueba de nuevo en modo avanzado.",
-      "no_sensors_advanced": "No se han encontrado sensores de temperatura o humedad."
+      "no_sensors": "No se han encontrado los sensores de temperatura o humedad. Prueba de nuevo en modo avanzado.",
+      "no_sensors_advanced": "No se han encontrado los sensores de temperatura o humedad."
     },
     "error": {
-      "temperature_not_found": "No se han encontrado sensores de temperatura",
-      "humidity_not_found": "No se han encontrado sensores de humedad"
+      "temperature_not_found": "No se han encontrado el sensor de temperatura",
+      "humidity_not_found": "No se han encontrado el sensor de humedad"
     },
     "step": {
       "user": {
@@ -34,7 +34,7 @@
           "name": "Nombre",
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor de humedad",
-          "poll": "Activar consulta recurrente de datos",
+          "poll": "Habilitar el modo 'Polling' o lectura periódica",
           "scan_interval": "Intervalo de consulta (segundos)",
           "custom_icons": "Usar paquete de iconos personalizado",
           "enabled_sensors": "Sensores habilitados"
@@ -67,7 +67,7 @@
         "name": "Punto de escarcha"
       },
       "frost_risk": {
-        "name": "Riesgo de helada",
+        "name": "Riesgo de heladas",
         "state": {
           "no_risk": "Sin riesgo",
           "unlikely": "Poco probable",
@@ -79,17 +79,17 @@
         "name": "Temperatura de Bochorno"
       },
       "humidex": {
-        "name": "Índice de humedad"
+        "name": "Humidex "
       },
       "humidex_perception": {
-        "name": "Confort por índice de humedad",
+        "name": "Índice de Humidex",
         "state": {
           "comfortable": "Cómodo",
-          "noticable_discomfort": "Un poco incómodo",
-          "evident_discomfort": "Bastante molesto",
+          "noticable_discomfort": "Algo incómodo",
+          "evident_discomfort": "Bastante incómodo",
           "great_discomfort": "Muy incómodo, evitar esfuerzos",
           "dangerous_discomfort": "Peligroso",
-          "heat_stroke": "golpe de calor bastante probable"
+          "heat_stroke": "Golpe de calor bastante probable"
         }
       },
       "moist_air_enthalpy": {
