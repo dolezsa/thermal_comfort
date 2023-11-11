@@ -1,8 +1,8 @@
 {
   "options": {
     "error": {
-      "temperature_not_found": "No se ha encontrado esensor de temperatura",
-      "humidity_not_found": "No se ha encontrado esensor de humedad"
+      "temperature_not_found": "No se ha encontrado el  sensor de temperatura",
+      "humidity_not_found": "No se ha encontrado el  sensor de humedad"
     },
     "step": {
       "init": {
