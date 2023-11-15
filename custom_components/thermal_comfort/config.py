@@ -3,7 +3,7 @@
 import voluptuous as vol
 
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
-from homeassistant.config import async_log_exception, config_without_domain
+from homeassistant.config import async_log_schema_error, config_without_domain
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
@@ -40,7 +40,7 @@ async def async_validate_config(hass: HomeAssistant, config: ConfigType) -> Conf
             cfg = CONFIG_SECTION_SCHEMA(cfg)
 
         except vol.Invalid as err:
-            async_log_exception(err, DOMAIN, cfg, hass)
+            async_log_schema_error(err, DOMAIN, cfg, hass)
             continue
 
         config_sections.append(cfg)
