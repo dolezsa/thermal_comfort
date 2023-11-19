@@ -44,7 +44,14 @@
   },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Umidade absoluta"
+      },
+      "dew_point": {
+        "name": "Ponto de orvalho"
+      },
       "dew_point_perception": {
+        "name": "Percepção do ponto de orvalho",
         "state": {
           "dry": "Um pouco seco para alguns",
           "very_comfortable": "Muito confortável",
@@ -56,13 +63,20 @@
           "severely_high": "Extremamente alto, até mortal para doenças relacionadas com asma"
         }
       },
+      "frost_point": {
+        "name": "Ponto de congelamento"
+      },
       "frost_risk": {
+        "name": "Risco de congelamento",
         "state": {
           "no_risk": "Sem risco",
           "unlikely": "Improvável",
           "probable": "Provável",
           "high": "Alta probabilidade"
         }
+      },
+      "heat_index": {
+        "name": "Índice de calor"
       },
       "humidex_perception": {
         "state": {
