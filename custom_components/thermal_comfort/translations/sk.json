@@ -82,7 +82,7 @@
         "name": "Humidex"
       },
       "humidex_perception": {
-        "name": "Humidex prepoveď",
+        "name": "Humidex predpoveď",
         "state": {
           "comfortable": "Príjemne",
           "noticable_discomfort": "Znateľné nepohodlie",
