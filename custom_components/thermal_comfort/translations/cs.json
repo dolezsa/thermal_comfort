@@ -1,7 +1,57 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Snímač teploty nenalezen",
+      "humidity_not_found": "Čidlo vlhkosti nenalezeno"
+    },
+    "step": {
+      "init": {
+        "title": "Nastavení tepelné pohody",
+        "data": {
+          "temperature_sensor": "Senzor teploty",
+          "humidity_sensor": "Senzor vlhkosti",
+          "poll": "Povolit hlasování",
+          "scan_interval": "Interval dotazování (v sekundách)",
+          "custom_icons": "Použijte vlastní sadu ikon"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Tato kombinace snímačů teploty a vlhkosti je již nakonfigurována",
+      "no_sensors": "Nebyla nalezena žádná čidla teploty nebo vlhkosti. Zkuste to znovu v pokročilém režimu.",
+      "no_sensors_advanced": "Nebyla nalezena žádná čidla teploty nebo vlhkosti."
+    },
+    "error": {
+      "temperature_not_found": "Snímač teploty nenalezen",
+      "humidity_not_found": "Čidlo vlhkosti nenalezeno"
+    },
+    "step": {
+      "user": {
+        "title": "Nastavení tepelné pohody",
+        "data": {
+          "name": "název",
+          "temperature_sensor": "Senzor teploty",
+          "humidity_sensor": "Senzor vlhkosti",
+          "poll": "Povolit hlasování",
+          "scan_interval": "Interval dotazování (v sekundách)",
+          "custom_icons": "Použijte vlastní sadu ikon",
+          "enabled_sensors": "Aktivované senzory"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Absolutní vlhkost"
+      },
+      "dew_point": {
+        "name": "rosný bod"
+      },
       "dew_point_perception": {
+        "name": "Vnímání rosného bodu",
         "state": {
           "dry": "Pro někoho sucho",
           "very_comfortable": "Velmi přijemně",
@@ -13,7 +63,11 @@
           "severely_high": "Velmi vysoká vlhkost, dokonce smrtelná pro jedince s nemocemi související s astmatem"
         }
       },
+      "frost_point": {
+        "name": "Bod mrazu"
+      },
       "frost_risk": {
+        "name": "Riziko mrazu",
         "state": {
           "no_risk": "Žádné riziko",
           "unlikely": "Nepravděpodobné",
@@ -21,7 +75,59 @@
           "high": "Vysoce pravděpodobné"
         }
       },
+      "heat_index": {
+        "name": "Tepelný index"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
+      "humidex_perception": {
+        "name": "Vnímání Humidexu",
+        "state": {
+          "comfortable": "Komfortní",
+          "noticable_discomfort": "Znatelné nepohodlí",
+          "evident_discomfort": "Evidentní nepohodlí",
+          "great_discomfort": "Velké nepohodlí, vyhněte se námaze",
+          "dangerous_discomfort": "Nebezpečné nepohodlí",
+          "heat_stroke": "Úpal možný"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Entalpie vlhkého vzduchu"
+      },
+      "relative_strain_perception": {
+        "name": "Vnímání relativní zátěže",
+        "state": {
+          "outside_calculable_range": "Mimo vypočítatelný rozsah",
+          "comfortable": "Komfortní",
+          "slight_discomfort": "Mírné nepohodlí",
+          "discomfort": "Nepohodlí",
+          "significant_discomfort": "Výrazné nepohodlí",
+          "extreme_discomfort": "Extrémní nepohodlí"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "Letní vnímání scharlau",
+        "state": {
+          "outside_calculable_range": "Mimo vypočítatelný rozsah",
+          "comfortable": "Komfortní",
+          "slightly_uncomfortable": "Mírně nepohodlné",
+          "moderatly_uncomfortable": "Středně nepohodlné",
+          "highly_uncomfortable": "Vysoce nepohodlné"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Zimní vnímání scharlau",
+        "state": {
+          "outside_calculable_range": "Mimo vypočítatelný rozsah",
+          "comfortable": "Komfortní",
+          "slightly_uncomfortable": "Mírně nepohodlné",
+          "moderatly_uncomfortable": "Středně nepohodlné",
+          "highly_uncomfortable": "Vysoce nepohodlné"
+        }
+      },
       "summer_simmer_perception": {
+        "name": "Vnímání letního dusna",
         "state": {
           "cool": "Chladno",
           "slightly_cool": "Mírně chladno",
@@ -32,6 +138,17 @@
           "danger_of_heatstroke": "Nebezpečí úpalu",
           "extreme_danger_of_heatstroke": "Extrémní nebezpečí úpalu",
           "circulatory_collapse_imminent": "Hrozící kolaps krevního oběhu"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "Thomovo vnímání nepohodlí",
+        "state": {
+          "no_discomfort": "Žádné nepohodlí",
+          "less_than_half": "Méně než polovina populace pociťuje nepohodlí",
+          "more_than_half": "Více než polovina populace pociťuje nepohodlí",
+          "most": "Většina jedinců pociťuje nepohodlí a zhoršení psychofyzického stavu",
+          "everyone": "Každý pociťuje značné nepohodlí",
+          "dangerous": "Nebezpečné, velmi silné nepohodlí, které může způsobit úpal"
         }
       }
     }
