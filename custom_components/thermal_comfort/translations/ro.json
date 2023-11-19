@@ -44,7 +44,14 @@
   },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Umiditate absolută"
+      },
+      "dew_point": {
+        "name": "Punct de rouă"
+      },
       "dew_point_perception": {
+        "name": "Punct de rouă perceput",
         "state": {
           "dry": "Cam uscat pentru unii",
           "very_comfortable": "Foarte confortabil",
@@ -56,7 +63,11 @@
           "severely_high": "Sever ridicat, chiar mortal pentru bolile legate de astm"
         }
       },
+      "frost_point": {
+        "name": "Punct de îngheț"
+      },
       "frost_risk": {
+        "name": "Risc de îngheț",
         "state": {
           "no_risk": "Niciun risc",
           "unlikely": "Improbabil",
@@ -64,7 +75,14 @@
           "high": "Probabilitate mare"
         }
       },
+      "heat_index": {
+        "name": "Indice termic"
+      },
+      "humidex": {
+        "name": "Indice de umezeală"
+      },
       "humidex_perception": {
+        "name": "Indice de umezeală perceput",
         "state": {
           "comfortable": "Confortabil",
           "noticable_discomfort": "Disconfort perceptibil",
@@ -74,7 +92,11 @@
           "heat_stroke": "Posibil accident vascular cerebral cauzat de căldură excesivă"
         }
       },
+      "moist_air_enthalpy": {
+        "name": "Entalpia aerului umed"
+      },
       "relative_strain_perception": {
+        "name": "Discomfort termic",
         "state": {
           "outside_calculable_range": "În afara intervalului calculabil",
           "comfortable": "Confortabil",
@@ -85,6 +107,7 @@
         }
       },
       "summer_scharlau_perception": {
+        "name": "Percepție Scharlau (Vara)",
         "state": {
           "outside_calculable_range": "În afara intervalului calculabil",
           "comfortable": "Confortabil",
@@ -94,6 +117,7 @@
         }
       },
       "winter_scharlau_perception": {
+        "name": "Percepție Scharlau (Iarna)",
         "state": {
           "outside_calculable_range": "În afara intervalului calculabil",
           "comfortable": "Confortabil",
@@ -103,6 +127,7 @@
         }
       },
       "summer_simmer_perception": {
+        "name": "Discomfort termic (Vara)",
         "state": {
           "cool": "Rece",
           "slightly_cool": "Ușor rece",
@@ -116,6 +141,7 @@
         }
       },
       "thoms_discomfort_perception": {
+        "name": "Percepție Thoms",
         "state": {
           "no_discomfort": "Niciun disconfort",
           "less_than_half": "Mai puțin de jumătate din populație simte disconfort",
