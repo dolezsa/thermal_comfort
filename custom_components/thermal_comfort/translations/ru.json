@@ -44,14 +44,6 @@
   },
   "entity": {
     "sensor": {
-      "frost_risk": {
-        "state": {
-          "no_risk": "Не опасно",
-          "unlikely": "Маловероятно",
-          "probable": "Вероятно",
-          "high": "Очень вероятно"
-        }
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Сухо",
@@ -62,6 +54,14 @@
           "quite_uncomfortable": "Довольно влажно, некомфортно",
           "extremely_uncomfortable": "Очень влажно, угнетающе",
           "severely_high": "Очень высокая влажность, опасно для астматиков"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Не опасно",
+          "unlikely": "Маловероятно",
+          "probable": "Вероятно",
+          "high": "Очень вероятно"
         }
       },
       "humidex_perception": {
