@@ -11,7 +11,7 @@
           "temperature_sensor": "Temperatursensor",
           "humidity_sensor": "Feuchtigkeitssensor",
           "poll": "Polling verwenden",
-          "scan_interval": "Poll Interval (Sekunden)",
+          "scan_interval": "Poll Intervall (Sekunden)",
           "custom_icons": "Benutzerdefinierte Icons verwenden"
         }
       }
@@ -19,9 +19,9 @@
   },
   "config": {
     "abort": {
-      "already_configured": "Diese Kombination aus Temperatursensor und Feuchtigkeitssensor wird bereits verwendet",
-      "no_sensors": "Es wurden entweder keine Temperatursensoren oder Feuchtigkeitssensoren gefunden. Versuche es erneut im erweiterten Modus.",
-      "no_sensors_advanced": "Es wurden entweder keine Temperatursensoren oder Feuchtigkeitssensoren gefunden."
+      "already_configured": "Diese Kombination aus Temperatur- und Feuchtigkeitssensor wird bereits verwendet",
+      "no_sensors": "Es wurden entweder keine Temperatur- oder Feuchtigkeitssensoren gefunden. Versuche es im erweiterten Modus erneut.",
+      "no_sensors_advanced": "Es wurden entweder keine Temperatur- oder Feuchtigkeitssensoren gefunden."
     },
     "error": {
       "temperature_not_found": "Temperatursensor konnte nicht gefunden werden",
@@ -35,7 +35,7 @@
           "temperature_sensor": "Temperatursensor",
           "humidity_sensor": "Feuchtigkeitssensor",
           "poll": "Polling verwenden",
-          "scan_interval": "Poll Interval (Sekunden)",
+          "scan_interval": "Poll Intervall (Sekunden)",
           "custom_icons": "Benutzerdefinierte Icons verwenden",
           "enabled_sensors": "Aktivierte Sensoren"
         }
@@ -146,7 +146,7 @@
           "no_discomfort": "Kein Unbehagen",
           "less_than_half": "Weniger als die Hälfte der Bevölkerung fühlt sich unwohl",
           "more_than_half": "Mehr als die Hälfte der Bevölkerung fühlt sich unwohl",
-          "most": "Die meisten Menschen fühlen sich unwohl und einen verschlechterten psychophysischen Zustand",
+          "most": "Die meisten Menschen fühlen sich unwohl und empfinden einen verschlechterten psychophysischen Zustand",
           "everyone": "Jeder fühlt sich unwohl",
           "dangerous": "Gefährlich, sehr starke Beschwerden die zu Hitzschlägen führen können"
         }
