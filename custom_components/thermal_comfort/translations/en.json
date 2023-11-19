@@ -107,7 +107,7 @@
         }
       },
       "summer_scharlau_perception": {
-        "name": "Summer scharlau perception",
+        "name": "Summer Scharlau perception",
         "state": {
           "outside_calculable_range": "Outside of the calculable range",
           "comfortable": "Comfortable",
@@ -117,7 +117,7 @@
         }
       },
       "winter_scharlau_perception": {
-        "name": "Winter scharlau perception",
+        "name": "Winter Scharlau perception",
         "state": {
           "outside_calculable_range": "Outside of the calculable range",
           "comfortable": "Comfortable",
@@ -127,7 +127,7 @@
         }
       },
       "summer_simmer_perception": {
-        "name": "Summer simmer perception",
+        "name": "Summer Simmer perception",
         "state": {
           "cool": "Cool",
           "slightly_cool": "Slightly cool",
