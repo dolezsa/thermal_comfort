@@ -1,7 +1,57 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Hőmérséklet szenzor nem található",
+      "humidity_not_found": "Páratartalom szenzor nem található"
+    },
+    "step": {
+      "init": {
+        "title": "Hőkomfort beállítások",
+        "data": {
+          "temperature_sensor": "Hőmérséklet szenzor",
+          "humidity_sensor": "Páratartalom szenzor",
+          "poll": "Állapotlekérdezés (polling) engedélyezése",
+          "scan_interval": "Lekérdezési időköz (polling) (másodpercekben)",
+          "custom_icons": "Egyedi ikonkészlet használata"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Ez a hőmérséklet- és páratartalom-szenzor kombináció már konfigurálva van",
+      "no_sensors": "Nem található hőmérséklet- vagy páratartalom-szenzor. Próbáld újra a haladó (advanced) módban.",
+      "no_sensors_advanced": "Nem található hőmérséklet- vagy páratartalom-szenzor."
+    },
+    "error": {
+      "temperature_not_found": "Hőmérséklet szenzor nem található.",
+      "humidity_not_found": "Páratartalom szenzor nem található."
+    },
+    "step": {
+      "user": {
+        "title": "Hőkomfort beállítások",
+        "data": {
+          "name": "Név",
+          "temperature_sensor": "Hőmérséklet szenzor",
+          "humidity_sensor": "Páratartalom szenzor",
+          "poll": "Állapotlekérdezés (polling) engedélyezése",
+          "scan_interval": "Lekérdezési időköz (polling) (másodpercekben)",
+          "custom_icons": "Egyedi ikonkészlet használata",
+          "enabled_sensors": "Engedélyezett szenzorok"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Abszolút páratartalom"
+      },
+      "dew_point": {
+        "name": "Harmatpont"
+      },
       "dew_point_perception": {
+        "name": "Harmatpont érzékelés",
         "state": {
           "dry": "Egyeseknek kissé száraz",
           "very_comfortable": "Nagyon kellemes",
@@ -13,15 +63,71 @@
           "severely_high": "Különösen magas, az asztmás betegségek számára életveszélyes"
         }
       },
+      "frost_point": {
+        "name": "Fagypont"
+      },
       "frost_risk": {
+        "name": "Fagyveszély",
         "state": {
           "no_risk": "Nincs kockázat",
           "unlikely": "Nem valószínű",
           "probable": "Valószínű",
-          "high": "Nagy valószínűség"
+          "high": "Nagyon valószínű"
+        }
+      },
+      "heat_index": {
+        "name": "Hő index"
+      },
+      "humidex": {
+        "name": "Páratartalom index"
+      },
+      "humidex_perception": {
+        "name": "Páratartalom index \n\n\nérzékelés",
+        "state": {
+          "comfortable": "Kellemes",
+          "noticable_discomfort": "Érezhető kellemetlenség",
+          "evident_discomfort": "Kellemetlen",
+          "great_discomfort": "Rendkívül kellemetlen, kerüld a megterhelést",
+          "dangerous_discomfort": "Veszélyesen kellemetlen",
+          "heat_stroke": "Napszúrás lehetséges"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Páradús levegő entalpia"
+      },
+      "relative_strain_perception": {
+        "name": "Relatív feszültség érzékelése",
+        "state": {
+          "outside_calculable_range": "A számolható tartományon kívül\n",
+          "comfortable": "Kellemes",
+          "slight_discomfort": "Enyhén kellemetlen",
+          "discomfort": "Kellemetlen",
+          "significant_discomfort": "Jelentős kellemetlenség",
+          "extreme_discomfort": "Extrém kellemetlenség"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "Nyári Scharlau érzékelés",
+        "state": {
+          "outside_calculable_range": "A számolható tartományon kívül",
+          "comfortable": "Kellemes",
+          "slightly_uncomfortable": "Kissé kényelmetlen",
+          "moderatly_uncomfortable": "Mérsékelten kényelmetlen",
+          "highly_uncomfortable": "Nagyon kényelmetlen"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Téli scharlau felfogás",
+        "state": {
+          "outside_calculable_range": "A számolható tartományon kívül",
+          "comfortable": "Kellemes",
+          "slightly_uncomfortable": "Kissé kényelmetlen",
+          "moderatly_uncomfortable": "Mérsékelten kényelmetlen",
+          "highly_uncomfortable": "Nagyon kényelmetlen"
         }
       },
       "summer_simmer_perception": {
+        "name": "Nyári forrongás érzékelése",
         "state": {
           "cool": "Hideg",
           "slightly_cool": "Enyhén hűvös",
@@ -32,6 +138,17 @@
           "danger_of_heatstroke": "Napszúrásveszély",
           "extreme_danger_of_heatstroke": "Rendkívüli napszúrásveszély",
           "circulatory_collapse_imminent": "Keringési összeomlás veszélye"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "Thoms kellemetlen érzés",
+        "state": {
+          "no_discomfort": "Nincs kellemetlen érzés",
+          "less_than_half": "A lakosság kevesebb mint fele érez kényelmetlenséget",
+          "more_than_half": "A lakosság több mint fele kellemetlenül érzi magát",
+          "most": "A legtöbb ember kényelmetlenséget és pszichofizikai állapotának romlását érzi",
+          "everyone": "Mindenki jelentős kényelmetlenséget érez",
+          "dangerous": "Veszélyes, nagyon erős kényelmetlenség, amely hőgutát okozhat"
         }
       }
     }
