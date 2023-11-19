@@ -1,16 +1,16 @@
 {
   "options": {
     "error": {
-      "temperature_not_found": "No se ha encontrado sensor de temperatura",
-      "humidity_not_found": "No se ha encontrado sensor de humedad"
+      "temperature_not_found": "No se ha encontrado el sensor de temperatura",
+      "humidity_not_found": "No se ha encontrado el sensor de humedad"
     },
     "step": {
       "init": {
-        "title": "Ajustes de confort termal",
+        "title": "Ajustes de Thermal Comfort",
         "data": {
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor de humedad",
-          "poll": "Activar consulta recurrente de datos",
+          "poll": "Habilitar el modo 'Polling' o lectura periódica",
           "scan_interval": "Intervalo de consulta (segundos)",
           "custom_icons": "Usar paquete de iconos personalizado"
         }
@@ -20,61 +20,83 @@
   "config": {
     "abort": {
       "already_configured": "Esta combinación de sensores de temperatura y humedad ya ha sido configurada.",
-      "no_sensors": "No se han encontrado sensores de temperatura o humedad. Prueba de nuevo en modo avanzado.",
-      "no_sensors_advanced": "No se han encontrado sensores de temperatura o humedad."
+      "no_sensors": "No se han encontrado los sensores de temperatura o humedad. Prueba de nuevo en modo avanzado.",
+      "no_sensors_advanced": "No se han encontrado los sensores de temperatura o humedad."
     },
     "error": {
-      "temperature_not_found": "No se han encontrado sensores de temperatura",
-      "humidity_not_found": "No se han encontrado sensores de humedad"
+      "temperature_not_found": "No se han encontrado el sensor de temperatura",
+      "humidity_not_found": "No se han encontrado el sensor de humedad"
     },
     "step": {
       "user": {
-        "title": "Ajustes de confort termal",
+        "title": "Ajustes de Thermal Comfort",
         "data": {
           "name": "Nombre",
           "temperature_sensor": "Sensor de temperatura",
           "humidity_sensor": "Sensor de humedad",
-          "poll": "Activar consulta recurrente de datos",
+          "poll": "Habilitar el modo 'Polling' o lectura periódica",
           "scan_interval": "Intervalo de consulta (segundos)",
           "custom_icons": "Usar paquete de iconos personalizado",
-          "enabled_sensors": "Sensores activados"
+          "enabled_sensors": "Sensores habilitados"
         }
       }
     }
   },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Humedad absoluta"
+      },
+      "dew_point": {
+        "name": "Punto de Rocío"
+      },
       "dew_point_perception": {
+        "name": "Sensación de humedad ambiental",
         "state": {
           "dry": "Un poco seco para algunos",
           "very_comfortable": "Muy cómodo",
           "comfortable": "Cómodo",
-          "ok_but_humid": "Bien para la mayoria, pero algo húmedo",
+          "ok_but_humid": "Cómodo para la mayoria, pero algo húmedo",
           "somewhat_uncomfortable": "Algo incómodo",
           "quite_uncomfortable": "Muy húmedo, bastante incómodo",
           "extremely_uncomfortable": "Extremadamente incómodo, agobiante",
-          "severely_high": "Muy alto, incluso mortal para enfermedades relacionadas con el asma"
+          "severely_high": "Riesgo alto, incluso mortal para enfermedades relacionadas con el asma"
         }
       },
+      "frost_point": {
+        "name": "Punto de escarcha"
+      },
       "frost_risk": {
+        "name": "Riesgo de heladas",
         "state": {
           "no_risk": "Sin riesgo",
           "unlikely": "Poco probable",
           "probable": "Probable",
-          "high": "Alta probabilidad"
+          "high": "Muy probable"
         }
+      },
+      "heat_index": {
+        "name": "Temperatura de Bochorno"
+      },
+      "humidex": {
+        "name": "Humidex "
       },
       "humidex_perception": {
+        "name": "Índice de Humidex",
         "state": {
           "comfortable": "Cómodo",
-          "noticable_discomfort": "Un poco incómodo",
+          "noticable_discomfort": "Algo incómodo",
           "evident_discomfort": "Bastante incómodo",
           "great_discomfort": "Muy incómodo, evitar esfuerzos",
-          "dangerous_discomfort": "Incomodidad peligrosa",
-          "heat_stroke": "Posible golpe de calor"
+          "dangerous_discomfort": "Peligroso",
+          "heat_stroke": "Golpe de calor bastante probable"
         }
       },
+      "moist_air_enthalpy": {
+        "name": "Entalpía del aire húmedo"
+      },
       "relative_strain_perception": {
+        "name": "Índice de tensión relativa",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
@@ -85,6 +107,7 @@
         }
       },
       "summer_scharlau_perception": {
+        "name": "Índice de verano de Scharlau",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
@@ -94,6 +117,7 @@
         }
       },
       "winter_scharlau_perception": {
+        "name": "Índice de invierno de Scharlau",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
@@ -103,6 +127,7 @@
         }
       },
       "summer_simmer_perception": {
+        "name": "Índice de calor Simmer",
         "state": {
           "cool": "Fresco",
           "slightly_cool": "Ligeramente fresco",
@@ -116,6 +141,7 @@
         }
       },
       "thoms_discomfort_perception": {
+        "name": "Índice de malestar de Thom",
         "state": {
           "no_discomfort": "Sin molestias",
           "less_than_half": "Menos de la mitad de la población siente malestar",
