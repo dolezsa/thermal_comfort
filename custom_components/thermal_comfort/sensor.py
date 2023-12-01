@@ -13,7 +13,6 @@ import voluptuous as vol
 from homeassistant import util
 from homeassistant.components.sensor import (
     DOMAIN as SENSOR_DOMAIN,
-    PLATFORM_SCHEMA,
     SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
@@ -24,7 +23,6 @@ from homeassistant.const import (
     ATTR_TEMPERATURE,
     ATTR_UNIT_OF_MEASUREMENT,
     CONF_ENTITY_PICTURE_TEMPLATE,
-    CONF_FRIENDLY_NAME,
     CONF_ICON_TEMPLATE,
     CONF_NAME,
     CONF_SENSORS,
@@ -314,7 +312,7 @@ SENSOR_TYPES = {
 
 DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
 
-PLATFORM_OPTIONS_SCHEMA = vol.Schema(
+SENSOR_OPTIONS_SCHEMA = vol.Schema(
     {
         vol.Optional(CONF_POLL): cv.boolean,
         vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
@@ -324,28 +322,16 @@ PLATFORM_OPTIONS_SCHEMA = vol.Schema(
     extra=vol.REMOVE_EXTRA,
 )
 
-LEGACY_SENSOR_SCHEMA = vol.Schema(
+SENSOR_SCHEMA = vol.Schema(
     {
+        vol.Optional(CONF_NAME): cv.string,
         vol.Required(CONF_TEMPERATURE_SENSOR): cv.entity_id,
         vol.Required(CONF_HUMIDITY_SENSOR): cv.entity_id,
         vol.Optional(CONF_ICON_TEMPLATE): cv.template,
         vol.Optional(CONF_ENTITY_PICTURE_TEMPLATE): cv.template,
-        vol.Optional(CONF_FRIENDLY_NAME): cv.string,
         vol.Required(CONF_UNIQUE_ID): cv.string,
     }
-)
-
-SENSOR_SCHEMA = LEGACY_SENSOR_SCHEMA.extend(
-    {
-        vol.Optional(CONF_NAME): cv.string,
-    }
-).extend(PLATFORM_OPTIONS_SCHEMA.schema)
-
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
-    {
-        vol.Required(CONF_SENSORS): cv.schema_with_slug_keys(SENSOR_SCHEMA),
-    }
-).extend(PLATFORM_OPTIONS_SCHEMA.schema)
+).extend(SENSOR_OPTIONS_SCHEMA.schema)
 
 
 def compute_once_lock(sensor_type):
