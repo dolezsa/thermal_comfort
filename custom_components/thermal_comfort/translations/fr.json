@@ -56,11 +56,15 @@
           "severely_high": "Gravement élevé, voire mortel pour les maladies liées à l'asthme"
         }
       },
+      "frost_point": {
+        "name": "Point de gelée "
+      },
       "frost_risk": {
+        "name": "Risque de gelée ",
         "state": {
           "no_risk": "Aucun risque",
           "unlikely": "Peu probable",
-          "probable": "Probable",
+          "probable": "Plausible ",
           "high": "Haute probabilité"
         }
       },
