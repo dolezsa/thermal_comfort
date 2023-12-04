@@ -46,7 +46,7 @@ Home Assistant >= 2023.3.0
 Home Assistant >= 2021.12.0
 
 #### master
-Home Assistant >= 2023.3.0
+Home Assistant >= 2023.12.0
 
 ### Using [HACS](https://hacs.xyz/) (recommended)
 
