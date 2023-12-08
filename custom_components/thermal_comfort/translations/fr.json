@@ -44,6 +44,12 @@
   },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Humidité absolue"
+      },
+      "dew_point": {
+        "name": "Point de rosée"
+      },
       "dew_point_perception": {
         "state": {
           "dry": "Un peu sec pour certains",
@@ -57,18 +63,25 @@
         }
       },
       "frost_point": {
-        "name": "Point de gelée "
+        "name": "Point de gelée"
       },
       "frost_risk": {
-        "name": "Risque de gelée ",
+        "name": "Risque de gelée",
         "state": {
           "no_risk": "Aucun risque",
           "unlikely": "Peu probable",
-          "probable": "Plausible ",
+          "probable": "Plausible",
           "high": "Haute probabilité"
         }
       },
+      "heat_index": {
+        "name": "Indice de Chaleur"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
       "humidex_perception": {
+        "name": "Sensation Humidex",
         "state": {
           "comfortable": "Confortable",
           "noticable_discomfort": "Inconfortable",
@@ -78,7 +91,11 @@
           "heat_stroke": "Coup de chaleur, danger de mort"
         }
       },
+      "moist_air_enthalpy": {
+        "name": "Enthalpie Spécifique"
+      },
       "relative_strain_perception": {
+        "name": "Confort Thermique Relatif",
         "state": {
           "outside_calculable_range": "En dehors de la plage calculable",
           "comfortable": "Confortable",
@@ -89,6 +106,7 @@
         }
       },
       "summer_scharlau_perception": {
+        "name": "Indice d'été de Scharlau",
         "state": {
           "outside_calculable_range": "En dehors de la plage calculable",
           "comfortable": "Confortable",
@@ -98,6 +116,7 @@
         }
       },
       "winter_scharlau_perception": {
+        "name": "Index d'hiver de Scharlau",
         "state": {
           "outside_calculable_range": "En dehors de la plage calculable",
           "comfortable": "Confortable",
@@ -107,19 +126,21 @@
         }
       },
       "summer_simmer_perception": {
+        "name": "Indice d'été Simmer",
         "state": {
           "cool": "Froid",
           "slightly_cool": "Légèrement froid",
           "comfortable": "Confortable",
           "slightly_warm": "Légèrement chaud",
-          "increasing_discomfort": "Inconfortable",
-          "extremely_warm": "Extrêmement chaud",
-          "danger_of_heatstroke": "Danger de coup de chaleur",
+          "increasing_discomfort": "Chaud",
+          "extremely_warm": "Très chaud",
+          "danger_of_heatstroke": "Extrêmement chaud",
           "extreme_danger_of_heatstroke": "Danger extrême de coup de chaleur",
           "circulatory_collapse_imminent": "Arrêt cardiaque imminent"
         }
       },
       "thoms_discomfort_perception": {
+        "name": "Indice de Thom (THI)",
         "state": {
           "no_discomfort": "Pas de gêne",
           "less_than_half": "Moins de la moitié de la population ressent un inconfort",
