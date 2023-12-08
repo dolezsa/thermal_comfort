@@ -77,7 +77,7 @@
       "heat_index": {
         "name": "Indice de Chaleur"
       },
-	    "humidex": {
+      "humidex": {
         "name": "Humidex"
       },
       "humidex_perception": {
