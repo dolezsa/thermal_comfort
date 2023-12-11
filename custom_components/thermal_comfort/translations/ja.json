@@ -1,0 +1,157 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "温度センサーが見つかりません",
+      "humidity_not_found": "湿度センサーが見つかりません"
+    },
+    "step": {
+      "init": {
+        "title": "Thermal comfortの設定",
+        "data": {
+          "temperature_sensor": "温度センサー",
+          "humidity_sensor": "湿度センサー",
+          "poll": "ポーリングを有効にする",
+          "scan_interval": "ポーリング周期(秒)",
+          "custom_icons": "custom icons packを使用する"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "この温度センサーと湿度センサーの組み合わせは既に構成されています",
+      "no_sensors": "温度または湿度センサーが見つかりません。詳細モードで再試行してください。",
+      "no_sensors_advanced": "温度または湿度センサーが見つかりません。"
+    },
+    "error": {
+      "temperature_not_found": "温度センサーが見つかりません",
+      "humidity_not_found": "湿度センサーが見つかりません"
+    },
+    "step": {
+      "user": {
+        "title": "Thermal comfortの設定",
+        "data": {
+          "name": "名前",
+          "temperature_sensor": "温度センサー",
+          "humidity_sensor": "湿度センサー",
+          "poll": "ポーリングを有効にする",
+          "scan_interval": "ポーリング周期(秒)",
+          "custom_icons": "custom icons packを使用する",
+          "enabled_sensors": "センサーを有効にする"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "absolute_humidity": {
+        "name": "絶対湿度"
+      },
+      "dew_point": {
+        "name": "露点"
+      },
+      "dew_point_perception": {
+        "name": "露点知覚",
+        "state": {
+          "dry": "一部の人にとっては少し乾燥",
+          "very_comfortable": "とても快適",
+          "comfortable": "快適",
+          "ok_but_humid": "おおむね問題なし、ただし湿度が高い",
+          "somewhat_uncomfortable": "やや不快",
+          "quite_uncomfortable": "湿度が高くかなり不快",
+          "extremely_uncomfortable": "非常に不快で抑圧的",
+          "severely_high": "非常に高く、喘息関連疾患では致死的"
+        }
+      },
+      "frost_point": {
+        "name": "霜点"
+      },
+      "frost_risk": {
+        "name": "霜の危険性",
+
+        "state": {
+          "no_risk": "ノーリスク",
+          "unlikely": "なさそう",
+          "probable": "ありそう",
+          "high": "高確率"
+        }
+      },
+      "heat_index": {
+        "name": "暑さ指数"
+      },
+      "humidex": {
+        "name": "湿度指数"
+      },
+      "humidex_perception": {
+        "name": "湿度指数知覚",
+        "state": {
+          "comfortable": "快適",
+          "noticable_discomfort": "顕著な不快感",
+          "evident_discomfort": "明らかな不快感",
+          "great_discomfort": "極度の不快感、運動を避ける",
+          "dangerous_discomfort": "危険な不快感",
+          "heat_stroke": "熱中症の可能性あり"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "湿った空気のエンタルピー"
+      },
+      "relative_strain_perception": {
+        "name": "相対的な調子の知覚",
+        "state": {
+          "outside_calculable_range": "計算範囲外",
+          "comfortable": "快適",
+          "slight_discomfort": "わずかな不快感",
+          "discomfort": "不快感",
+          "significant_discomfort": "著しい不快感",
+          "extreme_discomfort": "極度の不快感"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "Summer Scharlau指数",
+        "state": {
+          "outside_calculable_range": "計算範囲外",
+          "comfortable": "快適",
+          "slightly_uncomfortable": "わずかな不快感",
+          "moderatly_uncomfortable": "中程度に不快",
+          "highly_uncomfortable": "非常に不快"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Winter Scharlau指数",
+        "state": {
+          "outside_calculable_range": "計算範囲外",
+          "comfortable": "快適",
+          "slightly_uncomfortable": "わずかな不快感",
+          "moderatly_uncomfortable": "中程度に不快",
+          "highly_uncomfortable": "非常に不快"
+        }
+      },
+      "summer_simmer_perception": {
+        "name": "Summer Simmer指数",
+        "state": {
+          "cool": "涼しい",
+          "slightly_cool": "やや涼しい",
+          "comfortable": "快適",
+          "slightly_warm": "やや暖かい",
+          "increasing_discomfort": "不快感の増大",
+          "extremely_warm": "非常に暖かい",
+          "danger_of_heatstroke": "熱中症になる危険性あり",
+          "extreme_danger_of_heatstroke": "熱中症になる危険性が極めて高い",
+          "circulatory_collapse_imminent": "循環器系の破綻が近い"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "Thoms discomfort指数",
+        "state": {
+          "no_discomfort": "不快感なし",
+          "less_then_half": "不快感を感じている人は半数以下",
+          "more_then_half": "不快感を感じている人が半数以上",
+          "most": "多数の人が違和感を覚え精神的にも物理的にも状態が悪化",
+          "everyone": "誰もが大きな違和感を覚える",
+          "dangerous": "熱中症になりそうなほど強い不快感"
+        }
+      }
+    }
+  }
+}
