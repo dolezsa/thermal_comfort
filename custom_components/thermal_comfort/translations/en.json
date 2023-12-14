@@ -126,6 +126,9 @@
           "highly_uncomfortable": "Highly uncomfortable"
         }
       },
+      "summer_simmer_index": {
+        "name": "Summer Simmer index"
+      },
       "summer_simmer_perception": {
         "name": "Summer Simmer perception",
         "state": {
