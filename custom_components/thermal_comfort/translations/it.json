@@ -44,7 +44,14 @@
   },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Umidità assoluta"
+      },
+      "dew_point": {
+        "name": "Punto di rugiada"
+      },
       "dew_point_perception": {
+        "name": "Percezione del punto di rugiada",
         "state": {
           "dry": "Secco per qualcuno",
           "very_comfortable": "Molto confortevole",
@@ -56,7 +63,11 @@
           "severely_high": "Estremo disagio, rischioso per malattie correlate all'asma"
         }
       },
+      "frost_point": {
+        "name": "Punto di gelo"
+      },
       "frost_risk": {
+        "name": "Rischio di gelo",
         "state": {
           "no_risk": "Nessun rischio",
           "unlikely": "Improbabile",
@@ -64,7 +75,14 @@
           "high": "Alta probabilità"
         }
       },
+      "heat_index": {
+        "name": "Indice di calore"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
       "humidex_perception": {
+        "name": "Percezione dell'humidex",
         "state": {
           "comfortable": "Confortevole",
           "noticable_discomfort": "Disagio",
@@ -74,7 +92,11 @@
           "heat_stroke": "Probabile colpo di calore"
         }
       },
+      "moist_air_enthalpy": {
+        "name": "Entalpia dell'aria umida"
+      },
       "relative_strain_perception": {
+        "name": "Percezione della tenzione relativa",
         "state": {
           "outside_calculable_range": "Fuori scala",
           "comfortable": "Confortevole",
@@ -85,6 +107,7 @@
         }
       },
       "summer_scharlau_perception": {
+        "name": "Percezione dell'indice di Scharlau estivo",
         "state": {
           "outside_calculable_range": "Fuori scala",
           "comfortable": "Confortevole",
@@ -94,6 +117,7 @@
         }
       },
       "winter_scharlau_perception": {
+        "name": "Percezione dell'indice di Scharlau invernale",
         "state": {
           "outside_calculable_range": "Fuori scala",
           "comfortable": "Confortevole",
@@ -103,6 +127,7 @@
         }
       },
       "summer_simmer_perception": {
+        "name": "Percezione dell'indice di Simmer estivo",
         "state": {
           "cool": "Freddo",
           "slightly_cool": "Leggermente freddo",
@@ -116,6 +141,7 @@
         }
       },
       "thoms_discomfort_perception": {
+        "name": "Percezione di disagio di Thoms",
         "state": {
           "no_discomfort": "Confortevole",
           "less_than_half": "Meno della metà della popolazione avverte disagio",
