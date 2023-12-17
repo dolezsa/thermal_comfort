@@ -126,6 +126,9 @@
           "highly_uncomfortable": "Forte disagio"
         }
       },
+      "summer_simmer_index": {
+        "name": "Indice di Simmer estivo"
+      },
       "summer_simmer_perception": {
         "name": "Percezione dell'indice di Simmer estivo",
         "state": {

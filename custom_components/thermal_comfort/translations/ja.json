@@ -68,7 +68,6 @@
       },
       "frost_risk": {
         "name": "霜の危険性",
-
         "state": {
           "no_risk": "ノーリスク",
           "unlikely": "なさそう",
@@ -145,11 +144,11 @@
         "name": "Thoms discomfort指数",
         "state": {
           "no_discomfort": "不快感なし",
-          "less_then_half": "不快感を感じている人は半数以下",
-          "more_then_half": "不快感を感じている人が半数以上",
           "most": "多数の人が違和感を覚え精神的にも物理的にも状態が悪化",
           "everyone": "誰もが大きな違和感を覚える",
-          "dangerous": "熱中症になりそうなほど強い不快感"
+          "dangerous": "熱中症になりそうなほど強い不快感",
+          "less_then_half": "不快感を感じている人は半数以下",
+          "more_then_half": "不快感を感じている人が半数以上"
         }
       }
     }
