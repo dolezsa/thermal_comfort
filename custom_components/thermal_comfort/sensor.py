@@ -385,9 +385,6 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         sensors += [
             SensorThermalComfort(
                 device=compute_device,
-                entity_description=SensorEntityDescription(
-                    **SENSOR_TYPES[SensorType.from_string(sensor_type)]
-                ),
                 icon_template=device_config.get(CONF_ICON_TEMPLATE),
                 entity_picture_template=device_config.get(CONF_ENTITY_PICTURE_TEMPLATE),
                 sensor_type=SensorType.from_string(sensor_type),
@@ -435,7 +432,6 @@ async def async_setup_entry(
     entities: list[SensorThermalComfort] = [
         SensorThermalComfort(
             device=compute_device,
-            entity_description=SensorEntityDescription(**SENSOR_TYPES[sensor_type]),
             sensor_type=sensor_type,
             custom_icons=data[CONF_CUSTOM_ICONS],
         )
@@ -467,7 +463,6 @@ class SensorThermalComfort(SensorEntity):
         self,
         device: "DeviceThermalComfort",
         sensor_type: SensorType,
-        entity_description: SensorEntityDescription,
         icon_template: Template = None,
         entity_picture_template: Template = None,
         custom_icons: bool = False,
@@ -476,13 +471,13 @@ class SensorThermalComfort(SensorEntity):
         """Initialize the sensor."""
         self._device = device
         self._sensor_type = sensor_type
-        self.entity_description = entity_description
-        self.entity_description.translation_key = sensor_type
-        self.entity_description.has_entity_name = True
+        entity_description = SENSOR_TYPES[sensor_type]
+        entity_description["translation_key"] = sensor_type
+        entity_description["has_entity_name"] = True
         if not is_config_entry:
             if self._device.name is not None:
-                self.entity_description.has_entity_name = False
-                self.entity_description.name = (
+                entity_description["has_entity_name"] = False
+                entity_description["name"] = (
                     f"{self._device.name} {self._sensor_type.to_name()}"
                 )
             if sensor_type in [SensorType.DEW_POINT_PERCEPTION, SensorType.SUMMER_SIMMER_INDEX, SensorType.SUMMER_SIMMER_PERCEPTION]:
@@ -498,8 +493,9 @@ class SensorThermalComfort(SensorEntity):
                 if entity_id is not None:
                     registry.async_update_entity(entity_id, new_unique_id=id_generator(self._device.unique_id, sensor_type))
         if custom_icons:
-            if self.entity_description.key in TC_ICONS:
-                self.entity_description.icon = TC_ICONS[self.entity_description.key]
+            if entity_description["key"] in TC_ICONS:
+                entity_description["icon"] = TC_ICONS[entity_description["key"]]
+        self.entity_description = SensorEntityDescription(**entity_description)
         self._icon_template = icon_template
         self._entity_picture_template = entity_picture_template
         self._attr_native_value = None
