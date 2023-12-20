@@ -151,7 +151,9 @@
           "more_than_half": "More than half of the population feels discomfort",
           "most": "Most individuals feel discomfort and deterioration of psychophysical conditions",
           "everyone": "Everyone feels significant discomfort",
-          "dangerous": "Dangerous, very strong discomfort which may cause heat strokes"
+          "dangerous": "Dangerous, very strong discomfort which may cause heat strokes",
+          "less_then_half": "discomfort perception less then half",
+          "more_then_half": "discomfort perception more then half"
         }
       }
     }
