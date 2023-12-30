@@ -68,7 +68,6 @@
       },
       "frost_risk": {
         "name": "霜の危険性",
-
         "state": {
           "no_risk": "ノーリスク",
           "unlikely": "なさそう",
