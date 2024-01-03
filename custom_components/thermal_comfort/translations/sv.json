@@ -21,6 +21,11 @@
           "high": "Stor risk"
         }
       },
+      "relative_strain_perception": {
+        "state": {
+          "discomfort": "Disconforto"
+        }
+      },
       "summer_simmer_perception": {
         "state": {
           "cool": "Svalt",
