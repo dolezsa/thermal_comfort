@@ -434,13 +434,10 @@ async def async_setup_entry(
             device=compute_device,
             sensor_type=sensor_type,
             custom_icons=data[CONF_CUSTOM_ICONS],
+            is_enabled_default=sensor_type in data.get(CONF_ENABLED_SENSORS, {})
         )
         for sensor_type in SensorType
     ]
-    if CONF_ENABLED_SENSORS in data:
-        for entity in entities:
-            if entity.entity_description.key not in data[CONF_ENABLED_SENSORS]:
-                entity.entity_description.entity_registry_enabled_default = False
 
     if entities:
         async_add_entities(entities)
@@ -467,6 +464,7 @@ class SensorThermalComfort(SensorEntity):
         entity_picture_template: Template = None,
         custom_icons: bool = False,
         is_config_entry: bool = True,
+        is_enabled_default: bool = True,
     ) -> None:
         """Initialize the sensor."""
         self._device = device
@@ -495,6 +493,7 @@ class SensorThermalComfort(SensorEntity):
         if custom_icons:
             if entity_description["key"] in TC_ICONS:
                 entity_description["icon"] = TC_ICONS[entity_description["key"]]
+        entity_description["entity_registry_enabled_default"] = is_enabled_default
         self.entity_description = SensorEntityDescription(**entity_description)
         self._icon_template = icon_template
         self._entity_picture_template = entity_picture_template
