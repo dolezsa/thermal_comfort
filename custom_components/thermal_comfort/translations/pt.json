@@ -45,7 +45,7 @@
   "entity": {
     "sensor": {
       "absolute_humidity": {
-        "name": "Umidade absoluta"
+        "name": "Humidade absoluta"
       },
       "dew_point": {
         "name": "Ponto de orvalho"
@@ -78,7 +78,11 @@
       "heat_index": {
         "name": "Índice de calor"
       },
+      "humidex": {
+        "name": "Índice de Humidade (humidex)"
+      },
       "humidex_perception": {
+        "name": "Percepção ao Índice de Humidade",
         "state": {
           "comfortable": "Confortável",
           "noticable_discomfort": "Algum desconforto",
