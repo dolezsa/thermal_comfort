@@ -89,7 +89,7 @@
           "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
           "comfortable": "Комфортно",
           "slightly_uncomfortable": "Слегка некомфортно",
-          "moderatly_uncomfortable": "Некомфортно",
+          "moderately_uncomfortable": "Некомфортно",
           "highly_uncomfortable": "Очень некомфортно"
         }
       },
@@ -98,7 +98,7 @@
           "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
           "comfortable": "Комфортно",
           "slightly_uncomfortable": "Слегка некомфортно",
-          "moderatly_uncomfortable": "Некомфортно",
+          "moderately_uncomfortable": "Некомфортно",
           "highly_uncomfortable": "Очень некомфортно"
         }
       },
