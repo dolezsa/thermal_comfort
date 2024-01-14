@@ -167,7 +167,7 @@ class ScharlauPerception(StrEnum):
     OUTSIDE_CALCULABLE_RANGE = "outside_calculable_range"
     COMFORTABLE = "comfortable"
     SLIGHTLY_UNCOMFORTABLE = "slightly_uncomfortable"
-    MODERATLY_UNCOMFORTABLE = "moderatly_uncomfortable"
+    MODERATELY_UNCOMFORTABLE = "moderately_uncomfortable"
     HIGHLY_UNCOMFORTABLE = "highly_uncomfortable"
 
 
@@ -845,7 +845,7 @@ class DeviceThermalComfort:
         elif ise <= -3:
             perception = ScharlauPerception.HIGHLY_UNCOMFORTABLE
         elif ise <= -1:
-            perception = ScharlauPerception.MODERATLY_UNCOMFORTABLE
+            perception = ScharlauPerception.MODERATELY_UNCOMFORTABLE
         elif ise < 0:
             perception = ScharlauPerception.SLIGHTLY_UNCOMFORTABLE
         else:
@@ -863,7 +863,7 @@ class DeviceThermalComfort:
         elif ish <= -3:
             perception = ScharlauPerception.HIGHLY_UNCOMFORTABLE
         elif ish <= -1:
-            perception = ScharlauPerception.MODERATLY_UNCOMFORTABLE
+            perception = ScharlauPerception.MODERATELY_UNCOMFORTABLE
         elif ish < 0:
             perception = ScharlauPerception.SLIGHTLY_UNCOMFORTABLE
         else:
