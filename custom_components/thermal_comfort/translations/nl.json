@@ -6,22 +6,22 @@
     },
     "step": {
       "init": {
-        "title": "Thermal comfort instellingen",
+        "title": "Instellingen Thermal comfort",
         "data": {
           "temperature_sensor": "Temperatuursensor",
           "humidity_sensor": "Luchtvochtigheidssensor",
-          "poll": "Zet polling aan",
+          "poll": "Inschakelen polling",
           "scan_interval": "Poll interval (seconden)",
-          "custom_icons": "Gebruik custom icons pack"
+          "custom_icons": "Gebruikerspecifieke iconen"
         }
       }
     }
   },
   "config": {
     "abort": {
-      "already_configured": "Deze combinatie van temperatuur- en luchtvochtigheidssensors is reeds geconfigureerd",
-      "no_sensors": "Geen temperatuur- of luchtvochtigheidssensors gevonden. Probeer nog eens in geadvanceerd modus.",
-      "no_sensors_advanced": "Geen temperatuur- of luchtvochtigheidssensors gevonden."
+      "already_configured": "Deze combinatie van temperatuur- en luchtvochtigheidssensoren is al geconfigureerd",
+      "no_sensors": "Geen temperatuur- of luchtvochtigheidssensoren gevonden. Probeer opnieuw in geadvanceerde modus.",
+      "no_sensors_advanced": "Geen temperatuur- of luchtvochtigheidssensoren gevonden."
     },
     "error": {
       "temperature_not_found": "Temperatuursensor niet gevonden",
@@ -29,15 +29,15 @@
     },
     "step": {
       "user": {
-        "title": "Thermal comfort instellingen",
+        "title": "Instellingen Thermal comfort",
         "data": {
           "name": "Naam",
           "temperature_sensor": "Temperatuursensor",
           "humidity_sensor": "Luchtvochtigheidssensor",
-          "poll": "Zet Polling aan",
+          "poll": "Inschakelen polling",
           "scan_interval": "Poll interval (seconden)",
-          "custom_icons": "Gebruik custom icons pack",
-          "enabled_sensors": "Ingeschakelde sensors"
+          "custom_icons": "Gebruikerspecifieke iconen",
+          "enabled_sensors": "Ingeschakelde sensoren"
         }
       }
     }
@@ -51,22 +51,23 @@
         "name": "Dauwpunt"
       },
       "dew_point_perception": {
+        "name": "Dauwpunt beleving",
         "state": {
-          "dry": "Beetje droog voor sommigen",
-          "very_comfortable": "Zeer gemakkelijk",
-          "comfortable": "Gemakkelijk",
-          "ok_but_humid": "OK voor meesten, wel vochtig",
-          "somewhat_uncomfortable": "Ietswat ongemakkelijk",
-          "quite_uncomfortable": "Zeer vochtig, best ongemakkelijk",
+          "dry": "Een beetje droog voor sommigen",
+          "very_comfortable": "Zeer comfortabel",
+          "comfortable": "Comfortabel",
+          "ok_but_humid": "Aangenaam maar wel vochtig",
+          "somewhat_uncomfortable": "Ietwat ongemakkelijk",
+          "quite_uncomfortable": "Zeer vochtig, behoorlijk ongemakkelijk",
           "extremely_uncomfortable": "Extreem ongemakkelijk, drukkend",
-          "severely_high": "Zeer hoog, zelfs gevaarlijk bij astma gerelateerde ziekten"
+          "severely_high": "Zeer hoog, zelfs levensgevaarlijk bij astmatische klachten"
         }
       },
       "frost_point": {
         "name": "Rijptemperatuur"
       },
       "frost_risk": {
-        "name": "Rijprisico",
+        "name": "Risico op rijp",
         "state": {
           "no_risk": "Geen risico",
           "unlikely": "Onwaarschijnlijk",
@@ -81,22 +82,24 @@
         "name": "Humidex"
       },
       "humidex_perception": {
+        "name": "Humidex beleving",
         "state": {
-          "comfortable": "Gemakkelijk",
-          "noticable_discomfort": "Merkbaar ongemak",
-          "evident_discomfort": "Duidelijk ongemak",
+          "comfortable": "Comfortabel",
+          "noticable_discomfort": "Merkbaar ongemakkelijk",
+          "evident_discomfort": "Duidelijk ongemakkelijk",
           "great_discomfort": "Groot ongemak, vermijd inspanning",
-          "dangerous_discomfort": "Gevaarlijk ongemak",
-          "heat_stroke": "Hitteberoerte mogelijk"
+          "dangerous_discomfort": "Gevaarlijk ongemakkelijk",
+          "heat_stroke": "Kans op hitteberoerte"
         }
       },
       "moist_air_enthalpy": {
-        "name": "Enthalpie van vochtige lucht"
+        "name": "Energie van de vochtige lucht (enthalpie)"
       },
       "relative_strain_perception": {
+        "name": "Temperatuurbeleving bij lichte inspanning",
         "state": {
           "outside_calculable_range": "Buiten het berekenbare bereik",
-          "comfortable": "Gemakkelijk",
+          "comfortable": "Comfortabel",
           "slight_discomfort": "Licht ongemakkelijk",
           "discomfort": "Ongemakkelijk",
           "significant_discomfort": "Aanzienlijk ongemakkelijk",
@@ -104,44 +107,51 @@
         }
       },
       "summer_scharlau_perception": {
+        "name": "Temperatuurbeleving volgens Scharlau (zomer)",
         "state": {
           "outside_calculable_range": "Buiten het berekenbare bereik",
-          "comfortable": "Gemakkelijk",
+          "comfortable": "Comfortabel",
           "slightly_uncomfortable": "Licht ongemakkelijk",
           "moderatly_uncomfortable": "Matig ongemakkelijk",
           "highly_uncomfortable": "Zeer ongemakkelijk"
         }
       },
       "winter_scharlau_perception": {
+        "name": "Temperatuurbeleving volgens Scharlau (winter)",
         "state": {
           "outside_calculable_range": "Buiten het berekenbare bereik",
-          "comfortable": "Gemakkelijk",
+          "comfortable": "Comfortabel",
           "slightly_uncomfortable": "Licht ongemakkelijk",
           "moderatly_uncomfortable": "Matig ongemakkelijk",
           "highly_uncomfortable": "Zeer ongemakkelijk"
         }
       },
+      "summer_simmer_index": {
+        "name": "Temperatuurindex volgens Simmer"
+      },
       "summer_simmer_perception": {
+        "name": "Temperatuurbeleving volgens Simmer (zomer)",
         "state": {
           "cool": "Koel",
           "slightly_cool": "Enigszins koel",
-          "comfortable": "Gemakkelijk",
+          "comfortable": "Comfortabel",
           "slightly_warm": "Enigszins warm",
-          "increasing_discomfort": "Toenemend ongemakkelijk",
+          "increasing_discomfort": "Toenemend ongemak",
           "extremely_warm": "Extreem warm",
-          "danger_of_heatstroke": "Gevaar voor een zonnesteek",
-          "extreme_danger_of_heatstroke": "Extreem gevaar voor een zonnesteek",
-          "circulatory_collapse_imminent": "Instorting van de bloedsomloop dreigt"
+          "danger_of_heatstroke": "Gevaar voor hitteberoerte",
+          "extreme_danger_of_heatstroke": "Extreem gevaar voor hitteberoerte",
+          "circulatory_collapse_imminent": "Direct gevaar voor flauwvallen, circulatoir collaps"
         }
       },
       "thoms_discomfort_perception": {
+        "name": "Temperatuurbeleving volgens Thoms",
         "state": {
           "no_discomfort": "Niet ongemakkelijk",
-          "less_than_half": "Minder, dan de helft van de populatie voelt ongemakkelijk",
-          "more_than_half": "Meer, dan de helft van de populatie voelt ongemakkelijk",
-          "most": "De meeste mensen voelen ongemak en verslechtering van psychofysische omstandigheden",
-          "everyone": "Iedereen ervaart behoorlijk ongemak",
-          "dangerous": "Gevaarlijk, zeer sterk ongemak dat hitteberoerte kan veroorzaken"
+          "less_than_half": "Minder dan de helft van de mensen voelt zich ongemakkelijk",
+          "more_than_half": "Meer dan de helft van de mensen voelt zich ongemakkelijk",
+          "most": "De meeste mensen voelen zich ongemakkelijk, verslechtering van psychofysische omstandigheden",
+          "everyone": "Iedereen ervaart aanzienlijk ongemak",
+          "dangerous": "Gevaarlijk, zeer sterk ongemak dat een hitteberoerte kan veroorzaken"
         }
       }
     }
