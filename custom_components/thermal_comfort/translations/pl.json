@@ -44,7 +44,14 @@
   },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Wilgotność bezwzględna"
+      },
+      "dew_point": {
+        "name": "Punkt rosy"
+      },
       "dew_point_perception": {
+        "name": "Odczucie punktu rosy",
         "state": {
           "dry": "Dla niektórych może być sucho",
           "very_comfortable": "Bardzo komfortowe",
@@ -56,7 +63,11 @@
           "severely_high": "Wysoce niebezpieczne dla astmatyków, bardzo uciążliwe"
         }
       },
+      "frost_point": {
+        "name": "Punkt zamarzania"
+      },
       "frost_risk": {
+        "name": "Ryzyko zamarazania",
         "state": {
           "no_risk": "Brak",
           "unlikely": "Małe",
@@ -64,7 +75,14 @@
           "high": "Wysokie"
         }
       },
+      "heat_index": {
+        "name": "Wskaźnik ciepła"
+      },
+      "humidex": {
+        "name": "Wskaźnik upału"
+      },
       "humidex_perception": {
+        "name": "Odczucie upału",
         "state": {
           "comfortable": "Komfortowo",
           "noticable_discomfort": "Lekki dyskomfort",
@@ -74,7 +92,11 @@
           "heat_stroke": "Możliwy udar cieplny"
         }
       },
+      "moist_air_enthalpy": {
+        "name": "Pojemność cieplna wilgotnego powietrza"
+      },
       "relative_strain_perception": {
+        "name": "Odczucie względnego obciążenia",
         "state": {
           "outside_calculable_range": "Poza obliczalnym zakresem",
           "comfortable": "Komfortowo",
