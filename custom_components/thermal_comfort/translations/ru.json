@@ -44,6 +44,12 @@
   },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Абсолютная влажность"
+      },
+      "dew_point": {
+        "name": "Точка росы"
+      },
       "dew_point_perception": {
         "state": {
           "dry": "Сухо",
@@ -56,13 +62,20 @@
           "severely_high": "Очень высокая влажность, опасно для астматиков"
         }
       },
+      "frost_point": {
+        "name": "Точка замерзания"
+      },
       "frost_risk": {
+        "name": "Риск заморозков",
         "state": {
           "no_risk": "Не опасно",
           "unlikely": "Маловероятно",
           "probable": "Вероятно",
           "high": "Очень вероятно"
         }
+      },
+      "heat_index": {
+        "name": "Индекс тепла"
       },
       "humidex_perception": {
         "state": {
@@ -73,6 +86,9 @@
           "dangerous_discomfort": "Опасный дискомфорт",
           "heat_stroke": "Возможен тепловой удар"
         }
+      },
+      "moist_air_enthalpy": {
+        "name": "Энтальпия влажного воздуха"
       },
       "relative_strain_perception": {
         "state": {
