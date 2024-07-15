@@ -113,7 +113,7 @@
           "comfortable": "Confortável",
           "slightly_uncomfortable": "Ligeiramente desconfortável",
           "moderately_uncomfortable": "Desconforto moderado",
-          "highly_uncomfortable": "Muito desconfortáve"
+          "highly_uncomfortable": "Muito desconfortável"
         }
       },
       "winter_scharlau_perception": {
@@ -149,7 +149,7 @@
           "no_discomfort": "Sem desconforto",
           "less_than_half": "Menos de metade da população sente desconforto",
           "more_than_half": "Mais de metade da população sente desconforto",
-          "most": " maioria dos indivíduos sente desconforto e deterioração da condição física e psicológica",
+          "most": "A maioria dos indivíduos sente desconforto e deterioração da condição física e psicológica",
           "everyone": "Todo mundo sente um importante desconforto",
           "dangerous": "Perigoso, desconforto muito forte que pode causar insolações"
         }

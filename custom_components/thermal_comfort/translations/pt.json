@@ -93,6 +93,7 @@
         }
       },
       "relative_strain_perception": {
+        "name": "Conforto Térmico Relativo",
         "state": {
           "outside_calculable_range": "Fora do interválo de cálculo",
           "comfortable": "Confortável",
@@ -103,6 +104,7 @@
         }
       },
       "summer_scharlau_perception": {
+        "name": "Índice de Verão de Scharlau",
         "state": {
           "outside_calculable_range": "Fora do interválo de cálculo",
           "comfortable": "Confortável",
@@ -112,6 +114,7 @@
         }
       },
       "winter_scharlau_perception": {
+        "name": "Percepção de Inverno de Scharlau",
         "state": {
           "outside_calculable_range": "Fora do interválo de cálculo",
           "comfortable": "Confortável",
@@ -120,12 +123,16 @@
           "highly_uncomfortable": "Muito desconfortável"
         }
       },
+      "summer_simmer_index": {
+        "name": "Índice de Verão de Simmer"
+      },
       "summer_simmer_perception": {
+        "name": "Percepção de Verão de Simmer",
         "state": {
           "cool": "Frio",
           "slightly_cool": "Frio ligeiro",
           "comfortable": "Confortável",
-          "slightly_warm": "calor ligueiro",
+          "slightly_warm": "calor ligeiro",
           "increasing_discomfort": "Desconforto crescente",
           "extremely_warm": "Extremamente quente",
           "danger_of_heatstroke": "Perigo de insolação",
@@ -134,6 +141,7 @@
         }
       },
       "thoms_discomfort_perception": {
+        "name": "Percepção de Desconforto de Thoms",
         "state": {
           "no_discomfort": "Sem desconforto",
           "less_than_half": "Menos de metade da população sente desconforto",
