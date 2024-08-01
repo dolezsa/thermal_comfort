@@ -1,7 +1,57 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Temperaturgivaren kunde inte hittas",
+      "humidity_not_found": "Luftfuktighetsgivaren kunde inte hittas"
+    },
+    "step": {
+      "init": {
+        "title": "Inställningar för Thermal comfort",
+        "data": {
+          "temperature_sensor": "Temperaturgivare",
+          "humidity_sensor": "Luftfuktighetsgivare",
+          "poll": "Aktivera pollning",
+          "scan_interval": "Poll intervall (sekunder)",
+          "custom_icons": "Använd anpassade ikoner"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Den här kombinationen av temperatur- och luftfuktighetsgivare har redan konfigurerats",
+      "no_sensors": "Ingen temperatur- eller luftfuktighetsgviare hittades. Prova igen i avancerat läge.",
+      "no_sensors_advanced": "Ingen temperatur- eller luftfuktighetsgviare hittades."
+    },
+    "error": {
+      "temperature_not_found": "Temperaturgivare kunde inte hittas",
+      "humidity_not_found": "Luftfuktighetsgivare kunde inte hittas"
+    },
+    "step": {
+      "user": {
+        "title": "Inställningar för Thermal comfort",
+        "data": {
+          "name": "Namn",
+          "temperature_sensor": "Temperaturgivare",
+          "humidity_sensor": "Luftfuktighetsgivare",
+          "poll": "Aktivera pollning",
+          "scan_interval": "Poll intervall (sekunder)",
+          "custom_icons": "Använd anpassade ikoner",
+          "enabled_sensors": "Aktiverade givare"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Absolut luftfuktighet"
+      },
+      "dew_point": {
+        "name": "Daggpunkt"
+      },
       "dew_point_perception": {
+        "name": "Upplevd luftfuktighet",
         "state": {
           "dry": "Lite torrt",
           "very_comfortable": "Väldigt bekväm",
@@ -13,7 +63,11 @@
           "severely_high": "Allvarligt högt, kan vara dödlig för astmarelaterade sjukdomar"
         }
       },
+      "frost_point": {
+        "name": "Fryspunkt"
+      },
       "frost_risk": {
+        "name": "Frysrisk",
         "state": {
           "no_risk": "Ingen risk",
           "unlikely": "Osannolikt",
@@ -21,9 +75,52 @@
           "high": "Stor risk"
         }
       },
+      "heat_index": {
+        "name": "Värmeindex"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
+      "humidex_perception": {
+        "name": "Upplevd humidex",
+        "state": {
+          "comfortable": "Bekvämt",
+          "noticable_discomfort": "Märkbart obekvämt",
+          "evident_discomfort": "Påtagligt obekvämt",
+          "great_discomfort": "Mycket obekvämt",
+          "dangerous_discomfort": "Farligt",
+          "heat_stroke": "Risk för värmeslag"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Entalpi"
+      },
       "relative_strain_perception": {
         "state": {
-          "discomfort": "Disconforto"
+          "outside_calculable_range": "Utanför beräkningsbart område",
+          "comfortable": "Bekvämt",
+          "slight_discomfort": "Lite obekvämt",
+          "discomfort": "Obekvämt",
+          "significant_discomfort": "Mycket obekvämt",
+          "extreme_discomfort": "Extremt obekvämt"
+        }
+      },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Utanför beräkningsbart område",
+          "comfortable": "Bekvämt",
+          "slightly_uncomfortable": "Lite obekvämt",
+          "moderately_uncomfortable": "Måttligt obekvämt",
+          "highly_uncomfortable": "Mycket obekvämt"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Utanför beräkningsbart område",
+          "comfortable": "Bekvämt",
+          "slightly_uncomfortable": "Lite obekvämt",
+          "moderately_uncomfortable": "Måttligt obekvämt",
+          "highly_uncomfortable": "Mycket obekvämt"
         }
       },
       "summer_simmer_perception": {
@@ -37,6 +134,15 @@
           "danger_of_heatstroke": "Risk för värmeslag",
           "extreme_danger_of_heatstroke": "Extrem risk för värmeslag",
           "circulatory_collapse_imminent": "Allvarlig fara för kollaps"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Inget obehag",
+          "less_than_half": "Mindre än hälften av alla människor upplever obehag",
+          "more_than_half": "Mer än hälften av alla människor upplever obehag",
+          "everyone": "Alla känner måttligt obehag",
+          "dangerous": "Farligt, mycket obehagligt, kan leda till värmeslag"
         }
       }
     }
