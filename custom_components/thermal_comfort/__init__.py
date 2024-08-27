@@ -20,7 +20,6 @@ from homeassistant.helpers.reload import (
     async_integration_yaml_config,
     async_reload_integration_platforms,
 )
-from homeassistant.helpers.service import async_register_admin_service
 from homeassistant.helpers.typing import ConfigType
 
 from .config_flow import get_value
@@ -160,7 +159,48 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
         hass.bus.async_fire(f"event_{DOMAIN}_reloaded", context=call.context)
 
-    async_register_admin_service(hass, DOMAIN, SERVICE_RELOAD, _reload_config)
+from homeassistant.helpers.service import async_register_admin_service
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Set up the thermal_comfort integration."""
+    if DOMAIN in config:
+        await _process_config(hass, config)
+
+    async def _reload_config(call: Event | ServiceCall) -> None:
+        """Reload top-level + platforms."""
+        try:
+            config_yaml = await async_integration_yaml_config(hass, DOMAIN, raise_on_failure=True)
+        except ConfigValidationError as ex:
+            raise ServiceValidationError(
+                str(ex),
+                translation_domain=ex.translation_domain,
+                translation_key=ex.translation_key,
+                translation_placeholders=ex.translation_placeholders,
+            ) from ex
+
+        if config_yaml is None:
+            return
+
+        await async_reload_integration_platforms(hass, DOMAIN, PLATFORMS)
+
+        if DOMAIN in config_yaml:
+            await _process_config(hass, config_yaml)
+
+        hass.bus.async_fire(f"event_{DOMAIN}_reloaded", context=call.context)
+
+    domain = DOMAIN 
+
+    service_name = "reload"
+    service_func = _reload_config
+    SERVICE_SCHEMA = vol.Schema({})
+
+    async_register_admin_service(
+        hass,
+        domain,
+        service_name,
+        service_func,
+        schema=SERVICE_SCHEMA,
+    )
 
     return True
 
