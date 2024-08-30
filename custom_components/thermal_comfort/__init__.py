@@ -21,6 +21,7 @@ from homeassistant.helpers.reload import (
     async_reload_integration_platforms,
 )
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.helpers.service import async_register_admin_service
 
 from .config_flow import get_value
 from .const import DOMAIN, PLATFORMS, UPDATE_LISTENER
@@ -38,6 +39,29 @@ from .sensor import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+OPTIONS_SCHEMA = vol.Schema({}).extend(
+    SENSOR_OPTIONS_SCHEMA.schema,
+    extra=vol.REMOVE_EXTRA,
+)
+
+COMBINED_SCHEMA = vol.Schema(
+    {
+        vol.Optional(SENSOR_DOMAIN): vol.All(
+            cv.ensure_list, [SENSOR_SCHEMA]
+        ),
+    }
+).extend(OPTIONS_SCHEMA.schema)
+
+CONFIG_SCHEMA = vol.Schema(
+    {
+        vol.Optional(DOMAIN): vol.All(
+            cv.ensure_list,
+            [COMBINED_SCHEMA],
+        )
+    },
+    extra=vol.ALLOW_EXTRA,
+)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -109,33 +133,16 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     return True
 
 
-OPTIONS_SCHEMA = vol.Schema({}).extend(
-    SENSOR_OPTIONS_SCHEMA.schema,
-    extra=vol.REMOVE_EXTRA,
-)
-
-COMBINED_SCHEMA = vol.Schema(
-    {
-        vol.Optional(SENSOR_DOMAIN): vol.All(
-            cv.ensure_list, [SENSOR_SCHEMA]
-        ),
-    }
-).extend(OPTIONS_SCHEMA.schema)
-
-CONFIG_SCHEMA = vol.Schema(
-    {
-        vol.Optional(DOMAIN): vol.All(
-            cv.ensure_list,
-            [COMBINED_SCHEMA],
-        )
-    },
-    extra=vol.ALLOW_EXTRA,
-)
-
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the thermal_comfort integration."""
-    if DOMAIN in config:
-        await _process_config(hass, config)
+
+    async def start_config(event: Event):
+        """Processa a configuração após o evento homeassistant_start."""
+        if DOMAIN in config:
+            await _process_config(hass, config)
+
+    # Aguarda o evento homeassistant_start antes de processar a configuração
+    hass.bus.async_listen_once('homeassistant_start', start_config)
 
     async def _reload_config(call: Event | ServiceCall) -> None:
         """Reload top-level + platforms."""
@@ -159,37 +166,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
         hass.bus.async_fire(f"event_{DOMAIN}_reloaded", context=call.context)
 
-from homeassistant.helpers.service import async_register_admin_service
-
-async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    """Set up the thermal_comfort integration."""
-    if DOMAIN in config:
-        await _process_config(hass, config)
-
-    async def _reload_config(call: Event | ServiceCall) -> None:
-        """Reload top-level + platforms."""
-        try:
-            config_yaml = await async_integration_yaml_config(hass, DOMAIN, raise_on_failure=True)
-        except ConfigValidationError as ex:
-            raise ServiceValidationError(
-                str(ex),
-                translation_domain=ex.translation_domain,
-                translation_key=ex.translation_key,
-                translation_placeholders=ex.translation_placeholders,
-            ) from ex
-
-        if config_yaml is None:
-            return
-
-        await async_reload_integration_platforms(hass, DOMAIN, PLATFORMS)
-
-        if DOMAIN in config_yaml:
-            await _process_config(hass, config_yaml)
-
-        hass.bus.async_fire(f"event_{DOMAIN}_reloaded", context=call.context)
-
-    domain = DOMAIN 
-
+    domain = DOMAIN
     service_name = "reload"
     service_func = _reload_config
     SERVICE_SCHEMA = vol.Schema({})
