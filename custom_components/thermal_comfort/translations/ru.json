@@ -44,7 +44,14 @@
   },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Абсолютная влажность"
+      },
+      "dew_point": {
+        "name": "Точка росы"
+      },
       "dew_point_perception": {
+        "name": "Ощущение точки росы",
         "state": {
           "dry": "Сухо",
           "very_comfortable": "Очень комфортно",
@@ -56,7 +63,11 @@
           "severely_high": "Очень высокая влажность, опасно для астматиков"
         }
       },
+      "frost_point": {
+        "name": "Точка замерзания"
+      },
       "frost_risk": {
+        "name": "Риск заморозки",
         "state": {
           "no_risk": "Не опасно",
           "unlikely": "Маловероятно",
@@ -64,7 +75,14 @@
           "high": "Очень вероятно"
         }
       },
+      "heat_index": {
+        "name": "Индекс тепла"
+      },
+      "humidex": {
+        "name": "Индекс температуры и влажности"
+      },
       "humidex_perception": {
+        "name": "Восприятие температуры и влажности",
         "state": {
           "comfortable": "Комфортно",
           "noticable_discomfort": "Заметный дискомфорт",
@@ -73,6 +91,9 @@
           "dangerous_discomfort": "Опасный дискомфорт",
           "heat_stroke": "Возможен тепловой удар"
         }
+      },
+      "moist_air_enthalpy": {
+        "name": "Энтальпия влажного воздуха"
       },
       "relative_strain_perception": {
         "state": {
@@ -85,6 +106,7 @@
         }
       },
       "summer_scharlau_perception": {
+        "name": "Индекс летнего Шарлау",
         "state": {
           "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
           "comfortable": "Комфортно",
@@ -94,6 +116,7 @@
         }
       },
       "winter_scharlau_perception": {
+        "name": "Зимний индекс Шарлау",
         "state": {
           "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
           "comfortable": "Комфортно",
@@ -102,7 +125,11 @@
           "highly_uncomfortable": "Очень некомфортно"
         }
       },
+      "summer_simmer_index": {
+        "name": "Индекс летнего стресса"
+      },
       "summer_simmer_perception": {
+        "name": "Восприятие летнего дискомфорта",
         "state": {
           "cool": "Холодно",
           "slightly_cool": "Прохладно",
@@ -116,6 +143,7 @@
         }
       },
       "thoms_discomfort_perception": {
+        "name": "Индекс дискомфорта Тома",
         "state": {
           "no_discomfort": "Нет дискомфорта",
           "less_than_half": "Менее половины населения испытывает дискомфорт",
