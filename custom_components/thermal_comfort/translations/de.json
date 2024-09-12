@@ -126,6 +126,9 @@
           "highly_uncomfortable": "Sehr unangenehm"
         }
       },
+      "summer_simmer_index": {
+        "name": "Summer Simmer Index"
+      },
       "summer_simmer_perception": {
         "name": "Sommer Simmer gefühlt",
         "state": {
