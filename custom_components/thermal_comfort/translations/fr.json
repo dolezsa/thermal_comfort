@@ -130,7 +130,7 @@
         "name": "Indice d'été Simmer"
       },
       "summer_simmer_perception": {
-        "name": "Sensation Indice d'été Simmer",
+        "name": "Sensation indice d'été Simmer",
         "state": {
           "cool": "Froid",
           "slightly_cool": "Légèrement froid",
