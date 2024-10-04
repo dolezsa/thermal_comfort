@@ -123,7 +123,7 @@
       "summer_simmer_perception": {
         "state": {
           "cool": "Frio",
-          "slightly_cool": "Frio ligeiro",
+          "slightly_cool": "Ligeiramente fresco",
           "comfortable": "Confortável",
           "slightly_warm": "Ligeiramente quente",
           "increasing_discomfort": "Desconforto crescente",
