@@ -94,7 +94,7 @@
       },
       "relative_strain_perception": {
         "state": {
-          "outside_calculable_range": "Fora do interválo de cálculo",
+          "outside_calculable_range": "Fora do intervalo de cálculo",
           "comfortable": "Confortável",
           "slight_discomfort": "Ligeiro desconforto",
           "discomfort": "Desconforto",
@@ -104,7 +104,7 @@
       },
       "summer_scharlau_perception": {
         "state": {
-          "outside_calculable_range": "Fora do interválo de cálculo",
+          "outside_calculable_range": "Fora do intervalo de cálculo",
           "comfortable": "Confortável",
           "slightly_uncomfortable": "Ligeiramente desconfortável",
           "moderately_uncomfortable": "Desconforto moderado",
@@ -113,7 +113,7 @@
       },
       "winter_scharlau_perception": {
         "state": {
-          "outside_calculable_range": "Fora do interválo de cálculo",
+          "outside_calculable_range": "Fora do intervalo de cálculo",
           "comfortable": "Confortável",
           "slightly_uncomfortable": "Ligeiramente desconfortável",
           "moderately_uncomfortable": "Desconforto moderado",
@@ -123,9 +123,9 @@
       "summer_simmer_perception": {
         "state": {
           "cool": "Frio",
-          "slightly_cool": "Frio ligeiro",
+          "slightly_cool": "Ligeiramente fresco",
           "comfortable": "Confortável",
-          "slightly_warm": "calor ligueiro",
+          "slightly_warm": "Ligeiramente quente",
           "increasing_discomfort": "Desconforto crescente",
           "extremely_warm": "Extremamente quente",
           "danger_of_heatstroke": "Perigo de insolação",
