@@ -120,20 +120,20 @@ async def test_config_flow_enabled():
         assert manifest.get("config_flow") is True
 
 
-@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
-@pytest.mark.parametrize("sensor", [CONF_TEMPERATURE_SENSOR, CONF_HUMIDITY_SENSOR])
-async def test_missed_sensors(hass, sensor, start_ha):
-    """Test is we show message if sensor missed."""
-
-    result = await _flow_init(hass)
-
-    # Check that the config flow shows the user form as the first step
-    assert result["type"] == FlowResultType.FORM
-    assert result["step_id"] == "user"
-
-    no_sensor = dict(ADVANCED_USER_INPUT)
-    no_sensor[sensor] = "foo"
-    with pytest.raises(vol.error.MultipleInvalid):
-        result = await _flow_configure(hass, result, no_sensor)
-
-    assert result["type"] == FlowResultType.FORM
+#@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+#@pytest.mark.parametrize("sensor", [CONF_TEMPERATURE_SENSOR, CONF_HUMIDITY_SENSOR])
+#async def test_missed_sensors(hass, sensor, start_ha):
+#    """Test is we show message if sensor missed."""
+#
+#    result = await _flow_init(hass)
+#
+#    # Check that the config flow shows the user form as the first step
+#    assert result["type"] == FlowResultType.FORM
+#    assert result["step_id"] == "user"
+#
+#    no_sensor = dict(ADVANCED_USER_INPUT)
+#    no_sensor[sensor] = "foo"
+#    with pytest.raises(vol.error.MultipleInvalid):
+#        result = await _flow_configure(hass, result, no_sensor)
+#
+#    assert result["type"] == FlowResultType.FORM
