@@ -51,6 +51,7 @@
         "name": "Точка росы"
       },
       "dew_point_perception": {
+        "name": "Ощущение точки росы",
         "state": {
           "dry": "Сухо",
           "very_comfortable": "Очень комфортно",
@@ -77,7 +78,11 @@
       "heat_index": {
         "name": "Индекс тепла"
       },
+      "humidex": {
+        "name": "Индекс температуры и влажности"
+      },
       "humidex_perception": {
+        "name": "Восприятие температуры и влажности",
         "state": {
           "comfortable": "Комфортно",
           "noticable_discomfort": "Заметный дискомфорт",
@@ -101,6 +106,7 @@
         }
       },
       "summer_scharlau_perception": {
+        "name": "Индекс летнего Шарлау",
         "state": {
           "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
           "comfortable": "Комфортно",
@@ -110,6 +116,7 @@
         }
       },
       "winter_scharlau_perception": {
+        "name": "Зимний индекс Шарлау",
         "state": {
           "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
           "comfortable": "Комфортно",
@@ -118,7 +125,11 @@
           "highly_uncomfortable": "Очень некомфортно"
         }
       },
+      "summer_simmer_index": {
+        "name": "Индекс летнего стресса"
+      },
       "summer_simmer_perception": {
+        "name": "Восприятие летнего дискомфорта",
         "state": {
           "cool": "Холодно",
           "slightly_cool": "Прохладно",
@@ -132,6 +143,7 @@
         }
       },
       "thoms_discomfort_perception": {
+        "name": "Индекс дискомфорта Тома",
         "state": {
           "no_discomfort": "Нет дискомфорта",
           "less_than_half": "Менее половины населения испытывает дискомфорт",
