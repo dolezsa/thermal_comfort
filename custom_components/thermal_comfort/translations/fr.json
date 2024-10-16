@@ -51,6 +51,7 @@
         "name": "Point de rosée"
       },
       "dew_point_perception": {
+        "name": "Sensation point de rosée",
         "state": {
           "dry": "Un peu sec pour certains",
           "very_comfortable": "Très confortable",
@@ -106,7 +107,7 @@
         }
       },
       "summer_scharlau_perception": {
-        "name": "Indice d'été de Scharlau",
+        "name": "Sensation indice d'été de Scharlau",
         "state": {
           "outside_calculable_range": "En dehors de la plage calculable",
           "comfortable": "Confortable",
@@ -116,7 +117,7 @@
         }
       },
       "winter_scharlau_perception": {
-        "name": "Index d'hiver de Scharlau",
+        "name": "Sensation indice d'hiver de Scharlau",
         "state": {
           "outside_calculable_range": "En dehors de la plage calculable",
           "comfortable": "Confortable",
@@ -125,8 +126,11 @@
           "highly_uncomfortable": "Très inconfortable"
         }
       },
+      "summer_simmer_index": {
+        "name": "Indice d'été Simmer"
+      },
       "summer_simmer_perception": {
-        "name": "Indice d'été Simmer",
+        "name": "Sensation indice d'été Simmer",
         "state": {
           "cool": "Froid",
           "slightly_cool": "Légèrement froid",

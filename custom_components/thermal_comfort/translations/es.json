@@ -67,7 +67,7 @@
         "name": "Punto de escarcha"
       },
       "frost_risk": {
-        "name": "Riesgo de heladas",
+        "name": "Riesgo de escarcha",
         "state": {
           "no_risk": "Sin riesgo",
           "unlikely": "Poco probable",
@@ -96,7 +96,7 @@
         "name": "Entalpía del aire húmedo"
       },
       "relative_strain_perception": {
-        "name": "Índice de tensión relativa",
+        "name": "Índice de confort térmico relativo",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
@@ -126,8 +126,11 @@
           "highly_uncomfortable": "Muy incómodo"
         }
       },
+      "summer_simmer_index": {
+        "name": "Índice de calor Simmer (verano)"
+      },
       "summer_simmer_perception": {
-        "name": "Índice de calor Simmer",
+        "name": "Sensación índice de calor Simmer (verano)",
         "state": {
           "cool": "Fresco",
           "slightly_cool": "Ligeramente fresco",
