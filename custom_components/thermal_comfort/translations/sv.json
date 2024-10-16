@@ -1,6 +1,50 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Temperatursensor hittas inte",
+      "humidity_not_found": "Fuktsensor hittas inte"
+    },
+    "step": {
+      "init": {
+        "data": {
+          "temperature_sensor": "Temperatursensor",
+          "humidity_sensor": "Fuktighetssensor",
+          "poll": "Aktivera polling",
+          "scan_interval": "Poll intervall (sekunder)"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "no_sensors": "Ingen temperatur eller fuktighetssensor hittad. Försök igen i avancerat läge.",
+      "no_sensors_advanced": "Ingen temperatur eller fuktighetssensor hittad."
+    },
+    "error": {
+      "temperature_not_found": "Temperatursensor hittat inte",
+      "humidity_not_found": "Fuktighetssensor hittas inte"
+    },
+    "step": {
+      "user": {
+        "data": {
+          "name": "Namn",
+          "temperature_sensor": "Temperatursensor",
+          "humidity_sensor": "Fuktighetssensor",
+          "poll": "Aktivera polling",
+          "scan_interval": "Poll intervall (sekunder)",
+          "enabled_sensors": "Aktivera sensorer"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Absolut fuktighet"
+      },
+      "dew_point": {
+        "name": "Dagg punkt"
+      },
       "dew_point_perception": {
         "state": {
           "dry": "Lite torrt",
@@ -14,6 +58,7 @@
         }
       },
       "frost_risk": {
+        "name": "Frost risk",
         "state": {
           "no_risk": "Ingen risk",
           "unlikely": "Osannolikt",
@@ -21,9 +66,27 @@
           "high": "Stor risk"
         }
       },
+      "heat_index": {
+        "name": "Värme index"
+      },
+      "humidex": {
+        "name": "Fuktighetsindex"
+      },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Komfortabel",
+          "noticable_discomfort": "Märkbart obehagligt",
+          "evident_discomfort": "Tydligt obehag",
+          "dangerous_discomfort": "Farligt obehagligt",
+          "heat_stroke": "Värmeslag möjligt"
+        }
+      },
       "relative_strain_perception": {
         "state": {
-          "discomfort": "Disconforto"
+          "comfortable": "Komfortabel",
+          "slight_discomfort": "Lätt obehag",
+          "discomfort": "Obehag",
+          "extreme_discomfort": "Extremt obehag"
         }
       },
       "summer_simmer_perception": {

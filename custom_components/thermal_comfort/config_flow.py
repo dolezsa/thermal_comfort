@@ -111,7 +111,6 @@ def get_sensors_by_device_class(
             Platform.IMAGE_PROCESSING,
             Platform.LIGHT,
             Platform.LOCK,
-            Platform.MAILBOX,
             Platform.MEDIA_PLAYER,
             Platform.NOTIFY,
             Platform.REMOTE,
