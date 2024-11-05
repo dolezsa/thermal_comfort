@@ -44,14 +44,7 @@
   },
   "entity": {
     "sensor": {
-      "absolute_humidity": {
-        "name": "Umidità assoluta"
-      },
-      "dew_point": {
-        "name": "Punto di rugiada"
-      },
       "dew_point_perception": {
-        "name": "Percezione del punto di rugiada",
         "state": {
           "dry": "Secco per qualcuno",
           "very_comfortable": "Molto confortevole",
@@ -61,28 +54,19 @@
           "quite_uncomfortable": "Significativo disagio, molto umido",
           "extremely_uncomfortable": "Forte disagio, opprimente",
           "severely_high": "Estremo disagio, rischioso per malattie correlate all'asma"
-        }
-      },
-      "frost_point": {
-        "name": "Punto di gelo"
+        },
+        "name": "Percezione del punto di rugiada"
       },
       "frost_risk": {
-        "name": "Rischio di gelo",
         "state": {
           "no_risk": "Nessun rischio",
           "unlikely": "Improbabile",
           "probable": "Probabile",
           "high": "Alta probabilità"
-        }
-      },
-      "heat_index": {
-        "name": "Indice di calore"
-      },
-      "humidex": {
-        "name": "Humidex"
+        },
+        "name": "Rischio di gelo"
       },
       "humidex_perception": {
-        "name": "Percezione dell'humidex",
         "state": {
           "comfortable": "Confortevole",
           "noticable_discomfort": "Disagio",
@@ -90,13 +74,10 @@
           "great_discomfort": "Disagio enorme, evitare affaticamenti",
           "dangerous_discomfort": "Disagio pericoloso",
           "heat_stroke": "Probabile colpo di calore"
-        }
-      },
-      "moist_air_enthalpy": {
-        "name": "Entalpia dell'aria umida"
+        },
+        "name": "Percezione dell'humidex"
       },
       "relative_strain_perception": {
-        "name": "Percezione della tenzione relativa",
         "state": {
           "outside_calculable_range": "Fuori scala",
           "comfortable": "Confortevole",
@@ -104,33 +85,30 @@
           "discomfort": "Disagio",
           "significant_discomfort": "Disagio significativo",
           "extreme_discomfort": "Disagio estremo"
-        }
+        },
+        "name": "Percezione della tenzione relativa"
       },
       "summer_scharlau_perception": {
-        "name": "Percezione dell'indice di Scharlau estivo",
         "state": {
           "outside_calculable_range": "Fuori scala",
           "comfortable": "Confortevole",
           "slightly_uncomfortable": "Leggero disagio",
           "moderately_uncomfortable": "Moderato disagio",
           "highly_uncomfortable": "Forte disagio"
-        }
+        },
+        "name": "Percezione dell'indice di Scharlau estivo"
       },
       "winter_scharlau_perception": {
-        "name": "Percezione dell'indice di Scharlau invernale",
         "state": {
           "outside_calculable_range": "Fuori scala",
           "comfortable": "Confortevole",
           "slightly_uncomfortable": "Leggero disagio",
           "moderately_uncomfortable": "Moderato disagio",
           "highly_uncomfortable": "Forte disagio"
-        }
-      },
-      "summer_simmer_index": {
-        "name": "Indice di Simmer estivo"
+        },
+        "name": "Percezione dell'indice di Scharlau invernale"
       },
       "summer_simmer_perception": {
-        "name": "Percezione dell'indice di Simmer estivo",
         "state": {
           "cool": "Freddo",
           "slightly_cool": "Leggermente freddo",
@@ -141,10 +119,10 @@
           "danger_of_heatstroke": "Pericolo colpo di calore",
           "extreme_danger_of_heatstroke": "Probabile colpo di calore",
           "circulatory_collapse_imminent": "Imminente colasso circolatorio"
-        }
+        },
+        "name": "Percezione dell'indice di Simmer estivo"
       },
       "thoms_discomfort_perception": {
-        "name": "Percezione di disagio di Thoms",
         "state": {
           "no_discomfort": "Confortevole",
           "less_than_half": "Meno della metà della popolazione avverte disagio",
@@ -152,7 +130,29 @@
           "most": "La maggior parte delle persone avverte disagio e deterioramento delle condizioni psicofisiche",
           "everyone": "Forte disagio per chiunque",
           "dangerous": "Stato di emergenza medica, disagio molto forte che può causare colpi di calore"
-        }
+        },
+        "name": "Percezione di disagio di Thoms"
+      },
+      "absolute_humidity": {
+        "name": "Umidità assoluta"
+      },
+      "dew_point": {
+        "name": "Punto di rugiada"
+      },
+      "frost_point": {
+        "name": "Punto di gelo"
+      },
+      "heat_index": {
+        "name": "Indice di calore"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
+      "moist_air_enthalpy": {
+        "name": "Entalpia dell'aria umida"
+      },
+      "summer_simmer_index": {
+        "name": "Indice di Simmer estivo"
       }
     }
   }

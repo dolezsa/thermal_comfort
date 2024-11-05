@@ -44,14 +44,7 @@
   },
   "entity": {
     "sensor": {
-      "absolute_humidity": {
-        "name": "Абсолютная влажность"
-      },
-      "dew_point": {
-        "name": "Точка росы"
-      },
       "dew_point_perception": {
-        "name": "Ощущение точки росы",
         "state": {
           "dry": "Сухо",
           "very_comfortable": "Очень комфортно",
@@ -61,28 +54,19 @@
           "quite_uncomfortable": "Довольно влажно, некомфортно",
           "extremely_uncomfortable": "Очень влажно, угнетающе",
           "severely_high": "Очень высокая влажность, опасно для астматиков"
-        }
-      },
-      "frost_point": {
-        "name": "Точка замерзания"
+        },
+        "name": "Ощущение точки росы"
       },
       "frost_risk": {
-        "name": "Риск заморозков",
         "state": {
           "no_risk": "Не опасно",
           "unlikely": "Маловероятно",
           "probable": "Вероятно",
           "high": "Очень вероятно"
-        }
-      },
-      "heat_index": {
-        "name": "Индекс тепла"
-      },
-      "humidex": {
-        "name": "Индекс температуры и влажности"
+        },
+        "name": "Риск заморозков"
       },
       "humidex_perception": {
-        "name": "Восприятие температуры и влажности",
         "state": {
           "comfortable": "Комфортно",
           "noticable_discomfort": "Заметный дискомфорт",
@@ -90,10 +74,8 @@
           "great_discomfort": "Серьезный дискомфорт, избегайте физических нагрузок",
           "dangerous_discomfort": "Опасный дискомфорт",
           "heat_stroke": "Возможен тепловой удар"
-        }
-      },
-      "moist_air_enthalpy": {
-        "name": "Энтальпия влажного воздуха"
+        },
+        "name": "Восприятие температуры и влажности"
       },
       "relative_strain_perception": {
         "state": {
@@ -106,30 +88,26 @@
         }
       },
       "summer_scharlau_perception": {
-        "name": "Индекс летнего Шарлау",
         "state": {
           "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
           "comfortable": "Комфортно",
           "slightly_uncomfortable": "Слегка некомфортно",
           "moderately_uncomfortable": "Некомфортно",
           "highly_uncomfortable": "Очень некомфортно"
-        }
+        },
+        "name": "Индекс летнего Шарлау"
       },
       "winter_scharlau_perception": {
-        "name": "Зимний индекс Шарлау",
         "state": {
           "outside_calculable_range": "Значения датчиков вне допустимого диапазона",
           "comfortable": "Комфортно",
           "slightly_uncomfortable": "Слегка некомфортно",
           "moderately_uncomfortable": "Некомфортно",
           "highly_uncomfortable": "Очень некомфортно"
-        }
-      },
-      "summer_simmer_index": {
-        "name": "Индекс летнего стресса"
+        },
+        "name": "Зимний индекс Шарлау"
       },
       "summer_simmer_perception": {
-        "name": "Восприятие летнего дискомфорта",
         "state": {
           "cool": "Холодно",
           "slightly_cool": "Прохладно",
@@ -140,10 +118,10 @@
           "danger_of_heatstroke": "Риск теплового удара",
           "extreme_danger_of_heatstroke": "Серьёзный риск теплового удара",
           "circulatory_collapse_imminent": "Возможны сосудистые нарушения"
-        }
+        },
+        "name": "Восприятие летнего дискомфорта"
       },
       "thoms_discomfort_perception": {
-        "name": "Индекс дискомфорта Тома",
         "state": {
           "no_discomfort": "Нет дискомфорта",
           "less_than_half": "Менее половины населения испытывает дискомфорт",
@@ -151,7 +129,29 @@
           "most": "Большинство испытывает дискомфорт и ухудшение психофизического состояния",
           "everyone": "Все испытывают существенный дискомфорт",
           "dangerous": "Опасно, очень сильный дискомфорт, который может вызвать тепловой удар"
-        }
+        },
+        "name": "Индекс дискомфорта Тома"
+      },
+      "absolute_humidity": {
+        "name": "Абсолютная влажность"
+      },
+      "dew_point": {
+        "name": "Точка росы"
+      },
+      "frost_point": {
+        "name": "Точка замерзания"
+      },
+      "heat_index": {
+        "name": "Индекс тепла"
+      },
+      "humidex": {
+        "name": "Индекс температуры и влажности"
+      },
+      "moist_air_enthalpy": {
+        "name": "Энтальпия влажного воздуха"
+      },
+      "summer_simmer_index": {
+        "name": "Индекс летнего стресса"
       }
     }
   }

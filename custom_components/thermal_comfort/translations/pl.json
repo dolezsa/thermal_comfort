@@ -44,14 +44,7 @@
   },
   "entity": {
     "sensor": {
-      "absolute_humidity": {
-        "name": "Wilgotność bezwzględna"
-      },
-      "dew_point": {
-        "name": "Punkt rosy"
-      },
       "dew_point_perception": {
-        "name": "Odczucie punktu rosy",
         "state": {
           "dry": "Dla niektórych może być sucho",
           "very_comfortable": "Bardzo komfortowe",
@@ -61,28 +54,19 @@
           "quite_uncomfortable": "Bardzo wilgotno, całkiem niekomfortowe",
           "extremely_uncomfortable": "Bardzo niekomfortowe, uciążliwe",
           "severely_high": "Wysoce niebezpieczne dla astmatyków, bardzo uciążliwe"
-        }
-      },
-      "frost_point": {
-        "name": "Punkt zamarzania"
+        },
+        "name": "Odczucie punktu rosy"
       },
       "frost_risk": {
-        "name": "Ryzyko zamarazania",
         "state": {
           "no_risk": "Brak",
           "unlikely": "Małe",
           "probable": "Możliwe",
           "high": "Wysokie"
-        }
-      },
-      "heat_index": {
-        "name": "Wskaźnik ciepła"
-      },
-      "humidex": {
-        "name": "Wskaźnik upału"
+        },
+        "name": "Ryzyko zamarazania"
       },
       "humidex_perception": {
-        "name": "Odczucie upału",
         "state": {
           "comfortable": "Komfortowo",
           "noticable_discomfort": "Lekki dyskomfort",
@@ -90,13 +74,10 @@
           "great_discomfort": "Duży dyskomfort, unikaj wysiłku",
           "dangerous_discomfort": "Niebezpieczny dyskomfort",
           "heat_stroke": "Możliwy udar cieplny"
-        }
-      },
-      "moist_air_enthalpy": {
-        "name": "Pojemność cieplna wilgotnego powietrza"
+        },
+        "name": "Odczucie upału"
       },
       "relative_strain_perception": {
-        "name": "Odczucie względnego obciążenia",
         "state": {
           "outside_calculable_range": "Poza obliczalnym zakresem",
           "comfortable": "Komfortowo",
@@ -104,7 +85,8 @@
           "discomfort": "Dyskomfort",
           "significant_discomfort": "Znaczący dyskomfort",
           "extreme_discomfort": "Ekstremalny dyskomfort"
-        }
+        },
+        "name": "Odczucie względnego obciążenia"
       },
       "summer_scharlau_perception": {
         "state": {
@@ -146,6 +128,24 @@
           "everyone": "Wszyscy odczuwają znaczny dyskomfort",
           "dangerous": "Niebezpieczny, bardzo silny dyskomfort, który może powodować udary cieplne"
         }
+      },
+      "absolute_humidity": {
+        "name": "Wilgotność bezwzględna"
+      },
+      "dew_point": {
+        "name": "Punkt rosy"
+      },
+      "frost_point": {
+        "name": "Punkt zamarzania"
+      },
+      "heat_index": {
+        "name": "Wskaźnik ciepła"
+      },
+      "humidex": {
+        "name": "Wskaźnik upału"
+      },
+      "moist_air_enthalpy": {
+        "name": "Pojemność cieplna wilgotnego powietrza"
       }
     }
   }
