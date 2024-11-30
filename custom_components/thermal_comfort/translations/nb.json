@@ -1,16 +1,157 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Temperatursensor ikke funnet",
+      "humidity_not_found": "Fuktighetssensor ikke funnet"
+    },
+    "step": {
+      "init": {
+        "title": "Termiske komfortinnstillinger",
+        "data": {
+          "temperature_sensor": "Temperatursensor",
+          "humidity_sensor": "Fuktighetssensor",
+          "poll": "Aktiver spørring",
+          "scan_interval": "Spørringsintervall (sekunder)",
+          "custom_icons": "Bruk tilpasset ikonpakke"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Denne kombinasjonen av temperatur- og fuktighetssensorer er allerede konfigurert",
+      "no_sensors": "Fant ingen temperatur- eller fuktighetssensorer. Prøv igjen i avansert modus.",
+      "no_sensors_advanced": "Fant ingen temperatur- eller fuktighetssensorer."
+    },
+    "error": {
+      "temperature_not_found": "Temperatursensor ikke funnet",
+      "humidity_not_found": "Fuktighetssensor ikke funnet"
+    },
+    "step": {
+      "user": {
+        "title": "Termiske komfortinnstillinger",
+        "data": {
+          "name": "Navn",
+          "temperature_sensor": "Temperatursensor",
+          "humidity_sensor": "Fuktighetssensor",
+          "poll": "Aktiver spørring",
+          "scan_interval": "Spørringsintervall (sekunder)",
+          "custom_icons": "Bruk tilpasset ikonpakke",
+          "enabled_sensors": "Aktiverte sensorer"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Absolutt fuktighet"
+      },
+      "dew_point": {
+        "name": "Duggpunkt"
+      },
       "dew_point_perception": {
+        "name": "Duggpunktoppfatning",
         "state": {
-          "dry": "A bit dry for some",
-          "very_comfortable": "Very comfortable",
-          "comfortable": "Comfortable",
-          "ok_but_humid": "OK for most, but humid",
-          "somewhat_uncomfortable": "Somewhat uncomfortable",
-          "quite_uncomfortable": "Very humid, quite uncomfortable",
-          "extremely_uncomfortable": "Extremely uncomfortable, oppressive",
-          "severely_high": "Severely high, even deadly for asthma related illnesses"
+          "dry": "Litt tørt for noen",
+          "very_comfortable": "Veldig behagelig",
+          "comfortable": "Komfortabelt",
+          "ok_but_humid": "OK for de fleste, men fuktig",
+          "somewhat_uncomfortable": "Noe ubehagelig",
+          "quite_uncomfortable": "Veldig fuktig, ganske ubehagelig",
+          "extremely_uncomfortable": "Ekstremt ubehagelig, undertrykkende",
+          "severely_high": "Alvorlig høy, til og med dødelig for astma-relaterte sykdommer"
+        }
+      },
+      "frost_point": {
+        "name": "Frostpunkt"
+      },
+      "frost_risk": {
+        "name": "Frostrisiko",
+        "state": {
+          "no_risk": "Ingen risiko",
+          "unlikely": "Usannsynlig",
+          "probable": "Sannsynlig",
+          "high": "Høy sannsynlighet"
+        }
+      },
+      "heat_index": {
+        "name": "Varmeindeks"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
+      "humidex_perception": {
+        "name": "Humidex oppfatning",
+        "state": {
+          "comfortable": "Komfortabel",
+          "noticable_discomfort": "Merkbart ubehag",
+          "evident_discomfort": "Tydelig ubehag",
+          "great_discomfort": "Stort ubehag, unngå anstrengelse",
+          "dangerous_discomfort": "Farlig ubehag",
+          "heat_stroke": "Mulig heteslag"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Entalpi av fuktig luft"
+      },
+      "relative_strain_perception": {
+        "name": "Relativ belastningsoppfatning",
+        "state": {
+          "outside_calculable_range": "Utenfor det kalkulerbare området",
+          "comfortable": "Komfortabel",
+          "slight_discomfort": "Lett ubehag",
+          "discomfort": "Ubehag",
+          "significant_discomfort": "Betydelig ubehag",
+          "extreme_discomfort": "Ekstremt ubehag"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "Sommer Scharlau oppfatning",
+        "state": {
+          "outside_calculable_range": "Utenfor det kalkulerbare området",
+          "comfortable": "Komfortabel",
+          "slightly_uncomfortable": "Litt ubehagelig",
+          "moderately_uncomfortable": "Middels ubehagelig",
+          "highly_uncomfortable": "Svært ubehagelig"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Vinter Scharlau oppfatning",
+        "state": {
+          "outside_calculable_range": "Utenfor det kalkulerbare området",
+          "comfortable": "Komfortabel",
+          "slightly_uncomfortable": "Litt ubehagelig",
+          "moderately_uncomfortable": "Middels ubehagelig",
+          "highly_uncomfortable": "Svært ubehagelig"
+        }
+      },
+      "summer_simmer_index": {
+        "name": "Sommer Simmer-indeks"
+      },
+      "summer_simmer_perception": {
+        "name": "Sommer Simmer oppfatning",
+        "state": {
+          "cool": "Kjølig",
+          "slightly_cool": "Litt kjølig",
+          "comfortable": "Komfortabelt",
+          "slightly_warm": "Litt varm",
+          "increasing_discomfort": "Økende ubehag",
+          "extremely_warm": "Ekstremt varmt",
+          "danger_of_heatstroke": "Fare for heteslag",
+          "extreme_danger_of_heatstroke": "Ekstrem fare for heteslag",
+          "circulatory_collapse_imminent": "Sirkulasjonssvikt nært forestående"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "Thoms ubehag oppfatning",
+        "state": {
+          "no_discomfort": "Ingen ubehag",
+          "less_than_half": "Mindre enn halvparten av befolkningen føler ubehag",
+          "more_than_half": "Mer enn halvparten av befolkningen føler ubehag",
+          "most": "De fleste individer føler ubehag og forverring av psykofysiske tilstander",
+          "everyone": "Alle føler betydelig ubehag",
+          "dangerous": "Farlig, veldig sterkt ubehag som kan forårsake heteslag"
         }
       }
     }
