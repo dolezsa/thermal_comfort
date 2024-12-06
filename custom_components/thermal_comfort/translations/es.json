@@ -44,14 +44,7 @@
   },
   "entity": {
     "sensor": {
-      "absolute_humidity": {
-        "name": "Humedad absoluta"
-      },
-      "dew_point": {
-        "name": "Punto de Rocío"
-      },
       "dew_point_perception": {
-        "name": "Sensación de humedad ambiental",
         "state": {
           "dry": "Un poco seco para algunos",
           "very_comfortable": "Muy cómodo",
@@ -61,28 +54,19 @@
           "quite_uncomfortable": "Muy húmedo, bastante incómodo",
           "extremely_uncomfortable": "Extremadamente incómodo, agobiante",
           "severely_high": "Riesgo alto, incluso mortal para enfermedades relacionadas con el asma"
-        }
-      },
-      "frost_point": {
-        "name": "Punto de escarcha"
+        },
+        "name": "Sensación de humedad ambiental"
       },
       "frost_risk": {
-        "name": "Riesgo de escarcha",
         "state": {
           "no_risk": "Sin riesgo",
           "unlikely": "Poco probable",
           "probable": "Probable",
           "high": "Muy probable"
-        }
-      },
-      "heat_index": {
-        "name": "Temperatura de Bochorno"
-      },
-      "humidex": {
-        "name": "Humidex "
+        },
+        "name": "Riesgo de escarcha"
       },
       "humidex_perception": {
-        "name": "Índice de Humidex",
         "state": {
           "comfortable": "Cómodo",
           "noticable_discomfort": "Algo incómodo",
@@ -90,13 +74,10 @@
           "great_discomfort": "Muy incómodo, evitar esfuerzos",
           "dangerous_discomfort": "Peligroso",
           "heat_stroke": "Golpe de calor bastante probable"
-        }
-      },
-      "moist_air_enthalpy": {
-        "name": "Entalpía del aire húmedo"
+        },
+        "name": "Índice de Humidex"
       },
       "relative_strain_perception": {
-        "name": "Índice de confort térmico relativo",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
@@ -104,33 +85,30 @@
           "discomfort": "Incómodo",
           "significant_discomfort": "Bastante incómodo",
           "extreme_discomfort": "Muy incómodo"
-        }
+        },
+        "name": "Índice de confort térmico relativo"
       },
       "summer_scharlau_perception": {
-        "name": "Índice de verano de Scharlau",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
           "slightly_uncomfortable": "Un poco incómodo",
           "moderately_uncomfortable": "Bastante incómodo",
           "highly_uncomfortable": "Muy incómodo"
-        }
+        },
+        "name": "Índice de verano de Scharlau"
       },
       "winter_scharlau_perception": {
-        "name": "Índice de invierno de Scharlau",
         "state": {
           "outside_calculable_range": "Fuera del rango calculable",
           "comfortable": "Cómodo",
           "slightly_uncomfortable": "Un poco incómodo",
           "moderately_uncomfortable": "Bastante incómodo",
           "highly_uncomfortable": "Muy incómodo"
-        }
-      },
-      "summer_simmer_index": {
-        "name": "Índice de calor Simmer (verano)"
+        },
+        "name": "Índice de invierno de Scharlau"
       },
       "summer_simmer_perception": {
-        "name": "Sensación índice de calor Simmer (verano)",
         "state": {
           "cool": "Fresco",
           "slightly_cool": "Ligeramente fresco",
@@ -141,10 +119,10 @@
           "danger_of_heatstroke": "Riesgo de golpe de calor",
           "extreme_danger_of_heatstroke": "Riesgo extremo de golpe de calor",
           "circulatory_collapse_imminent": "Colapso circulatorio inminente"
-        }
+        },
+        "name": "Sensación índice de calor Simmer (verano)"
       },
       "thoms_discomfort_perception": {
-        "name": "Índice de malestar de Thom",
         "state": {
           "no_discomfort": "Sin molestias",
           "less_than_half": "Menos de la mitad de la población siente malestar",
@@ -152,7 +130,29 @@
           "most": "La mayoría de personas sienten malestar y deterioro de las condiciones psicofísicas",
           "everyone": "Todos sienten malestar significativo",
           "dangerous": "Peligro, malestar muy fuerte que puede provocar golpes de calor"
-        }
+        },
+        "name": "Índice de malestar de Thom"
+      },
+      "absolute_humidity": {
+        "name": "Humedad absoluta"
+      },
+      "dew_point": {
+        "name": "Punto de Rocío"
+      },
+      "frost_point": {
+        "name": "Punto de escarcha"
+      },
+      "heat_index": {
+        "name": "Temperatura de Bochorno"
+      },
+      "humidex": {
+        "name": "Humidex "
+      },
+      "moist_air_enthalpy": {
+        "name": "Entalpía del aire húmedo"
+      },
+      "summer_simmer_index": {
+        "name": "Índice de calor Simmer (verano)"
       }
     }
   }

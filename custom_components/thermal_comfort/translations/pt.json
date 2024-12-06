@@ -44,14 +44,7 @@
   },
   "entity": {
     "sensor": {
-      "absolute_humidity": {
-        "name": "Humidade absoluta"
-      },
-      "dew_point": {
-        "name": "Ponto de orvalho"
-      },
       "dew_point_perception": {
-        "name": "Percepção do ponto de orvalho",
         "state": {
           "dry": "Um pouco seco para alguns",
           "very_comfortable": "Muito confortável",
@@ -61,28 +54,19 @@
           "quite_uncomfortable": "Muito húmido e bastante desconfortável",
           "extremely_uncomfortable": "Extremamente desconfortável, opressivo",
           "severely_high": "Extremamente alto, até mortal para doenças relacionadas com asma"
-        }
-      },
-      "frost_point": {
-        "name": "Ponto de congelamento"
+        },
+        "name": "Percepção do ponto de orvalho"
       },
       "frost_risk": {
-        "name": "Risco de congelamento",
         "state": {
           "no_risk": "Sem risco",
           "unlikely": "Improvável",
           "probable": "Provável",
           "high": "Alta probabilidade"
-        }
-      },
-      "heat_index": {
-        "name": "Índice de calor"
-      },
-      "humidex": {
-        "name": "Índice de Humidade (humidex)"
+        },
+        "name": "Risco de congelamento"
       },
       "humidex_perception": {
-        "name": "Percepção ao Índice de Humidade",
         "state": {
           "comfortable": "Confortável",
           "noticable_discomfort": "Algum desconforto",
@@ -90,7 +74,8 @@
           "great_discomfort": "Grande desconforto, evitar esforços",
           "dangerous_discomfort": "Desconforto perigoso",
           "heat_stroke": "Posibilidade de insolação"
-        }
+        },
+        "name": "Percepção ao Índice de Humidade"
       },
       "relative_strain_perception": {
         "state": {
@@ -142,6 +127,21 @@
           "everyone": "Todos sentem desconforto significativo",
           "dangerous": "Perigoso, desconforto muito forte que pode causar insolações"
         }
+      },
+      "absolute_humidity": {
+        "name": "Humidade absoluta"
+      },
+      "dew_point": {
+        "name": "Ponto de orvalho"
+      },
+      "frost_point": {
+        "name": "Ponto de congelamento"
+      },
+      "heat_index": {
+        "name": "Índice de calor"
+      },
+      "humidex": {
+        "name": "Índice de Humidade (humidex)"
       }
     }
   }

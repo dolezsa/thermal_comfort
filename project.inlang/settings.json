@@ -1,6 +1,8 @@
 {
-  "sourceLanguageTag": "en",
+  "$schema": "https://inlang.com/schema/project-settings",
+  "sourceLanguageTag": "fi",
   "languageTags": [
+    "fi",
     "ca",
     "cs",
     "da",
@@ -15,8 +17,8 @@
     "nb",
     "nl",
     "pl",
-    "pt-BR",
     "pt",
+    "pt-BR",
     "ro",
     "ru",
     "sk",
@@ -32,11 +34,12 @@
     "https://cdn.jsdelivr.net/npm/@inlang/message-lint-rule-missing-translation/dist/index.js",
     "https://cdn.jsdelivr.net/npm/@inlang/plugin-json@4/dist/index.js"
   ],
-  "settings": {
-    "plugin.inlang.json": {
-      "pathPattern": "./custom_components/thermal_comfort/translations/{languageTag}.json",
-      "ignore": [],
-      "variableReferencePattern": ["{", "}"]
-    }
+  "plugin.inlang.json": {
+    "pathPattern": "./custom_components/thermal_comfort/translations/{languageTag}.json",
+    "ignore": [],
+    "variableReferencePattern": [
+      "{",
+      "}"
+    ]
   }
 }

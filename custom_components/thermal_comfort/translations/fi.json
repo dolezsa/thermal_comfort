@@ -1,0 +1,159 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "Lämpötila-anturia ei löydy",
+      "humidity_not_found": "Kosteusanturia ei löydy"
+    },
+    "step": {
+      "init": {
+        "title": "Thermal comfort asetukset",
+        "data": {
+          "temperature_sensor": "Lämpötila-anturi",
+          "humidity_sensor": "Kosteusanturi",
+          "poll": "Salli pollaus",
+          "scan_interval": "Pollauksen aikaväli (sekuntia)",
+          "custom_icons": "Käytä muokattua ikonipakettia"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Näiden sensoreiden yhdistelmä on jo konfiguroitu",
+      "no_sensors": "Lämpötila- eikä kosteussensoria löydy. Koita uudestaan edistyneellä käyttäjätilalla",
+      "no_sensors_advanced": "Lämpötila- ja kosteussensoria ei löydy"
+    },
+    "error": {
+      "temperature_not_found": "Lämpötila-anturia ei löydy",
+      "humidity_not_found": "Kosteussensoria ei löydy"
+    },
+    "step": {
+      "user": {
+        "title": "Thermal comfort asetukset",
+        "data": {
+          "name": "Nimi",
+          "temperature_sensor": "Lämpötila-anturi",
+          "humidity_sensor": "Kosteusanturi",
+          "poll": "Salli pollaus",
+          "scan_interval": "Pollauksen aikaväli (sekuntia)",
+          "custom_icons": "Käytä muokattua ikonipakettia",
+          "enabled_sensors": "Käytössä olevat sensorit"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dew_point_perception": {
+        "state": {
+          "dry": "Liian kuivaa joillekin",
+          "very_comfortable": "Oikein mukava",
+          "comfortable": "Mukava",
+          "ok_but_humid": "Hyvä useimmille, mutta kosteaa",
+          "somewhat_uncomfortable": "Jonkin verran epämiellyttävää",
+          "quite_uncomfortable": "Erittäin kosteaa, aika epämiellyttävää",
+          "extremely_uncomfortable": "Äärimmäisen kosteaa, painostavaa",
+          "severely_high": "Vakavan korkea, jopa tappava astmaa sairastaville"
+        },
+        "name": "Kastepisteen havaitseminen"
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Ei riskiä",
+          "unlikely": "Epätodennäköistä",
+          "probable": "Mahdollisesti",
+          "high": "Todennäköisesti"
+        },
+        "name": "Jäätymisriski"
+      },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Miellyttävää",
+          "noticable_discomfort": "Epämiellyttävää",
+          "evident_discomfort": "Selvästi epämiellyttävää",
+          "great_discomfort": "Erittäin epämiellyttävää",
+          "dangerous_discomfort": "Vaarallisen epämiellyttävää",
+          "heat_stroke": "Lämpöhalvaus mahdollista"
+        },
+        "name": "Kosteuden havaitseminen"
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Laskettavan asteikon ulkopuolella",
+          "comfortable": "Mukavaa",
+          "slight_discomfort": "Hieman epämukavaa",
+          "discomfort": "Epämukavaa",
+          "significant_discomfort": "Merkittävän epämukavaa",
+          "extreme_discomfort": "Erittäin epämukavaa"
+        },
+        "name": "Suhteellisen rasituksen havaitseminen"
+      },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Laskettavan asteikon ulkopuolella",
+          "comfortable": "Miellyttävää",
+          "slightly_uncomfortable": "Hieman epämiellyttävää",
+          "moderately_uncomfortable": "Jonkin verran epämiellyttävää",
+          "highly_uncomfortable": "Erittäin epämiellyttävää"
+        },
+        "name": "Kesän bioklimaattisuuden havaitseminen"
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Laskettavan asteikon ulkopuolella",
+          "comfortable": "Miellyttävää",
+          "slightly_uncomfortable": "Hieman epämiellyttävää",
+          "moderately_uncomfortable": "Jonkin verran epämiellyttävää",
+          "highly_uncomfortable": "Erittäin epämiellyttävää"
+        },
+        "name": "Talven bioklimaattisuuden havaitseminen"
+      },
+      "summer_simmer_perception": {
+        "state": {
+          "cool": "Viileää",
+          "slightly_cool": "Hieman viileää",
+          "comfortable": "Mukavaa",
+          "slightly_warm": "Hieman lämmintä",
+          "increasing_discomfort": "Epämukavaa",
+          "extremely_warm": "Erittäin lämmintä",
+          "danger_of_heatstroke": "Lämpöhalvauksen riski",
+          "extreme_danger_of_heatstroke": "Lämpöhalvauksen mahdollisuus",
+          "circulatory_collapse_imminent": "Välitön verenkierron romahdus"
+        },
+        "name": "Hautumisen havaitseminen"
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Ei epämukavuutta",
+          "less_than_half": "Alle puolet populaatiosta kokee epämukavana",
+          "more_than_half": "Yli puolet populaatiosta kokee epämukavana",
+          "most": "Moni kokee epämukavuutta ja psykofyysisen tilan heikkenemistä",
+          "everyone": "Kaikki kokevat merkittävää epämukavuutta",
+          "dangerous": "Vaarallista, erittäin epämiellyttävää ja lämpöhalvauksen riski"
+        },
+        "name": "Lämpöstressi-indeksi THI"
+      },
+      "absolute_humidity": {
+        "name": "Absoluuttinen ilmankosteus"
+      },
+      "dew_point": {
+        "name": "Kastepiste"
+      },
+      "frost_point": {
+        "name": "Jäätymispiste"
+      },
+      "heat_index": {
+        "name": "Lämpöindeksi"
+      },
+      "humidex": {
+        "name": "Kosteusindeksi"
+      },
+      "moist_air_enthalpy": {
+        "name": "Kostean ilman entalpia"
+      },
+      "summer_simmer_index": {
+        "name": "Hautumisindeksi"
+      }
+    }
+  }
+}
