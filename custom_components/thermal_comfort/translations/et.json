@@ -1,0 +1,159 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "Temperatuuriandurit ei leitud",
+      "humidity_not_found": "Niiskuseandurit ei leitud"
+    },
+    "step": {
+      "init": {
+        "title": "Soojusliku mugavustunde seaded",
+        "data": {
+          "temperature_sensor": "Temperatuuriandur",
+          "humidity_sensor": "Niiskusandur",
+          "poll": "Luba küsitlus",
+          "scan_interval": "Küsitluse intervall (sekundites)",
+          "custom_icons": "Kasuta kohandatud pisipiltide paketti"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "See temperatuuri- ja niiskusandurite kombinatsioon on juba seadistatud",
+      "no_sensors": "Temperatuuri- ega niiskusandureid ei leitud. Proovi uuesti täiustatud režiimis.",
+      "no_sensors_advanced": "Temperatuuri- ega niiskusandureid ei leitud."
+    },
+    "error": {
+      "temperature_not_found": "Temperatuuriandurit ei leitud",
+      "humidity_not_found": "Niiskusandurit ei leitud"
+    },
+    "step": {
+      "user": {
+        "title": "Soojusliku mugavuse seaded",
+        "data": {
+          "name": "Nimi",
+          "temperature_sensor": "Temperatuuriandur",
+          "humidity_sensor": "Niiskuse andur",
+          "poll": "Luba küsitlus",
+          "scan_interval": "Küsitluse intervall (sekundites)",
+          "custom_icons": "Kasuta kohandatud pisipiltide paketti",
+          "enabled_sensors": "Lubatud andurid"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "absolute_humidity": {
+        "name": "Absoluutne niiskus"
+      },
+      "dew_point": {
+        "name": "Kastepunkt"
+      },
+      "dew_point_perception": {
+        "name": "Tajutav kastepunkt",
+        "state": {
+          "dry": "Mõne jaoks natuke kuiv",
+          "very_comfortable": "Väga mugav",
+          "comfortable": "Mugav",
+          "ok_but_humid": "Enamiku jaoks OK kuid niiske",
+          "somewhat_uncomfortable": "Mõnevõrra ebamugav",
+          "quite_uncomfortable": "Väga niiske, üsna ebamugav",
+          "extremely_uncomfortable": "Äärmiselt ebamugav, rõhuv",
+          "severely_high": "Tõsiselt kõrge, isegi surmav astmaga seotud haiguste puhul"
+        }
+      },
+      "frost_point": {
+        "name": "Külmumispunkt"
+      },
+      "frost_risk": {
+        "name": "Külmaoht",
+        "state": {
+          "no_risk": "Ei mingit riski",
+          "unlikely": "Ebatõenäoline",
+          "probable": "Tõenäoline",
+          "high": "Suure tõenäosusega"
+        }
+      },
+      "heat_index": {
+        "name": "Kuumaindeks"
+      },
+      "humidex": {
+        "name": "Niiskusindeks"
+      },
+      "humidex_perception": {
+        "name": "Niiskuse tajumine",
+        "state": {
+          "comfortable": "Mugav",
+          "noticable_discomfort": "Märgatav ebamugavustunne",
+          "evident_discomfort": "Ilmne ebamugavustunne",
+          "great_discomfort": "Suur ebamugavustunne, väldi pingutust",
+          "dangerous_discomfort": "Ohtlik ebamugavustunne",
+          "heat_stroke": "Võimalik kuumarabandus"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Niiske õhu entalpia"
+      },
+      "relative_strain_perception": {
+        "name": "Suhtelise pinge tajumine",
+        "state": {
+          "outside_calculable_range": "Väljaspool arvutatavat vahemikku",
+          "comfortable": "Mugav",
+          "slight_discomfort": "Kerge ebamugavustunne",
+          "discomfort": "Ebamugavustunne",
+          "significant_discomfort": "Märkimisväärne ebamugavustunne",
+          "extreme_discomfort": "Äärmuslik ebamugavustunne"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "Suvine mugavustaju",
+        "state": {
+          "outside_calculable_range": "Väljaspool arvutatavat vahemikku",
+          "comfortable": "Mugav",
+          "slightly_uncomfortable": "Veidi ebamugav",
+          "moderately_uncomfortable": "Mõõdukalt ebamugav",
+          "highly_uncomfortable": "Väga ebamugav"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Talvine mugavusindeks",
+        "state": {
+          "outside_calculable_range": "Väljaspool arvutatavat vahemikku",
+          "comfortable": "Mugav",
+          "slightly_uncomfortable": "Veidi ebamugav",
+          "moderately_uncomfortable": "Mõõdukalt ebamugav",
+          "highly_uncomfortable": "Väga ebamugav"
+        }
+      },
+      "summer_simmer_index": {
+        "name": "Suvine mugavusindeks"
+      },
+      "summer_simmer_perception": {
+        "name": "Suvine mugavustaju",
+        "state": {
+          "cool": "Jahe",
+          "slightly_cool": "Kergelt jahe",
+          "comfortable": "Mugav",
+          "slightly_warm": "Kergelt soe",
+          "increasing_discomfort": "Kasvav ebamugavustunne",
+          "extremely_warm": "Ülimalt palav",
+          "danger_of_heatstroke": "Kuumarabanduse oht",
+          "extreme_danger_of_heatstroke": "Suur kuumarabanduse oht",
+          "circulatory_collapse_imminent": "Vereringe häire oht"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "Vaimne ebamugavustunne",
+        "state": {
+          "no_discomfort": "Ei mingit ebamugavust",
+          "less_than_half": "Vähem kui pool elanikkonnast tunneb ebamugavust",
+          "more_than_half": "Rohkem kui pool elanikkonnast tunneb ebamugavust",
+          "most": "Enamik inimesi tunneb ebamugavust ja psühhofüüsiliste seisundite halvenemist",
+          "everyone": "Igaüks tunneb märkimisväärset ebamugavust",
+          "dangerous": "Ohtlik, väga tugev ebamugavustunne, mis võib põhjustada kuumarabandust"
+        }
+      }
+    }
+  }
+}
