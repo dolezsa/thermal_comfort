@@ -1,0 +1,37 @@
+name: Publish archive
+
+# yamllint disable-line rule:truthy
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Publish archive
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "Set package name"
+        working-directory: ./custom_components
+        run: echo "package=$(ls -F | grep \/$ | sed -n "s/\///g;1p")" >> $GITHUB_ENV
+
+      - name: "Set variables"
+        working-directory: ./custom_components
+        run: |
+          echo "archive=${{ env.package }}.zip" >> $GITHUB_ENV
+          echo "basedir=$(pwd)/${{ env.package }}" >> $GITHUB_ENV
+
+      - name: "Zip component dir"
+        working-directory: ./custom_components/${{ env.package }}
+        run: zip ${{ env.archive }} -r ./
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./custom_components/${{ env.package }}/${{ env.archive }}
+          asset_name: ${{ env.archive }}
+          tag: ${{ github.ref }}
+          overwrite: true

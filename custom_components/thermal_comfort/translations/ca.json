@@ -1,0 +1,130 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "No s'ha trobat el sensor de temperatura",
+      "humidity_not_found": "No s'ha trobat el sensor d'humitat"
+    },
+    "step": {
+      "init": {
+        "title": "Configuració de Thermal Comfort",
+        "data": {
+          "temperature_sensor": "Sensor de temperatura",
+          "humidity_sensor": "Sensor d'humitat",
+          "poll": "Activar la consulta recurrent de les dades",
+          "scan_interval": "Interval de consulta (segons)",
+          "custom_icons": "Utilitzar el paquet d'icones personalitzat"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Aquesta combinació de sensors de temperatura i humitat ja està configurada.",
+      "no_sensors": "No s'han trobat sensors de temperatura o humitat. Torna-ho a provar en mode avançat.",
+      "no_sensors_advanced": "No s'han trobat sensors de temperatura o humitat."
+    },
+    "error": {
+      "temperature_not_found": "No s'ha trobat el sensor de temperatura",
+      "humidity_not_found": "No s'ha trobat el sensor d'humitat"
+    },
+    "step": {
+      "user": {
+        "title": "Configuració de Thermal Comfort",
+        "data": {
+          "name": "Nom",
+          "temperature_sensor": "Sensor de temperatura",
+          "humidity_sensor": "Sensor d'humitat",
+          "poll": "Activar la consulta recurrent de les dades",
+          "scan_interval": "Interval de consulta (segons)",
+          "custom_icons": "Utilitzar el paquet d'icones personalitzat",
+          "enabled_sensors": "Sensors activats"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dew_point_perception": {
+        "state": {
+          "dry": "Una mica sec per a alguns",
+          "very_comfortable": "Molt còmode",
+          "comfortable": "Còmode",
+          "ok_but_humid": "Bé per a la majoria, però humit",
+          "somewhat_uncomfortable": "Una mica incòmode",
+          "quite_uncomfortable": "Molt humit, bastant incòmode",
+          "extremely_uncomfortable": "Extremadament incòmode, aclaparador",
+          "severely_high": "Molt alt, fins i tot mortal per a persones amb malalties relacionades amb l'asma"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Sense risc",
+          "unlikely": "Poc probable",
+          "probable": "Probable",
+          "high": "Alta probabilitat"
+        }
+      },
+      "humidex_perception": {
+        "state": {
+          "comfortable": "Còmode",
+          "noticable_discomfort": "Una mica incòmode",
+          "evident_discomfort": "Bastant incòmode",
+          "great_discomfort": "Molt incòmode, evitar esforços",
+          "dangerous_discomfort": "Malestar perillós",
+          "heat_stroke": "Possible cop de calor"
+        }
+      },
+      "relative_strain_perception": {
+        "state": {
+          "outside_calculable_range": "Fora de l'interval calculable",
+          "comfortable": "Còmode",
+          "slight_discomfort": "Una mica incòmode",
+          "discomfort": "Incòmode",
+          "significant_discomfort": "Bastant incòmode",
+          "extreme_discomfort": "Molt incòmode"
+        }
+      },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Fora de l'interval calculable",
+          "comfortable": "Còmode",
+          "slightly_uncomfortable": "Una mica incòmode",
+          "moderately_uncomfortable": "Bastant incòmode",
+          "highly_uncomfortable": "Molt incòmode"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Fora de l'interval calculable",
+          "comfortable": "Còmode",
+          "slightly_uncomfortable": "Una mica incòmode",
+          "moderately_uncomfortable": "Bastant incòmode",
+          "highly_uncomfortable": "Molt incòmode"
+        }
+      },
+      "summer_simmer_perception": {
+        "state": {
+          "cool": "Fred",
+          "slightly_cool": "Una mica fred",
+          "comfortable": "Còmode",
+          "slightly_warm": "Una mica càlid",
+          "increasing_discomfort": "Càlid i incòmode",
+          "extremely_warm": "Extremadament càlid",
+          "danger_of_heatstroke": "Perill de cop de calor",
+          "extreme_danger_of_heatstroke": "Perill extrem de cop de calor",
+          "circulatory_collapse_imminent": "Colapse circulatori imminent"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "No és incòmode",
+          "less_than_half": "Menys de la meitat de la població sent malestar",
+          "more_than_half": "Més de la meitat de la població sent malestar",
+          "most": "La majoria de les persones senten malestar i deteriorament de les condicions psicofísiques",
+          "everyone": "Tothom sent un malestar important",
+          "dangerous": "Perill, malestar molt fort que pot provocar cops de calor"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "Nie znaleziono czujnika temperatury",
+      "humidity_not_found": "Nie znaleziono czujnika wilgotności"
+    },
+    "step": {
+      "init": {
+        "title": "Ustawienia komfortu cieplnego",
+        "data": {
+          "temperature_sensor": "Czujnik temperatury",
+          "humidity_sensor": "Czujnik wilgotności",
+          "poll": "Włącz odpytywanie",
+          "scan_interval": "Interwał odpytywania (sekundy)",
+          "custom_icons": "Użyj niestandardowego pakietu ikon"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Ta kombinacja czujników temperatury i wilgotności jest już skonfigurowana",
+      "no_sensors": "Nie znaleziono czujników temperatury ani wilgotności. Spróbuj ponownie w trybie zaawansowanym.",
+      "no_sensors_advanced": "Nie znaleziono czujników temperatury ani wilgotności."
+    },
+    "error": {
+      "temperature_not_found": "Nie znaleziono czujnika temperatury",
+      "humidity_not_found": "Nie znaleziono czujnika wilgotności"
+    },
+    "step": {
+      "user": {
+        "title": "Ustawienia komfortu cieplnego",
+        "data": {
+          "name": "Nazwa",
+          "temperature_sensor": "Czujnik temperatury",
+          "humidity_sensor": "Czujnik wilgotności",
+          "poll": "Włącz odpytywanie",
+          "scan_interval": "Interwał odpytywania (sekundy)",
+          "custom_icons": "Użyj niestandardowego pakietu ikon",
+          "enabled_sensors": "Włączone czujniki"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "absolute_humidity": {
+        "name": "Wilgotność bezwzględna"
+      },
+      "dew_point": {
+        "name": "Punkt rosy"
+      },
+      "dew_point_perception": {
+        "name": "Odczucie punktu rosy",
+        "state": {
+          "dry": "Dla niektórych może być sucho",
+          "very_comfortable": "Bardzo komfortowe",
+          "comfortable": "Komfortowe",
+          "ok_but_humid": "OK dla większości, ale wilgotno",
+          "somewhat_uncomfortable": "Trochę niekomfortowe",
+          "quite_uncomfortable": "Bardzo wilgotno, całkiem niekomfortowe",
+          "extremely_uncomfortable": "Bardzo niekomfortowe, uciążliwe",
+          "severely_high": "Wysoce niebezpieczne dla astmatyków, bardzo uciążliwe"
+        }
+      },
+      "frost_point": {
+        "name": "Punkt zamarzania"
+      },
+      "frost_risk": {
+        "name": "Ryzyko zamarazania",
+        "state": {
+          "no_risk": "Brak",
+          "unlikely": "Małe",
+          "probable": "Możliwe",
+          "high": "Wysokie"
+        }
+      },
+      "heat_index": {
+        "name": "Wskaźnik ciepła"
+      },
+      "humidex": {
+        "name": "Wskaźnik upału"
+      },
+      "humidex_perception": {
+        "name": "Odczucie upału",
+        "state": {
+          "comfortable": "Komfortowo",
+          "noticable_discomfort": "Lekki dyskomfort",
+          "evident_discomfort": "Wyraźny dyskomfort",
+          "great_discomfort": "Duży dyskomfort, unikaj wysiłku",
+          "dangerous_discomfort": "Niebezpieczny dyskomfort",
+          "heat_stroke": "Możliwy udar cieplny"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Pojemność cieplna wilgotnego powietrza"
+      },
+      "relative_strain_perception": {
+        "name": "Odczucie względnego obciążenia",
+        "state": {
+          "outside_calculable_range": "Poza obliczalnym zakresem",
+          "comfortable": "Komfortowo",
+          "slight_discomfort": "Lekki dyskomfort",
+          "discomfort": "Dyskomfort",
+          "significant_discomfort": "Znaczący dyskomfort",
+          "extreme_discomfort": "Ekstremalny dyskomfort"
+        }
+      },
+      "summer_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Poza obliczalnym zakresem",
+          "comfortable": "Komfortowo",
+          "slightly_uncomfortable": "Lekki dyskomfort",
+          "moderately_uncomfortable": "Dyskomfort",
+          "highly_uncomfortable": "Wysoki dyskomfort"
+        }
+      },
+      "winter_scharlau_perception": {
+        "state": {
+          "outside_calculable_range": "Poza obliczalnym zakresem",
+          "comfortable": "Komfortowo",
+          "slightly_uncomfortable": "Lekki dyskomfort",
+          "moderately_uncomfortable": "Dyskomfort",
+          "highly_uncomfortable": "Wysoki dyskomfort"
+        }
+      },
+      "summer_simmer_perception": {
+        "state": {
+          "cool": "Zimno",
+          "slightly_cool": "Chłodnawo",
+          "comfortable": "Komfortowo",
+          "slightly_warm": "Ciepło",
+          "increasing_discomfort": "Trochę za ciepło",
+          "extremely_warm": "Bardzo ciepło",
+          "danger_of_heatstroke": "Możliwy udar cieplny",
+          "extreme_danger_of_heatstroke": "Wysokie niebezpieczeństwo udaru",
+          "circulatory_collapse_imminent": "Zdecydowane problemy z krążeniem, zapaść"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "state": {
+          "no_discomfort": "Brak dyskomfortu",
+          "less_than_half": "Mniej niż połowa populacji odczuwa dyskomfort",
+          "more_than_half": "Ponad połowa populacji odczuwa dyskomfort",
+          "most": "Większość osób odczuwa dyskomfort i pogorszenie warunków psychofizycznych",
+          "everyone": "Wszyscy odczuwają znaczny dyskomfort",
+          "dangerous": "Niebezpieczny, bardzo silny dyskomfort, który może powodować udary cieplne"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "Senzorul de temperatură nu a fost găsit",
+      "humidity_not_found": "Senzorul de umiditate nu a fost găsit"
+    },
+    "step": {
+      "init": {
+        "title": "Setări de confort termic",
+        "data": {
+          "temperature_sensor": "Senzor de temperatura",
+          "humidity_sensor": "Senzor de umiditate",
+          "poll": "Activați sondajul",
+          "scan_interval": "Interval de sondaj (secunde)",
+          "custom_icons": "Utilizați pachetul de pictograme personalizate"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Această combinație de senzori de temperatură și umiditate este deja configurată",
+      "no_sensors": "Nu s-au găsit senzori de temperatură sau umiditate. Încercați din nou în modul avansat.",
+      "no_sensors_advanced": "Nu s-au găsit senzori de temperatură sau umiditate."
+    },
+    "error": {
+      "temperature_not_found": "Senzorul de temperatură nu a fost găsit",
+      "humidity_not_found": "Senzorul de umiditate nu a fost găsit"
+    },
+    "step": {
+      "user": {
+        "title": "Setări de confort termic",
+        "data": {
+          "name": "Nume",
+          "temperature_sensor": "Senzor de temperatura",
+          "humidity_sensor": "Senzor de umiditate",
+          "poll": "Activați sondajul",
+          "scan_interval": "Interval de sondaj (secunde)",
+          "custom_icons": "Utilizați pachetul de pictograme personalizate",
+          "enabled_sensors": "Senzori activați"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "absolute_humidity": {
+        "name": "Umiditate absolută"
+      },
+      "dew_point": {
+        "name": "Punct de rouă"
+      },
+      "dew_point_perception": {
+        "name": "Punct de rouă perceput",
+        "state": {
+          "dry": "Cam uscat pentru unii",
+          "very_comfortable": "Foarte confortabil",
+          "comfortable": "Confortabil",
+          "ok_but_humid": "OK pentru majoritatea, dar umed",
+          "somewhat_uncomfortable": "Oarecum inconfortabil",
+          "quite_uncomfortable": "Foarte umed, destul de inconfortabil",
+          "extremely_uncomfortable": "Extrem de inconfortabil, opresiv",
+          "severely_high": "Sever ridicat, chiar mortal pentru bolile legate de astm"
+        }
+      },
+      "frost_point": {
+        "name": "Punct de îngheț"
+      },
+      "frost_risk": {
+        "name": "Risc de îngheț",
+        "state": {
+          "no_risk": "Niciun risc",
+          "unlikely": "Improbabil",
+          "probable": "Probabil",
+          "high": "Probabilitate mare"
+        }
+      },
+      "heat_index": {
+        "name": "Indice termic"
+      },
+      "humidex": {
+        "name": "Indice de umezeală"
+      },
+      "humidex_perception": {
+        "name": "Indice de umezeală perceput",
+        "state": {
+          "comfortable": "Confortabil",
+          "noticable_discomfort": "Disconfort perceptibil",
+          "evident_discomfort": "Disconfort evident",
+          "great_discomfort": "Disconfort mare, evitați eforturile",
+          "dangerous_discomfort": "Disconfort periculos",
+          "heat_stroke": "Posibil accident vascular cerebral cauzat de căldură excesivă"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Entalpia aerului umed"
+      },
+      "relative_strain_perception": {
+        "name": "Discomfort termic",
+        "state": {
+          "outside_calculable_range": "În afara intervalului calculabil",
+          "comfortable": "Confortabil",
+          "slight_discomfort": "Ușor disconfort",
+          "discomfort": "Disconfort",
+          "significant_discomfort": "Disconfort semnificativ",
+          "extreme_discomfort": "Disconfort extrem"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "Percepție Scharlau (Vara)",
+        "state": {
+          "outside_calculable_range": "În afara intervalului calculabil",
+          "comfortable": "Confortabil",
+          "slightly_uncomfortable": "Ușor inconfortabil",
+          "moderately_uncomfortable": "Moderat inconfortabil",
+          "highly_uncomfortable": "Foarte inconfortabil"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Percepție Scharlau (Iarna)",
+        "state": {
+          "outside_calculable_range": "În afara intervalului calculabil",
+          "comfortable": "Confortabil",
+          "slightly_uncomfortable": "Ușor inconfortabil",
+          "moderately_uncomfortable": "Moderat inconfortabil",
+          "highly_uncomfortable": "Foarte inconfortabil"
+        }
+      },
+      "summer_simmer_perception": {
+        "name": "Discomfort termic (Vara)",
+        "state": {
+          "cool": "Rece",
+          "slightly_cool": "Ușor rece",
+          "comfortable": "Confortabil",
+          "slightly_warm": "Ușor cald",
+          "increasing_discomfort": "Creșterea disconfortului",
+          "extremely_warm": "Extrem de cald",
+          "danger_of_heatstroke": "Pericol de insolație",
+          "extreme_danger_of_heatstroke": "Pericol extrem de insolație",
+          "circulatory_collapse_imminent": "Colapsul circulator iminent"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "Percepție Thoms",
+        "state": {
+          "no_discomfort": "Niciun disconfort",
+          "less_than_half": "Mai puțin de jumătate din populație simte disconfort",
+          "more_than_half": "Mai mult de jumătate din populație simte disconfort",
+          "most": "Majoritatea persoanelor simt disconfort și deteriorarea condițiilor psihofizice",
+          "everyone": "Toată lumea simte disconfort semnificativ",
+          "dangerous": "Disconfort periculos, foarte puternic, care poate provoca epuizare termică"
+        }
+      }
+    }
+  }
+}

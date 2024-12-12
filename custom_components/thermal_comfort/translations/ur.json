@@ -1,0 +1,159 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "درجہ حرارت کا سینسر نہیں ملا",
+      "humidity_not_found": "نمی کا سینسر نہیں ملا"
+    },
+    "step": {
+      "init": {
+        "title": "تھرمل آرام کی ترتیبات",
+        "data": {
+          "temperature_sensor": "درجہ حرارت کا سینسر",
+          "humidity_sensor": "نمی کا سینسر",
+          "poll": "پولنگ کو فعال کریں۔",
+          "scan_interval": "پول کا وقفہ (سیکنڈ)",
+          "custom_icons": "اپنی مرضی کے مطابق آئیکون پیک استعمال کریں۔"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "درجہ حرارت اور نمی کے سینسرز کا یہ امتزاج پہلے سے ہی ترتیب دیا گیا ہے۔",
+      "no_sensors": "درجہ حرارت یا نمی کے کوئی سینسر نہیں ملے۔ ایڈوانس موڈ میں دوبارہ کوشش کریں۔",
+      "no_sensors_advanced": "درجہ حرارت یا نمی کے کوئی سینسر نہیں ملے۔"
+    },
+    "error": {
+      "temperature_not_found": "درجہ حرارت کا سینسر نہیں ملا",
+      "humidity_not_found": "نمی کا سینسر نہیں ملا"
+    },
+    "step": {
+      "user": {
+        "title": "تھرمل سکون کی ترتیبات",
+        "data": {
+          "name": "نام",
+          "temperature_sensor": "درجہ حرارت سینسر",
+          "humidity_sensor": "نمی کا سینسر",
+          "poll": "پولنگ کو فعال کریں۔",
+          "scan_interval": "رائے شماری کا وقفہ (سیکنڈز)",
+          "custom_icons": "اپنی مرضی کے مطابق آئیکون پیک استعمال کریں۔",
+          "enabled_sensors": "فعال سینسرز"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "absolute_humidity": {
+        "name": "مطلق نمی"
+      },
+      "dew_point": {
+        "name": "شبنم کا نقطہ"
+      },
+      "dew_point_perception": {
+        "name": "اوس پوائنٹ کا ادراک",
+        "state": {
+          "dry": "کچھ کے لیے تھوڑا سا خشک",
+          "very_comfortable": "بہت آرام دہ ہے۔",
+          "comfortable": "آرام دہ ہے۔",
+          "ok_but_humid": "زیادہ تر کے لیے ٹھیک ہے، لیکن مرطوب ہے۔",
+          "somewhat_uncomfortable": "کچھ غیر آرام دہ",
+          "quite_uncomfortable": "بہت مرطوب، کافی غیر آرام دہ",
+          "extremely_uncomfortable": "انتہائی غیر آرام دہ، جابرانہ",
+          "severely_high": "بہت زیادہ، یہاں تک کہ دمہ سے متعلق بیماریوں کے لیے جان لیوا بھی"
+        }
+      },
+      "frost_point": {
+        "name": "ٹھنڈ کا نقطہ"
+      },
+      "frost_risk": {
+        "name": "ٹھنڈ کا خطرہ ۔",
+        "state": {
+          "no_risk": "کوئی خطرہ نہیں ہے۔",
+          "unlikely": "امکان نہیں ہے۔",
+          "probable": "ممکنہ",
+          "high": "زیادہ امکان"
+        }
+      },
+      "heat_index": {
+        "name": "حرارت کا اشاریہ"
+      },
+      "humidex": {
+        "name": "ہیومیڈیکس"
+      },
+      "humidex_perception": {
+        "name": "Humidex تاثر",
+        "state": {
+          "comfortable": "آرام دہ ہے۔",
+          "noticable_discomfort": "نمایاں تکلیف",
+          "evident_discomfort": "واضح تکلیف",
+          "great_discomfort": "بڑی تکلیف، مشقت سے گریز کریں۔",
+          "dangerous_discomfort": "خطرناک تکلیف ۔",
+          "heat_stroke": "ہیٹ سٹروک کا امکان ہے۔"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "نم ہوا انتھالپی"
+      },
+      "relative_strain_perception": {
+        "name": "رشتہ دار تناؤ کا ادراک",
+        "state": {
+          "outside_calculable_range": "Outside of the calculable range",
+          "comfortable": "آرام دہ ہے۔",
+          "slight_discomfort": "ہلکی سی تکلیف",
+          "discomfort": "بے آرامی",
+          "significant_discomfort": "نمایاں تکلیف",
+          "extreme_discomfort": "شدید تکلیف"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "سمر Scharlau خیال",
+        "state": {
+          "outside_calculable_range": "قابل حساب حد سے باہر",
+          "comfortable": "آرام دہ ہے۔",
+          "slightly_uncomfortable": "قدرے غیر آرام دہ",
+          "moderately_uncomfortable": "اعتدال پسند غیر آرام دہ",
+          "highly_uncomfortable": "انتہائی غیر آرام دہ"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "موسم سرما کے Scharlau تاثر",
+        "state": {
+          "outside_calculable_range": "قابل حساب حد سے باہر",
+          "comfortable": "آرام دہ",
+          "slightly_uncomfortable": "قدرے غیر آرام دہ",
+          "moderately_uncomfortable": "اعتدال پسند غیر آرام دہ",
+          "highly_uncomfortable": "انتہائی غیر آرام دہ"
+        }
+      },
+      "summer_simmer_index": {
+        "name": "موسم گرما سمر اشاریہ"
+      },
+      "summer_simmer_perception": {
+        "name": "موسم گرما میں سمر تاثر",
+        "state": {
+          "cool": "ٹھنڈا",
+          "slightly_cool": "تھوڑا سا ٹھنڈا",
+          "comfortable": "آرام دہ",
+          "slightly_warm": "قدرے گرم",
+          "increasing_discomfort": "بڑھتی ہوئی تکلیف",
+          "extremely_warm": "انتہائی گرم",
+          "danger_of_heatstroke": "ہیٹ اسٹروک کا خطرہ",
+          "extreme_danger_of_heatstroke": "ہیٹ اسٹروک کا انتہائی خطرہ",
+          "circulatory_collapse_imminent": "گردش کا خاتمہ آسنن ہے۔"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "تھامس کی تکلیف کا تاثر",
+        "state": {
+          "no_discomfort": "کوئی تکلیف نہیں۔",
+          "less_than_half": "آبادی کا نصف سے بھی کم حصہ تکلیف محسوس کرتا ہے۔",
+          "more_than_half": "نصف سے زیادہ آبادی تکلیف محسوس کرتی ہے۔",
+          "most": "زیادہ تر افراد تکلیف اور نفسیاتی حالات کی خرابی محسوس کرتے ہیں۔",
+          "everyone": "ہر ایک کو نمایاں تکلیف محسوس ہوتی ہے۔",
+          "dangerous": "خطرناک، بہت مضبوط تکلیف جو ہیٹ سٹروک کا سبب بن سکتی ہے۔"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "entity": {
+    "sensor": {
+      "dew_point_perception": {
+        "state": {
+          "dry": "Сухо",
+          "very_comfortable": "Дуже комфортно",
+          "comfortable": "Комфортно",
+          "ok_but_humid": "Нормально, але волого",
+          "somewhat_uncomfortable": "Трохи некомфортно",
+          "quite_uncomfortable": "Досить волого, некомфортно",
+          "extremely_uncomfortable": "Дуже волого, гнітюче",
+          "severely_high": "Дуже висока вологість, може бути смертельною для для астматиків"
+        }
+      },
+      "frost_risk": {
+        "state": {
+          "no_risk": "Безпечно",
+          "unlikely": "Малоймовірно",
+          "probable": "Ймовірно",
+          "high": "Висока ймовірність"
+        }
+      },
+      "summer_simmer_perception": {
+        "state": {
+          "cool": "Холодно",
+          "slightly_cool": "Прохолодно",
+          "comfortable": "Комфортно",
+          "slightly_warm": "Тепло",
+          "increasing_discomfort": "Жарко",
+          "extremely_warm": "Дуже жарко",
+          "danger_of_heatstroke": "Ризик теплового удару",
+          "extreme_danger_of_heatstroke": "Серйозний ризик теплового удару",
+          "circulatory_collapse_imminent": "Можливі судинні розлади"
+        }
+      }
+    }
+  }
+}

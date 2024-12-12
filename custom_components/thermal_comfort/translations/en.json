@@ -1,0 +1,159 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "Temperature sensor not found",
+      "humidity_not_found": "Humidity sensor not found"
+    },
+    "step": {
+      "init": {
+        "title": "Thermal comfort settings",
+        "data": {
+          "temperature_sensor": "Temperature sensor",
+          "humidity_sensor": "Humidity sensor",
+          "poll": "Enable Polling",
+          "scan_interval": "Poll interval (seconds)",
+          "custom_icons": "Use custom icons pack"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "This combination of temperature and humidity sensors is already configured",
+      "no_sensors": "No temperature or humidity sensors found. Try again in advanced mode.",
+      "no_sensors_advanced": "No temperature or humidity sensors found."
+    },
+    "error": {
+      "temperature_not_found": "Temperature sensor not found",
+      "humidity_not_found": "Humidity sensor not found"
+    },
+    "step": {
+      "user": {
+        "title": "Thermal comfort settings",
+        "data": {
+          "name": "Name",
+          "temperature_sensor": "Temperature sensor",
+          "humidity_sensor": "Humidity sensor",
+          "poll": "Enable Polling",
+          "scan_interval": "Poll interval (seconds)",
+          "custom_icons": "Use custom icons pack",
+          "enabled_sensors": "Enabled sensors"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "absolute_humidity": {
+        "name": "Absolute humidity"
+      },
+      "dew_point": {
+        "name": "Dew point"
+      },
+      "dew_point_perception": {
+        "name": "Dew point perception",
+        "state": {
+          "dry": "A bit dry for some",
+          "very_comfortable": "Very comfortable",
+          "comfortable": "Comfortable",
+          "ok_but_humid": "OK for most, but humid",
+          "somewhat_uncomfortable": "Somewhat uncomfortable",
+          "quite_uncomfortable": "Very humid, quite uncomfortable",
+          "extremely_uncomfortable": "Extremely uncomfortable, oppressive",
+          "severely_high": "Severely high, even deadly for asthma related illnesses"
+        }
+      },
+      "frost_point": {
+        "name": "Frost point"
+      },
+      "frost_risk": {
+        "name": "Frost risk",
+        "state": {
+          "no_risk": "No risk",
+          "unlikely": "Unlikely",
+          "probable": "Probable",
+          "high": "High probability"
+        }
+      },
+      "heat_index": {
+        "name": "Heat index"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
+      "humidex_perception": {
+        "name": "Humidex perception",
+        "state": {
+          "comfortable": "Comfortable",
+          "noticable_discomfort": "Noticeable discomfort",
+          "evident_discomfort": "Evident discomfort",
+          "great_discomfort": "Great discomfort, avoid exertion",
+          "dangerous_discomfort": "Dangerous discomfort",
+          "heat_stroke": "Heat stroke possible"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Moist air enthalpy"
+      },
+      "relative_strain_perception": {
+        "name": "Relative strain perception",
+        "state": {
+          "outside_calculable_range": "Outside of the calculable range",
+          "comfortable": "Comfortable",
+          "slight_discomfort": "Slight discomfort",
+          "discomfort": "Discomfort",
+          "significant_discomfort": "Significant discomfort",
+          "extreme_discomfort": "Extreme discomfort"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "Summer Scharlau perception",
+        "state": {
+          "outside_calculable_range": "Outside of the calculable range",
+          "comfortable": "Comfortable",
+          "slightly_uncomfortable": "Slightly uncomfortable",
+          "moderately_uncomfortable": "Moderately uncomfortable",
+          "highly_uncomfortable": "Highly uncomfortable"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Winter Scharlau perception",
+        "state": {
+          "outside_calculable_range": "Outside of the calculable range",
+          "comfortable": "Comfortable",
+          "slightly_uncomfortable": "Slightly uncomfortable",
+          "moderately_uncomfortable": "Moderately uncomfortable",
+          "highly_uncomfortable": "Highly uncomfortable"
+        }
+      },
+      "summer_simmer_index": {
+        "name": "Summer Simmer index"
+      },
+      "summer_simmer_perception": {
+        "name": "Summer Simmer perception",
+        "state": {
+          "cool": "Cool",
+          "slightly_cool": "Slightly cool",
+          "comfortable": "Comfortable",
+          "slightly_warm": "Slightly warm",
+          "increasing_discomfort": "Increasing discomfort",
+          "extremely_warm": "Extremely warm",
+          "danger_of_heatstroke": "Danger of heatstroke",
+          "extreme_danger_of_heatstroke": "Extreme danger of heatstroke",
+          "circulatory_collapse_imminent": "Circulatory collapse imminent"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "Thoms discomfort perception",
+        "state": {
+          "no_discomfort": "No discomfort",
+          "less_than_half": "Less than half of the population feels discomfort",
+          "more_than_half": "More than half of the population feels discomfort",
+          "most": "Most individuals feel discomfort and deterioration of psychophysical conditions",
+          "everyone": "Everyone feels significant discomfort",
+          "dangerous": "Dangerous, very strong discomfort which may cause heat strokes"
+        }
+      }
+    }
+  }
+}

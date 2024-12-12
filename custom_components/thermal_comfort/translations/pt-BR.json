@@ -1,0 +1,159 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "Sensor de temperatura não foi localizado",
+      "humidity_not_found": "Sensor de umidade não foi localizado"
+    },
+    "step": {
+      "init": {
+        "title": "Configurações do Conforto Térmico",
+        "data": {
+          "temperature_sensor": "Sensor de Temperatura",
+          "humidity_sensor": "Sensor de Umidade",
+          "poll": "Ativar Atualização Periódica",
+          "scan_interval": "Intervalo de atualização (segundos)",
+          "custom_icons": "Usar ícones personalizados"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Esta combinação de sensores de temperatura e umidade já foram utilizadas.",
+      "no_sensors": "Não foram localizados os sensores de temperatura e/ou umidade. Tente novamente no modo avançado.",
+      "no_sensors_advanced": "Não foram localizados sensores de temperatura e/ou umidade."
+    },
+    "error": {
+      "temperature_not_found": "Sensor de temperatura não foi localizado",
+      "humidity_not_found": "Sensor de umidade não foi localizado"
+    },
+    "step": {
+      "user": {
+        "title": "Definições do Conforto Térmico",
+        "data": {
+          "name": "Nome",
+          "temperature_sensor": "Sensor de Temperatura",
+          "humidity_sensor": "Sensor de Umidade",
+          "poll": "Ativar Atualizaçãov Periódica",
+          "scan_interval": "Intervalo de atualização (segundos)",
+          "custom_icons": "Usar ícones personalizados",
+          "enabled_sensors": "Sensores ligados"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "absolute_humidity": {
+        "name": "Umidade absoluta"
+      },
+      "dew_point": {
+        "name": "Ponto de orvalho"
+      },
+      "dew_point_perception": {
+        "name": "Percepção do ponto de orvalho",
+        "state": {
+          "dry": "Um pouco seco para alguns",
+          "very_comfortable": "Muito confortável",
+          "comfortable": "Confortável",
+          "ok_but_humid": "Confortável para a maioria, porém úmido",
+          "somewhat_uncomfortable": "Um pouco desconfortável",
+          "quite_uncomfortable": "Muito úmido, bastante desconfortável",
+          "extremely_uncomfortable": "Extremamente desconfortável",
+          "severely_high": "Extremamente alto, pode até ser mortal para portadores de asma"
+        }
+      },
+      "frost_point": {
+        "name": "Ponto de congelamento"
+      },
+      "frost_risk": {
+        "name": "Risco de congelamento",
+        "state": {
+          "no_risk": "Sem risco",
+          "unlikely": "Improvável",
+          "probable": "Provável",
+          "high": "Alta probabilidade"
+        }
+      },
+      "heat_index": {
+        "name": "Índice de calor"
+      },
+      "humidex": {
+        "name": "Índice de Umidade (humidex)"
+      },
+      "humidex_perception": {
+        "name": "Percepção ao Índice de Umidade",
+        "state": {
+          "comfortable": "Confortável",
+          "noticable_discomfort": "Desconforto Perceptível",
+          "evident_discomfort": "Desconforto evidente",
+          "great_discomfort": "Grande desconforto, evite esforço físico",
+          "dangerous_discomfort": "Desconforto perigoso",
+          "heat_stroke": "Alto risco de insolação"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Entalpia específica do vapor úmido"
+      },
+      "relative_strain_perception": {
+        "name": "Conforto Térmico Relativo",
+        "state": {
+          "outside_calculable_range": "Fora do interválo de cálculo",
+          "comfortable": "Confortável",
+          "slight_discomfort": "Leve desconforto",
+          "discomfort": "Desconforto",
+          "significant_discomfort": "Desconforto significativo",
+          "extreme_discomfort": "Desconforto extremo"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "Índice de Verão de Scharlau",
+        "state": {
+          "outside_calculable_range": "Fora do interválo de cálculo",
+          "comfortable": "Confortável",
+          "slightly_uncomfortable": "Ligeiramente desconfortável",
+          "moderately_uncomfortable": "Desconforto moderado",
+          "highly_uncomfortable": "Muito desconfortáve"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Percepção de Inverno de Scharlau",
+        "state": {
+          "outside_calculable_range": "Fora do interválo de cálculo",
+          "comfortable": "Confortável",
+          "slightly_uncomfortable": "Ligeiramente desconfortável",
+          "moderately_uncomfortable": "Desconforto moderado",
+          "highly_uncomfortable": "Muito desconfortável"
+        }
+      },
+      "summer_simmer_index": {
+        "name": "Índice de Verão de Simmer"
+      },
+      "summer_simmer_perception": {
+        "name": "Percepção de Verão de Simmer",
+        "state": {
+          "cool": "Frio",
+          "slightly_cool": "Um pouco frio",
+          "comfortable": "Confortável",
+          "slightly_warm": "Um pouco quente",
+          "increasing_discomfort": "Desconforto crescente",
+          "extremely_warm": "Extremamente quente",
+          "danger_of_heatstroke": "Perigo de insolação",
+          "extreme_danger_of_heatstroke": "Perigo extremo de insolação",
+          "circulatory_collapse_imminent": "Colapso circulatório iminente"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "Percepção de Desconforto de Thoms",
+        "state": {
+          "no_discomfort": "Sem desconforto",
+          "less_than_half": "Menos de metade da população sente desconforto",
+          "more_than_half": "Mais de metade da população sente desconforto",
+          "most": " maioria dos indivíduos sente desconforto e deterioração da condição física e psicológica",
+          "everyone": "Todo mundo sente um importante desconforto",
+          "dangerous": "Perigoso, desconforto muito forte que pode causar insolações"
+        }
+      }
+    }
+  }
+}

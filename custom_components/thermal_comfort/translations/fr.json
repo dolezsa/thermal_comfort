@@ -1,0 +1,159 @@
+{
+  "options": {
+    "error": {
+      "temperature_not_found": "Le capteur de température n'a pas été trouvé",
+      "humidity_not_found": "Le capteur d'humidité n'a pas été trouvé"
+    },
+    "step": {
+      "init": {
+        "title": "Paramètres de Thermal comfort",
+        "data": {
+          "temperature_sensor": "Capteur de température",
+          "humidity_sensor": "Capteur d'humidité",
+          "poll": "Activer le polling",
+          "scan_interval": "Intervalle de polling (en secondes)",
+          "custom_icons": "Utiliser un pack d'icônes personnalisé"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Cette combinaison de capteurs de température et d'humidité est déjà configurée",
+      "no_sensors": "Aucun capteur de température ou d'humidité n'a été trouvé. Réessayez en mode avancé.",
+      "no_sensors_advanced": "Aucun capteur de température ou d'humidité n'a été trouvé."
+    },
+    "error": {
+      "temperature_not_found": "Capteur de température introuvable",
+      "humidity_not_found": "Capteur d'humidité introuvable"
+    },
+    "step": {
+      "user": {
+        "title": "Paramètres de Thermal comfort",
+        "data": {
+          "name": "Nom",
+          "temperature_sensor": "Capteur de température",
+          "humidity_sensor": "Capteur d'humidité",
+          "poll": "Activer le polling",
+          "scan_interval": "Intervalle de polling (en secondes)",
+          "custom_icons": "Utiliser un pack d'icônes personnalisé",
+          "enabled_sensors": "Capteurs activés"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "absolute_humidity": {
+        "name": "Humidité absolue"
+      },
+      "dew_point": {
+        "name": "Point de rosée"
+      },
+      "dew_point_perception": {
+        "name": "Sensation point de rosée",
+        "state": {
+          "dry": "Un peu sec pour certains",
+          "very_comfortable": "Très confortable",
+          "comfortable": "Confortable",
+          "ok_but_humid": "OK pour la plupart, mais humide",
+          "somewhat_uncomfortable": "Un peu inconfortable",
+          "quite_uncomfortable": "Très humide, assez inconfortable",
+          "extremely_uncomfortable": "Extrêmement inconfortable, oppressant",
+          "severely_high": "Gravement élevé, voire mortel pour les maladies liées à l'asthme"
+        }
+      },
+      "frost_point": {
+        "name": "Point de gelée"
+      },
+      "frost_risk": {
+        "name": "Risque de gelée",
+        "state": {
+          "no_risk": "Aucun risque",
+          "unlikely": "Peu probable",
+          "probable": "Plausible",
+          "high": "Haute probabilité"
+        }
+      },
+      "heat_index": {
+        "name": "Indice de Chaleur"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
+      "humidex_perception": {
+        "name": "Sensation Humidex",
+        "state": {
+          "comfortable": "Confortable",
+          "noticable_discomfort": "Inconfortable",
+          "evident_discomfort": "Très désagréable. Ralentir l'effort physique",
+          "great_discomfort": "Malaise généralisé. Danger. Réduire considérablement l'effort physique",
+          "dangerous_discomfort": "Danger extrême. Arrêter tout effort physique",
+          "heat_stroke": "Coup de chaleur, danger de mort"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Enthalpie Spécifique"
+      },
+      "relative_strain_perception": {
+        "name": "Confort Thermique Relatif",
+        "state": {
+          "outside_calculable_range": "En dehors de la plage calculable",
+          "comfortable": "Confortable",
+          "slight_discomfort": "Légèrement inconfortable",
+          "discomfort": "Inconfortable",
+          "significant_discomfort": "Inconfort important",
+          "extreme_discomfort": "Inconfort extrême"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "Sensation indice d'été de Scharlau",
+        "state": {
+          "outside_calculable_range": "En dehors de la plage calculable",
+          "comfortable": "Confortable",
+          "slightly_uncomfortable": "Légèrement inconfortable",
+          "moderately_uncomfortable": "Modérément inconfortable",
+          "highly_uncomfortable": "Très inconfortable"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Sensation indice d'hiver de Scharlau",
+        "state": {
+          "outside_calculable_range": "En dehors de la plage calculable",
+          "comfortable": "Confortable",
+          "slightly_uncomfortable": "Légèrement inconfortable",
+          "moderately_uncomfortable": "Modérément inconfortable",
+          "highly_uncomfortable": "Très inconfortable"
+        }
+      },
+      "summer_simmer_index": {
+        "name": "Indice d'été Simmer"
+      },
+      "summer_simmer_perception": {
+        "name": "Sensation indice d'été Simmer",
+        "state": {
+          "cool": "Froid",
+          "slightly_cool": "Légèrement froid",
+          "comfortable": "Confortable",
+          "slightly_warm": "Légèrement chaud",
+          "increasing_discomfort": "Chaud",
+          "extremely_warm": "Très chaud",
+          "danger_of_heatstroke": "Extrêmement chaud",
+          "extreme_danger_of_heatstroke": "Danger extrême de coup de chaleur",
+          "circulatory_collapse_imminent": "Arrêt cardiaque imminent"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "Indice de Thom (THI)",
+        "state": {
+          "no_discomfort": "Pas de gêne",
+          "less_than_half": "Moins de la moitié de la population ressent un inconfort",
+          "more_than_half": "Plus de la moitié de la population ressent un inconfort",
+          "most": "La plupart des individus ressentent un inconfort et une détérioration des conditions psychophysiques",
+          "everyone": "Tout le monde ressent un inconfort important",
+          "dangerous": "Dangereux, inconfort très important qui peut causer des coups de chaleur"
+        }
+      }
+    }
+  }
+}
