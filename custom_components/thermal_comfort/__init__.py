@@ -64,7 +64,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # We have no unique_id yet, let's use backup.
         hass.config_entries.async_update_entry(entry, unique_id=entry.entry_id)
 
-    hass.async_create_task(
+    await hass.async_create_task(
         hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     )
     update_listener = entry.add_update_listener(async_update_options)
