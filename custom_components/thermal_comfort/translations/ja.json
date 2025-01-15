@@ -44,14 +44,7 @@
   },
   "entity": {
     "sensor": {
-      "absolute_humidity": {
-        "name": "絶対湿度"
-      },
-      "dew_point": {
-        "name": "露点"
-      },
       "dew_point_perception": {
-        "name": "露点知覚",
         "state": {
           "dry": "一部の人にとっては少し乾燥",
           "very_comfortable": "とても快適",
@@ -61,28 +54,19 @@
           "quite_uncomfortable": "湿度が高くかなり不快",
           "extremely_uncomfortable": "非常に不快で抑圧的",
           "severely_high": "非常に高く、喘息関連疾患では致死的"
-        }
-      },
-      "frost_point": {
-        "name": "霜点"
+        },
+        "name": "露点知覚"
       },
       "frost_risk": {
-        "name": "霜の危険性",
         "state": {
           "no_risk": "ノーリスク",
           "unlikely": "なさそう",
           "probable": "ありそう",
           "high": "高確率"
-        }
-      },
-      "heat_index": {
-        "name": "暑さ指数"
-      },
-      "humidex": {
-        "name": "湿度指数"
+        },
+        "name": "霜の危険性"
       },
       "humidex_perception": {
-        "name": "湿度指数知覚",
         "state": {
           "comfortable": "快適",
           "noticable_discomfort": "顕著な不快感",
@@ -90,13 +74,10 @@
           "great_discomfort": "極度の不快感、運動を避ける",
           "dangerous_discomfort": "危険な不快感",
           "heat_stroke": "熱中症の可能性あり"
-        }
-      },
-      "moist_air_enthalpy": {
-        "name": "湿った空気のエンタルピー"
+        },
+        "name": "湿度指数知覚"
       },
       "relative_strain_perception": {
-        "name": "相対的な調子の知覚",
         "state": {
           "outside_calculable_range": "計算範囲外",
           "comfortable": "快適",
@@ -104,30 +85,30 @@
           "discomfort": "不快感",
           "significant_discomfort": "著しい不快感",
           "extreme_discomfort": "極度の不快感"
-        }
+        },
+        "name": "相対的な調子の知覚"
       },
       "summer_scharlau_perception": {
-        "name": "Summer Scharlau指数",
         "state": {
           "outside_calculable_range": "計算範囲外",
           "comfortable": "快適",
           "slightly_uncomfortable": "わずかな不快感",
           "moderately_uncomfortable": "中程度に不快",
           "highly_uncomfortable": "非常に不快"
-        }
+        },
+        "name": "Summer Scharlau指数"
       },
       "winter_scharlau_perception": {
-        "name": "Winter Scharlau指数",
         "state": {
           "outside_calculable_range": "計算範囲外",
           "comfortable": "快適",
           "slightly_uncomfortable": "わずかな不快感",
           "moderately_uncomfortable": "中程度に不快",
           "highly_uncomfortable": "非常に不快"
-        }
+        },
+        "name": "Winter Scharlau指数"
       },
       "summer_simmer_perception": {
-        "name": "Summer Simmer指数",
         "state": {
           "cool": "涼しい",
           "slightly_cool": "やや涼しい",
@@ -138,10 +119,10 @@
           "danger_of_heatstroke": "熱中症になる危険性あり",
           "extreme_danger_of_heatstroke": "熱中症になる危険性が極めて高い",
           "circulatory_collapse_imminent": "循環器系の破綻が近い"
-        }
+        },
+        "name": "Summer Simmer指数"
       },
       "thoms_discomfort_perception": {
-        "name": "Thoms discomfort指数",
         "state": {
           "no_discomfort": "不快感なし",
           "less_than_half": "不快感を感じている人は半数以下",
@@ -149,7 +130,26 @@
           "most": "多数の人が違和感を覚え精神的にも物理的にも状態が悪化",
           "everyone": "誰もが大きな違和感を覚える",
           "dangerous": "熱中症になりそうなほど強い不快感"
-        }
+        },
+        "name": "Thoms discomfort指数"
+      },
+      "absolute_humidity": {
+        "name": "絶対湿度"
+      },
+      "dew_point": {
+        "name": "露点"
+      },
+      "frost_point": {
+        "name": "霜点"
+      },
+      "heat_index": {
+        "name": "暑さ指数"
+      },
+      "humidex": {
+        "name": "湿度指数"
+      },
+      "moist_air_enthalpy": {
+        "name": "湿った空気のエンタルピー"
       }
     }
   }

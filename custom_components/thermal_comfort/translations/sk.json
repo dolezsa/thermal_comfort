@@ -44,14 +44,7 @@
   },
   "entity": {
     "sensor": {
-      "absolute_humidity": {
-        "name": "Absolútna vlhkosť"
-      },
-      "dew_point": {
-        "name": "Rosný bod"
-      },
       "dew_point_perception": {
-        "name": "Rosný bod predpoveď",
         "state": {
           "dry": "Pre niekoho suché",
           "very_comfortable": "Veľmi komfortné",
@@ -61,28 +54,19 @@
           "quite_uncomfortable": "Veľmi vlhké, dosť nepríjemné",
           "extremely_uncomfortable": "Extrémne nekomfortné, tiesnivé",
           "severely_high": "Veľmi vysoká, pre astmatikov smrteľná vlhkosť"
-        }
-      },
-      "frost_point": {
-        "name": "Bod mrznutia"
+        },
+        "name": "Rosný bod predpoveď"
       },
       "frost_risk": {
-        "name": "Riziko zamrznutia",
         "state": {
           "no_risk": "Žiadne riziko",
           "unlikely": "Nepravdepodobné",
           "probable": "Pravdepodobné",
           "high": "Vysoká pravdepodobnosť"
-        }
-      },
-      "heat_index": {
-        "name": "Teplotný index"
-      },
-      "humidex": {
-        "name": "Humidex"
+        },
+        "name": "Riziko zamrznutia"
       },
       "humidex_perception": {
-        "name": "Humidex predpoveď",
         "state": {
           "comfortable": "Príjemne",
           "noticable_discomfort": "Znateľné nepohodlie",
@@ -90,13 +74,10 @@
           "great_discomfort": "Veľké nepohodlie, vyhýbajte sa námahe",
           "dangerous_discomfort": "Nebezpečné nepohodlie",
           "heat_stroke": "Úpal možný"
-        }
-      },
-      "moist_air_enthalpy": {
-        "name": "Entalpia vlhkého vzduchu"
+        },
+        "name": "Humidex predpoveď"
       },
       "relative_strain_perception": {
-        "name": "Vnímanie relatívnej záťaže",
         "state": {
           "outside_calculable_range": "Mimo vypočítateľného rozsahu",
           "comfortable": "Príjemne",
@@ -104,33 +85,30 @@
           "discomfort": "Diskomfort",
           "significant_discomfort": "Významný diskomfort",
           "extreme_discomfort": "Extrémny discomfort"
-        }
+        },
+        "name": "Vnímanie relatívnej záťaže"
       },
       "summer_scharlau_perception": {
-        "name": "Vnímanie letného scharlau",
         "state": {
           "outside_calculable_range": "Mimo vypočítateľného rozsahu",
           "comfortable": "Príjemne",
           "slightly_uncomfortable": "Mierny diskomfort",
           "moderately_uncomfortable": "Stredne nepríjemné",
           "highly_uncomfortable": "Veľmi nepríjemné"
-        }
+        },
+        "name": "Vnímanie letného scharlau"
       },
       "winter_scharlau_perception": {
-        "name": "Zimné vnímanie scharlau",
         "state": {
           "outside_calculable_range": "Mimo vypočítateľného rozsahu",
           "comfortable": "Príjemne",
           "slightly_uncomfortable": "Mierny diskomfort",
           "moderately_uncomfortable": "Stredne nepríjemné",
           "highly_uncomfortable": "Veľmi nepríjemné"
-        }
-      },
-      "summer_simmer_index": {
-        "name": "Letný Simmer index"
+        },
+        "name": "Zimné vnímanie scharlau"
       },
       "summer_simmer_perception": {
-        "name": "Vnímanie letného varu",
         "state": {
           "cool": "Chladno",
           "slightly_cool": "Mierne chladno",
@@ -141,10 +119,10 @@
           "danger_of_heatstroke": "Nebezpečenstvo úpalu",
           "extreme_danger_of_heatstroke": "Extrémne nebezpečenstvo úpalu",
           "circulatory_collapse_imminent": "Hroziaci kolaps krvného obehu"
-        }
+        },
+        "name": "Vnímanie letného varu"
       },
       "thoms_discomfort_perception": {
-        "name": "Vnímanie nepohodlia podľa Thoma",
         "state": {
           "no_discomfort": "Žiadne nepohodlie",
           "less_than_half": "Menej ako polovica populácie pociťuje nepríjemné pocity",
@@ -152,7 +130,29 @@
           "most": "Väčšina jednotlivcov pociťuje nepohodlie a zhoršenie psychofyzických podmienok",
           "everyone": "Každý pociťuje výrazné nepohodlie",
           "dangerous": "Nebezpečné, veľmi silné nepohodlie, ktoré môže spôsobiť úpal"
-        }
+        },
+        "name": "Vnímanie nepohodlia podľa Thoma"
+      },
+      "absolute_humidity": {
+        "name": "Absolútna vlhkosť"
+      },
+      "dew_point": {
+        "name": "Rosný bod"
+      },
+      "frost_point": {
+        "name": "Bod mrznutia"
+      },
+      "heat_index": {
+        "name": "Teplotný index"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
+      "moist_air_enthalpy": {
+        "name": "Entalpia vlhkého vzduchu"
+      },
+      "summer_simmer_index": {
+        "name": "Letný Simmer index"
       }
     }
   }

@@ -39,12 +39,6 @@
   },
   "entity": {
     "sensor": {
-      "absolute_humidity": {
-        "name": "Absolut fuktighet"
-      },
-      "dew_point": {
-        "name": "Dagg punkt"
-      },
       "dew_point_perception": {
         "state": {
           "dry": "Lite torrt",
@@ -58,19 +52,13 @@
         }
       },
       "frost_risk": {
-        "name": "Frost risk",
         "state": {
           "no_risk": "Ingen risk",
           "unlikely": "Osannolikt",
           "probable": "Sannolikt",
           "high": "Stor risk"
-        }
-      },
-      "heat_index": {
-        "name": "Värme index"
-      },
-      "humidex": {
-        "name": "Fuktighetsindex"
+        },
+        "name": "Frost risk"
       },
       "humidex_perception": {
         "state": {
@@ -101,6 +89,18 @@
           "extreme_danger_of_heatstroke": "Extrem risk för värmeslag",
           "circulatory_collapse_imminent": "Allvarlig fara för kollaps"
         }
+      },
+      "absolute_humidity": {
+        "name": "Absolut fuktighet"
+      },
+      "dew_point": {
+        "name": "Dagg punkt"
+      },
+      "heat_index": {
+        "name": "Värme index"
+      },
+      "humidex": {
+        "name": "Fuktighetsindex"
       }
     }
   }

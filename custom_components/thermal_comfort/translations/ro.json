@@ -44,14 +44,7 @@
   },
   "entity": {
     "sensor": {
-      "absolute_humidity": {
-        "name": "Umiditate absolută"
-      },
-      "dew_point": {
-        "name": "Punct de rouă"
-      },
       "dew_point_perception": {
-        "name": "Punct de rouă perceput",
         "state": {
           "dry": "Cam uscat pentru unii",
           "very_comfortable": "Foarte confortabil",
@@ -61,28 +54,19 @@
           "quite_uncomfortable": "Foarte umed, destul de inconfortabil",
           "extremely_uncomfortable": "Extrem de inconfortabil, opresiv",
           "severely_high": "Sever ridicat, chiar mortal pentru bolile legate de astm"
-        }
-      },
-      "frost_point": {
-        "name": "Punct de îngheț"
+        },
+        "name": "Punct de rouă perceput"
       },
       "frost_risk": {
-        "name": "Risc de îngheț",
         "state": {
           "no_risk": "Niciun risc",
           "unlikely": "Improbabil",
           "probable": "Probabil",
           "high": "Probabilitate mare"
-        }
-      },
-      "heat_index": {
-        "name": "Indice termic"
-      },
-      "humidex": {
-        "name": "Indice de umezeală"
+        },
+        "name": "Risc de îngheț"
       },
       "humidex_perception": {
-        "name": "Indice de umezeală perceput",
         "state": {
           "comfortable": "Confortabil",
           "noticable_discomfort": "Disconfort perceptibil",
@@ -90,13 +74,10 @@
           "great_discomfort": "Disconfort mare, evitați eforturile",
           "dangerous_discomfort": "Disconfort periculos",
           "heat_stroke": "Posibil accident vascular cerebral cauzat de căldură excesivă"
-        }
-      },
-      "moist_air_enthalpy": {
-        "name": "Entalpia aerului umed"
+        },
+        "name": "Indice de umezeală perceput"
       },
       "relative_strain_perception": {
-        "name": "Discomfort termic",
         "state": {
           "outside_calculable_range": "În afara intervalului calculabil",
           "comfortable": "Confortabil",
@@ -104,30 +85,30 @@
           "discomfort": "Disconfort",
           "significant_discomfort": "Disconfort semnificativ",
           "extreme_discomfort": "Disconfort extrem"
-        }
+        },
+        "name": "Discomfort termic"
       },
       "summer_scharlau_perception": {
-        "name": "Percepție Scharlau (Vara)",
         "state": {
           "outside_calculable_range": "În afara intervalului calculabil",
           "comfortable": "Confortabil",
           "slightly_uncomfortable": "Ușor inconfortabil",
           "moderately_uncomfortable": "Moderat inconfortabil",
           "highly_uncomfortable": "Foarte inconfortabil"
-        }
+        },
+        "name": "Percepție Scharlau (Vara)"
       },
       "winter_scharlau_perception": {
-        "name": "Percepție Scharlau (Iarna)",
         "state": {
           "outside_calculable_range": "În afara intervalului calculabil",
           "comfortable": "Confortabil",
           "slightly_uncomfortable": "Ușor inconfortabil",
           "moderately_uncomfortable": "Moderat inconfortabil",
           "highly_uncomfortable": "Foarte inconfortabil"
-        }
+        },
+        "name": "Percepție Scharlau (Iarna)"
       },
       "summer_simmer_perception": {
-        "name": "Discomfort termic (Vara)",
         "state": {
           "cool": "Rece",
           "slightly_cool": "Ușor rece",
@@ -138,10 +119,10 @@
           "danger_of_heatstroke": "Pericol de insolație",
           "extreme_danger_of_heatstroke": "Pericol extrem de insolație",
           "circulatory_collapse_imminent": "Colapsul circulator iminent"
-        }
+        },
+        "name": "Discomfort termic (Vara)"
       },
       "thoms_discomfort_perception": {
-        "name": "Percepție Thoms",
         "state": {
           "no_discomfort": "Niciun disconfort",
           "less_than_half": "Mai puțin de jumătate din populație simte disconfort",
@@ -149,7 +130,26 @@
           "most": "Majoritatea persoanelor simt disconfort și deteriorarea condițiilor psihofizice",
           "everyone": "Toată lumea simte disconfort semnificativ",
           "dangerous": "Disconfort periculos, foarte puternic, care poate provoca epuizare termică"
-        }
+        },
+        "name": "Percepție Thoms"
+      },
+      "absolute_humidity": {
+        "name": "Umiditate absolută"
+      },
+      "dew_point": {
+        "name": "Punct de rouă"
+      },
+      "frost_point": {
+        "name": "Punct de îngheț"
+      },
+      "heat_index": {
+        "name": "Indice termic"
+      },
+      "humidex": {
+        "name": "Indice de umezeală"
+      },
+      "moist_air_enthalpy": {
+        "name": "Entalpia aerului umed"
       }
     }
   }
