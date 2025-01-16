@@ -22,6 +22,16 @@ jobs:
         run: |
           echo "archive=${{ env.package }}.zip" >> $GITHUB_ENV
           echo "basedir=$(pwd)/${{ env.package }}" >> $GITHUB_ENV
+      
+      - name: "Adjust version number"
+        shell: bash
+        run: |
+          version="${{ github.event.release.tag_name }}"
+          version="${version,,}"
+          version="${version#v}"
+          yq e -P -o=json \
+            -i ".version = \"${version}\"" \
+            "./custom_components/${{ env.package }}/manifest.json"
 
       - name: "Zip component dir"
         working-directory: ./custom_components/${{ env.package }}
