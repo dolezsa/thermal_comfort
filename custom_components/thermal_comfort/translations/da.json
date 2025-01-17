@@ -44,7 +44,14 @@
   },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Absolut luftfugtighed"
+      },
+      "dew_point": {
+        "name": "Dugpunkt"
+      },
       "dew_point_perception": {
+        "name": "Opfattelse af dugpunkt",
         "state": {
           "dry": "Lidt tørt for nogle",
           "very_comfortable": "Meget behagelig",
@@ -56,7 +63,11 @@
           "severely_high": "Alvorligt høj, endda dødelig for astmarelaterede sygdomme"
         }
       },
+      "frost_point": {
+        "name": "Frostpunkt"
+      },
       "frost_risk": {
+        "name": "Risiko for frost",
         "state": {
           "no_risk": "Ingen risiko",
           "unlikely": "Usandsynlig",
@@ -64,7 +75,14 @@
           "high": "Høj sandsynlighed"
         }
       },
+      "heat_index": {
+        "name": "varmeindeks"
+      },
+      "humidex": {
+        "name": "Humidex"
+      },
       "humidex_perception": {
+        "name": "Humidex opfattelse",
         "state": {
           "comfortable": "Komfortabel",
           "noticable_discomfort": "Mærkbart ubehag",
@@ -74,7 +92,11 @@
           "heat_stroke": "Hedeslag muligt"
         }
       },
+      "moist_air_enthalpy": {
+        "name": "Entalpi for fugtig luft"
+      },
       "relative_strain_perception": {
+        "name": "Opfattelse af relativ belastning",
         "state": {
           "outside_calculable_range": "Uden for det beregnelige område",
           "comfortable": "Komfortabel",
