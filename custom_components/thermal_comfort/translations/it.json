@@ -36,7 +36,7 @@
           "humidity_sensor": "Sensore di umidità",
           "poll": "Abilita polling",
           "scan_interval": "Intervallo di polling (secondi)",
-          "custom_icons": "Usa pacchetto icone personalizzato",
+          "custom_icons": "Usa il pacchetto di icone personalizzato",
           "enabled_sensors": "Sensori abilitati"
         }
       }
@@ -96,7 +96,7 @@
         "name": "Entalpia dell'aria umida"
       },
       "relative_strain_perception": {
-        "name": "Percezione della tenzione relativa",
+        "name": "Percezione della tensione relativa",
         "state": {
           "outside_calculable_range": "Fuori scala",
           "comfortable": "Confortevole",
@@ -140,7 +140,7 @@
           "extremely_warm": "Estremamente caldo",
           "danger_of_heatstroke": "Pericolo colpo di calore",
           "extreme_danger_of_heatstroke": "Probabile colpo di calore",
-          "circulatory_collapse_imminent": "Imminente colasso circolatorio"
+          "circulatory_collapse_imminent": "Imminente collasso circolatorio"
         }
       },
       "thoms_discomfort_perception": {
