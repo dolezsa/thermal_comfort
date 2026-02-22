@@ -1,7 +1,57 @@
 {
+  "options": {
+    "error": {
+      "temperature_not_found": "Сенсор температури не знайдено",
+      "humidity_not_found": "Сенсор вологості не знайдено"
+    },
+    "step": {
+      "init": {
+        "title": "Налаштування теплового комфорту",
+        "data": {
+          "temperature_sensor": "Сенсор температури",
+          "humidity_sensor": "Сенсор вологості",
+          "poll": "Увімкнути опитування",
+          "scan_interval": "Інтервал опитування (секунди)",
+          "custom_icons": "Використовувати пакет власних значків"
+        }
+      }
+    }
+  },
+  "config": {
+    "abort": {
+      "already_configured": "Це поєднання сенсорів температури та вологості вже налаштоване",
+      "no_sensors": "Не знайдено сенсорів температури чи вологості. Спробуйте ще раз у розширеному режимі.",
+      "no_sensors_advanced": "Сенсори температури чи вологості не знайдено."
+    },
+    "error": {
+      "temperature_not_found": "Сенсор температури не знайдено",
+      "humidity_not_found": "Сенсор вологості не знайдено"
+    },
+    "step": {
+      "user": {
+        "title": "Налаштування теплового комфорту",
+        "data": {
+          "name": "Ім'я",
+          "temperature_sensor": "Сенсор температури",
+          "humidity_sensor": "Сенсор вологості",
+          "poll": "Увімкнути опитування",
+          "scan_interval": "Інтервал опитування (секунди)",
+          "custom_icons": "Використовувати пакет власних значків",
+          "enabled_sensors": "Увімкнені сенсори"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
+      "absolute_humidity": {
+        "name": "Абсолютна вологість"
+      },
+      "dew_point": {
+        "name": "Точка роси"
+      },
       "dew_point_perception": {
+        "name": "Відчуття точки роси",
         "state": {
           "dry": "Сухо",
           "very_comfortable": "Дуже комфортно",
@@ -13,7 +63,11 @@
           "severely_high": "Дуже висока вологість, може бути смертельною для для астматиків"
         }
       },
+      "frost_point": {
+        "name": "Точка інею"
+      },
       "frost_risk": {
+        "name": "Ризик заморозків",
         "state": {
           "no_risk": "Безпечно",
           "unlikely": "Малоймовірно",
@@ -21,7 +75,62 @@
           "high": "Висока ймовірність"
         }
       },
+      "heat_index": {
+        "name": "Індекс спеки"
+      },
+      "humidex": {
+        "name": "Індекс вологості"
+      },
+      "humidex_perception": {
+        "name": "Відчуття вологості",
+        "state": {
+          "comfortable": "Комфортно",
+          "noticable_discomfort": "Відчутний дискомфорт",
+          "evident_discomfort": "Явний дискомфорт",
+          "great_discomfort": "Сильний дискомфорт, уникайте навантажень",
+          "dangerous_discomfort": "Небезпечний дискомфорт",
+          "heat_stroke": "Можливий тепловий удар"
+        }
+      },
+      "moist_air_enthalpy": {
+        "name": "Тепловміст вологого повітря "
+      },
+      "relative_strain_perception": {
+        "name": "Відчуття відносного теплового навантаження",
+        "state": {
+          "outside_calculable_range": "Поза межами розрахункового діапазону",
+          "comfortable": "Комфортно",
+          "slight_discomfort": "Незначний дискомфорт",
+          "discomfort": "Дискомфорт",
+          "significant_discomfort": "Значний дискомфорт",
+          "extreme_discomfort": "Крайній дискомфорт"
+        }
+      },
+      "summer_scharlau_perception": {
+        "name": "Відчуття за індексом Scharlau (літній)",
+        "state": {
+          "outside_calculable_range": "Поза межами розрахункового діапазону",
+          "comfortable": "Комфортно",
+          "slightly_uncomfortable": "Трохи некомфортно",
+          "moderately_uncomfortable": "Помірний дискомфорт",
+          "highly_uncomfortable": "Сильний дискомфорт"
+        }
+      },
+      "winter_scharlau_perception": {
+        "name": "Відчуття за індексом Scharlau (зимовий)",
+        "state": {
+          "outside_calculable_range": "Поза межами розрахункового діапазону",
+          "comfortable": "Комфортно",
+          "slightly_uncomfortable": "Трохи некомфортно",
+          "moderately_uncomfortable": "Помірний дискомфорт",
+          "highly_uncomfortable": "Сильний дискомфорт"
+        }
+      },
+      "summer_simmer_index": {
+        "name": "Літній індекс Simmer"
+      },
       "summer_simmer_perception": {
+        "name": "Відчуття за літнім індексом Simmer",
         "state": {
           "cool": "Холодно",
           "slightly_cool": "Прохолодно",
@@ -32,6 +141,17 @@
           "danger_of_heatstroke": "Ризик теплового удару",
           "extreme_danger_of_heatstroke": "Серйозний ризик теплового удару",
           "circulatory_collapse_imminent": "Можливі судинні розлади"
+        }
+      },
+      "thoms_discomfort_perception": {
+        "name": "Відчуття за індексом Томса",
+        "state": {
+          "no_discomfort": "Без дискомфорту",
+          "less_than_half": "Менше половини населення відчуває дискомфорт",
+          "more_than_half": "Більше половини населення відчуває дискомфорт",
+          "most": "Більшість людей відчувають дискомфорт та погіршення психофізичного стану",
+          "everyone": "Кожен відчуває значний дискомфорт",
+          "dangerous": "Небезпечний, дуже сильний дискомфорт, який може спричинити теплові удари"
         }
       }
     }
