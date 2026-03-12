@@ -1,4 +1,4 @@
-black==24.3.0
+black==26.3.1
 codespell==2.2.2
 ruff==0.0.285
 yamllint==1.32.0
