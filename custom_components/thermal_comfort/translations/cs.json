@@ -1,8 +1,8 @@
 {
   "options": {
     "error": {
-      "temperature_not_found": "Snímač teploty nenalezen",
-      "humidity_not_found": "Čidlo vlhkosti nenalezeno"
+      "temperature_not_found": "Senzor teploty nenalezen",
+      "humidity_not_found": "Senzor vlhkosti nenalezen"
     },
     "step": {
       "init": {
@@ -10,34 +10,34 @@
         "data": {
           "temperature_sensor": "Senzor teploty",
           "humidity_sensor": "Senzor vlhkosti",
-          "poll": "Povolit hlasování",
+          "poll": "Povolit periodické dotazování",
           "scan_interval": "Interval dotazování (v sekundách)",
-          "custom_icons": "Použijte vlastní sadu ikon"
+          "custom_icons": "Použít vlastní sadu ikon"
         }
       }
     }
   },
   "config": {
     "abort": {
-      "already_configured": "Tato kombinace snímačů teploty a vlhkosti je již nakonfigurována",
+      "already_configured": "Tato kombinace senzorů teploty a vlhkosti je již nastavena",
       "no_sensors": "Nebyla nalezena žádná čidla teploty nebo vlhkosti. Zkuste to znovu v pokročilém režimu.",
       "no_sensors_advanced": "Nebyla nalezena žádná čidla teploty nebo vlhkosti."
     },
     "error": {
-      "temperature_not_found": "Snímač teploty nenalezen",
-      "humidity_not_found": "Čidlo vlhkosti nenalezeno"
+      "temperature_not_found": "Senzor teploty nenalezen",
+      "humidity_not_found": "Senzor vlhkosti nenalezen"
     },
     "step": {
       "user": {
         "title": "Nastavení tepelné pohody",
         "data": {
-          "name": "název",
+          "name": "Název",
           "temperature_sensor": "Senzor teploty",
           "humidity_sensor": "Senzor vlhkosti",
-          "poll": "Povolit hlasování",
+          "poll": "Povolit periodické dotazování",
           "scan_interval": "Interval dotazování (v sekundách)",
-          "custom_icons": "Použijte vlastní sadu ikon",
-          "enabled_sensors": "Aktivované senzory"
+          "custom_icons": "Použít vlastní sadu ikon",
+          "enabled_sensors": "Povolené senzory"
         }
       }
     }
@@ -48,45 +48,45 @@
         "name": "Absolutní vlhkost"
       },
       "dew_point": {
-        "name": "rosný bod"
+        "name": "Rosný bod"
       },
       "dew_point_perception": {
         "name": "Vnímání rosného bodu",
         "state": {
-          "dry": "Pro někoho sucho",
-          "very_comfortable": "Velmi přijemně",
+          "dry": "Spíše sucho",
+          "very_comfortable": "Velmi příjemně",
           "comfortable": "Příjemně",
-          "ok_but_humid": "OK pro většinu, ale vlhko",
+          "ok_but_humid": "Přijatelné, ale vlhké",
           "somewhat_uncomfortable": "Poněkud nepříjemně",
           "quite_uncomfortable": "Velmi vlhko, docela nepříjemně",
           "extremely_uncomfortable": "Extrémně nepříjemně, tísnivě",
-          "severely_high": "Velmi vysoká vlhkost, dokonce smrtelná pro jedince s nemocemi související s astmatem"
+          "severely_high": "Extrémně vysoká vlhkost, nebezpečná i pro osoby s astmatem"
         }
       },
       "frost_point": {
-        "name": "Bod mrazu"
+        "name": "Bod jinovatky"
       },
       "frost_risk": {
-        "name": "Riziko mrazu",
+        "name": "Riziko jinovatky",
         "state": {
           "no_risk": "Žádné riziko",
           "unlikely": "Nepravděpodobné",
           "probable": "Pravděpodobné",
-          "high": "Vysoce pravděpodobné"
+          "high": "Vysoké"
         }
       },
       "heat_index": {
-        "name": "Tepelný index"
+        "name": "Index horka"
       },
       "humidex": {
         "name": "Humidex"
       },
       "humidex_perception": {
-        "name": "Vnímání Humidexu",
+        "name": "Vnímání humidexu",
         "state": {
-          "comfortable": "Komfortní",
+          "comfortable": "Příjemně",
           "noticable_discomfort": "Znatelné nepohodlí",
-          "evident_discomfort": "Evidentní nepohodlí",
+          "evident_discomfort": "Zřetelné nepohodlí",
           "great_discomfort": "Velké nepohodlí, vyhněte se námaze",
           "dangerous_discomfort": "Nebezpečné nepohodlí",
           "heat_stroke": "Úpal možný"
@@ -99,7 +99,7 @@
         "name": "Vnímání relativní zátěže",
         "state": {
           "outside_calculable_range": "Mimo vypočítatelný rozsah",
-          "comfortable": "Komfortní",
+          "comfortable": "Příjemně",
           "slight_discomfort": "Mírné nepohodlí",
           "discomfort": "Nepohodlí",
           "significant_discomfort": "Výrazné nepohodlí",
@@ -107,23 +107,23 @@
         }
       },
       "summer_scharlau_perception": {
-        "name": "Letní vnímání scharlau",
+        "name": "Letní Scharlauovo vnímání",
         "state": {
           "outside_calculable_range": "Mimo vypočítatelný rozsah",
-          "comfortable": "Komfortní",
-          "slightly_uncomfortable": "Mírně nepohodlné",
-          "moderately_uncomfortable": "Středně nepohodlné",
-          "highly_uncomfortable": "Vysoce nepohodlné"
+          "comfortable": "Příjemně",
+          "slightly_uncomfortable": "Mírně nepříjemně",
+          "moderately_uncomfortable": "Středně nepříjemně",
+          "highly_uncomfortable": "Velmi nepříjemně"
         }
       },
       "winter_scharlau_perception": {
-        "name": "Zimní vnímání scharlau",
+        "name": "Zimní Scharlauovo vnímání",
         "state": {
           "outside_calculable_range": "Mimo vypočítatelný rozsah",
-          "comfortable": "Komfortní",
-          "slightly_uncomfortable": "Mírně nepohodlné",
-          "moderately_uncomfortable": "Středně nepohodlné",
-          "highly_uncomfortable": "Vysoce nepohodlné"
+          "comfortable": "Příjemně",
+          "slightly_uncomfortable": "Mírně nepříjemně",
+          "moderately_uncomfortable": "Středně nepříjemně",
+          "highly_uncomfortable": "Velmi nepříjemně"
         }
       },
       "summer_simmer_perception": {
@@ -141,12 +141,12 @@
         }
       },
       "thoms_discomfort_perception": {
-        "name": "Thomovo vnímání nepohodlí",
+        "name": "Thomův index nepohody",
         "state": {
           "no_discomfort": "Žádné nepohodlí",
           "less_than_half": "Méně než polovina populace pociťuje nepohodlí",
           "more_than_half": "Více než polovina populace pociťuje nepohodlí",
-          "most": "Většina jedinců pociťuje nepohodlí a zhoršení psychofyzického stavu",
+          "most": "Většina lidí pociťuje nepohodlí a zhoršení psychofyzického stavu",
           "everyone": "Každý pociťuje značné nepohodlí",
           "dangerous": "Nebezpečné, velmi silné nepohodlí, které může způsobit úpal"
         }
