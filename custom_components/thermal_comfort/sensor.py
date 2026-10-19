@@ -963,7 +963,7 @@ class DeviceThermalComfort:
             * math.atan(0.151977 * pow(self._humidity + 8.313659, 1 / 2))
             + math.atan(self._temperature + self._humidity)
             - math.atan(self._humidity - 1.676331)
-            + pow(0.00391838 * self._humidity, 3 / 2)
+            + 0.00391838 * pow(self._humidity, 3 / 2)
             * math.atan(0.023101 * self._humidity)
             - 4.686035
         )

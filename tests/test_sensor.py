@@ -755,77 +755,91 @@ async def test_thoms_discomfort_perception(hass, start_ha):
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
             ATTR_THOMS_DISCOMFORT_INDEX
         ]
-        == 20.94
-    )
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
-        == ThomsDiscomfortPerception.NO_DISCOMFORT
-    )
-
-    hass.states.async_set("sensor.test_temperature_sensor", "25.06")
-    hass.states.async_set("sensor.test_humidity_sensor", "50.05")
-    await hass.async_block_till_done()
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
-            ATTR_THOMS_DISCOMFORT_INDEX
-        ]
-        == 21
+        == 21.5
     )
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
         == ThomsDiscomfortPerception.LESS_THAN_HALF
     )
 
-    hass.states.async_set("sensor.test_temperature_sensor", "27.50")
+    hass.states.async_set("sensor.test_temperature_sensor", "22.00")
+    hass.states.async_set("sensor.test_humidity_sensor", "50.00")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
+            ATTR_THOMS_DISCOMFORT_INDEX
+        ]
+        == 18.71
+    )
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
+        == ThomsDiscomfortPerception.NO_DISCOMFORT
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "24.47")
+    hass.states.async_set("sensor.test_humidity_sensor", "50.05")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
+            ATTR_THOMS_DISCOMFORT_INDEX
+        ]
+        == 21.01
+    )
+    assert (
+        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
+        == ThomsDiscomfortPerception.LESS_THAN_HALF
+    )
+
+    hass.states.async_set("sensor.test_temperature_sensor", "26.55")
     hass.states.async_set("sensor.test_humidity_sensor", "63.80")
     await hass.async_block_till_done()
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
             ATTR_THOMS_DISCOMFORT_INDEX
         ]
-        == 24
+        == 24.01
     )
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
         == ThomsDiscomfortPerception.MORE_THAN_HALF
     )
 
-    hass.states.async_set("sensor.test_temperature_sensor", "30.70")
+    hass.states.async_set("sensor.test_temperature_sensor", "29.78")
     hass.states.async_set("sensor.test_humidity_sensor", "62.70")
     await hass.async_block_till_done()
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
             ATTR_THOMS_DISCOMFORT_INDEX
         ]
-        == 27
+        == 27.01
     )
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
         == ThomsDiscomfortPerception.MOST
     )
 
-    hass.states.async_set("sensor.test_temperature_sensor", "32.30")
+    hass.states.async_set("sensor.test_temperature_sensor", "31.13")
     hass.states.async_set("sensor.test_humidity_sensor", "71.50")
     await hass.async_block_till_done()
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
             ATTR_THOMS_DISCOMFORT_INDEX
         ]
-        == 29
+        == 29.01
     )
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
         == ThomsDiscomfortPerception.EVERYONE
     )
 
-    hass.states.async_set("sensor.test_temperature_sensor", "35.20")
+    hass.states.async_set("sensor.test_temperature_sensor", "33.92")
     hass.states.async_set("sensor.test_humidity_sensor", "75.10")
     await hass.async_block_till_done()
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
             ATTR_THOMS_DISCOMFORT_INDEX
         ]
-        == 32
+        == 32.01
     )
     assert (
         get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
