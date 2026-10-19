@@ -1,2 +1,2 @@
 # Strictly for tests
-pytest-homeassistant-custom-component>=0.13.52
+pytest-homeassistant-custom-component
