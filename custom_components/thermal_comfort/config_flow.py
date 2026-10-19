@@ -477,6 +477,19 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             if not (errors := check_input(self.hass, user_input)):
+                # The options flow can change the sensors of an entry later, so
+                # compare with the current ones instead of the unique_id.
+                sensors = (
+                    user_input[CONF_TEMPERATURE_SENSOR],
+                    user_input[CONF_HUMIDITY_SENSOR],
+                )
+                for entry in self._async_current_entries():
+                    if sensors == (
+                        get_value(entry, CONF_TEMPERATURE_SENSOR),
+                        get_value(entry, CONF_HUMIDITY_SENSOR),
+                    ):
+                        return self.async_abort(reason="already_configured")
+
                 registry = er.async_get(self.hass)
 
                 t_sensor = registry.async_get(user_input[CONF_TEMPERATURE_SENSOR])
@@ -486,10 +499,17 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 if t_sensor is not None and p_sensor is not None:
                     unique_id = f"{t_sensor.unique_id}-{p_sensor.unique_id}"
-                    entry = await self.async_set_unique_id(unique_id)
-                    if entry is not None:
-                        _LOGGER.debug("An entry with the unique_id %s already exists: %s", unique_id, entry.data)
-                    self._abort_if_unique_id_configured()
+                    # An entry that was switched to other sensors by the options
+                    # flow still owns its unique_id. Reusing it would make
+                    # Home Assistant replace that entry, so use the entry_id
+                    # fallback (see async_setup_entry) instead.
+                    if (
+                        self.hass.config_entries.async_entry_for_domain_unique_id(
+                            DOMAIN, unique_id
+                        )
+                        is None
+                    ):
+                        await self.async_set_unique_id(unique_id)
 
                 return self.async_create_entry(
                     title=user_input[CONF_NAME],

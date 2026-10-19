@@ -6,7 +6,11 @@ from unittest.mock import MagicMock, patch
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.thermal_comfort.const import DOMAIN
+from custom_components.thermal_comfort.const import (
+    CONF_HUMIDITY_SENSOR,
+    CONF_TEMPERATURE_SENSOR,
+    DOMAIN,
+)
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME
 from homeassistant.data_entry_flow import FlowResultType
@@ -35,9 +39,10 @@ async def _flow_init(hass, advanced_options=True):
     )
 
 
-async def _flow_configure(hass, r, _input=ADVANCED_USER_INPUT):
+async def _flow_configure(hass, r, _input=ADVANCED_USER_INPUT, registry_entry=None):
     with patch(
         "homeassistant.helpers.entity_registry.EntityRegistry.async_get",
+        side_effect=registry_entry,
         return_value=MagicMock(unique_id="foo"),
     ):
         return await hass.config_entries.flow.async_configure(
@@ -132,3 +137,77 @@ async def test_config_flow_enabled():
 #        result = await _flow_configure(hass, result, no_sensor)
 #
 #    assert result["type"] == FlowResultType.FORM
+
+
+def _registry_entry(entity_id):
+    """Give every sensor a distinct unique_id."""
+    return MagicMock(unique_id=f"uid_{entity_id}")
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_duplicate_check_uses_current_sensors(hass, start_ha):
+    """Test that the duplicate check follows sensors changed by the options flow."""
+    pair_a = ADVANCED_USER_INPUT
+    pair_b = {
+        **ADVANCED_USER_INPUT,
+        CONF_TEMPERATURE_SENSOR: "sensor.other_temperature_sensor",
+        CONF_HUMIDITY_SENSOR: "sensor.other_humidity_sensor",
+    }
+    hass.states.async_set(pair_b[CONF_TEMPERATURE_SENSOR], "20")
+    hass.states.async_set(pair_b[CONF_HUMIDITY_SENSOR], "40")
+
+    original_unique_id = (
+        f"{_registry_entry(pair_a[CONF_TEMPERATURE_SENSOR]).unique_id}-"
+        f"{_registry_entry(pair_a[CONF_HUMIDITY_SENSOR]).unique_id}"
+    )
+    entry = MockConfigEntry(
+        domain=DOMAIN, data=pair_a, entry_id="test", unique_id=original_unique_id
+    )
+    entry.add_to_hass(hass)
+
+    # switch the entry from pair A to pair B with the options flow
+    result = await hass.config_entries.options.async_init(
+        entry.entry_id, context={"show_advanced_options": True}
+    )
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"],
+        user_input={k: v for k, v in pair_b.items() if k in USER_INPUT},
+    )
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert entry.unique_id == original_unique_id
+
+    # pair B is taken now, although its unique_id was never used
+    result = await _flow_configure(
+        hass, await _flow_init(hass), pair_b, _registry_entry
+    )
+    assert result["type"] == FlowResultType.ABORT
+    assert result["reason"] == "already_configured"
+
+    # pair A is free again, and the new entry must not replace the old one
+    result = await _flow_configure(
+        hass, await _flow_init(hass), pair_a, _registry_entry
+    )
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["result"].unique_id != original_unique_id
+    assert hass.config_entries.async_get_entry(entry.entry_id) is entry
+    assert len(hass.config_entries.async_entries(DOMAIN)) == 2
+
+    # and now pair A is a duplicate again
+    result = await _flow_configure(
+        hass, await _flow_init(hass), pair_a, _registry_entry
+    )
+    assert result["type"] == FlowResultType.ABORT
+    assert result["reason"] == "already_configured"
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_duplicate_check_sensors_not_in_registry(hass, start_ha):
+    """Test that sensors without a registry entry are checked for duplicates too."""
+    for _ in [0, 1]:
+        result = await _flow_init(hass)
+        result = await _flow_configure(
+            hass, result, ADVANCED_USER_INPUT, lambda entity_id: None
+        )
+
+    assert result["type"] == FlowResultType.ABORT
+    assert result["reason"] == "already_configured"
