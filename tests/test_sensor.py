@@ -1,10 +1,15 @@
 """The test for the Thermal Comfort sensor platform."""
 
 from collections.abc import Callable
+from datetime import timedelta
 import logging
+from unittest.mock import patch
 
 import pytest
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant_custom_component.common import (
+    MockConfigEntry,
+    async_fire_time_changed,
+)
 
 from custom_components.thermal_comfort.const import DOMAIN
 from custom_components.thermal_comfort.sensor import (
@@ -15,8 +20,12 @@ from custom_components.thermal_comfort.sensor import (
     ATTR_THOMS_DISCOMFORT_INDEX,
     ATTR_WINTER_SCHARLAU_INDEX,
     CONF_CUSTOM_ICONS,
+    CONF_ENABLED_SENSORS,
+    CONF_POLL,
+    CONF_SCAN_INTERVAL,
     CONF_SENSOR_TYPES,
     DEFAULT_SENSOR_TYPES,
+    DeviceThermalComfort,
     DewPointPerception,
     FrostRisk,
     HumidexPerception,
@@ -29,9 +38,10 @@ from custom_components.thermal_comfort.sensor import (
 )
 from homeassistant.components.sensor import DOMAIN as PLATFORM_DOMAIN
 from homeassistant.components.template.const import DOMAIN as TEMPLATE_DOMAIN
-from homeassistant.const import ATTR_TEMPERATURE
+from homeassistant.const import ATTR_TEMPERATURE, STATE_UNAVAILABLE, STATE_UNKNOWN
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
+from homeassistant.util import dt as dt_util
 
 from .const import ADVANCED_USER_INPUT
 
@@ -974,7 +984,7 @@ async def test_zero_degree_celcius(hass, start_ha):
         ),
     ],
 )
-async def get_sensor_types(hass, start_ha):
+async def test_sensor_types(hass, start_ha):
     """Test if configure sensor_types only creates the sensors specified."""
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 4
 
@@ -1017,7 +1027,7 @@ async def get_sensor_types(hass, start_ha):
         ),
     ],
 )
-async def get_sensor_is_nan(hass, start_ha):
+async def test_sensor_is_nan(hass, start_ha):
     """Test if we correctly handle input sensors with NaN as state value."""
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
     for sensor_type in DEFAULT_SENSOR_TYPES:
@@ -1035,13 +1045,13 @@ async def get_sensor_is_nan(hass, start_ha):
                     {
                         PLATFORM_DOMAIN: {
                             "name": "test_temperature_sensor",
-                            "state": "{{ NaN | float }}",
+                            "state": "unknown",
                         }
                     },
                     {
                         PLATFORM_DOMAIN: {
                             "name": "test_humidity_sensor",
-                            "state": "{{ NaN | float }}",
+                            "state": "unknown",
                         }
                     },
                 ],
@@ -1050,33 +1060,19 @@ async def get_sensor_is_nan(hass, start_ha):
                         "name": "test_thermal_comfort",
                         "temperature_sensor": "sensor.test_temperature_sensor",
                         "humidity_sensor": "sensor.test_humidity_sensor",
+                        "unique_id": "unique_thermal_comfort_id",
                     },
                 },
             },
         ),
     ],
 )
-async def get_sensor_unknown(hass, start_ha):
+async def test_sensor_unknown(hass, start_ha):
     """Test handling input sensors with unknown state."""
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert ATTR_TEMPERATURE not in get_sensor(hass, sensor_type).attributes
         assert ATTR_HUMIDITY not in get_sensor(hass, sensor_type).attributes
-
-
-@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
-async def get_sensor_unavailable(hass, start_ha):
-    """Test handling unavailable sensors."""
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
-    hass.states.async_remove("sensor.test_temperature_sensor")
-    hass.states.async_remove("sensor.test_humidity_sensor")
-    await hass.async_block_till_done()
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS
-    for sensor_type in DEFAULT_SENSOR_TYPES:
-        assert ATTR_TEMPERATURE in get_sensor(hass, sensor_type).attributes
-        assert ATTR_HUMIDITY in get_sensor(hass, sensor_type).attributes
-        assert get_sensor(hass, sensor_type).attributes[ATTR_TEMPERATURE] == 25.0
-        assert get_sensor(hass, sensor_type).attributes[ATTR_HUMIDITY] == 50.0
 
 
 async def test_create_sensors(hass: HomeAssistant):
@@ -1177,3 +1173,177 @@ async def test_global_options(hass: HomeAssistant, start_ha: Callable) -> None:
         get_sensor(hass, SensorType.DEW_POINT_PERCEPTION).attributes["icon"]
         == "tc:thermal-perception"
     )
+
+
+def remove_platform_entities(hass: HomeAssistant) -> None:
+    """Remove all entities of the integration from the entity registry."""
+    registry = er.async_get(hass)
+    for entity in list(registry.entities.values()):
+        if entity.platform == DOMAIN:
+            registry.async_remove(entity.entity_id)
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_invalid_source_makes_sensors_unavailable(hass, start_ha):
+    """Test that invalid source states make the sensors unavailable until they recover."""
+    assert get_sensor(hass, SensorType.DEW_POINT).state != STATE_UNAVAILABLE
+
+    for entity_id, bad_state in (
+        ("sensor.test_temperature_sensor", STATE_UNAVAILABLE),
+        ("sensor.test_temperature_sensor", STATE_UNKNOWN),
+        ("sensor.test_temperature_sensor", "100"),
+        ("sensor.test_humidity_sensor", STATE_UNAVAILABLE),
+        ("sensor.test_humidity_sensor", "0"),
+        ("sensor.test_humidity_sensor", "110"),
+    ):
+        hass.states.async_set(entity_id, bad_state)
+        await hass.async_block_till_done()
+        for sensor_type in DEFAULT_SENSOR_TYPES:
+            assert get_sensor(hass, sensor_type).state == STATE_UNAVAILABLE
+        hass.states.async_set(entity_id, "25" if "temperature" in entity_id else "50")
+        await hass.async_block_till_done()
+        for sensor_type in DEFAULT_SENSOR_TYPES:
+            assert get_sensor(hass, sensor_type).state != STATE_UNAVAILABLE
+
+    assert get_sensor(hass, SensorType.DEW_POINT).attributes[ATTR_TEMPERATURE] == 25.0
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_humidity_overshoot_is_clipped(hass, start_ha):
+    """Test that a small humidity overshoot is clipped to 100 percent."""
+    hass.states.async_set("sensor.test_humidity_sensor", "103.5")
+    await hass.async_block_till_done()
+    sensor = get_sensor(hass, SensorType.DEW_POINT)
+    assert sensor.state != STATE_UNAVAILABLE
+    assert sensor.attributes[ATTR_HUMIDITY] == 100.0
+    assert float(sensor.state) == pytest.approx(25.0, abs=0.1)
+
+
+@pytest.mark.parametrize(
+    "domains, config",
+    [
+        (
+            [(DOMAIN, 1)],
+            {
+                DOMAIN: {
+                    PLATFORM_DOMAIN: {
+                        "name": "test_thermal_comfort",
+                        "temperature_sensor": "sensor.test_temperature_sensor",
+                        "humidity_sensor": "sensor.test_humidity_sensor",
+                        "poll": True,
+                        "scan_interval": 3600,
+                        "unique_id": "unique_thermal_comfort_id",
+                    },
+                },
+            },
+        ),
+    ],
+)
+async def test_poll_updates_right_after_first_valid_values(hass, start_ha):
+    """Test that polling sensors do not wait for the next poll after the sources appear."""
+    assert get_sensor(hass, SensorType.DEW_POINT).state == STATE_UNAVAILABLE
+
+    hass.states.async_set("sensor.test_temperature_sensor", "25")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.DEW_POINT).state == STATE_UNAVAILABLE
+
+    hass.states.async_set("sensor.test_humidity_sensor", "50")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.DEW_POINT).state != STATE_UNAVAILABLE
+    first = get_sensor(hass, SensorType.DEW_POINT).state
+
+    # further valid values wait for the poll
+    hass.states.async_set("sensor.test_temperature_sensor", "30")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.DEW_POINT).state == first
+
+    # going invalid shows up immediately, and so does recovery
+    hass.states.async_set("sensor.test_temperature_sensor", STATE_UNAVAILABLE)
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.DEW_POINT).state == STATE_UNAVAILABLE
+    hass.states.async_set("sensor.test_temperature_sensor", "30")
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.DEW_POINT).state not in (
+        first,
+        STATE_UNAVAILABLE,
+    )
+
+    remove_platform_entities(hass)
+    await hass.async_block_till_done()
+
+
+@pytest.mark.parametrize("poll", [False, True])
+@pytest.mark.parametrize("enabled_sensors", [[], list(SensorType)])
+async def test_entry_unload_unsubscribes(
+    hass: HomeAssistant, poll: bool, enabled_sensors: list
+) -> None:
+    """Test that nothing keeps listening to the sources after the entry is gone."""
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={
+            **ADVANCED_USER_INPUT,
+            CONF_POLL: poll,
+            CONF_SCAN_INTERVAL: 30,
+            CONF_ENABLED_SENSORS: enabled_sensors,
+        },
+        entry_id="test",
+        unique_id="uniqueid",
+    )
+    entry.add_to_hass(hass)
+    hass.states.async_set("sensor.test_temperature_sensor", "25")
+    hass.states.async_set("sensor.test_humidity_sensor", "50")
+
+    with (
+        patch.object(
+            DeviceThermalComfort,
+            "_new_temperature_state",
+            autospec=True,
+            side_effect=DeviceThermalComfort._new_temperature_state,
+        ) as new_temperature,
+        patch.object(
+            DeviceThermalComfort,
+            "async_update_sensors",
+            autospec=True,
+            side_effect=DeviceThermalComfort.async_update_sensors,
+        ) as update_sensors,
+    ):
+        assert await hass.config_entries.async_setup(entry.entry_id)
+        await hass.async_block_till_done()
+        assert await hass.config_entries.async_reload(entry.entry_id)
+        await hass.async_block_till_done()
+
+        new_temperature.reset_mock()
+        update_sensors.reset_mock()
+        hass.states.async_set("sensor.test_temperature_sensor", "26")
+        await hass.async_block_till_done()
+        # one live device after the reload, not two
+        assert new_temperature.call_count == 1
+
+        assert await hass.config_entries.async_unload(entry.entry_id)
+        await hass.async_block_till_done()
+
+        new_temperature.reset_mock()
+        update_sensors.reset_mock()
+        hass.states.async_set("sensor.test_temperature_sensor", "27")
+        async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=120))
+        await hass.async_block_till_done()
+        assert new_temperature.call_count == 0
+        assert update_sensors.call_count == 0
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_yaml_entities_removed_unsubscribes(hass, start_ha):
+    """Test that the YAML device stops listening when its last entity is removed."""
+    with patch.object(
+        DeviceThermalComfort,
+        "_new_temperature_state",
+        autospec=True,
+        side_effect=DeviceThermalComfort._new_temperature_state,
+    ) as new_temperature:
+        remove_platform_entities(hass)
+        await hass.async_block_till_done()
+        assert get_sensor(hass, SensorType.DEW_POINT) is None
+
+        hass.states.async_set("sensor.test_temperature_sensor", "27")
+        await hass.async_block_till_done()
+        assert new_temperature.call_count == 0
