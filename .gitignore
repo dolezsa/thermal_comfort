@@ -4,3 +4,4 @@ venv
 .venv
 .coverage
 .idea
+node_modules

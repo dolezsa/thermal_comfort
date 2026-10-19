@@ -557,7 +557,7 @@ class SensorThermalComfort(SensorEntity):
         if value is None:  # can happen during startup
             return
 
-        if type(value) == tuple and len(value) == 2:
+        if isinstance(value, tuple) and len(value) == 2:
             self._attr_extra_state_attributes.update(value[1])
             value = value[0]
 

@@ -211,7 +211,6 @@ def get_sensors_by_device_class(
             "µg",
             "oz",
             "lb",
-            #
             "µS/cm",
             "lx",
             "UV index",

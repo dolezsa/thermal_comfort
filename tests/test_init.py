@@ -1,4 +1,5 @@
 """Test setup process."""
+
 from unittest.mock import AsyncMock, patch
 
 from pytest_homeassistant_custom_component.common import MockConfigEntry

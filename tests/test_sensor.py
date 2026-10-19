@@ -113,7 +113,7 @@ async def test_properties(hass, start_ha):
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_absolutehumidity(hass, start_ha):
-    """Test if absolute humidity is calculted correctly."""
+    """Test if absolute humidity is calculated correctly."""
     assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY) is not None
     assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY).state == "11.5128065738593"
     assert (

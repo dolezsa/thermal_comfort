@@ -1,4 +1,5 @@
 """General test constants."""
+
 from custom_components.thermal_comfort.const import (
     CONF_HUMIDITY_SENSOR,
     CONF_POLL,
