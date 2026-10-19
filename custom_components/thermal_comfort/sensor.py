@@ -908,7 +908,7 @@ class DeviceThermalComfort:
     @compute_once_lock(SensorType.WINTER_SCHARLAU_PERCEPTION)
     async def winter_scharlau_perception(self) -> (ScharlauPerception, dict):
         """<https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf>."""
-        tc = (0.0003 * self._humidity) + (0.1497 * self._humidity) - 7.7133
+        tc = -0.0003 * pow(self._humidity, 2) + 0.1497 * self._humidity - 7.7133
         ish = self._temperature - tc
         if self._temperature < -5 or self._temperature > 6 or self._humidity < 40:
             perception = ScharlauPerception.OUTSIDE_CALCULABLE_RANGE
