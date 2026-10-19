@@ -13,6 +13,7 @@
         },
         "sections": {
           "advanced": {
+            "name": "Erweiterte Optionen",
             "data": {
               "poll": "Polling verwenden",
               "scan_interval": "Poll Intervall (Sekunden)",
@@ -26,7 +27,7 @@
   "config": {
     "abort": {
       "already_configured": "Diese Kombination aus Temperatur- und Feuchtigkeitssensor wird bereits verwendet",
-      "no_sensors": "Es wurde kein Temperatur- oder Feuchtigkeitssensor gefunden."
+      "no_sensors": "Es wurden keine Temperatur- oder Feuchtigkeitssensoren gefunden."
     },
     "error": {
       "temperature_not_found": "Temperatursensor konnte nicht gefunden werden",
@@ -42,6 +43,7 @@
         },
         "sections": {
           "advanced": {
+            "name": "Erweiterte Optionen",
             "data": {
               "poll": "Polling verwenden",
               "scan_interval": "Poll Intervall (Sekunden)",
