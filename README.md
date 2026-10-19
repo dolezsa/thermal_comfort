@@ -89,9 +89,8 @@ Enable the custom icons options for your sensor in the
   attributes are no longer stored in the recorder.
 
 ## Localization 🌎🗺
-Contribute translations directly with PRs or via inlang's web-editor.
-
-[![translation badge](https://inlang.com/badge?url=github.com/dolezsa/thermal_comfort)](https://inlang.com/editor/github.com/dolezsa/thermal_comfort?ref=badge)
+Contribute translations directly with PRs or with the inlang editor
+[Fink](https://fink.inlang.com/github.com/dolezsa/thermal_comfort).
 
 ## Support and Contributing
 Please report bugs and ask questions in the [issues](https://github.com/dolezsa/thermal_comfort/issues),
