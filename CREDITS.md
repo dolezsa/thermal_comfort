@@ -19,6 +19,9 @@
 [<img src="https://github.com/papo-o.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @papo-o](https://github.com/papo-o)
 * Original frost point and frost risk sensor [implementation](https://github.com/papo-o/home-assistant-frost-risks) and support at porting it upstream.
 
+Federico Tartarini
+* Moist air enthalpy calculation (2019-2020)
+
 [<img src="https://github.com/lymanepp.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @lymanepp](https://github.com/lymanepp)
 * Original simmer index and simmer zone [implementation](https://github.com/lymanepp/thermal_comfort).
 
