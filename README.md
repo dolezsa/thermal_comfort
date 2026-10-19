@@ -73,7 +73,9 @@ cp -r custom_components $hacs_config_folder
 Finally you need to restart home assistant before you can use it.
 
 ### Custom Icons
-[Install](https://github.com/rautesamtr/thermal_comfort_icons#install) Thermal Comforts icon pack.
+The [icon pack](https://github.com/rautesamtr/thermal_comfort_icons) is no longer
+available in the HACS default repositories, follow the installation instructions
+in its repository to install it.
 
 Enable the custom icons options for your sensor in the
  [frontend](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md#configuration-options)
