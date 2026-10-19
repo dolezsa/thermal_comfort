@@ -210,6 +210,7 @@ TC_ICONS = {
 SENSOR_TYPES = {
     SensorType.ABSOLUTE_HUMIDITY: {
         "key": SensorType.ABSOLUTE_HUMIDITY,
+        "device_class": SensorDeviceClass.ABSOLUTE_HUMIDITY,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": "g/m³",
         "state_class": SensorStateClass.MEASUREMENT,
@@ -461,6 +462,10 @@ def id_generator(unique_id: str, sensor_type: str) -> str:
 
 class SensorThermalComfort(SensorEntity):
     """Representation of a Thermal Comfort Sensor."""
+
+    # The source values change with almost every update, don't fill the
+    # database with a new attribute row each time.
+    _unrecorded_attributes = frozenset({ATTR_TEMPERATURE, ATTR_HUMIDITY})
 
     def __init__(
         self,

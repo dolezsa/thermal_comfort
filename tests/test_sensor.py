@@ -31,12 +31,13 @@ from custom_components.thermal_comfort.sensor import (
     HumidexPerception,
     RelativeStrainPerception,
     ScharlauPerception,
+    SensorThermalComfort,
     SensorType,
     SummerSimmerPerception,
     ThomsDiscomfortPerception,
     id_generator,
 )
-from homeassistant.components.sensor import DOMAIN as PLATFORM_DOMAIN
+from homeassistant.components.sensor import DOMAIN as PLATFORM_DOMAIN, SensorDeviceClass
 from homeassistant.components.template.const import DOMAIN as TEMPLATE_DOMAIN
 from homeassistant.const import ATTR_TEMPERATURE, STATE_UNAVAILABLE, STATE_UNKNOWN
 from homeassistant.core import HomeAssistant
@@ -115,6 +116,10 @@ async def test_absolutehumidity(hass, start_ha):
     """Test if absolute humidity is calculted correctly."""
     assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY) is not None
     assert get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY).state == "11.5128065738593"
+    assert (
+        get_sensor(hass, SensorType.ABSOLUTE_HUMIDITY).attributes["device_class"]
+        == SensorDeviceClass.ABSOLUTE_HUMIDITY
+    )
 
     hass.states.async_set("sensor.test_temperature_sensor", "15.0")
     await hass.async_block_till_done()
@@ -1347,3 +1352,11 @@ async def test_yaml_entities_removed_unsubscribes(hass, start_ha):
         hass.states.async_set("sensor.test_temperature_sensor", "27")
         await hass.async_block_till_done()
         assert new_temperature.call_count == 0
+
+
+def test_source_values_are_not_recorded():
+    """Test that the frequently changing source attributes are kept out of the database."""
+    assert {
+        ATTR_TEMPERATURE,
+        ATTR_HUMIDITY,
+    } <= SensorThermalComfort._unrecorded_attributes
