@@ -17,7 +17,9 @@ sensor.
     The calculation follows the <a href="http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml">NWS procedure</a>:
     a simple formula is used first and the full regression only applies once
     that result exceeds 26.1°C (79°F), so the value can show a small step at
-    that point.
+    that point. Above 85 % relative humidity a further humidity adjustment
+    applies between 26.7°C and 30.6°C (80°F and 87°F), which makes the value
+    jump again at 26.7°C.
   </dd>
   <dt><strong>Humidex + Perception</strong> <code>humidex</code> <code>humidex_perception</code></dt>
   <dd>

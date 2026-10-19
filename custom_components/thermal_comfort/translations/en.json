@@ -60,6 +60,9 @@
               "scan_interval": "Poll interval (seconds)",
               "custom_icons": "Use custom icons pack",
               "enabled_sensors": "Enabled sensors"
+            },
+            "data_description": {
+              "enabled_sensors": "Sensors you do not select are still created, but disabled. You can enable them later in the entity settings."
             }
           }
         }
