@@ -9,9 +9,13 @@
       "init": {
         "title": "Thermal comfort settings",
         "data": {
+          "name": "Device name",
           "temperature_sensor": "Temperature sensor",
           "humidity_sensor": "Humidity sensor",
           "pressure_sensor": "Pressure sensor (optional)"
+        },
+        "data_description": {
+          "name": "Used as the device name and as the prefix of the sensor names, for example the name of the room."
         },
         "sections": {
           "advanced": {
@@ -40,10 +44,13 @@
       "user": {
         "title": "Thermal comfort settings",
         "data": {
-          "name": "Name",
+          "name": "Device name",
           "temperature_sensor": "Temperature sensor",
           "humidity_sensor": "Humidity sensor",
           "pressure_sensor": "Pressure sensor (optional)"
+        },
+        "data_description": {
+          "name": "Used as the device name and as the prefix of the sensor names, for example the name of the room."
         },
         "sections": {
           "advanced": {

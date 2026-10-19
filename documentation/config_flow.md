@@ -13,6 +13,9 @@
 
 ## Name your virtual device and select the temperature and humidity sensor you want to use
 
+The name is used as the device name and as the prefix of the names of its sensors, so enter
+the name of the room (or the location) to get distinctly named sensors for each of them.
+
 *Note: Additional options are available in the collapsed "Advanced options" section.
 Sensors with the correct device class are listed first, but you can also select
 sensors without a device class.*
