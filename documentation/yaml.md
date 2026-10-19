@@ -60,6 +60,13 @@ thermal_comfort:
   <dd>ID of temperature sensor entity to be used for calculations.</dd>
   <dt><strong>humidity_sensor</strong>  <code>string</code> <code>REQUIRED</code></dt>
   <dd>ID of humidity sensor entity to be used for calculations.</dd>
+  <dt><strong>pressure_sensor</strong> <code>string</code> <code>(optional)</code></dt>
+  <dd>
+    ID of an atmospheric pressure sensor entity, used for the moist air enthalpy.
+    Without it, or while its value is unusable (unavailable or outside 300 to
+    1100 hPa), the standard pressure of 101325 Pa is used. Use the station
+    pressure, not a pressure reduced to sea level.
+  </dd>
   <dt><strong>icon_template</strong> <code>template</code> <code>(optional)</code></dt>
   <dd>Defines a template for the icon of the sensor.</dd>
   <dt><strong>entity_picture_template</strong> <code>template</code> <code>(optional)</code></dt>

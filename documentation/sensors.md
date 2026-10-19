@@ -59,6 +59,7 @@ sensor.
   <dt><strong>Moist Air Enthalpy</strong> <code>moist_air_enthalpy</code></dt>
   <dd>
     The enthalpy of moist air is the sum of the enthalpy of the dry air and the enthalpy of the water vapour. Enthalpy is the total energy of a thermodynamic system.
+    It depends on the atmospheric pressure, from the optional pressure sensor, otherwise the standard pressure of 101325 Pa is used, see the configuration docs.
   </dd>
   <dt><strong>Summer Scharlau Perception</strong> <code>summer_scharlau_perception</code></dt>
   <dd>

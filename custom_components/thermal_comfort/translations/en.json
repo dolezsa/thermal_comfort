@@ -2,14 +2,16 @@
   "options": {
     "error": {
       "temperature_not_found": "Temperature sensor not found",
-      "humidity_not_found": "Humidity sensor not found"
+      "humidity_not_found": "Humidity sensor not found",
+      "pressure_not_found": "Pressure sensor not found"
     },
     "step": {
       "init": {
         "title": "Thermal comfort settings",
         "data": {
           "temperature_sensor": "Temperature sensor",
-          "humidity_sensor": "Humidity sensor"
+          "humidity_sensor": "Humidity sensor",
+          "pressure_sensor": "Pressure sensor (optional)"
         },
         "sections": {
           "advanced": {
@@ -31,7 +33,8 @@
     },
     "error": {
       "temperature_not_found": "Temperature sensor not found",
-      "humidity_not_found": "Humidity sensor not found"
+      "humidity_not_found": "Humidity sensor not found",
+      "pressure_not_found": "Pressure sensor not found"
     },
     "step": {
       "user": {
@@ -39,7 +42,8 @@
         "data": {
           "name": "Name",
           "temperature_sensor": "Temperature sensor",
-          "humidity_sensor": "Humidity sensor"
+          "humidity_sensor": "Humidity sensor",
+          "pressure_sensor": "Pressure sensor (optional)"
         },
         "sections": {
           "advanced": {

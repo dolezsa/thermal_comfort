@@ -6,8 +6,10 @@ from unittest.mock import MagicMock, patch
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.thermal_comfort.config_flow import get_value
 from custom_components.thermal_comfort.const import (
     CONF_HUMIDITY_SENSOR,
+    CONF_PRESSURE_SENSOR,
     CONF_TEMPERATURE_SENSOR,
     DOMAIN,
 )
@@ -17,7 +19,7 @@ from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.setup import async_setup_component
 
 from .const import ADVANCED_USER_INPUT, USER_INPUT, form_input
-from .test_sensor import DEFAULT_TEST_SENSORS
+from .test_sensor import DEFAULT_TEST_SENSORS, PRESSURE_TEST_SENSORS
 
 
 @pytest.fixture(autouse=True)
@@ -236,3 +238,108 @@ async def test_duplicate_check_sensors_not_in_registry(hass, start_ha):
 
     assert result["type"] == FlowResultType.ABORT
     assert result["reason"] == "already_configured"
+
+
+@pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
+async def test_config_flow_with_pressure_sensor(hass, start_ha):
+    """Test that the pressure sensor is optional and stored when given."""
+    # without it nothing is stored, like before
+    result = await _flow_configure(hass, await _flow_init(hass))
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert CONF_PRESSURE_SENSOR not in result["data"]
+
+    with_pressure = {
+        **ADVANCED_USER_INPUT,
+        CONF_TEMPERATURE_SENSOR: "sensor.other_temperature_sensor",
+        CONF_PRESSURE_SENSOR: "sensor.test_pressure_sensor",
+    }
+    hass.states.async_set(with_pressure[CONF_TEMPERATURE_SENSOR], "20")
+    result = await _flow_configure(hass, await _flow_init(hass), with_pressure)
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["data"] == with_pressure
+
+
+@pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
+async def test_config_flow_pressure_sensor_not_found(hass, start_ha):
+    """Test that an unknown pressure sensor is refused."""
+    missing = {**ADVANCED_USER_INPUT, CONF_PRESSURE_SENSOR: "sensor.no_such_sensor"}
+    result = await _flow_configure(hass, await _flow_init(hass), missing)
+    assert result["type"] == FlowResultType.FORM
+    assert result["errors"] == {"base": "pressure_not_found"}
+
+
+@pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
+async def test_pressure_sensor_selector(hass, start_ha, hass_client):
+    """Test the pressure field as the frontend receives it, outside of the advanced section."""
+    assert await async_setup_component(hass, "config", {})
+    client = await hass_client()
+
+    response = await client.post(
+        "/api/config/config_entries/flow", json={"handler": DOMAIN}
+    )
+    form = await response.json()
+    field = next(f for f in form["data_schema"] if f["name"] == "pressure_sensor")
+    assert field["optional"] is True
+    assert field["selector"]["entity"]["domain"] == ["sensor"]
+    assert set(field["selector"]["entity"]["device_class"]) == {
+        "pressure",
+        "atmospheric_pressure",
+    }
+    advanced = next(f for f in form["data_schema"] if f["name"] == "advanced")
+    assert "pressure_sensor" not in [f["name"] for f in advanced["schema"]]
+
+    response = await client.post(
+        f"/api/config/config_entries/flow/{form['flow_id']}",
+        json=form_input(
+            {**ADVANCED_USER_INPUT, CONF_PRESSURE_SENSOR: "sensor.test_pressure_sensor"}
+        ),
+    )
+    assert (await response.json())["type"] == "create_entry"
+    (entry,) = hass.config_entries.async_entries(DOMAIN)
+    assert entry.data[CONF_PRESSURE_SENSOR] == "sensor.test_pressure_sensor"
+
+
+@pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
+async def test_options_flow_pressure_sensor(hass, start_ha):
+    """Test adding, keeping and removing the pressure sensor in the options flow."""
+    entry = MockConfigEntry(domain=DOMAIN, data=ADVANCED_USER_INPUT, entry_id="test")
+    entry.add_to_hass(hass)
+
+    async def submit(user_input):
+        result = await hass.config_entries.options.async_init(entry.entry_id)
+        with patch.object(hass.config_entries, "async_schedule_reload"):
+            return await hass.config_entries.options.async_configure(
+                result["flow_id"], user_input=form_input(user_input)
+            )
+
+    # add
+    with_pressure = {**USER_INPUT, CONF_PRESSURE_SENSOR: "sensor.test_pressure_sensor"}
+    result = await submit(with_pressure)
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert entry.options == with_pressure
+
+    # the stored value is offered again
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    schema = result["data_schema"].schema
+    key = next(k for k in schema if k == CONF_PRESSURE_SENSOR)
+    assert key.description["suggested_value"] == "sensor.test_pressure_sensor"
+    hass.config_entries.options.async_abort(result["flow_id"])
+
+    # unknown sensor
+    result = await submit({**USER_INPUT, CONF_PRESSURE_SENSOR: "sensor.no_such"})
+    assert result["type"] == FlowResultType.FORM
+    assert result["errors"] == {"base": "pressure_not_found"}
+
+    # remove: the options win over the data, so the old value must not come back
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={
+            **ADVANCED_USER_INPUT,
+            CONF_PRESSURE_SENSOR: "sensor.test_pressure_sensor",
+        },
+        entry_id="test2",
+    )
+    entry.add_to_hass(hass)
+    result = await submit(USER_INPUT)
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert get_value(entry, CONF_PRESSURE_SENSOR) is None

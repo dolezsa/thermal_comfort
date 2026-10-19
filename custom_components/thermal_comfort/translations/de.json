@@ -2,14 +2,16 @@
   "options": {
     "error": {
       "temperature_not_found": "Temperatursensor konnte nicht gefunden werden",
-      "humidity_not_found": "Feuchtigkeitssensor konnte nicht gefunden werden"
+      "humidity_not_found": "Feuchtigkeitssensor konnte nicht gefunden werden",
+      "pressure_not_found": "Drucksensor konnte nicht gefunden werden"
     },
     "step": {
       "init": {
         "title": "Thermal Comfort Einstellungen",
         "data": {
           "temperature_sensor": "Temperatursensor",
-          "humidity_sensor": "Feuchtigkeitssensor"
+          "humidity_sensor": "Feuchtigkeitssensor",
+          "pressure_sensor": "Drucksensor (optional)"
         },
         "sections": {
           "advanced": {
@@ -31,7 +33,8 @@
     },
     "error": {
       "temperature_not_found": "Temperatursensor konnte nicht gefunden werden",
-      "humidity_not_found": "Feuchtigkeitssensor konnte nicht gefunden werden"
+      "humidity_not_found": "Feuchtigkeitssensor konnte nicht gefunden werden",
+      "pressure_not_found": "Drucksensor konnte nicht gefunden werden"
     },
     "step": {
       "user": {
@@ -39,7 +42,8 @@
         "data": {
           "name": "Name",
           "temperature_sensor": "Temperatursensor",
-          "humidity_sensor": "Feuchtigkeitssensor"
+          "humidity_sensor": "Feuchtigkeitssensor",
+          "pressure_sensor": "Drucksensor (optional)"
         },
         "sections": {
           "advanced": {

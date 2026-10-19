@@ -3,6 +3,7 @@
 from collections.abc import Callable
 from datetime import timedelta
 import logging
+import math
 from unittest.mock import patch
 
 import pytest
@@ -15,6 +16,7 @@ from custom_components.thermal_comfort.const import DOMAIN
 from custom_components.thermal_comfort.sensor import (
     ATTR_FROST_POINT,
     ATTR_HUMIDITY,
+    ATTR_PRESSURE,
     ATTR_RELATIVE_STRAIN_INDEX,
     ATTR_SUMMER_SCHARLAU_INDEX,
     ATTR_THOMS_DISCOMFORT_INDEX,
@@ -22,6 +24,7 @@ from custom_components.thermal_comfort.sensor import (
     CONF_CUSTOM_ICONS,
     CONF_ENABLED_SENSORS,
     CONF_POLL,
+    CONF_PRESSURE_SENSOR,
     CONF_SCAN_INTERVAL,
     CONF_SENSOR_TYPES,
     DEFAULT_SENSOR_TYPES,
@@ -79,6 +82,40 @@ DEFAULT_TEST_SENSORS = [
                         "name": "test_thermal_comfort",
                         "temperature_sensor": "sensor.test_temperature_sensor",
                         "humidity_sensor": "sensor.test_humidity_sensor",
+                        "unique_id": "unique_thermal_comfort_id",
+                    },
+                },
+            },
+        ),
+    ],
+]
+
+PRESSURE_TEST_SENSOR = {
+    PLATFORM_DOMAIN: {
+        "name": "test_pressure_sensor",
+        "state": "{{ 1000.0 | float }}",
+        "unit_of_measurement": "hPa",
+        "device_class": "pressure",
+    },
+}
+
+PRESSURE_TEST_SENSORS = [
+    "domains, config",
+    [
+        (
+            [(TEMPLATE_DOMAIN, 3), (DOMAIN, 1)],
+            {
+                TEMPLATE_DOMAIN: [
+                    TEMPERATURE_TEST_SENSOR,
+                    HUMIDITY_TEST_SENSOR,
+                    PRESSURE_TEST_SENSOR,
+                ],
+                DOMAIN: {
+                    PLATFORM_DOMAIN: {
+                        "name": "test_thermal_comfort",
+                        "temperature_sensor": "sensor.test_temperature_sensor",
+                        "humidity_sensor": "sensor.test_humidity_sensor",
+                        "pressure_sensor": "sensor.test_pressure_sensor",
                         "unique_id": "unique_thermal_comfort_id",
                     },
                 },
@@ -1360,3 +1397,273 @@ def test_source_values_are_not_recorded():
         ATTR_TEMPERATURE,
         ATTR_HUMIDITY,
     } <= SensorThermalComfort._unrecorded_attributes
+
+
+def reference_enthalpy(temperature: float, humidity: float, patm: float) -> float:
+    """Moist air enthalpy (ASHRAE 2021) above 0 degrees, independent of the code."""
+    t = temperature + 273.15
+    p_ws = math.exp(
+        -5.8002206e03 / t
+        + 1.3914993
+        - 4.8640239e-02 * t
+        + 4.1764768e-05 * t**2
+        - 1.4452093e-08 * t**3
+        + 6.5459673 * math.log(t)
+    )
+    p_w = humidity / 100 * p_ws
+    w = 0.621945 * p_w / (patm - p_w)
+    return 1.006 * temperature + w * (2501 + 1.86 * temperature)
+
+
+def enthalpy(hass) -> float:
+    """Return the state of the enthalpy sensor."""
+    return float(get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state)
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_enthalpy_ignores_elevation(hass, start_ha):
+    """Test that without a pressure sensor the standard pressure is used at any elevation."""
+    hass.config.elevation = 500
+    hass.states.async_set("sensor.test_temperature_sensor", "25.0001")
+    await hass.async_block_till_done()
+    sensor = get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY)
+    assert float(sensor.state) == pytest.approx(reference_enthalpy(25.0001, 50, 101325))
+    assert ATTR_PRESSURE not in sensor.attributes
+
+
+@pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
+async def test_enthalpy_with_pressure_sensor(hass, start_ha):
+    """Test that the enthalpy follows the measured pressure, also on the first state."""
+    sensor = get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY)
+    assert float(sensor.state) == pytest.approx(reference_enthalpy(25, 50, 100000))
+    assert sensor.attributes[ATTR_PRESSURE] == 1000.0
+
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "900", {"unit_of_measurement": "hPa"}
+    )
+    await hass.async_block_till_done()
+    sensor = get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY)
+    assert float(sensor.state) == pytest.approx(reference_enthalpy(25, 50, 90000))
+    assert sensor.attributes[ATTR_PRESSURE] == 900.0
+
+    # only the enthalpy shows the pressure
+    assert ATTR_PRESSURE not in get_sensor(hass, SensorType.DEW_POINT).attributes
+
+
+@pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
+@pytest.mark.parametrize(
+    "value, unit",
+    [
+        ("100000", "Pa"),
+        ("1000", "hPa"),
+        ("1000", "mbar"),
+        ("100", "kPa"),
+        ("1", "bar"),
+        ("100", "cbar"),
+        ("29.5300", "inHg"),
+        ("750.062", "mmHg"),
+    ],
+)
+async def test_pressure_units(hass, start_ha, value, unit):
+    """Test that every pressure unit gives the same result for the same pressure."""
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "1100", {"unit_of_measurement": "hPa"}
+    )
+    await hass.async_block_till_done()
+    assert enthalpy(hass) == pytest.approx(reference_enthalpy(25, 50, 110000))
+
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", value, {"unit_of_measurement": unit}
+    )
+    await hass.async_block_till_done()
+    assert enthalpy(hass) == pytest.approx(reference_enthalpy(25, 50, 100000), abs=0.01)
+
+
+@pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
+@pytest.mark.parametrize(
+    "value, attributes",
+    [
+        (STATE_UNAVAILABLE, {}),
+        (STATE_UNKNOWN, {}),
+        ("not a number", {}),
+        ("nan", {}),
+        ("0", {"unit_of_measurement": "hPa"}),
+        ("299", {"unit_of_measurement": "hPa"}),
+        ("1101", {"unit_of_measurement": "hPa"}),
+        ("-5", {"unit_of_measurement": "hPa"}),
+        ("101325", {"unit_of_measurement": "hPa"}),  # a Pa value with the wrong unit
+        ("1000", {"unit_of_measurement": "%"}),  # not a pressure unit
+        ("1000", {"unit_of_measurement": "°C"}),
+    ],
+)
+async def test_invalid_pressure_falls_back_to_standard(
+    hass, start_ha, value, attributes
+):
+    """Test that an unusable pressure means 101325 Pa, and nothing becomes unavailable."""
+    hass.config.elevation = 500  # must not matter
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "950", {"unit_of_measurement": "hPa"}
+    )
+    await hass.async_block_till_done()
+    assert enthalpy(hass) == pytest.approx(reference_enthalpy(25, 50, 95000))
+
+    hass.states.async_set("sensor.test_pressure_sensor", value, attributes)
+    await hass.async_block_till_done()
+    for sensor_type in DEFAULT_SENSOR_TYPES:
+        assert get_sensor(hass, sensor_type).state != STATE_UNAVAILABLE
+    # not the stale 950 hPa
+    sensor = get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY)
+    assert float(sensor.state) == pytest.approx(reference_enthalpy(25, 50, 101325))
+    assert sensor.attributes[ATTR_PRESSURE] == 1013.25
+
+    # and it recovers
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "950", {"unit_of_measurement": "hPa"}
+    )
+    await hass.async_block_till_done()
+    assert enthalpy(hass) == pytest.approx(reference_enthalpy(25, 50, 95000))
+
+
+@pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
+async def test_pressure_does_not_gate_availability_or_other_sensors(hass, start_ha):
+    """Test that the pressure only touches the enthalpy sensor."""
+    others = [t for t in DEFAULT_SENSOR_TYPES if t != SensorType.MOIST_AIR_ENTHALPY]
+    before = {t: get_sensor(hass, t).state for t in others}
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "800", {"unit_of_measurement": "hPa"}
+    )
+    await hass.async_block_till_done()
+    assert {t: get_sensor(hass, t).state for t in others} == before
+
+    hass.states.async_set("sensor.test_temperature_sensor", STATE_UNAVAILABLE)
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == STATE_UNAVAILABLE
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "850", {"unit_of_measurement": "hPa"}
+    )
+    await hass.async_block_till_done()
+    hass.states.async_set("sensor.test_temperature_sensor", "25")
+    await hass.async_block_till_done()
+    assert enthalpy(hass) == pytest.approx(reference_enthalpy(25, 50, 85000))
+
+
+@pytest.mark.parametrize(
+    "domains, config",
+    [
+        (
+            [(DOMAIN, 1)],
+            {
+                DOMAIN: {
+                    PLATFORM_DOMAIN: {
+                        "name": "test_thermal_comfort",
+                        "temperature_sensor": "sensor.test_temperature_sensor",
+                        "humidity_sensor": "sensor.test_humidity_sensor",
+                        "pressure_sensor": "sensor.test_pressure_sensor",
+                        "poll": True,
+                        "scan_interval": 3600,
+                        "unique_id": "unique_thermal_comfort_id",
+                    },
+                },
+            },
+        ),
+    ],
+)
+async def test_pressure_with_polling(hass, start_ha):
+    """Test that a polling device picks up a new pressure on the next poll only."""
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "1000", {"unit_of_measurement": "hPa"}
+    )
+    await hass.async_block_till_done()
+    hass.states.async_set("sensor.test_temperature_sensor", "25")
+    hass.states.async_set("sensor.test_humidity_sensor", "50")
+    await hass.async_block_till_done()
+    assert enthalpy(hass) == pytest.approx(reference_enthalpy(25, 50, 100000))
+
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "900", {"unit_of_measurement": "hPa"}
+    )
+    await hass.async_block_till_done()
+    assert enthalpy(hass) == pytest.approx(reference_enthalpy(25, 50, 100000))
+
+    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=3601))
+    await hass.async_block_till_done()
+    assert enthalpy(hass) == pytest.approx(reference_enthalpy(25, 50, 90000))
+
+    remove_platform_entities(hass)
+    await hass.async_block_till_done()
+
+
+@pytest.mark.parametrize("poll", [False, True])
+async def test_entry_with_pressure_sensor(hass: HomeAssistant, poll: bool) -> None:
+    """Test a config entry with a pressure sensor, and that unloading stops listening to it."""
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={
+            **ADVANCED_USER_INPUT,
+            CONF_PRESSURE_SENSOR: "sensor.test_pressure_sensor",
+            CONF_POLL: poll,
+            CONF_SCAN_INTERVAL: 30,
+            CONF_ENABLED_SENSORS: list(SensorType),
+        },
+        entry_id="test",
+        unique_id="uniqueid",
+    )
+    entry.add_to_hass(hass)
+    hass.states.async_set("sensor.test_temperature_sensor", "25")
+    hass.states.async_set("sensor.test_humidity_sensor", "50")
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "950", {"unit_of_measurement": "hPa"}
+    )
+
+    with patch.object(
+        DeviceThermalComfort,
+        "_new_pressure_state",
+        autospec=True,
+        side_effect=DeviceThermalComfort._new_pressure_state,
+    ) as new_pressure:
+        assert await hass.config_entries.async_setup(entry.entry_id)
+        await hass.async_block_till_done()
+        state = hass.states.get("sensor.test_thermal_comfort_moist_air_enthalpy")
+        assert float(state.state) == pytest.approx(reference_enthalpy(25, 50, 95000))
+
+        # a reload does not leave a second listener behind
+        assert await hass.config_entries.async_reload(entry.entry_id)
+        await hass.async_block_till_done()
+        new_pressure.reset_mock()
+        hass.states.async_set(
+            "sensor.test_pressure_sensor", "960", {"unit_of_measurement": "hPa"}
+        )
+        await hass.async_block_till_done()
+        assert new_pressure.call_count == 1
+
+        assert await hass.config_entries.async_unload(entry.entry_id)
+        await hass.async_block_till_done()
+        new_pressure.reset_mock()
+        hass.states.async_set(
+            "sensor.test_pressure_sensor", "970", {"unit_of_measurement": "hPa"}
+        )
+        await hass.async_block_till_done()
+        assert new_pressure.call_count == 0
+
+
+@pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
+async def test_yaml_entities_removed_unsubscribes_pressure(hass, start_ha):
+    """Test that the YAML device stops listening to the pressure sensor too."""
+    with patch.object(
+        DeviceThermalComfort,
+        "_new_pressure_state",
+        autospec=True,
+        side_effect=DeviceThermalComfort._new_pressure_state,
+    ) as new_pressure:
+        remove_platform_entities(hass)
+        await hass.async_block_till_done()
+        hass.states.async_set(
+            "sensor.test_pressure_sensor", "970", {"unit_of_measurement": "hPa"}
+        )
+        await hass.async_block_till_done()
+        assert new_pressure.call_count == 0
+
+
+def test_pressure_is_not_recorded():
+    """Test that the pressure attribute is kept out of the database."""
+    assert ATTR_PRESSURE in SensorThermalComfort._unrecorded_attributes
