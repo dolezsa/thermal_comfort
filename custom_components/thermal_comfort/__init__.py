@@ -24,7 +24,7 @@ from homeassistant.helpers.service import async_register_admin_service
 from homeassistant.helpers.typing import ConfigType
 
 from .config_flow import get_value
-from .const import DOMAIN, PLATFORMS, UPDATE_LISTENER
+from .const import DOMAIN, PLATFORMS
 from .sensor import (
     CONF_CUSTOM_ICONS,
     CONF_ENABLED_SENSORS,
@@ -64,25 +64,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # We have no unique_id yet, let's use backup.
         hass.config_entries.async_update_entry(entry, unique_id=entry.entry_id)
 
-    await hass.async_create_task(
-        hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    )
-    update_listener = entry.add_update_listener(async_update_options)
-    hass.data[DOMAIN][entry.entry_id][UPDATE_LISTENER] = update_listener
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
-
-
-async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Update options from user interface."""
-    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Remove entry via user interface."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
-        update_listener = hass.data[DOMAIN][entry.entry_id][UPDATE_LISTENER]
-        update_listener()
         hass.data[DOMAIN].pop(entry.entry_id)
     return unload_ok
 
@@ -104,8 +93,7 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry):
 
         await async_migrate_entries(hass, config_entry.entry_id, update_unique_id)
         hass.config_entries.async_update_entry(config_entry, version=2)
-
-    _LOGGER.info("Migration to version %s successful", config_entry.version)
+        _LOGGER.info("Migration to version %s successful", config_entry.version)
 
     return True
 

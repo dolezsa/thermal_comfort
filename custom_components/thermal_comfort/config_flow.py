@@ -535,8 +535,8 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
 
-class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
-    """Handle options."""
+class ThermalComfortOptionsFlow(config_entries.OptionsFlowWithReload):
+    """Handle options, the entry reloads when they change."""
 
     async def async_step_init(self, user_input=None):
         """Manage the options."""

@@ -7,7 +7,7 @@ from enum import StrEnum
 from functools import wraps
 import logging
 import math
-from typing import Any, Self
+from typing import Self
 
 import voluptuous as vol
 
@@ -475,7 +475,8 @@ class SensorThermalComfort(SensorEntity):
         """Initialize the sensor."""
         self._device = device
         self._sensor_type = sensor_type
-        entity_description = SENSOR_TYPES[sensor_type]
+        self._is_config_entry = is_config_entry
+        entity_description = dict(SENSOR_TYPES[sensor_type])
         entity_description["translation_key"] = sensor_type
         entity_description["has_entity_name"] = True
         if not is_config_entry:
@@ -509,9 +510,9 @@ class SensorThermalComfort(SensorEntity):
         self._attr_should_poll = False
 
     @property
-    def device_info(self) -> dict[str, Any]:
-        """Return device information."""
-        return self._device.device_info
+    def device_info(self) -> DeviceInfo | None:
+        """Return device information, only config entries can have devices."""
+        return self._device.device_info if self._is_config_entry else None
 
     @property
     def extra_state_attributes(self):

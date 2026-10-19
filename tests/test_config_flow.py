@@ -94,10 +94,14 @@ async def test_options_flow(hass, start_ha):
     assert result["step_id"] == "init"
 
     # Enter some data into the form
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"],
-        user_input=form_input(USER_INPUT),
-    )
+    with patch.object(hass.config_entries, "async_schedule_reload") as reload:
+        result = await hass.config_entries.options.async_configure(
+            result["flow_id"],
+            user_input=form_input(USER_INPUT),
+        )
+
+    # Changed options reload the entry
+    reload.assert_called_once_with(entry.entry_id)
 
     # Verify that the flow finishes
     assert result["type"] == FlowResultType.CREATE_ENTRY

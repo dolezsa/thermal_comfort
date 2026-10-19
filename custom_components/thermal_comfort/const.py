@@ -8,4 +8,3 @@ CONF_HUMIDITY_SENSOR = "humidity_sensor"
 CONF_POLL = "poll"
 
 DEFAULT_NAME = "Thermal Comfort"
-UPDATE_LISTENER = "update_listener"
