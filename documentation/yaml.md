@@ -30,7 +30,7 @@ thermal_comfort:
   <dt><strong>sensor_types</strong> <code>list</code> <code>(optional)</code></dt>
   <dd>
     A list of sensors to create. If omitted all will be created.
-    <a href="https://github.com/dolezsa/thermal_comfort/blob/2.2/documentation/sensors.md">Available sensors</a>
+    <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md">Available sensors</a>
   </dd>
   <dt><strong>poll</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
   <dd>
@@ -38,9 +38,10 @@ thermal_comfort:
     calculated values if your input sensors split change updates for humidity
     and temperature.
   </dd>
-  <dt><strong>scan_interval</strong> <code>boolean</code> <code>(optional, default: 30)</code></dt>
+  <dt><strong>scan_interval</strong> <code>time period</code> <code>(optional, default: 30 seconds)</code></dt>
   <dd>
-    If polling is enabled this sets the interval in seconds.
+    If polling is enabled this sets the interval, as a number of seconds
+    (e.g. <code>60</code>) or as a time (e.g. <code>00:01:00</code>).
   </dd>
   <dt><strong>custom_icons</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
   <dd>Set to true if you have the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/README.md#custom-icons">custom icon pack</a>
@@ -54,11 +55,11 @@ thermal_comfort:
   <dd>
     Name of the sensor will be used both for the friendly name and entity id
     combined with the sensor type. e.g. Kitchen would get your
-    `sensor.kitchen_absolutehumidity` and Kichten Absolute Humidity.</dd>
+    `sensor.kitchen_absolute_humidity` and Kitchen Absolute humidity.</dd>
   <dt><strong>temperature_sensor</strong> <code>string</code> <code>REQUIRED</code></dt>
   <dd>ID of temperature sensor entity to be used for calculations.</dd>
   <dt><strong>humidity_sensor</strong>  <code>string</code> <code>REQUIRED</code></dt>
-  <dd>ID of humidity sensor entity to be used for calculations..</dd>
+  <dd>ID of humidity sensor entity to be used for calculations.</dd>
   <dt><strong>icon_template</strong> <code>template</code> <code>(optional)</code></dt>
   <dd>Defines a template for the icon of the sensor.</dd>
   <dt><strong>entity_picture_template</strong> <code>template</code> <code>(optional)</code></dt>
@@ -76,3 +77,14 @@ thermal_comfort:
     sensor you would get `0ee4d8a7-c610-4afa-855d-0b2c2c265e11absolute_humidity`.
   </dd>
 </dl>
+
+### Applying changes
+
+Changes to the `thermal_comfort` section take effect after a restart, or after
+calling the `thermal_comfort.reload` action (Developer tools, Actions), which
+reloads the YAML configuration and the entities created from it. Entries set up
+in the UI are not affected.
+
+Sensors set up with YAML are not attached to a device. Use the
+[UI](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)
+if you want a device for each temperature and humidity pair.

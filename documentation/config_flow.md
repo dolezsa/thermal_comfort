@@ -27,7 +27,18 @@ sensors without a device class.*
 
 ## Click configure on the configuration to set additional options
 
+The entry reloads when you save changed options.
+
 ![Config Virtual Device](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/config_options_thermal_comfort.png)
+
+<dl>
+  <dt><strong>Temperature sensor</strong> and <strong>Humidity sensor</strong> <code>entity</code></dt>
+  <dd>
+    The sensors used for the calculations.
+  </dd>
+</dl>
+
+The following options are in the collapsed "Advanced options" section:
 
 <dl>
   <dt><strong>Enable Polling</strong> <code>boolean</code></dt>
@@ -36,9 +47,19 @@ sensors without a device class.*
     calculated values if your input sensors split change updates for humidity
     and temperature.
   </dd>
+  <dt><strong>Poll interval (seconds)</strong> <code>integer</code></dt>
+  <dd>
+    If polling is enabled this sets the interval in seconds (default: 30).
+  </dd>
   <dt><strong>Use custom icons pack</strong>  <code>boolean</code></dt>
   <dd>
     Enable this if you have the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/README.md#custom-icons">custom icon pack</a>
     installed and want to use it as default icons for the sensors
+  </dd>
+  <dt><strong>Enabled sensors</strong> <code>list</code> (initial setup only)</dt>
+  <dd>
+    The sensors that are enabled right after the setup, all are selected by
+    default. The other sensors are created as well, but disabled, you can
+    enable them later in the entity settings.
   </dd>
 </dl>

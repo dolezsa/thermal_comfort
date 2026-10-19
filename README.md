@@ -6,10 +6,7 @@ Thermal Comfort provides a variety of thermal indices and thermal perceptions in
 
 ## Sensors:
 
-**Full list
- [2.2](https://github.com/dolezsa/thermal_comfort/blob/2.2/documentation/sensors.md) /
- [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/sensors.md) /
- [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)**
+**[Full list](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)**
 
 ### Numeric Indices
 
@@ -25,32 +22,25 @@ Thermal Comfort also provides a variety of bio indices like `humidex` or `heat i
 To use Thermal Comfort check the documentation for your preferred way to setup
 sensors.
 
-**UI/Frontend (Config Flow)
- [2.2](https://github.com/dolezsa/thermal_comfort/blob/2.2/documentation/config_flow.md) /
- [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/config_flow.md) /
- [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)**
+**[UI/Frontend (Config Flow)](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)**
 
-**YAML
- [2.2](https://github.com/dolezsa/thermal_comfort/blob/2.2/documentation/yaml.md) /
- [1.5](https://github.com/dolezsa/thermal_comfort/blob/1.5/documentation/yaml.md) /
- [master](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md)**
+**[YAML](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md)**
 
 ## Installation
 
 ### Requirements
 
-#### 2.2
-Home Assistant >= 2023.12.0
+Home Assistant 2025.8.0 or newer (which needs Python 3.13 or newer).
 
-#### 1.5
-Home Assistant >= 2021.12.0
-
-#### master
-Home Assistant >= 2025.8.0
+Older Home Assistant versions can keep using the 2.2 releases (Home Assistant
+2023.12.0 or newer,
+ [documentation](https://github.com/dolezsa/thermal_comfort/tree/2.2/documentation))
+or the 1.5 releases for even older versions
+ ([documentation](https://github.com/dolezsa/thermal_comfort/tree/1.5/documentation)).
 
 ### Using [HACS](https://hacs.xyz/) (recommended)
 
-This integration can be installed using HACS. To do it search for Thermal Comfort in the integrations section.
+This integration can be installed using HACS. Open HACS, search for Thermal Comfort, download it and restart Home Assistant.
 
 ### Manual
 
@@ -68,7 +58,7 @@ cd thermal_comfort
 cp -r custom_components $hacs_config_folder
 ```
 
-* Download the source release and extract the custom_components folder into your home assistant config folder.
+* Download `thermal_comfort.zip` from the [latest release](https://github.com/dolezsa/thermal_comfort/releases/latest) and extract it into the `custom_components/thermal_comfort` folder of your Home Assistant config folder.
 
 Finally you need to restart home assistant before you can use it.
 
@@ -81,7 +71,29 @@ Enable the custom icons options for your sensor in the
  [frontend](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md#configuration-options)
  or in [yaml](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables).
 
+## Upgrading from 2.x to 3.0
+
+* Home Assistant 2025.8.0 or newer is required.
+* The calculated sensors are `unavailable` while a source sensor is unavailable, unknown or out of range
+  (see [input values](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md#input-values)),
+  instead of keeping the last value. They also start as `unavailable` instead of `unknown` until both sources are valid.
+  Adjust automations or templates that relied on the old behavior.
+* Humidity readings up to 105 % are treated as 100 %.
+* Corrected formulas change the values of two attributes: `thoms_discomfort_index` (typically about 0.4 to 1.1 °C
+  higher at 40 to 70 % humidity, more at higher humidity) and, from 3.0.1 on, `winter_scharlau_index`.
+  The state of the Thom's discomfort and winter Scharlau perception sensors changes with them.
+* Polling, the poll interval, custom icons and the enabled sensors are in a collapsed "Advanced options" section,
+  advanced mode is no longer needed. Existing entries keep working unchanged.
+* Any sensor entity can be chosen as a temperature or humidity source, sensors with a matching device class are listed first.
+* The absolute humidity sensor has the `absolute_humidity` device class, and the `temperature` and `humidity`
+  attributes are no longer stored in the recorder.
+
 ## Localization 🌎🗺
 Contribute translations directly with PRs or via inlang's web-editor.
 
 [![translation badge](https://inlang.com/badge?url=github.com/dolezsa/thermal_comfort)](https://inlang.com/editor/github.com/dolezsa/thermal_comfort?ref=badge)
+
+## Support and Contributing
+Please report bugs and ask questions in the [issues](https://github.com/dolezsa/thermal_comfort/issues),
+see [CONTRIBUTING.md](CONTRIBUTING.md) if you want to contribute.
+Thermal Comfort is licensed under the [MIT license](LICENSE), credits are listed in [CREDITS.md](CREDITS.md).
