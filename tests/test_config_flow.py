@@ -5,13 +5,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
-import voluptuous as vol
 
-from custom_components.thermal_comfort.const import (
-    CONF_HUMIDITY_SENSOR,
-    CONF_TEMPERATURE_SENSOR,
-    DOMAIN,
-)
+from custom_components.thermal_comfort.const import DOMAIN
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME
 from homeassistant.data_entry_flow import FlowResultType
@@ -120,9 +115,9 @@ async def test_config_flow_enabled():
         assert manifest.get("config_flow") is True
 
 
-#@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
-#@pytest.mark.parametrize("sensor", [CONF_TEMPERATURE_SENSOR, CONF_HUMIDITY_SENSOR])
-#async def test_missed_sensors(hass, sensor, start_ha):
+# @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+# @pytest.mark.parametrize("sensor", [CONF_TEMPERATURE_SENSOR, CONF_HUMIDITY_SENSOR])
+# async def test_missed_sensors(hass, sensor, start_ha):
 #    """Test is we show message if sensor missed."""
 #
 #    result = await _flow_init(hass)

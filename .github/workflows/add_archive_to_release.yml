@@ -22,7 +22,7 @@ jobs:
         run: |
           echo "archive=${{ env.package }}.zip" >> $GITHUB_ENV
           echo "basedir=$(pwd)/${{ env.package }}" >> $GITHUB_ENV
-      
+
       - name: "Adjust version number"
         shell: bash
         run: |
