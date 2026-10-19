@@ -9,10 +9,16 @@
         "title": "Setări de confort termic",
         "data": {
           "temperature_sensor": "Senzor de temperatura",
-          "humidity_sensor": "Senzor de umiditate",
-          "poll": "Activați sondajul",
-          "scan_interval": "Interval de sondaj (secunde)",
-          "custom_icons": "Utilizați pachetul de pictograme personalizate"
+          "humidity_sensor": "Senzor de umiditate"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Activați sondajul",
+              "scan_interval": "Interval de sondaj (secunde)",
+              "custom_icons": "Utilizați pachetul de pictograme personalizate"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "Această combinație de senzori de temperatură și umiditate este deja configurată",
-      "no_sensors": "Nu s-au găsit senzori de temperatură sau umiditate. Încercați din nou în modul avansat.",
-      "no_sensors_advanced": "Nu s-au găsit senzori de temperatură sau umiditate."
+      "no_sensors": "Nu s-au găsit senzori de temperatură sau umiditate."
     },
     "error": {
       "temperature_not_found": "Senzorul de temperatură nu a fost găsit",
@@ -33,11 +38,17 @@
         "data": {
           "name": "Nume",
           "temperature_sensor": "Senzor de temperatura",
-          "humidity_sensor": "Senzor de umiditate",
-          "poll": "Activați sondajul",
-          "scan_interval": "Interval de sondaj (secunde)",
-          "custom_icons": "Utilizați pachetul de pictograme personalizate",
-          "enabled_sensors": "Senzori activați"
+          "humidity_sensor": "Senzor de umiditate"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Activați sondajul",
+              "scan_interval": "Interval de sondaj (secunde)",
+              "custom_icons": "Utilizați pachetul de pictograme personalizate",
+              "enabled_sensors": "Senzori activați"
+            }
+          }
         }
       }
     }

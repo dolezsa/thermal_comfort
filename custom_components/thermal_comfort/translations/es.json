@@ -9,10 +9,16 @@
         "title": "Ajustes de Thermal Comfort",
         "data": {
           "temperature_sensor": "Sensor de temperatura",
-          "humidity_sensor": "Sensor de humedad",
-          "poll": "Habilitar el modo 'Polling' o lectura periódica",
-          "scan_interval": "Intervalo de consulta (segundos)",
-          "custom_icons": "Usar paquete de iconos personalizado"
+          "humidity_sensor": "Sensor de humedad"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Habilitar el modo 'Polling' o lectura periódica",
+              "scan_interval": "Intervalo de consulta (segundos)",
+              "custom_icons": "Usar paquete de iconos personalizado"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "Esta combinación de sensores de temperatura y humedad ya ha sido configurada.",
-      "no_sensors": "No se han encontrado los sensores de temperatura o humedad. Prueba de nuevo en modo avanzado.",
-      "no_sensors_advanced": "No se han encontrado los sensores de temperatura o humedad."
+      "no_sensors": "No se han encontrado los sensores de temperatura o humedad."
     },
     "error": {
       "temperature_not_found": "No se han encontrado el sensor de temperatura",
@@ -33,11 +38,17 @@
         "data": {
           "name": "Nombre",
           "temperature_sensor": "Sensor de temperatura",
-          "humidity_sensor": "Sensor de humedad",
-          "poll": "Habilitar el modo 'Polling' o lectura periódica",
-          "scan_interval": "Intervalo de consulta (segundos)",
-          "custom_icons": "Usar paquete de iconos personalizado",
-          "enabled_sensors": "Sensores habilitados"
+          "humidity_sensor": "Sensor de humedad"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Habilitar el modo 'Polling' o lectura periódica",
+              "scan_interval": "Intervalo de consulta (segundos)",
+              "custom_icons": "Usar paquete de iconos personalizado",
+              "enabled_sensors": "Sensores habilitados"
+            }
+          }
         }
       }
     }

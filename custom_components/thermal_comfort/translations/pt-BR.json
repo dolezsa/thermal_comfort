@@ -9,10 +9,16 @@
         "title": "Configurações do Conforto Térmico",
         "data": {
           "temperature_sensor": "Sensor de Temperatura",
-          "humidity_sensor": "Sensor de Umidade",
-          "poll": "Ativar Atualização Periódica",
-          "scan_interval": "Intervalo de atualização (segundos)",
-          "custom_icons": "Usar ícones personalizados"
+          "humidity_sensor": "Sensor de Umidade"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Ativar Atualização Periódica",
+              "scan_interval": "Intervalo de atualização (segundos)",
+              "custom_icons": "Usar ícones personalizados"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "Esta combinação de sensores de temperatura e umidade já foram utilizadas.",
-      "no_sensors": "Não foram localizados os sensores de temperatura e/ou umidade. Tente novamente no modo avançado.",
-      "no_sensors_advanced": "Não foram localizados sensores de temperatura e/ou umidade."
+      "no_sensors": "Não foram localizados sensores de temperatura e/ou umidade."
     },
     "error": {
       "temperature_not_found": "Sensor de temperatura não foi localizado",
@@ -33,11 +38,17 @@
         "data": {
           "name": "Nome",
           "temperature_sensor": "Sensor de Temperatura",
-          "humidity_sensor": "Sensor de Umidade",
-          "poll": "Ativar Atualizaçãov Periódica",
-          "scan_interval": "Intervalo de atualização (segundos)",
-          "custom_icons": "Usar ícones personalizados",
-          "enabled_sensors": "Sensores ligados"
+          "humidity_sensor": "Sensor de Umidade"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Ativar Atualizaçãov Periódica",
+              "scan_interval": "Intervalo de atualização (segundos)",
+              "custom_icons": "Usar ícones personalizados",
+              "enabled_sensors": "Sensores ligados"
+            }
+          }
         }
       }
     }

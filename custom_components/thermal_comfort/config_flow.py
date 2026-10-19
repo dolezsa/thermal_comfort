@@ -9,6 +9,7 @@ from homeassistant import config_entries
 from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import CONF_NAME, Platform
 from homeassistant.core import HomeAssistant, State, callback
+from homeassistant.data_entry_flow import section
 from homeassistant.helpers import entity_registry as er
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_registry import EntityRegistry
@@ -28,6 +29,8 @@ from .sensor import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+SECTION_ADVANCED = "advanced"
 
 
 def get_sensors_by_device_class(
@@ -344,23 +347,21 @@ def get_value(
 def build_schema(
     config_entry: config_entries | None,
     hass: HomeAssistant,
-    show_advanced: bool = False,
     step: str = "user",
 ) -> vol.Schema:
     """Build configuration schema.
 
     :param config_entry: config entry for getting current parameters on None
     :param hass: Home Assistant instance
-    :param show_advanced: bool: should we show advanced options?
     :param step: for which step we should build schema
     :return: Configuration schema with default parameters
     """
     registry = er.async_get(hass)
     humidity_sensors = get_sensors_by_device_class(
-        registry, hass, SensorDeviceClass.HUMIDITY, show_advanced
+        registry, hass, SensorDeviceClass.HUMIDITY, include_all=True
     )
     temperature_sensors = get_sensors_by_device_class(
-        registry, hass, SensorDeviceClass.TEMPERATURE, show_advanced
+        registry, hass, SensorDeviceClass.TEMPERATURE, include_all=True
     )
 
     if not temperature_sensors or not humidity_sensors:
@@ -397,40 +398,45 @@ def build_schema(
             ),
         },
     )
-    if show_advanced:
-        schema = schema.extend(
-            {
-                vol.Optional(
-                    CONF_POLL, default=get_value(config_entry, CONF_POLL, POLL_DEFAULT)
-                ): bool,
-                vol.Optional(
-                    CONF_SCAN_INTERVAL,
-                    default=get_value(
-                        config_entry, CONF_SCAN_INTERVAL, SCAN_INTERVAL_DEFAULT
-                    ),
-                ): vol.All(vol.Coerce(int), vol.Range(min=1)),
-                vol.Optional(
-                    CONF_CUSTOM_ICONS,
-                    default=get_value(config_entry, CONF_CUSTOM_ICONS, False),
-                ): bool,
-            }
+    advanced = {
+        vol.Optional(
+            CONF_POLL, default=get_value(config_entry, CONF_POLL, POLL_DEFAULT)
+        ): bool,
+        vol.Optional(
+            CONF_SCAN_INTERVAL,
+            default=get_value(config_entry, CONF_SCAN_INTERVAL, SCAN_INTERVAL_DEFAULT),
+        ): vol.All(vol.Coerce(int), vol.Range(min=1)),
+        vol.Optional(
+            CONF_CUSTOM_ICONS,
+            default=get_value(config_entry, CONF_CUSTOM_ICONS, False),
+        ): bool,
+    }
+    if step == "user":
+        advanced[
+            vol.Optional(CONF_ENABLED_SENSORS, default=list(SensorType))
+        ] = cv.multi_select(
+            {sensor_type: sensor_type.to_name() for sensor_type in SensorType}
         )
-        if step == "user":
-            schema = schema.extend(
-                {
-                    vol.Optional(
-                        CONF_ENABLED_SENSORS,
-                        default=list(SensorType),
-                    ): cv.multi_select(
-                        {
-                            sensor_type: sensor_type.to_name()
-                            for sensor_type in SensorType
-                        }
-                    ),
-                }
-            )
 
-    return schema
+    return schema.extend(
+        {
+            vol.Required(SECTION_ADVANCED): section(
+                vol.Schema(advanced), {"collapsed": True}
+            )
+        }
+    )
+
+
+def flatten_input(user_input: dict) -> dict:
+    """Move the options of the advanced section up to the top level.
+
+    The config entry keeps the flat layout it always had.
+
+    :param user_input: input of a form built by build_schema
+    :return: flat dict with all options
+    """
+    flat = {k: v for k, v in user_input.items() if k != SECTION_ADVANCED}
+    return flat | user_input.get(SECTION_ADVANCED, {})
 
 
 def check_input(hass: HomeAssistant, user_input: dict) -> dict:
@@ -476,6 +482,7 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
+            user_input = flatten_input(user_input)
             if not (errors := check_input(self.hass, user_input)):
                 # The options flow can change the sensors of an entry later, so
                 # compare with the current ones instead of the unique_id.
@@ -516,18 +523,10 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     data=user_input,
                 )
 
-        schema = build_schema(
-            config_entry=None,
-            hass=self.hass,
-            show_advanced=self.show_advanced_options,
-        )
+        schema = build_schema(config_entry=None, hass=self.hass)
 
         if schema is None:
-            if self.show_advanced_options:
-                reason = "no_sensors_advanced"
-            else:
-                reason = "no_sensors"
-            return self.async_abort(reason=reason)
+            return self.async_abort(reason="no_sensors")
 
         return self.async_show_form(
             step_id="user",
@@ -544,6 +543,7 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
 
         errors = {}
         if user_input is not None:
+            user_input = flatten_input(user_input)
             _LOGGER.debug("OptionsFlow: going to update configuration %s", user_input)
             if not (errors := check_input(self.hass, user_input)):
                 return self.async_create_entry(title="", data=user_input)
@@ -553,7 +553,6 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlow):
             data_schema=build_schema(
                 config_entry=self.config_entry,
                 hass=self.hass,
-                show_advanced=self.show_advanced_options,
                 step="init",
             ),
             errors=errors,

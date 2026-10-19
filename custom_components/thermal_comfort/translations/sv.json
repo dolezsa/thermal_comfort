@@ -8,17 +8,22 @@
       "init": {
         "data": {
           "temperature_sensor": "Temperatursensor",
-          "humidity_sensor": "Fuktighetssensor",
-          "poll": "Aktivera polling",
-          "scan_interval": "Poll intervall (sekunder)"
+          "humidity_sensor": "Fuktighetssensor"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Aktivera polling",
+              "scan_interval": "Poll intervall (sekunder)"
+            }
+          }
         }
       }
     }
   },
   "config": {
     "abort": {
-      "no_sensors": "Ingen temperatur eller fuktighetssensor hittad. Försök igen i avancerat läge.",
-      "no_sensors_advanced": "Ingen temperatur eller fuktighetssensor hittad."
+      "no_sensors": "Ingen temperatur eller fuktighetssensor hittad."
     },
     "error": {
       "temperature_not_found": "Temperatursensor hittat inte",
@@ -29,10 +34,16 @@
         "data": {
           "name": "Namn",
           "temperature_sensor": "Temperatursensor",
-          "humidity_sensor": "Fuktighetssensor",
-          "poll": "Aktivera polling",
-          "scan_interval": "Poll intervall (sekunder)",
-          "enabled_sensors": "Aktivera sensorer"
+          "humidity_sensor": "Fuktighetssensor"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Aktivera polling",
+              "scan_interval": "Poll intervall (sekunder)",
+              "enabled_sensors": "Aktivera sensorer"
+            }
+          }
         }
       }
     }

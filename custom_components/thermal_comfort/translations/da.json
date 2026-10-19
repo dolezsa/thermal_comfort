@@ -9,10 +9,16 @@
         "title": "Termiske komfortindstillinger",
         "data": {
           "temperature_sensor": "Temperatursensor",
-          "humidity_sensor": "Fugtighedssensor",
-          "poll": "Aktiver polling",
-          "scan_interval": "Poll interval (sekunder)",
-          "custom_icons": "Brug tilpasset ikonpakke"
+          "humidity_sensor": "Fugtighedssensor"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Aktiver polling",
+              "scan_interval": "Poll interval (sekunder)",
+              "custom_icons": "Brug tilpasset ikonpakke"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "Denne kombination af temperatur og fugtighedssensorer er allerede konfigureret",
-      "no_sensors": "Ingen temperatur eller fugtighedssensorer fundet. Prøv igen i avanceret tilstand.",
-      "no_sensors_advanced": "Ingen temperatur eller fugtighedssensorer fundet."
+      "no_sensors": "Ingen temperatur eller fugtighedssensorer fundet."
     },
     "error": {
       "temperature_not_found": "Temperatursensor ikke fundet",
@@ -33,11 +38,17 @@
         "data": {
           "name": "Name",
           "temperature_sensor": "Temperatursensor",
-          "humidity_sensor": "Fugtighedssensor",
-          "poll": "Aktiver polling",
-          "scan_interval": "Poll interval (sekunder)",
-          "custom_icons": "Brug tilpasset ikonpakke",
-          "enabled_sensors": "Aktiverede sensorer"
+          "humidity_sensor": "Fugtighedssensor"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Aktiver polling",
+              "scan_interval": "Poll interval (sekunder)",
+              "custom_icons": "Brug tilpasset ikonpakke",
+              "enabled_sensors": "Aktiverede sensorer"
+            }
+          }
         }
       }
     }

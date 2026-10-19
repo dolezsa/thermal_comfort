@@ -9,10 +9,16 @@
         "title": "Soojusliku mugavustunde seaded",
         "data": {
           "temperature_sensor": "Temperatuuriandur",
-          "humidity_sensor": "Niiskusandur",
-          "poll": "Luba küsitlus",
-          "scan_interval": "Küsitluse intervall (sekundites)",
-          "custom_icons": "Kasuta kohandatud pisipiltide paketti"
+          "humidity_sensor": "Niiskusandur"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Luba küsitlus",
+              "scan_interval": "Küsitluse intervall (sekundites)",
+              "custom_icons": "Kasuta kohandatud pisipiltide paketti"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "See temperatuuri- ja niiskusandurite kombinatsioon on juba seadistatud",
-      "no_sensors": "Temperatuuri- ega niiskusandureid ei leitud. Proovi uuesti täiustatud režiimis.",
-      "no_sensors_advanced": "Temperatuuri- ega niiskusandureid ei leitud."
+      "no_sensors": "Temperatuuri- ega niiskusandureid ei leitud."
     },
     "error": {
       "temperature_not_found": "Temperatuuriandurit ei leitud",
@@ -33,11 +38,17 @@
         "data": {
           "name": "Nimi",
           "temperature_sensor": "Temperatuuriandur",
-          "humidity_sensor": "Niiskuse andur",
-          "poll": "Luba küsitlus",
-          "scan_interval": "Küsitluse intervall (sekundites)",
-          "custom_icons": "Kasuta kohandatud pisipiltide paketti",
-          "enabled_sensors": "Lubatud andurid"
+          "humidity_sensor": "Niiskuse andur"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Luba küsitlus",
+              "scan_interval": "Küsitluse intervall (sekundites)",
+              "custom_icons": "Kasuta kohandatud pisipiltide paketti",
+              "enabled_sensors": "Lubatud andurid"
+            }
+          }
         }
       }
     }

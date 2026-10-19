@@ -14,8 +14,9 @@ from custom_components.thermal_comfort.const import (
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME
 from homeassistant.data_entry_flow import FlowResultType
+from homeassistant.setup import async_setup_component
 
-from .const import ADVANCED_USER_INPUT, USER_INPUT
+from .const import ADVANCED_USER_INPUT, USER_INPUT, form_input
 from .test_sensor import DEFAULT_TEST_SENSORS
 
 
@@ -29,13 +30,9 @@ def bypass_setup_fixture():
         yield
 
 
-async def _flow_init(hass, advanced_options=True):
+async def _flow_init(hass):
     return await hass.config_entries.flow.async_init(
-        DOMAIN,
-        context={
-            "source": config_entries.SOURCE_USER,
-            "show_advanced_options": advanced_options,
-        },
+        DOMAIN, context={"source": config_entries.SOURCE_USER}
     )
 
 
@@ -46,7 +43,7 @@ async def _flow_configure(hass, r, _input=ADVANCED_USER_INPUT, registry_entry=No
         return_value=MagicMock(unique_id="foo"),
     ):
         return await hass.config_entries.flow.async_configure(
-            r["flow_id"], user_input=_input
+            r["flow_id"], user_input=form_input(_input)
         )
 
 
@@ -90,9 +87,7 @@ async def test_options_flow(hass, start_ha):
     entry.add_to_hass(hass)
 
     # Initialize an options flow for entry
-    result = await hass.config_entries.options.async_init(
-        entry.entry_id, context={"show_advanced_options": True}
-    )
+    result = await hass.config_entries.options.async_init(entry.entry_id)
 
     # Verify that the first options step is a user form
     assert result["type"] == FlowResultType.FORM
@@ -101,7 +96,7 @@ async def test_options_flow(hass, start_ha):
     # Enter some data into the form
     result = await hass.config_entries.options.async_configure(
         result["flow_id"],
-        user_input=USER_INPUT,
+        user_input=form_input(USER_INPUT),
     )
 
     # Verify that the flow finishes
@@ -111,6 +106,34 @@ async def test_options_flow(hass, start_ha):
     # Verify that the options were updated
 
     assert entry.options == USER_INPUT
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_advanced_options_section(hass, start_ha, hass_client):
+    """Test the form as the frontend receives it, with a section for the advanced options."""
+    assert await async_setup_component(hass, "config", {})
+    client = await hass_client()
+
+    response = await client.post(
+        "/api/config/config_entries/flow", json={"handler": DOMAIN}
+    )
+    form = await response.json()
+    advanced = next(f for f in form["data_schema"] if f["name"] == "advanced")
+    assert advanced["type"] == "expandable"
+    assert [f["name"] for f in advanced["schema"]] == [
+        "poll",
+        "scan_interval",
+        "custom_icons",
+        "enabled_sensors",
+    ]
+
+    response = await client.post(
+        f"/api/config/config_entries/flow/{form['flow_id']}",
+        json=form_input(ADVANCED_USER_INPUT),
+    )
+    assert (await response.json())["type"] == "create_entry"
+    (entry,) = hass.config_entries.async_entries(DOMAIN)
+    assert entry.data == ADVANCED_USER_INPUT
 
 
 async def test_config_flow_enabled():
@@ -166,12 +189,10 @@ async def test_duplicate_check_uses_current_sensors(hass, start_ha):
     entry.add_to_hass(hass)
 
     # switch the entry from pair A to pair B with the options flow
-    result = await hass.config_entries.options.async_init(
-        entry.entry_id, context={"show_advanced_options": True}
-    )
+    result = await hass.config_entries.options.async_init(entry.entry_id)
     result = await hass.config_entries.options.async_configure(
         result["flow_id"],
-        user_input={k: v for k, v in pair_b.items() if k in USER_INPUT},
+        user_input=form_input({k: v for k, v in pair_b.items() if k in USER_INPUT}),
     )
     assert result["type"] == FlowResultType.CREATE_ENTRY
     assert entry.unique_id == original_unique_id

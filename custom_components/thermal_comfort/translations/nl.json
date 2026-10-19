@@ -9,10 +9,16 @@
         "title": "Instellingen Thermal comfort",
         "data": {
           "temperature_sensor": "Temperatuursensor",
-          "humidity_sensor": "Luchtvochtigheidssensor",
-          "poll": "Inschakelen polling",
-          "scan_interval": "Poll interval (seconden)",
-          "custom_icons": "Gebruikerspecifieke iconen"
+          "humidity_sensor": "Luchtvochtigheidssensor"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Inschakelen polling",
+              "scan_interval": "Poll interval (seconden)",
+              "custom_icons": "Gebruikerspecifieke iconen"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "Deze combinatie van temperatuur- en luchtvochtigheidssensoren is al geconfigureerd",
-      "no_sensors": "Geen temperatuur- of luchtvochtigheidssensoren gevonden. Probeer opnieuw in geadvanceerde modus.",
-      "no_sensors_advanced": "Geen temperatuur- of luchtvochtigheidssensoren gevonden."
+      "no_sensors": "Geen temperatuur- of luchtvochtigheidssensoren gevonden."
     },
     "error": {
       "temperature_not_found": "Temperatuursensor niet gevonden",
@@ -33,11 +38,17 @@
         "data": {
           "name": "Naam",
           "temperature_sensor": "Temperatuursensor",
-          "humidity_sensor": "Luchtvochtigheidssensor",
-          "poll": "Inschakelen polling",
-          "scan_interval": "Poll interval (seconden)",
-          "custom_icons": "Gebruikerspecifieke iconen",
-          "enabled_sensors": "Ingeschakelde sensoren"
+          "humidity_sensor": "Luchtvochtigheidssensor"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Inschakelen polling",
+              "scan_interval": "Poll interval (seconden)",
+              "custom_icons": "Gebruikerspecifieke iconen",
+              "enabled_sensors": "Ingeschakelde sensoren"
+            }
+          }
         }
       }
     }

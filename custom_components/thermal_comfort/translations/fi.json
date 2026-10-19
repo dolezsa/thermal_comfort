@@ -9,10 +9,16 @@
         "title": "Lämpömukavuus asetukset",
         "data": {
           "temperature_sensor": "Lämpötila-anturi",
-          "humidity_sensor": "Kosteusanturi",
-          "poll": "Ota tiedonkeruu käyttöön",
-          "scan_interval": "Tiedonkeruun tiheys (sekunneissa)",
-          "custom_icons": "Käytä räätälöityä kuvakepakettia"
+          "humidity_sensor": "Kosteusanturi"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Ota tiedonkeruu käyttöön",
+              "scan_interval": "Tiedonkeruun tiheys (sekunneissa)",
+              "custom_icons": "Käytä räätälöityä kuvakepakettia"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "Annettu anturiyhdistelmä on jo määritetty.",
-      "no_sensors": "Lämpötila- tai kosteusanturia ei löydetty. Kokeile uudestaan kehittynyt-tilassa.",
-      "no_sensors_advanced": "Lämpötila- tai kosteusanturia ei löydetty."
+      "no_sensors": "Lämpötila- tai kosteusanturia ei löydetty."
     },
     "error": {
       "temperature_not_found": "Lämpötila-anturia ei löydetty",
@@ -33,11 +38,17 @@
         "data": {
           "name": "Nimi",
           "temperature_sensor": "Lämpötila-anturi",
-          "humidity_sensor": "Kosteusanturi",
-          "poll": "Ota tiedonkeruu käyttöön",
-          "scan_interval": "Tiedonkeruun tiheys (sekunneissa)",
-          "custom_icons": "Käytä räätälöityä kuvakepakettia",
-          "enabled_sensors": "Ota anturit käyttöön"
+          "humidity_sensor": "Kosteusanturi"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Ota tiedonkeruu käyttöön",
+              "scan_interval": "Tiedonkeruun tiheys (sekunneissa)",
+              "custom_icons": "Käytä räätälöityä kuvakepakettia",
+              "enabled_sensors": "Ota anturit käyttöön"
+            }
+          }
         }
       }
     }

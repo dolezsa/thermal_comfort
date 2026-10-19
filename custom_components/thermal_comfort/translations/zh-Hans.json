@@ -9,10 +9,16 @@
         "title": "热舒适设置",
         "data": {
           "temperature_sensor": "温度传感器",
-          "humidity_sensor": "湿度传感器",
-          "poll": "启用轮询",
-          "scan_interval": "轮询间隔（秒）",
-          "custom_icons": "使用自定义图标包"
+          "humidity_sensor": "湿度传感器"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "启用轮询",
+              "scan_interval": "轮询间隔（秒）",
+              "custom_icons": "使用自定义图标包"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "此温度和湿度传感器组合已配置",
-      "no_sensors": "未找到温度或湿度传感器。请在高级模式下重试。",
-      "no_sensors_advanced": "未找到温度或湿度传感器。"
+      "no_sensors": "未找到温度或湿度传感器。"
     },
     "error": {
       "temperature_not_found": "未找到温度传感器",
@@ -33,11 +38,17 @@
         "data": {
           "name": "名称",
           "temperature_sensor": "温度传感器",
-          "humidity_sensor": "湿度传感器",
-          "poll": "启用轮询",
-          "scan_interval": "轮询间隔（秒）",
-          "custom_icons": "使用自定义图标包",
-          "enabled_sensors": "已启用的传感器"
+          "humidity_sensor": "湿度传感器"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "启用轮询",
+              "scan_interval": "轮询间隔（秒）",
+              "custom_icons": "使用自定义图标包",
+              "enabled_sensors": "已启用的传感器"
+            }
+          }
         }
       }
     }

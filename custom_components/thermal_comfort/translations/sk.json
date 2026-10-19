@@ -9,10 +9,16 @@
         "title": "Nastavenia tepelnej pohody",
         "data": {
           "temperature_sensor": "Teplotný snímač",
-          "humidity_sensor": "Snímač vlhkosti",
-          "poll": "Povoliť dotazovanie",
-          "scan_interval": "Interval dotazovania (sekundy)",
-          "custom_icons": "Používanie vlastného balíka ikon"
+          "humidity_sensor": "Snímač vlhkosti"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Povoliť dotazovanie",
+              "scan_interval": "Interval dotazovania (sekundy)",
+              "custom_icons": "Používanie vlastného balíka ikon"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "Táto kombinácia snímačov teploty a vlhkosti je už nakonfigurovaná",
-      "no_sensors": "Nenašli sa žiadne snímače teploty alebo vlhkosti. Skúste to znova v rozšírenom režime.",
-      "no_sensors_advanced": "Nenašli sa žiadne snímače teploty alebo vlhkosti."
+      "no_sensors": "Nenašli sa žiadne snímače teploty alebo vlhkosti."
     },
     "error": {
       "temperature_not_found": "Teplotný snímač nenájdený",
@@ -33,11 +38,17 @@
         "data": {
           "name": "Názov",
           "temperature_sensor": "Teplotný snímač",
-          "humidity_sensor": "Snímač vlhkosti",
-          "poll": "Povoliť dotazovanie",
-          "scan_interval": "Interval dotazovania (sekundy)",
-          "custom_icons": "Používanie vlastného balíka ikon",
-          "enabled_sensors": "Povolené senzory"
+          "humidity_sensor": "Snímač vlhkosti"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Povoliť dotazovanie",
+              "scan_interval": "Interval dotazovania (sekundy)",
+              "custom_icons": "Používanie vlastného balíka ikon",
+              "enabled_sensors": "Povolené senzory"
+            }
+          }
         }
       }
     }

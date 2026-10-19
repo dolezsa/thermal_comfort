@@ -9,10 +9,16 @@
         "title": "Hőkomfort beállítások",
         "data": {
           "temperature_sensor": "Hőmérséklet szenzor",
-          "humidity_sensor": "Páratartalom szenzor",
-          "poll": "Állapotlekérdezés (polling) engedélyezése",
-          "scan_interval": "Lekérdezési időköz (polling) (másodpercekben)",
-          "custom_icons": "Egyedi ikonkészlet használata"
+          "humidity_sensor": "Páratartalom szenzor"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Állapotlekérdezés (polling) engedélyezése",
+              "scan_interval": "Lekérdezési időköz (polling) (másodpercekben)",
+              "custom_icons": "Egyedi ikonkészlet használata"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "Ez a hőmérséklet- és páratartalom-szenzor kombináció már konfigurálva van",
-      "no_sensors": "Nem található hőmérséklet- vagy páratartalom-szenzor. Próbáld újra a haladó (advanced) módban.",
-      "no_sensors_advanced": "Nem található hőmérséklet- vagy páratartalom-szenzor."
+      "no_sensors": "Nem található hőmérséklet- vagy páratartalom-szenzor."
     },
     "error": {
       "temperature_not_found": "Hőmérséklet szenzor nem található.",
@@ -33,11 +38,17 @@
         "data": {
           "name": "Név",
           "temperature_sensor": "Hőmérséklet szenzor",
-          "humidity_sensor": "Páratartalom szenzor",
-          "poll": "Állapotlekérdezés (polling) engedélyezése",
-          "scan_interval": "Lekérdezési időköz (polling) (másodpercekben)",
-          "custom_icons": "Egyedi ikonkészlet használata",
-          "enabled_sensors": "Engedélyezett szenzorok"
+          "humidity_sensor": "Páratartalom szenzor"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Állapotlekérdezés (polling) engedélyezése",
+              "scan_interval": "Lekérdezési időköz (polling) (másodpercekben)",
+              "custom_icons": "Egyedi ikonkészlet használata",
+              "enabled_sensors": "Engedélyezett szenzorok"
+            }
+          }
         }
       }
     }

@@ -9,10 +9,16 @@
         "title": "Nastavení tepelné pohody",
         "data": {
           "temperature_sensor": "Senzor teploty",
-          "humidity_sensor": "Senzor vlhkosti",
-          "poll": "Povolit hlasování",
-          "scan_interval": "Interval dotazování (v sekundách)",
-          "custom_icons": "Použijte vlastní sadu ikon"
+          "humidity_sensor": "Senzor vlhkosti"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Povolit hlasování",
+              "scan_interval": "Interval dotazování (v sekundách)",
+              "custom_icons": "Použijte vlastní sadu ikon"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "Tato kombinace snímačů teploty a vlhkosti je již nakonfigurována",
-      "no_sensors": "Nebyla nalezena žádná čidla teploty nebo vlhkosti. Zkuste to znovu v pokročilém režimu.",
-      "no_sensors_advanced": "Nebyla nalezena žádná čidla teploty nebo vlhkosti."
+      "no_sensors": "Nebyla nalezena žádná čidla teploty nebo vlhkosti."
     },
     "error": {
       "temperature_not_found": "Snímač teploty nenalezen",
@@ -33,11 +38,17 @@
         "data": {
           "name": "název",
           "temperature_sensor": "Senzor teploty",
-          "humidity_sensor": "Senzor vlhkosti",
-          "poll": "Povolit hlasování",
-          "scan_interval": "Interval dotazování (v sekundách)",
-          "custom_icons": "Použijte vlastní sadu ikon",
-          "enabled_sensors": "Aktivované senzory"
+          "humidity_sensor": "Senzor vlhkosti"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Povolit hlasování",
+              "scan_interval": "Interval dotazování (v sekundách)",
+              "custom_icons": "Použijte vlastní sadu ikon",
+              "enabled_sensors": "Aktivované senzory"
+            }
+          }
         }
       }
     }

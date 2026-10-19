@@ -9,10 +9,16 @@
         "title": "Thermal comfortの設定",
         "data": {
           "temperature_sensor": "温度センサー",
-          "humidity_sensor": "湿度センサー",
-          "poll": "ポーリングを有効にする",
-          "scan_interval": "ポーリング周期(秒)",
-          "custom_icons": "custom icons packを使用する"
+          "humidity_sensor": "湿度センサー"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "ポーリングを有効にする",
+              "scan_interval": "ポーリング周期(秒)",
+              "custom_icons": "custom icons packを使用する"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "この温度センサーと湿度センサーの組み合わせは既に構成されています",
-      "no_sensors": "温度または湿度センサーが見つかりません。詳細モードで再試行してください。",
-      "no_sensors_advanced": "温度または湿度センサーが見つかりません。"
+      "no_sensors": "温度または湿度センサーが見つかりません。"
     },
     "error": {
       "temperature_not_found": "温度センサーが見つかりません",
@@ -33,11 +38,17 @@
         "data": {
           "name": "名前",
           "temperature_sensor": "温度センサー",
-          "humidity_sensor": "湿度センサー",
-          "poll": "ポーリングを有効にする",
-          "scan_interval": "ポーリング周期(秒)",
-          "custom_icons": "custom icons packを使用する",
-          "enabled_sensors": "センサーを有効にする"
+          "humidity_sensor": "湿度センサー"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "ポーリングを有効にする",
+              "scan_interval": "ポーリング周期(秒)",
+              "custom_icons": "custom icons packを使用する",
+              "enabled_sensors": "センサーを有効にする"
+            }
+          }
         }
       }
     }

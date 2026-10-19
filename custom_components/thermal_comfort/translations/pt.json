@@ -9,10 +9,16 @@
         "title": "Definições de Conforto Térmico",
         "data": {
           "temperature_sensor": "Sensor de Temperatura",
-          "humidity_sensor": "Sensor de Humidade",
-          "poll": "Ativar Atualização",
-          "scan_interval": "Intervalo de atualização (segundos)",
-          "custom_icons": "Usar ícones personalizados"
+          "humidity_sensor": "Sensor de Humidade"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Ativar Atualização",
+              "scan_interval": "Intervalo de atualização (segundos)",
+              "custom_icons": "Usar ícones personalizados"
+            }
+          }
         }
       }
     }
@@ -20,8 +26,7 @@
   "config": {
     "abort": {
       "already_configured": "Esta combinação de sensores de humidade e temperatura já está configurada.",
-      "no_sensors": "Não foram encontrados sensores de humidade e/ou temperatura. Tente de novo no modo avançado.",
-      "no_sensors_advanced": "Não foram encontrados sensores de humidade e/ou temperatura."
+      "no_sensors": "Não foram encontrados sensores de humidade e/ou temperatura."
     },
     "error": {
       "temperature_not_found": "Sensor de temperatura não encontrado",
@@ -33,11 +38,17 @@
         "data": {
           "name": "Nome",
           "temperature_sensor": "Sensor de Temperatura",
-          "humidity_sensor": "Sensor de Humidade",
-          "poll": "Ativar Atualização",
-          "scan_interval": "Intervalo de atualização (segundos)",
-          "custom_icons": "Usar ícones personalizados",
-          "enabled_sensors": "Sensores ligados"
+          "humidity_sensor": "Sensor de Humidade"
+        },
+        "sections": {
+          "advanced": {
+            "data": {
+              "poll": "Ativar Atualização",
+              "scan_interval": "Intervalo de atualização (segundos)",
+              "custom_icons": "Usar ícones personalizados",
+              "enabled_sensors": "Sensores ligados"
+            }
+          }
         }
       }
     }
