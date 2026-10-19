@@ -27,8 +27,8 @@ from custom_components.thermal_comfort.sensor import (
     ThomsDiscomfortPerception,
     id_generator,
 )
-from homeassistant.components.command_line.const import DOMAIN as COMMAND_LINE_DOMAIN
 from homeassistant.components.sensor import DOMAIN as PLATFORM_DOMAIN
+from homeassistant.components.template.const import DOMAIN as TEMPLATE_DOMAIN
 from homeassistant.const import ATTR_TEMPERATURE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
@@ -41,17 +41,15 @@ TEST_NAME = "sensor.test_thermal_comfort"
 
 TEMPERATURE_TEST_SENSOR = {
     PLATFORM_DOMAIN: {
-        "command": "echo 0",
         "name": "test_temperature_sensor",
-        "value_template": "{{ 25.0 | float }}",
+        "state": "{{ 25.0 | float }}",
     },
 }
 
 HUMIDITY_TEST_SENSOR = {
     PLATFORM_DOMAIN: {
-        "command": "echo 0",
         "name": "test_humidity_sensor",
-        "value_template": "{{ 50.0 | float }}",
+        "state": "{{ 50.0 | float }}",
     },
 }
 
@@ -59,9 +57,9 @@ DEFAULT_TEST_SENSORS = [
     "domains, config",
     [
         (
-            [(COMMAND_LINE_DOMAIN, 2), (DOMAIN, 1)],
+            [(TEMPLATE_DOMAIN, 2), (DOMAIN, 1)],
             {
-                COMMAND_LINE_DOMAIN: [
+                TEMPLATE_DOMAIN: [
                     TEMPERATURE_TEST_SENSOR,
                     HUMIDITY_TEST_SENSOR,
                 ],
@@ -839,9 +837,9 @@ async def test_thoms_discomfort_perception(hass, start_ha):
     "domains, config",
     [
         (
-            [(COMMAND_LINE_DOMAIN, 2), (DOMAIN, 1)],
+            [(TEMPLATE_DOMAIN, 2), (DOMAIN, 1)],
             {
-                COMMAND_LINE_DOMAIN: [
+                TEMPLATE_DOMAIN: [
                     TEMPERATURE_TEST_SENSOR,
                     HUMIDITY_TEST_SENSOR,
                 ],
@@ -900,9 +898,9 @@ async def test_unique_id(hass, start_ha):
     "domains, config",
     [
         (
-            [(COMMAND_LINE_DOMAIN, 2), (DOMAIN, 1)],
+            [(TEMPLATE_DOMAIN, 2), (DOMAIN, 1)],
             {
-                COMMAND_LINE_DOMAIN: [
+                TEMPLATE_DOMAIN: [
                     TEMPERATURE_TEST_SENSOR,
                     HUMIDITY_TEST_SENSOR,
                 ],
@@ -940,9 +938,9 @@ async def test_zero_degree_celcius(hass, start_ha):
     "domains, config",
     [
         (
-            [(COMMAND_LINE_DOMAIN, 2), (DOMAIN, 1)],
+            [(TEMPLATE_DOMAIN, 2), (DOMAIN, 1)],
             {
-                COMMAND_LINE_DOMAIN: [
+                TEMPLATE_DOMAIN: [
                     TEMPERATURE_TEST_SENSOR,
                     HUMIDITY_TEST_SENSOR,
                 ],
@@ -977,21 +975,19 @@ async def get_sensor_types(hass, start_ha):
     "domains, config",
     [
         (
-            [(COMMAND_LINE_DOMAIN, 2), (DOMAIN, 1)],
+            [(TEMPLATE_DOMAIN, 2), (DOMAIN, 1)],
             {
-                COMMAND_LINE_DOMAIN: [
+                TEMPLATE_DOMAIN: [
                     {
                         PLATFORM_DOMAIN: {
-                            "command": "echo 0",
                             "name": "test_temperature_sensor",
-                            "value_template": "{{ NaN | float }}",
+                            "state": "{{ NaN | float }}",
                         },
                     },
                     {
                         PLATFORM_DOMAIN: {
-                            "command": "echo 0",
                             "name": "test_humidity_sensor",
-                            "value_template": "{{ NaN | float }}",
+                            "state": "{{ NaN | float }}",
                         },
                     },
                 ],
@@ -1019,21 +1015,19 @@ async def get_sensor_is_nan(hass, start_ha):
     "domains, config",
     [
         (
-            [(COMMAND_LINE_DOMAIN, 2), (DOMAIN, 1)],
+            [(TEMPLATE_DOMAIN, 2), (DOMAIN, 1)],
             {
-                COMMAND_LINE_DOMAIN: [
+                TEMPLATE_DOMAIN: [
                     {
                         PLATFORM_DOMAIN: {
-                            "command": "echo 0",
                             "name": "test_temperature_sensor",
-                            "value_template": "{{ NaN | float }}",
+                            "state": "{{ NaN | float }}",
                         }
                     },
                     {
                         PLATFORM_DOMAIN: {
-                            "command": "echo 0",
                             "name": "test_humidity_sensor",
-                            "value_template": "{{ NaN | float }}",
+                            "state": "{{ NaN | float }}",
                         }
                     },
                 ],
