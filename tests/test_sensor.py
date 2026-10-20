@@ -498,6 +498,22 @@ async def test_summer_simmer_perception(hass, start_ha):
         == SummerSimmerPerception.DANGER_OF_HEATSTROKE
     )
 
+    hass.states.async_set("sensor.test_temperature_sensor", "45.0")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.EXTREME_DANGER_OF_HEATSTROKE
+    )
+
+    hass.states.async_set("sensor.test_humidity_sensor", "100.0")
+    await hass.async_block_till_done()
+    hass.states.async_set("sensor.test_temperature_sensor", "56.0")
+    await hass.async_block_till_done()
+    assert (
+        get_sensor(hass, SensorType.SUMMER_SIMMER_PERCEPTION).state
+        == SummerSimmerPerception.CIRCULATORY_COLLAPSE_IMMINENT
+    )
+
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_moist_air_enthalpy(hass, start_ha):
@@ -986,6 +1002,8 @@ async def test_unique_id(hass, start_ha):
 async def test_valid_icon_template(hass, start_ha):
     """Test if icon template is working as expected."""
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
+    for sensor_type in DEFAULT_SENSOR_TYPES:
+        assert get_sensor(hass, sensor_type).attributes["icon"] == "mdi:thermometer"
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
@@ -1037,84 +1055,11 @@ async def test_sensor_types(hass, start_ha):
     assert get_sensor(hass, SensorType.DEW_POINT) is not None
 
 
-@pytest.mark.parametrize(
-    "domains, config",
-    [
-        (
-            [(TEMPLATE_DOMAIN, 2), (DOMAIN, 1)],
-            {
-                TEMPLATE_DOMAIN: [
-                    {
-                        PLATFORM_DOMAIN: {
-                            "name": "test_temperature_sensor",
-                            "state": "{{ NaN | float }}",
-                        },
-                    },
-                    {
-                        PLATFORM_DOMAIN: {
-                            "name": "test_humidity_sensor",
-                            "state": "{{ NaN | float }}",
-                        },
-                    },
-                ],
-                DOMAIN: {
-                    PLATFORM_DOMAIN: {
-                        "name": "test_thermal_comfort",
-                        "temperature_sensor": "sensor.test_temperature_sensor",
-                        "humidity_sensor": "sensor.test_humidity_sensor",
-                        "unique_id": "unique_thermal_comfort_id",
-                    },
-                },
-            },
-        ),
-    ],
-)
-async def test_sensor_is_nan(hass, start_ha):
-    """Test if we correctly handle input sensors with NaN as state value."""
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
-    for sensor_type in DEFAULT_SENSOR_TYPES:
-        assert ATTR_TEMPERATURE not in get_sensor(hass, sensor_type).attributes
-        assert ATTR_HUMIDITY not in get_sensor(hass, sensor_type).attributes
-
-
-@pytest.mark.parametrize(
-    "domains, config",
-    [
-        (
-            [(TEMPLATE_DOMAIN, 2), (DOMAIN, 1)],
-            {
-                TEMPLATE_DOMAIN: [
-                    {
-                        PLATFORM_DOMAIN: {
-                            "name": "test_temperature_sensor",
-                            "state": "unknown",
-                        }
-                    },
-                    {
-                        PLATFORM_DOMAIN: {
-                            "name": "test_humidity_sensor",
-                            "state": "unknown",
-                        }
-                    },
-                ],
-                DOMAIN: {
-                    PLATFORM_DOMAIN: {
-                        "name": "test_thermal_comfort",
-                        "temperature_sensor": "sensor.test_temperature_sensor",
-                        "humidity_sensor": "sensor.test_humidity_sensor",
-                        "unique_id": "unique_thermal_comfort_id",
-                    },
-                },
-            },
-        ),
-    ],
-)
-async def test_sensor_unknown(hass, start_ha):
-    """Test handling input sensors with unknown state."""
-    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
-    for sensor_type in DEFAULT_SENSOR_TYPES:
-        assert ATTR_TEMPERATURE not in get_sensor(hass, sensor_type).attributes
-        assert ATTR_HUMIDITY not in get_sensor(hass, sensor_type).attributes
+def test_sensor_type_from_string_rejects_unknown():
+    """Test that an unknown sensor type in the YAML options is refused."""
+    assert SensorType.from_string("dew_point") == SensorType.DEW_POINT
+    with pytest.raises(ValueError, match="Unknown sensor type: bogus"):
+        SensorType.from_string("bogus")
 
 
 async def test_create_sensors(hass: HomeAssistant):
@@ -1233,6 +1178,7 @@ async def test_invalid_source_makes_sensors_unavailable(hass, start_ha):
     for entity_id, bad_state in (
         ("sensor.test_temperature_sensor", STATE_UNAVAILABLE),
         ("sensor.test_temperature_sensor", STATE_UNKNOWN),
+        ("sensor.test_temperature_sensor", "nan"),
         ("sensor.test_temperature_sensor", "100"),
         ("sensor.test_humidity_sensor", STATE_UNAVAILABLE),
         ("sensor.test_humidity_sensor", "0"),
@@ -1445,6 +1391,13 @@ async def test_enthalpy_with_pressure_sensor(hass, start_ha):
     sensor = get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY)
     assert float(sensor.state) == pytest.approx(reference_enthalpy(25, 50, 90000))
     assert sensor.attributes[ATTR_PRESSURE] == 900.0
+
+    # a state change that leaves the pressure as it is changes nothing
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "900", {"unit_of_measurement": "hPa", "x": 1}
+    )
+    await hass.async_block_till_done()
+    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == sensor.state
 
     # only the enthalpy shows the pressure
     assert ATTR_PRESSURE not in get_sensor(hass, SensorType.DEW_POINT).attributes
