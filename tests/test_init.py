@@ -6,15 +6,11 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.thermal_comfort import async_setup_entry, async_unload_entry
 from custom_components.thermal_comfort.const import DOMAIN, PLATFORMS
-from custom_components.thermal_comfort.sensor import (
-    LegacySensorType,
-    SensorType,
-    id_generator,
-)
+from custom_components.thermal_comfort.sensor import id_generator
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.helpers import entity_registry as er
 
-from .const import ADVANCED_USER_INPUT
+from .const import ADVANCED_USER_INPUT, RENAMED_SENSOR_TYPES
 
 
 async def test_setup_unload_entry(hass):
@@ -62,13 +58,8 @@ async def test_migrate_entry_renames_legacy_unique_ids(hass):
     )
     config_entry.add_to_hass(hass)
     registry = er.async_get(hass)
-    renamed = {
-        LegacySensorType.THERMAL_PERCEPTION: SensorType.DEW_POINT_PERCEPTION,
-        LegacySensorType.SIMMER_INDEX: SensorType.SUMMER_SIMMER_INDEX,
-        LegacySensorType.SIMMER_ZONE: SensorType.SUMMER_SIMMER_PERCEPTION,
-    }
     entity_ids = {}
-    for legacy_type in renamed:
+    for legacy_type in RENAMED_SENSOR_TYPES:
         entity_ids[legacy_type] = registry.async_get_or_create(
             SENSOR_DOMAIN,
             DOMAIN,
@@ -80,6 +71,6 @@ async def test_migrate_entry_renames_legacy_unique_ids(hass):
     await hass.async_block_till_done()
 
     assert config_entry.version == 2
-    for legacy_type, sensor_type in renamed.items():
+    for legacy_type, sensor_type in RENAMED_SENSOR_TYPES.items():
         entry = registry.async_get(entity_ids[legacy_type])
         assert entry.unique_id == id_generator("uid", sensor_type)

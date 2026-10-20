@@ -35,7 +35,6 @@ from custom_components.thermal_comfort.sensor import (
     DewPointPerception,
     FrostRisk,
     HumidexPerception,
-    LegacySensorType,
     RelativeStrainPerception,
     ScharlauPerception,
     SensorThermalComfort,
@@ -57,7 +56,7 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.setup import async_setup_component
 from homeassistant.util import dt as dt_util
 
-from .const import ADVANCED_USER_INPUT
+from .const import ADVANCED_USER_INPUT, RENAMED_SENSOR_TYPES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -99,6 +98,8 @@ DEFAULT_TEST_SENSORS = [
         ),
     ],
 ]
+
+DEFAULT_DOMAINS, DEFAULT_CONFIG = DEFAULT_TEST_SENSORS[1][0]
 
 PRESSURE_TEST_SENSOR = {
     PLATFORM_DOMAIN: {
@@ -1403,10 +1404,14 @@ async def test_enthalpy_with_pressure_sensor(hass, start_ha):
     assert sensor.attributes[ATTR_PRESSURE] == 900.0
 
     # a state change that leaves the pressure as it is changes nothing
-    hass.states.async_set(
-        "sensor.test_pressure_sensor", "900", {"unit_of_measurement": "hPa", "x": 1}
-    )
-    await hass.async_block_till_done()
+    with patch.object(
+        SensorThermalComfort, "async_schedule_update_ha_state"
+    ) as schedule_update:
+        hass.states.async_set(
+            "sensor.test_pressure_sensor", "900", {"unit_of_measurement": "hPa", "x": 1}
+        )
+        await hass.async_block_till_done()
+    schedule_update.assert_not_called()
     assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == sensor.state
 
     # only the enthalpy shows the pressure
@@ -1664,26 +1669,38 @@ async def test_reload_service(hass, start_ha):
 async def test_yaml_renames_legacy_unique_ids(hass):
     """Test that YAML sensors take over the entities named before thermal comfort 2.0."""
     registry = er.async_get(hass)
-    renamed = {
-        LegacySensorType.THERMAL_PERCEPTION: SensorType.DEW_POINT_PERCEPTION,
-        LegacySensorType.SIMMER_INDEX: SensorType.SUMMER_SIMMER_INDEX,
-        LegacySensorType.SIMMER_ZONE: SensorType.SUMMER_SIMMER_PERCEPTION,
-    }
     entity_ids = {
         legacy_type: registry.async_get_or_create(
             PLATFORM_DOMAIN, DOMAIN, id_generator("legacy", legacy_type)
         ).entity_id
-        for legacy_type in renamed
+        for legacy_type in RENAMED_SENSOR_TYPES
     }
 
-    domains, config = DEFAULT_TEST_SENSORS[1][0]
-    config = copy.deepcopy(config)
+    config = copy.deepcopy(DEFAULT_CONFIG)
     config[DOMAIN][PLATFORM_DOMAIN]["unique_id"] = "legacy"
-    for domain, count in domains:
+    for domain, count in DEFAULT_DOMAINS:
         with assert_setup_component(count, domain):
             assert await async_setup_component(hass, domain, config)
         await hass.async_block_till_done()
 
-    for legacy_type, sensor_type in renamed.items():
+    for legacy_type, sensor_type in RENAMED_SENSOR_TYPES.items():
         entry = registry.async_get(entity_ids[legacy_type])
         assert entry.unique_id == id_generator("legacy", sensor_type)
+
+
+@pytest.mark.parametrize("bad_state", ["nan", STATE_UNKNOWN])
+async def test_invalid_first_source_state(hass, bad_state):
+    """Test that sources which start with an invalid state keep the sensors unavailable."""
+    config = copy.deepcopy(DEFAULT_CONFIG)
+    for source in config[TEMPLATE_DOMAIN]:
+        source[PLATFORM_DOMAIN]["state"] = bad_state
+    for domain, count in DEFAULT_DOMAINS:
+        with assert_setup_component(count, domain):
+            assert await async_setup_component(hass, domain, config)
+        await hass.async_block_till_done()
+    await hass.async_start()
+    await hass.async_block_till_done()
+
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
+    for sensor_type in DEFAULT_SENSOR_TYPES:
+        assert get_sensor(hass, sensor_type).state == STATE_UNAVAILABLE
