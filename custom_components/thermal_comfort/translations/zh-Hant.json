@@ -170,7 +170,7 @@
         "name": "霜點溫度"
       },
       "heat_index": {
-        "name": "熱指數"
+        "name": "酷熱指數"
       },
       "humidex": {
         "name": "濕熱指數（Humidex）"
