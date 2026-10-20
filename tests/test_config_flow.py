@@ -6,7 +6,10 @@ from unittest.mock import MagicMock, patch
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.thermal_comfort.config_flow import get_value
+from custom_components.thermal_comfort.config_flow import (
+    get_sensors_by_device_class,
+    get_value,
+)
 from custom_components.thermal_comfort.const import (
     CONF_HUMIDITY_SENSOR,
     CONF_PRESSURE_SENSOR,
@@ -14,8 +17,10 @@ from custom_components.thermal_comfort.const import (
     DOMAIN,
 )
 from homeassistant import config_entries
+from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import CONF_NAME
 from homeassistant.data_entry_flow import FlowResultType
+from homeassistant.helpers import entity_registry as er
 from homeassistant.setup import async_setup_component
 
 from .const import ADVANCED_USER_INPUT, USER_INPUT, form_input
@@ -343,3 +348,21 @@ async def test_options_flow_pressure_sensor(hass, start_ha):
     result = await submit(USER_INPUT)
     assert result["type"] == FlowResultType.CREATE_ENTRY
     assert get_value(entry, CONF_PRESSURE_SENSOR) is None
+
+
+@pytest.mark.parametrize(
+    "unit",
+    ["\u00b5g/m³", "\u03bcg/m³", "\u00b5g/ft³", "\u03bcg/ft³", "\u00b5g", "\u03bcg"]
+    + ["\u00b5S/cm", "\u03bcS/cm", "\u00b5s", "\u03bcs"],
+)
+async def test_micro_units_are_excluded_in_both_spellings(hass, unit):
+    """Units with micro are excluded whether spelled U+00B5 or U+03BC."""
+    hass.states.async_set("sensor.useless", "1", {"unit_of_measurement": unit})
+    hass.states.async_set("sensor.useful", "1", {"unit_of_measurement": "°C"})
+
+    sensors = get_sensors_by_device_class(
+        er.async_get(hass), hass, SensorDeviceClass.TEMPERATURE, include_all=True
+    )
+
+    assert "sensor.useful" in sensors
+    assert "sensor.useless" not in sensors

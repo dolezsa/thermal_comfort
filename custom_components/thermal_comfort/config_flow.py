@@ -161,7 +161,7 @@ def get_sensors_by_device_class(
             "$",
             "¢",
             # Time units
-            "μs",
+            "µs",
             "ms",
             "s",
             "min",
@@ -228,7 +228,7 @@ def get_sensors_by_device_class(
             # Concentration units
             "µg/m³",
             "mg/m³",
-            "μg/ft³",
+            "µg/ft³",
             "p/m³",
             "ppm",
             "ppb",
@@ -286,6 +286,10 @@ def get_sensors_by_device_class(
         unit_of_measurement = state.attributes.get(
             "unit_of_measurement", state.attributes.get("native_unit_of_measurement")
         )
+        if isinstance(unit_of_measurement, str):
+            # The list spells micro as U+00B5, the Home Assistant unit
+            # enumerators use U+03BC, so compare them as the same character.
+            unit_of_measurement = unit_of_measurement.replace("\u03bc", "\u00b5")
         return unit_of_measurement not in units_for_exclude
 
     def filter_thermal_comfort_ids(entity_id: str) -> bool:
