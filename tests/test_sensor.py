@@ -1,6 +1,7 @@
 """The test for the Thermal Comfort sensor platform."""
 
 from collections.abc import Callable
+import copy
 from datetime import timedelta
 import logging
 import math
@@ -9,6 +10,8 @@ from unittest.mock import patch
 import pytest
 from pytest_homeassistant_custom_component.common import (
     MockConfigEntry,
+    assert_setup_component,
+    async_capture_events,
     async_fire_time_changed,
 )
 
@@ -32,6 +35,7 @@ from custom_components.thermal_comfort.sensor import (
     DewPointPerception,
     FrostRisk,
     HumidexPerception,
+    LegacySensorType,
     RelativeStrainPerception,
     ScharlauPerception,
     SensorThermalComfort,
@@ -42,9 +46,15 @@ from custom_components.thermal_comfort.sensor import (
 )
 from homeassistant.components.sensor import DOMAIN as PLATFORM_DOMAIN, SensorDeviceClass
 from homeassistant.components.template.const import DOMAIN as TEMPLATE_DOMAIN
-from homeassistant.const import ATTR_TEMPERATURE, STATE_UNAVAILABLE, STATE_UNKNOWN
+from homeassistant.const import (
+    ATTR_TEMPERATURE,
+    SERVICE_RELOAD,
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
+from homeassistant.setup import async_setup_component
 from homeassistant.util import dt as dt_util
 
 from .const import ADVANCED_USER_INPUT
@@ -1620,3 +1630,60 @@ async def test_yaml_entities_removed_unsubscribes_pressure(hass, start_ha):
 def test_pressure_is_not_recorded():
     """Test that the pressure attribute is kept out of the database."""
     assert ATTR_PRESSURE in SensorThermalComfort._unrecorded_attributes
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_reload_service(hass, start_ha):
+    """Test that the reload service applies the changed YAML configuration."""
+    assert (
+        get_sensor(hass, SensorType.DEW_POINT).name == "test_thermal_comfort Dew point"
+    )
+    events = async_capture_events(hass, f"event_{DOMAIN}_reloaded")
+    changed = {
+        TEMPLATE_DOMAIN: [TEMPERATURE_TEST_SENSOR, HUMIDITY_TEST_SENSOR],
+        DOMAIN: {
+            PLATFORM_DOMAIN: {
+                "name": "renamed",
+                "temperature_sensor": "sensor.test_temperature_sensor",
+                "humidity_sensor": "sensor.test_humidity_sensor",
+                "unique_id": "unique_thermal_comfort_id",
+            },
+        },
+    }
+
+    with patch("homeassistant.config.async_hass_config_yaml", return_value=changed):
+        await hass.services.async_call(DOMAIN, SERVICE_RELOAD, blocking=True)
+    await hass.async_block_till_done()
+
+    assert len(events) == 1
+    sensor = get_sensor(hass, SensorType.DEW_POINT)
+    assert sensor.name == "renamed Dew point"
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
+
+
+async def test_yaml_renames_legacy_unique_ids(hass):
+    """Test that YAML sensors take over the entities named before thermal comfort 2.0."""
+    registry = er.async_get(hass)
+    renamed = {
+        LegacySensorType.THERMAL_PERCEPTION: SensorType.DEW_POINT_PERCEPTION,
+        LegacySensorType.SIMMER_INDEX: SensorType.SUMMER_SIMMER_INDEX,
+        LegacySensorType.SIMMER_ZONE: SensorType.SUMMER_SIMMER_PERCEPTION,
+    }
+    entity_ids = {
+        legacy_type: registry.async_get_or_create(
+            PLATFORM_DOMAIN, DOMAIN, id_generator("legacy", legacy_type)
+        ).entity_id
+        for legacy_type in renamed
+    }
+
+    domains, config = DEFAULT_TEST_SENSORS[1][0]
+    config = copy.deepcopy(config)
+    config[DOMAIN][PLATFORM_DOMAIN]["unique_id"] = "legacy"
+    for domain, count in domains:
+        with assert_setup_component(count, domain):
+            assert await async_setup_component(hass, domain, config)
+        await hass.async_block_till_done()
+
+    for legacy_type, sensor_type in renamed.items():
+        entry = registry.async_get(entity_ids[legacy_type])
+        assert entry.unique_id == id_generator("legacy", sensor_type)
