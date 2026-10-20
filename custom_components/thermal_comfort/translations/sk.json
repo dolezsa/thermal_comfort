@@ -2,17 +2,24 @@
   "options": {
     "error": {
       "temperature_not_found": "Teplotný snímač nenájdený",
-      "humidity_not_found": "Snímač vlhkosti nenájdený"
+      "humidity_not_found": "Snímač vlhkosti nenájdený",
+      "pressure_not_found": "Tlakový snímač nenájdený"
     },
     "step": {
       "init": {
         "title": "Nastavenia tepelnej pohody",
         "data": {
+          "name": "Názov zariadenia",
           "temperature_sensor": "Teplotný snímač",
-          "humidity_sensor": "Snímač vlhkosti"
+          "humidity_sensor": "Snímač vlhkosti",
+          "pressure_sensor": "Tlakový snímač (voliteľný)"
+        },
+        "data_description": {
+          "name": "Používa sa ako názov zariadenia a ako predpona názvov snímačov, napríklad názov miestnosti."
         },
         "sections": {
           "advanced": {
+            "name": "Rozšírené možnosti",
             "data": {
               "poll": "Povoliť dotazovanie",
               "scan_interval": "Interval dotazovania (sekundy)",
@@ -30,7 +37,8 @@
     },
     "error": {
       "temperature_not_found": "Teplotný snímač nenájdený",
-      "humidity_not_found": "Snímač vlhkosti nenájdený"
+      "humidity_not_found": "Snímač vlhkosti nenájdený",
+      "pressure_not_found": "Snímač tlaku nebol nájdený"
     },
     "step": {
       "user": {
@@ -38,15 +46,23 @@
         "data": {
           "name": "Názov",
           "temperature_sensor": "Teplotný snímač",
-          "humidity_sensor": "Snímač vlhkosti"
+          "humidity_sensor": "Snímač vlhkosti",
+          "pressure_sensor": "Snímač tlaku (voliteľný)"
+        },
+        "data_description": {
+          "name": "Používa sa ako názov zariadenia a ako predpona názvov snímačov, napríklad názov miestnosti."
         },
         "sections": {
           "advanced": {
+            "name": "Rozšírené možnosti",
             "data": {
               "poll": "Povoliť dotazovanie",
               "scan_interval": "Interval dotazovania (sekundy)",
               "custom_icons": "Používanie vlastného balíka ikon",
-              "enabled_sensors": "Povolené senzory"
+              "enabled_sensors": "Povolené snímače"
+            },
+            "data_description": {
+              "enabled_sensors": "Snímače, ktoré si nevyberiete, sa napriek tomu vytvoria, avšak budú deaktivované. Neskôr ich môžete aktivovať v nastaveniach entity."
             }
           }
         }
