@@ -368,7 +368,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     """Set up the Thermal Comfort sensors."""
     if discovery_info is None:
         _LOGGER.warning(
-            "Legacy YAML configuration is unsupported in 2.0. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
+            "Legacy YAML configuration is unsupported since 2.0 and will stop working in the next release. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
         )
         devices = [
             dict(device_config, **{CONF_NAME: device_name})

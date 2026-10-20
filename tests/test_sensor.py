@@ -1704,3 +1704,26 @@ async def test_invalid_first_source_state(hass, bad_state):
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
     for sensor_type in DEFAULT_SENSOR_TYPES:
         assert get_sensor(hass, sensor_type).state == STATE_UNAVAILABLE
+
+
+async def test_legacy_yaml_warns_about_the_end_of_support(hass, caplog):
+    """Test that the legacy YAML format still works and announces its end."""
+    config = {
+        TEMPLATE_DOMAIN: [TEMPERATURE_TEST_SENSOR, HUMIDITY_TEST_SENSOR],
+        PLATFORM_DOMAIN: {
+            "platform": DOMAIN,
+            "sensors": {
+                "test_thermal_comfort": {
+                    "temperature_sensor": "sensor.test_temperature_sensor",
+                    "humidity_sensor": "sensor.test_humidity_sensor",
+                    "unique_id": "unique_thermal_comfort_id",
+                },
+            },
+        },
+    }
+    for domain in (TEMPLATE_DOMAIN, PLATFORM_DOMAIN):
+        assert await async_setup_component(hass, domain, config)
+        await hass.async_block_till_done()
+
+    assert "will stop working in the next release" in caplog.text
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
