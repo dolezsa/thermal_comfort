@@ -16,6 +16,10 @@
 The name is used as the device name and as the prefix of the names of its sensors, so enter
 the name of the room (or the location) to get distinctly named sensors for each of them.
 
+The entity IDs of the sensors are always in English, for example `sensor.living_room_dew_point`,
+independent of the language of Home Assistant. Only the names of the sensors are translated.
+Existing entities keep their entity ID.
+
 *Note: Additional options are available in the collapsed "Advanced options" section.
 Sensors with the correct device class are listed first, but you can also select
 sensors without a device class.*

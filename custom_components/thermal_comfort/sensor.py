@@ -7,7 +7,7 @@ from enum import StrEnum
 from functools import wraps
 import logging
 import math
-from typing import Self
+from typing import Self, override
 
 import voluptuous as vol
 
@@ -552,6 +552,18 @@ class SensorThermalComfort(SensorEntity):
         self._attr_extra_state_attributes = {}
         self._attr_unique_id = id_generator(self._device.unique_id, sensor_type)
         self._attr_should_poll = False
+
+    @property
+    @override
+    def suggested_object_id(self) -> str | None:
+        """Return the English sensor name as the base of the entity_id.
+
+        The name of the entity is translated, without this the entity_id gets
+        translated too in the languages that have native entity ids.
+        """
+        if self.has_entity_name:
+            return self._sensor_type.to_name()
+        return super().suggested_object_id
 
     @property
     def device_info(self) -> DeviceInfo | None:

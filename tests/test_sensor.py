@@ -1727,3 +1727,25 @@ async def test_legacy_yaml_warns_about_the_end_of_support(hass, caplog):
 
     assert "will stop working in the next release" in caplog.text
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
+
+
+async def test_yaml_entity_ids_without_name_are_english(hass):
+    """Test that the entity_ids of unnamed YAML sensors are English."""
+    hass.config.language = "it"
+    assert await async_setup_component(
+        hass,
+        DOMAIN,
+        {
+            DOMAIN: {
+                PLATFORM_DOMAIN: {
+                    "temperature_sensor": "sensor.test_temperature_sensor",
+                    "humidity_sensor": "sensor.test_humidity_sensor",
+                    "unique_id": "unnamed_id",
+                },
+            },
+        },
+    )
+    await hass.async_block_till_done()
+    registry = er.async_get(hass)
+    assert registry.async_get("sensor.dew_point") is not None
+    assert registry.async_get("sensor.punto_di_rugiada") is None

@@ -73,6 +73,8 @@ Enable the custom icons options for your sensor in the
 
 ## Upgrading from 3.0
 
+* The entity IDs of new sensors are in English also if Home Assistant uses a language with native entity IDs,
+  they used to be translated. Existing entities keep their entity ID.
 * New sensors: the wet-bulb temperature and the Thoms discomfort index. Sensors configured in the
   frontend before the update get them as disabled entities, enable them in the entity settings.
   YAML sensors without `sensor_types` get them automatically.
