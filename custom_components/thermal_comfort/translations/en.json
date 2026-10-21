@@ -170,6 +170,9 @@
           "circulatory_collapse_imminent": "Circulatory collapse imminent"
         }
       },
+      "thoms_discomfort_index": {
+        "name": "Thoms discomfort index"
+      },
       "thoms_discomfort_perception": {
         "name": "Thoms discomfort perception",
         "state": {
@@ -180,6 +183,9 @@
           "everyone": "Everyone feels significant discomfort",
           "dangerous": "Dangerous, very strong discomfort which may cause heat strokes"
         }
+      },
+      "wet_bulb_temperature": {
+        "name": "Wet-bulb temperature"
       }
     }
   }

@@ -17,6 +17,7 @@ from pytest_homeassistant_custom_component.common import (
 
 from custom_components.thermal_comfort.const import DOMAIN
 from custom_components.thermal_comfort.sensor import (
+    ATTR_EPSTEIN_MORAN_DISCOMFORT_INDEX,
     ATTR_FROST_POINT,
     ATTR_HUMIDITY,
     ATTR_PRESSURE,
@@ -50,6 +51,7 @@ from homeassistant.const import (
     SERVICE_RELOAD,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
+    EntityCategory,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
@@ -827,102 +829,100 @@ async def test_winter_scharlau_perception(hass, start_ha):
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
-async def test_thoms_discomfort_perception(hass, start_ha):
-    """Test if thoms discomfort perception is calculated correctly."""
-    assert get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION) is not None
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
-            ATTR_THOMS_DISCOMFORT_INDEX
-        ]
-        == 21.5
-    )
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
-        == ThomsDiscomfortPerception.LESS_THAN_HALF
-    )
+async def test_thoms_discomfort_index(hass, start_ha):
+    """Test if Thom's discomfort index is calculated correctly."""
+    sensor = get_sensor(hass, SensorType.THOMS_DISCOMFORT_INDEX)
+    assert sensor is not None
+    assert float(sensor.state) == pytest.approx(22.1125)
+    assert sensor.attributes[ATTR_EPSTEIN_MORAN_DISCOMFORT_INDEX] == 21.5
 
-    hass.states.async_set("sensor.test_temperature_sensor", "22.00")
+    # example of the issue 369, 17.84 with the relative humidity form
+    hass.states.async_set("sensor.test_temperature_sensor", "19.4")
+    hass.states.async_set("sensor.test_humidity_sensor", "42.00")
+    await hass.async_block_till_done()
+    sensor = get_sensor(hass, SensorType.THOMS_DISCOMFORT_INDEX)
+    assert float(sensor.state) == pytest.approx(17.8369)
+    assert sensor.attributes[ATTR_EPSTEIN_MORAN_DISCOMFORT_INDEX] == 15.75
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_thoms_discomfort_perception(hass, start_ha):
+    """Test if Thom's discomfort perception is calculated correctly."""
+    assert get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION) is not None
+    for temperature, index, perception in (
+        ("25.00", 22.11, ThomsDiscomfortPerception.LESS_THAN_HALF),
+        ("23.00", 20.66, ThomsDiscomfortPerception.NO_DISCOMFORT),
+        ("23.50", 21.02, ThomsDiscomfortPerception.LESS_THAN_HALF),
+        ("27.70", 24.07, ThomsDiscomfortPerception.MORE_THAN_HALF),
+        ("31.50", 26.82, ThomsDiscomfortPerception.MORE_THAN_HALF),
+        ("31.80", 27.04, ThomsDiscomfortPerception.MOST),
+        ("34.40", 28.93, ThomsDiscomfortPerception.MOST),
+        ("34.60", 29.07, ThomsDiscomfortPerception.EVERYONE),
+        ("38.50", 31.9, ThomsDiscomfortPerception.EVERYONE),
+        ("38.70", 32.05, ThomsDiscomfortPerception.DANGEROUS),
+    ):
+        hass.states.async_set("sensor.test_temperature_sensor", temperature)
+        await hass.async_block_till_done()
+        sensor = get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION)
+        assert sensor.attributes[ATTR_THOMS_DISCOMFORT_INDEX] == index
+        assert sensor.state == perception
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_wet_bulb_temperature(hass, start_ha):
+    """Test if the wet-bulb temperature is calculated correctly."""
+    assert get_sensor(hass, SensorType.WET_BULB_TEMPERATURE) is not None
+    assert float(
+        get_sensor(hass, SensorType.WET_BULB_TEMPERATURE).state
+    ) == pytest.approx(17.998, abs=1e-3)
+
+    # example of the paper of Stull (2011)
+    hass.states.async_set("sensor.test_temperature_sensor", "20.00")
+    await hass.async_block_till_done()
+    assert float(
+        get_sensor(hass, SensorType.WET_BULB_TEMPERATURE).state
+    ) == pytest.approx(13.70, abs=1e-2)
+
+    # the formula would exceed the air temperature at saturation
+    hass.states.async_set("sensor.test_humidity_sensor", "100.00")
+    await hass.async_block_till_done()
+    assert float(get_sensor(hass, SensorType.WET_BULB_TEMPERATURE).state) == 20.0
+
+    # and fall below the dew point, so the dew point is the lower limit
+    hass.states.async_set("sensor.test_temperature_sensor", "-30.00")
     hass.states.async_set("sensor.test_humidity_sensor", "50.00")
     await hass.async_block_till_done()
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
-            ATTR_THOMS_DISCOMFORT_INDEX
-        ]
-        == 18.71
-    )
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
-        == ThomsDiscomfortPerception.NO_DISCOMFORT
-    )
+    assert float(get_sensor(hass, SensorType.WET_BULB_TEMPERATURE).state) == -30.0
 
-    hass.states.async_set("sensor.test_temperature_sensor", "24.47")
-    hass.states.async_set("sensor.test_humidity_sensor", "50.05")
-    await hass.async_block_till_done()
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
-            ATTR_THOMS_DISCOMFORT_INDEX
-        ]
-        == 21.01
-    )
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
-        == ThomsDiscomfortPerception.LESS_THAN_HALF
-    )
 
-    hass.states.async_set("sensor.test_temperature_sensor", "26.55")
-    hass.states.async_set("sensor.test_humidity_sensor", "63.80")
-    await hass.async_block_till_done()
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_entity_registry_attributes(hass, start_ha):
+    """Test the entity category and device class of the temperature sensors."""
+    registry = er.async_get(hass)
+    for sensor_type in (
+        SensorType.DEW_POINT,
+        SensorType.FROST_POINT,
+        SensorType.HEAT_INDEX,
+        SensorType.HUMIDEX,
+        SensorType.SUMMER_SIMMER_INDEX,
+        SensorType.WET_BULB_TEMPERATURE,
+    ):
+        entry = registry.async_get(f"{TEST_NAME}_{sensor_type}")
+        assert entry.entity_category is EntityCategory.DIAGNOSTIC, sensor_type
+    entry = registry.async_get(f"{TEST_NAME}_{SensorType.WET_BULB_TEMPERATURE}")
+    assert entry.device_class is None
     assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
-            ATTR_THOMS_DISCOMFORT_INDEX
-        ]
-        == 24.01
+        get_sensor(hass, SensorType.WET_BULB_TEMPERATURE).attributes["device_class"]
+        == SensorDeviceClass.TEMPERATURE
     )
+    # an index with its own scale, not a temperature
+    state = get_sensor(hass, SensorType.THOMS_DISCOMFORT_INDEX)
+    assert "device_class" not in state.attributes
     assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
-        == ThomsDiscomfortPerception.MORE_THAN_HALF
-    )
-
-    hass.states.async_set("sensor.test_temperature_sensor", "29.78")
-    hass.states.async_set("sensor.test_humidity_sensor", "62.70")
-    await hass.async_block_till_done()
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
-            ATTR_THOMS_DISCOMFORT_INDEX
-        ]
-        == 27.01
-    )
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
-        == ThomsDiscomfortPerception.MOST
-    )
-
-    hass.states.async_set("sensor.test_temperature_sensor", "31.13")
-    hass.states.async_set("sensor.test_humidity_sensor", "71.50")
-    await hass.async_block_till_done()
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
-            ATTR_THOMS_DISCOMFORT_INDEX
-        ]
-        == 29.01
-    )
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
-        == ThomsDiscomfortPerception.EVERYONE
-    )
-
-    hass.states.async_set("sensor.test_temperature_sensor", "33.92")
-    hass.states.async_set("sensor.test_humidity_sensor", "75.10")
-    await hass.async_block_till_done()
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).attributes[
-            ATTR_THOMS_DISCOMFORT_INDEX
-        ]
-        == 32.01
-    )
-    assert (
-        get_sensor(hass, SensorType.THOMS_DISCOMFORT_PERCEPTION).state
-        == ThomsDiscomfortPerception.DANGEROUS
+        registry.async_get(
+            f"{TEST_NAME}_{SensorType.THOMS_DISCOMFORT_INDEX}"
+        ).entity_category
+        is None
     )
 
 

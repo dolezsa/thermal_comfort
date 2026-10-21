@@ -30,6 +30,7 @@ from homeassistant.const import (
     CONF_UNIQUE_ID,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
+    EntityCategory,
     UnitOfPressure,
     UnitOfTemperature,
 )
@@ -61,6 +62,7 @@ ATTR_SUMMER_SCHARLAU_INDEX = "summer_scharlau_index"
 ATTR_WINTER_SCHARLAU_INDEX = "winter_scharlau_index"
 ATTR_SUMMER_SIMMER_INDEX = "summer_simmer_index"
 ATTR_THOMS_DISCOMFORT_INDEX = "thoms_discomfort_index"
+ATTR_EPSTEIN_MORAN_DISCOMFORT_INDEX = "epstein_moran_discomfort_index"
 CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
@@ -92,6 +94,8 @@ class LegacySensorType(StrEnum):
 class SensorType(StrEnum):
     """Sensor type enum."""
 
+    # A sensor must come after the sensors it computes from, otherwise it has no
+    # initial state, see async_added_to_hass of SensorThermalComfort.
     ABSOLUTE_HUMIDITY = "absolute_humidity"
     DEW_POINT = "dew_point"
     DEW_POINT_PERCEPTION = "dew_point_perception"
@@ -106,6 +110,8 @@ class SensorType(StrEnum):
     WINTER_SCHARLAU_PERCEPTION = "winter_scharlau_perception"
     SUMMER_SIMMER_INDEX = "summer_simmer_index"
     SUMMER_SIMMER_PERCEPTION = "summer_simmer_perception"
+    WET_BULB_TEMPERATURE = "wet_bulb_temperature"
+    THOMS_DISCOMFORT_INDEX = "thoms_discomfort_index"
     THOMS_DISCOMFORT_PERCEPTION = "thoms_discomfort_perception"
 
     def to_name(self) -> str:
@@ -225,6 +231,7 @@ SENSOR_TYPES = {
     },
     SensorType.DEW_POINT: {
         "key": SensorType.DEW_POINT,
+        "entity_category": EntityCategory.DIAGNOSTIC,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -239,6 +246,7 @@ SENSOR_TYPES = {
     },
     SensorType.FROST_POINT: {
         "key": SensorType.FROST_POINT,
+        "entity_category": EntityCategory.DIAGNOSTIC,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -253,6 +261,7 @@ SENSOR_TYPES = {
     },
     SensorType.HEAT_INDEX: {
         "key": SensorType.HEAT_INDEX,
+        "entity_category": EntityCategory.DIAGNOSTIC,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -261,6 +270,7 @@ SENSOR_TYPES = {
     },
     SensorType.HUMIDEX: {
         "key": SensorType.HUMIDEX,
+        "entity_category": EntityCategory.DIAGNOSTIC,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -300,6 +310,7 @@ SENSOR_TYPES = {
     },
     SensorType.SUMMER_SIMMER_INDEX: {
         "key": SensorType.SUMMER_SIMMER_INDEX,
+        "entity_category": EntityCategory.DIAGNOSTIC,
         "device_class": SensorDeviceClass.TEMPERATURE,
         "suggested_display_precision": DISPLAY_PRECISION,
         "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -310,6 +321,22 @@ SENSOR_TYPES = {
         "key": SensorType.SUMMER_SIMMER_PERCEPTION,
         "device_class": SensorDeviceClass.ENUM,
         "options": list(map(str, SummerSimmerPerception)),
+        "icon": "mdi:sun-thermometer",
+    },
+    SensorType.WET_BULB_TEMPERATURE: {
+        "key": SensorType.WET_BULB_TEMPERATURE,
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "suggested_display_precision": DISPLAY_PRECISION,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:water-thermometer",
+    },
+    SensorType.THOMS_DISCOMFORT_INDEX: {
+        "key": SensorType.THOMS_DISCOMFORT_INDEX,
+        "suggested_display_precision": DISPLAY_PRECISION,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
+        "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:sun-thermometer",
     },
     SensorType.THOMS_DISCOMFORT_PERCEPTION: {
@@ -1082,9 +1109,15 @@ class DeviceThermalComfort:
             return enthalpy, {ATTR_PRESSURE: patm / 100}
         return enthalpy
 
-    @compute_once_lock(SensorType.THOMS_DISCOMFORT_PERCEPTION)
-    async def thoms_discomfort_perception(self) -> (ThomsDiscomfortPerception, dict):
-        """Calculate Thom's discomfort index and perception."""
+    @compute_once_lock(SensorType.WET_BULB_TEMPERATURE)
+    async def wet_bulb_temperature(self) -> float:
+        """Wet-bulb temperature <https://doi.org/10.1175/JAMC-D-11-0143.1>.
+
+        Stull (2011), valid for 5 to 99 % relative humidity and -20 to 50 °C
+        at sea level pressure. Outside that range the formula can exceed the
+        air temperature or fall below the dew point, so the result is limited
+        to the physically possible range.
+        """
         tw = (
             self._temperature
             * math.atan(0.151977 * pow(self._humidity + 8.313659, 1 / 2))
@@ -1094,7 +1127,29 @@ class DeviceThermalComfort:
             * math.atan(0.023101 * self._humidity)
             - 4.686035
         )
-        tdi = 0.5 * tw + 0.5 * self._temperature
+        dewpoint = await self.dew_point()
+        return min(max(tw, dewpoint), self._temperature)
+
+    @compute_once_lock(SensorType.THOMS_DISCOMFORT_INDEX)
+    async def thoms_discomfort_index(self) -> (float, dict):
+        """Thom's discomfort index <https://thermofeel.readthedocs.io/en/2.3.0/guide/discomfortindex/>.
+
+        The relative humidity form, to which the perception categories belong.
+        The Epstein-Moran form <https://doi.org/10.2486/indhealth.44.388>,
+        the mean of the air and the wet-bulb temperature, is an attribute.
+        """
+        tdi = (
+            self._temperature
+            - 0.55 * (1 - 0.01 * self._humidity) * (self._temperature - 14.5)
+        )
+        tw = await self.wet_bulb_temperature()
+        epstein_moran = 0.5 * tw + 0.5 * self._temperature
+        return tdi, {ATTR_EPSTEIN_MORAN_DISCOMFORT_INDEX: round(epstein_moran, 2)}
+
+    @compute_once_lock(SensorType.THOMS_DISCOMFORT_PERCEPTION)
+    async def thoms_discomfort_perception(self) -> (ThomsDiscomfortPerception, dict):
+        """Thom's discomfort perception, the categories belong to the relative humidity form."""
+        tdi, _ = await self.thoms_discomfort_index()
 
         if tdi >= 32:
             perception = ThomsDiscomfortPerception.DANGEROUS

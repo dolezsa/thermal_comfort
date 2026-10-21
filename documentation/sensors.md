@@ -73,13 +73,45 @@ sensor.
     Reflects the level of human discomfort caused by cooling. Valid for: temperatures -5 to +6°C (23 to 43°F) and humidity >= 40%.
     Source: <a href="https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf">Rusanescu et al.</a>
   </dd>
-  <dt><strong>Thoms discomfort Perception</strong> <code>thoms_discomfort_perception</code></dt>
+  <dt><strong>Wet-Bulb Temperature</strong> <code>wet_bulb_temperature</code></dt>
   <dd>
-    Indicates the level of discomfort as a result of high temperature and the combined effect with relative humidity.
-    It is the discomfort index of Epstein and Moran, the mean of the air temperature and the wet-bulb temperature,
-    which is calculated with the formula of Stull (2011).
+    The lowest temperature the air can reach by evaporative cooling. It is calculated with the
+    approximation of <a href="https://doi.org/10.1175/JAMC-D-11-0143.1">Stull (2011)</a>,
+    which is valid for 5 to 99 % relative humidity and -20 to 50°C (-4 to 122°F) with an error of
+    about 0.3°C on average, and assumes the pressure at sea level. The pressure sensor is not used.
+    Outside the valid range the formula can give a value above the air temperature or below the
+    dew point, the sensor limits the value to that range, but the accuracy is lower there.
+  </dd>
+  <dt><strong>Thoms discomfort Index + Perception</strong> <code>thoms_discomfort_index</code> <code>thoms_discomfort_perception</code></dt>
+  <dd>
+    Thom's discomfort index shows the discomfort as a result of high temperature and the combined effect with
+    relative humidity. The index is calculated with the relative humidity form
+    <code>DI = T - 0.55 (1 - 0.01 RH) (T - 14.5)</code>, with the temperature in °C and the relative humidity in %.
+    The perception uses the categories that belong to this form
+    (<a href="https://thermofeel.readthedocs.io/en/2.3.0/guide/discomfortindex/">Giles et al., 1990</a>,
+    <a href="https://doi.org/10.2486/indhealth.44.388">Epstein and Moran, 2006</a>):
+    below 21 no discomfort, 21 to 24 less than half of the population feels discomfort, 24 to 27 more than half,
+    27 to 29 most, 29 to 32 everyone, 32 and above a state of medical emergency.
+    The categories are meant for warm weather, the index has no meaning in the cold,
+    where the term <code>T - 14.5</code> changes its sign.<br>
+    The index sensor has the attribute <code>epstein_moran_discomfort_index</code> with the
+    form of Epstein and Moran, the mean of the air temperature and the wet-bulb temperature,
+    <code>DI = 0.5 Tw + 0.5 T</code>. It gives other values, in dry air up to several °C, and has its own
+    categories (below 22 no heat stress, 22 to 24 mild, 24 to 28 moderate, above 28 severe),
+    which this integration does not use.
+    The perception sensor shows the value of the index in the attribute <code>thoms_discomfort_index</code>.
+    The index has no device class, it is shown in °C, also if the system uses °F.
   </dd>
 </dl>
+
+## Diagnostic sensors
+
+The sensors with a temperature device class (dew point, frost point, heat index, humidex,
+summer simmer index and wet-bulb temperature) have the `diagnostic` entity category.
+Home Assistant does not use diagnostic entities for the temperature of an area, for area
+targeted temperature triggers and conditions and, by default, for voice assistants, so these derived
+values do not mix with the measured air temperature. The sensors are listed in the diagnostic
+section of the device. Dashboards, automations and templates can use them as before.
 
 ## Input values
 

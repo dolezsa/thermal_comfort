@@ -71,6 +71,20 @@ Enable the custom icons options for your sensor in the
  [frontend](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md#configuration-options)
  or in [yaml](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables).
 
+## Upgrading from 3.0
+
+* New sensors: the wet-bulb temperature and the Thoms discomfort index. Sensors configured in the
+  frontend before the update get them as disabled entities, enable them in the entity settings.
+  YAML sensors without `sensor_types` get them automatically.
+* The Thoms discomfort perception and its `thoms_discomfort_index` attribute use the relative humidity
+  form of the index, the one the categories belong to, instead of the mean of the air and wet-bulb
+  temperature. The values change (see the [sensor documentation](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)),
+  so does the state of the perception near the category limits. The previous value is in the
+  `epstein_moran_discomfort_index` attribute of the new index sensor.
+* The sensors with a temperature device class (dew point, frost point, heat index, humidex, summer simmer index
+  and wet-bulb temperature) have the `diagnostic` entity category, so they no longer count for the temperature of
+  an area. They are shown in the diagnostic section of the device.
+
 ## Upgrading from 2.x to 3.0
 
 * Home Assistant 2025.8.0 or newer is required.
