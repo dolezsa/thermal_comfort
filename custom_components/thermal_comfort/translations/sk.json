@@ -3,7 +3,9 @@
     "error": {
       "temperature_not_found": "Teplotný snímač nenájdený",
       "humidity_not_found": "Snímač vlhkosti nenájdený",
-      "pressure_not_found": "Tlakový snímač nenájdený"
+      "pressure_not_found": "Tlakový snímač nenájdený",
+      "temperature_attribute_not_found": "Zdroj teploty nemá atribút s týmto názvom; pozrite si rozšírené možnosti.",
+      "humidity_attribute_not_found": "Zdroj vlhkosti nemá atribút s týmto názvom; pozrite si rozšírené možnosti."
     },
     "step": {
       "init": {
@@ -23,7 +25,13 @@
             "data": {
               "poll": "Povoliť dotazovanie",
               "scan_interval": "Interval dotazovania (sekundy)",
-              "custom_icons": "Používanie vlastného balíka ikon"
+              "custom_icons": "Používanie vlastného balíka ikon",
+              "temperature_attribute": "Atribút teploty (voliteľný)",
+              "humidity_attribute": "Atribút vlhkosti (voliteľný)"
+            },
+            "data_description": {
+              "temperature_attribute": "Vlastnosť teplotného snímača, ktorá obsahuje hodnotu namiesto stavu. Pri entitách týkajúcich sa počasia a klímy nie je potrebná.",
+              "humidity_attribute": "Vlastnosť snímača vlhkosti, ktorá obsahuje hodnotu namiesto stavu. Pri entitách týkajúcich sa počasia a klímy nie je potrebná."
             }
           }
         }
@@ -38,7 +46,9 @@
     "error": {
       "temperature_not_found": "Teplotný snímač nenájdený",
       "humidity_not_found": "Snímač vlhkosti nenájdený",
-      "pressure_not_found": "Snímač tlaku nebol nájdený"
+      "pressure_not_found": "Snímač tlaku nebol nájdený",
+      "temperature_attribute_not_found": "Zdroj teploty nemá atribút s týmto názvom; pozrite si rozšírené možnosti",
+      "humidity_attribute_not_found": "Zdroj vlhkosti nemá atribút s týmto názvom; pozrite si rozšírené možnosti"
     },
     "step": {
       "user": {
@@ -59,9 +69,13 @@
               "poll": "Povoliť dotazovanie",
               "scan_interval": "Interval dotazovania (sekundy)",
               "custom_icons": "Používanie vlastného balíka ikon",
-              "enabled_sensors": "Povolené snímače"
+              "enabled_sensors": "Povolené snímače",
+              "temperature_attribute": "Atribút teploty (voliteľný)",
+              "humidity_attribute": "Atribút vlhkosti (voliteľný)"
             },
             "data_description": {
+              "temperature_attribute": "Vlastnosť teplotného senzora, ktorá obsahuje hodnotu namiesto stavu. Pri entitách týkajúcich sa počasia a klímy nie je potrebná.",
+              "humidity_attribute": "Vlastnosť snímača vlhkosti, ktorá obsahuje hodnotu namiesto stavu. Pri entitách týkajúcich sa počasia a klímy nie je potrebná.",
               "enabled_sensors": "Snímače, ktoré si nevyberiete, sa napriek tomu vytvoria, avšak budú deaktivované. Neskôr ich môžete aktivovať v nastaveniach entity."
             }
           }
@@ -170,6 +184,9 @@
           "circulatory_collapse_imminent": "Hroziaci kolaps krvného obehu"
         }
       },
+      "thoms_discomfort_index": {
+        "name": "Thomov index nepohodlia"
+      },
       "thoms_discomfort_perception": {
         "name": "Vnímanie nepohodlia podľa Thoma",
         "state": {
@@ -180,6 +197,9 @@
           "everyone": "Každý pociťuje výrazné nepohodlie",
           "dangerous": "Nebezpečné, veľmi silné nepohodlie, ktoré môže spôsobiť úpal"
         }
+      },
+      "wet_bulb_temperature": {
+        "name": "Teplota mokrej žiarovky"
       }
     }
   }
