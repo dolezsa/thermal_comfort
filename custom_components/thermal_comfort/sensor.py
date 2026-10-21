@@ -71,6 +71,8 @@ CONF_SCAN_INTERVAL = "scan_interval"
 CONF_TEMPERATURE_SENSOR = "temperature_sensor"
 CONF_HUMIDITY_SENSOR = "humidity_sensor"
 CONF_PRESSURE_SENSOR = "pressure_sensor"
+CONF_TEMPERATURE_ATTRIBUTE = "temperature_attribute"
+CONF_HUMIDITY_ATTRIBUTE = "humidity_attribute"
 CONF_POLL = "poll"
 # Default values
 POLL_DEFAULT = False
@@ -81,6 +83,17 @@ STANDARD_PRESSURE = 101325  # Pa, standard pressure at sea level
 # Plausible range of an atmospheric pressure reading, in Pa
 PRESSURE_MIN = 30000
 PRESSURE_MAX = 110000
+# The state of these domains is never a number, the values are in attributes
+DEFAULT_TEMPERATURE_ATTRIBUTES = {
+    "weather": "temperature",
+    "climate": "current_temperature",
+}
+DEFAULT_HUMIDITY_ATTRIBUTES = {
+    "weather": "humidity",
+    "climate": "current_humidity",
+}
+# The attribute of a weather entity that has the unit of its temperature
+ATTR_TEMPERATURE_UNIT = "temperature_unit"
 
 
 class LegacySensorType(StrEnum):
@@ -365,6 +378,8 @@ SENSOR_SCHEMA = vol.Schema(
         vol.Required(CONF_TEMPERATURE_SENSOR): cv.entity_id,
         vol.Required(CONF_HUMIDITY_SENSOR): cv.entity_id,
         vol.Optional(CONF_PRESSURE_SENSOR): cv.entity_id,
+        vol.Optional(CONF_TEMPERATURE_ATTRIBUTE): vol.All(cv.string, vol.Strip),
+        vol.Optional(CONF_HUMIDITY_ATTRIBUTE): vol.All(cv.string, vol.Strip),
         vol.Optional(CONF_ICON_TEMPLATE): cv.template,
         vol.Optional(CONF_ENTITY_PICTURE_TEMPLATE): cv.template,
         vol.Required(CONF_UNIQUE_ID): cv.string,
@@ -417,6 +432,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             temperature_entity=device_config.get(CONF_TEMPERATURE_SENSOR),
             humidity_entity=device_config.get(CONF_HUMIDITY_SENSOR),
             pressure_entity=device_config.get(CONF_PRESSURE_SENSOR),
+            temperature_attribute=device_config.get(CONF_TEMPERATURE_ATTRIBUTE),
+            humidity_attribute=device_config.get(CONF_HUMIDITY_ATTRIBUTE),
             should_poll=device_config.get(CONF_POLL, POLL_DEFAULT),
             scan_interval=device_config.get(
                 CONF_SCAN_INTERVAL, timedelta(seconds=SCAN_INTERVAL_DEFAULT)
@@ -465,6 +482,8 @@ async def async_setup_entry(
         temperature_entity=data[CONF_TEMPERATURE_SENSOR],
         humidity_entity=data[CONF_HUMIDITY_SENSOR],
         pressure_entity=data.get(CONF_PRESSURE_SENSOR),
+        temperature_attribute=data.get(CONF_TEMPERATURE_ATTRIBUTE),
+        humidity_attribute=data.get(CONF_HUMIDITY_ATTRIBUTE),
         should_poll=data[CONF_POLL],
         scan_interval=timedelta(
             seconds=data.get(CONF_SCAN_INTERVAL, SCAN_INTERVAL_DEFAULT)
@@ -669,6 +688,8 @@ class DeviceThermalComfort:
         should_poll: bool,
         scan_interval: timedelta,
         pressure_entity: str | None = None,
+        temperature_attribute: str | None = None,
+        humidity_attribute: str | None = None,
     ):
         """Initialize the sensor."""
         self.hass = hass
@@ -683,6 +704,12 @@ class DeviceThermalComfort:
         self._temperature_entity = temperature_entity
         self._humidity_entity = humidity_entity
         self._pressure_entity = pressure_entity
+        self._temperature_attribute = source_attribute(
+            temperature_entity, temperature_attribute, DEFAULT_TEMPERATURE_ATTRIBUTES
+        )
+        self._humidity_attribute = source_attribute(
+            humidity_entity, humidity_attribute, DEFAULT_HUMIDITY_ATTRIBUTES
+        )
         self._temperature = None
         self._humidity = None
         self._pressure = None  # Pa, None means the standard pressure
@@ -695,17 +722,29 @@ class DeviceThermalComfort:
             for sensor_type in SENSOR_TYPES
         }
 
-        self._unsubscribers.append(
-            async_track_state_change_event(
-                self.hass, self._temperature_entity, self.temperature_state_listener
+        if self._temperature_entity == self._humidity_entity:
+            # One change updates both values, so they have to be read together,
+            # otherwise the sensors are computed with the new value of the
+            # one and the old value of the other.
+            self._unsubscribers.append(
+                async_track_state_change_event(
+                    self.hass, self._temperature_entity, self.source_state_listener
+                )
             )
-        )
+        else:
+            self._unsubscribers.append(
+                async_track_state_change_event(
+                    self.hass,
+                    self._temperature_entity,
+                    self.temperature_state_listener,
+                )
+            )
 
-        self._unsubscribers.append(
-            async_track_state_change_event(
-                self.hass, self._humidity_entity, self.humidity_state_listener
+            self._unsubscribers.append(
+                async_track_state_change_event(
+                    self.hass, self._humidity_entity, self.humidity_state_listener
+                )
             )
-        )
 
         if self._pressure_entity:
             # Read before the first computation, so it never starts with the
@@ -717,12 +756,17 @@ class DeviceThermalComfort:
                 )
             )
 
-        hass.async_create_task(
-            self._new_temperature_state(hass.states.get(temperature_entity))
-        )
-        hass.async_create_task(
-            self._new_humidity_state(hass.states.get(humidity_entity))
-        )
+        if self._temperature_entity == self._humidity_entity:
+            hass.async_create_task(
+                self._new_source_state(hass.states.get(temperature_entity))
+            )
+        else:
+            hass.async_create_task(
+                self._new_temperature_state(hass.states.get(temperature_entity))
+            )
+            hass.async_create_task(
+                self._new_humidity_state(hass.states.get(humidity_entity))
+            )
 
         hass.async_create_task(self._set_version())
 
@@ -752,44 +796,110 @@ class DeviceThermalComfort:
         """Handle temperature device state changes."""
         await self._new_temperature_state(event.data.get("new_state"))
 
+    async def source_state_listener(self, event):
+        """Handle the state changes of an entity that is the source of both values."""
+        await self._new_source_state(event.data.get("new_state"))
+
+    async def _new_source_state(self, state):
+        # Both values have to be read, a bitwise or does not skip the second
+        changed = self._apply_temperature(state) | self._apply_humidity(state)
+        if changed:
+            await self.async_update()
+
     async def _new_temperature_state(self, state):
+        if self._apply_temperature(state):
+            await self.async_update()
+
+    def _attribute_temperature_unit(self, state) -> str:
+        """Return the unit of a temperature that is an attribute of a source state."""
+        for unit in (
+            state.attributes.get(ATTR_TEMPERATURE_UNIT),
+            # The unit of the state does not have to be a temperature unit
+            state.attributes.get(ATTR_UNIT_OF_MEASUREMENT),
+        ):
+            if isinstance(unit, str) and unit in TemperatureConverter.VALID_UNITS:
+                return unit
+        return self.hass.config.units.temperature_unit
+
+    def _apply_temperature(self, state) -> bool:
+        """Read the temperature of a source state.
+
+        :returns: True if the sensors have to be updated, which is the case for
+            a new value and for an invalid one.
+        """
         temperature = None
-        if _is_valid_state(state):
-            hass = self.hass
-            unit = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT, hass.config.units.temperature_unit)
-            temp = util.convert(state.state, float)
+        value = None
+        if self._temperature_attribute is None:
+            if _is_valid_state(state):
+                unit = state.attributes.get(
+                    ATTR_UNIT_OF_MEASUREMENT, self.hass.config.units.temperature_unit
+                )
+                value = util.convert(state.state, float)
+        else:
+            value = _attribute_value(state, self._temperature_attribute)
+            if value is not None:
+                unit = self._attribute_temperature_unit(state)
+        if value is not None:
             # convert to celsius if necessary
             with contextlib.suppress(HomeAssistantError):
-                temperature = TemperatureConverter.convert(temp, unit, UnitOfTemperature.CELSIUS)
+                temperature = TemperatureConverter.convert(
+                    value, unit, UnitOfTemperature.CELSIUS
+                )
             if temperature is not None and not -89.2 <= temperature <= 56.7:
                 temperature = None
+        # A source with the value in an attribute changes its other attributes
+        # often, plain sensors update for every change as they always did.
+        changed = (
+            self._temperature_attribute is None
+            or temperature is None
+            or temperature != self._temperature
+            or value != self.extra_state_attributes.get(ATTR_TEMPERATURE)
+        )
         if temperature is None:
             _LOGGER.info("Temperature has an invalid value: %s. Can't calculate new states.", state)
             self.extra_state_attributes.pop(ATTR_TEMPERATURE, None)
         else:
-            self.extra_state_attributes[ATTR_TEMPERATURE] = temp
+            self.extra_state_attributes[ATTR_TEMPERATURE] = value
         self._temperature = temperature
-        await self.async_update()
+        return changed
 
     async def humidity_state_listener(self, event):
         """Handle humidity device state changes."""
         await self._new_humidity_state(event.data.get("new_state"))
 
     async def _new_humidity_state(self, state):
+        if self._apply_humidity(state):
+            await self.async_update()
+
+    def _apply_humidity(self, state) -> bool:
+        """Read the humidity of a source state.
+
+        :returns: True if the sensors have to be updated, which is the case for
+            a new value and for an invalid one.
+        """
         humidity = None
-        if _is_valid_state(state):
-            humidity = float(state.state)
+        if self._humidity_attribute is None:
+            if _is_valid_state(state):
+                humidity = float(state.state)
+        else:
+            humidity = _attribute_value(state, self._humidity_attribute)
+        if humidity is not None:
             if 100 < humidity <= HUMIDITY_MAX_OVERSHOOT:
                 humidity = 100.0
             if not 0 < humidity <= 100:
                 humidity = None
+        changed = (
+            self._humidity_attribute is None
+            or humidity is None
+            or humidity != self._humidity
+        )
         if humidity is None:
             _LOGGER.info("Relative humidity has an invalid value: %s. Can't calculate new states.", state)
             self.extra_state_attributes.pop(ATTR_HUMIDITY, None)
         else:
             self.extra_state_attributes[ATTR_HUMIDITY] = humidity
         self._humidity = humidity
-        await self.async_update()
+        return changed
 
     async def pressure_state_listener(self, event):
         """Handle pressure device state changes."""
@@ -1218,6 +1328,38 @@ class DeviceThermalComfort:
     def name(self) -> str:
         """Return the name."""
         return self._device_info["name"]
+
+
+def source_attribute(
+    entity_id: str, configured: str | None, defaults: dict[str, str]
+) -> str | None:
+    """Return the attribute of a source entity that has the value.
+
+    :param entity_id: the source entity
+    :param configured: the attribute configured by the user
+    :param defaults: attribute by domain for the entities, that have the value
+        in an attribute
+    :returns: the attribute, None if the value is the state of the entity
+    """
+    if isinstance(configured, str) and configured.strip():
+        return configured.strip()
+    return defaults.get((entity_id or "").split(".", 1)[0])
+
+
+def _attribute_value(state, attribute: str) -> float | None:
+    """Return the value of an attribute of a source state, None if unusable."""
+    # The attributes of an unavailable entity are gone, an unknown state (a
+    # weather without a condition) can still have them
+    if state is None or state.state == STATE_UNAVAILABLE:
+        return None
+    value = state.attributes.get(attribute)
+    if isinstance(value, bool):
+        return None
+    try:
+        value = float(value)
+    except (TypeError, ValueError, OverflowError):
+        return None
+    return value if math.isfinite(value) else None
 
 
 def _is_valid_state(state) -> bool:

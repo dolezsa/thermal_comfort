@@ -123,3 +123,24 @@ The sensors need a valid value from both source sensors:
 * If a source is `unavailable`, `unknown` or outside these ranges, all sensors of
   the device become `unavailable` until both sources are valid again.
 
+### Values in attributes
+
+The value of a source can be in an attribute of its entity instead of its state:
+
+* The attributes of a weather entity (`temperature`, `humidity`) and of a climate
+  entity (`current_temperature`, `current_humidity`) are used automatically. Their
+  state is never a number (the condition of the weather, the mode of the thermostat).
+* For another entity, or another attribute, set the temperature or humidity attribute
+  in the [advanced options](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)
+  or in [YAML](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md).
+* The temperature in an attribute uses the unit in the `temperature_unit` attribute (weather
+  entities have it), otherwise the unit of the state, if that is a temperature unit,
+  otherwise the unit system of Home Assistant (climate entities use it).
+* The ranges above apply to the attributes too. The attribute must be a number, a text with a
+  number is accepted. The state of the entity does not matter, except that
+  an `unavailable` entity has no attributes.
+* A weather entity can be the source of both values. Its values are rounded (the temperature
+  to the precision of the entity, the humidity to whole percents), and are weather data of a
+  provider, not measured at your home, so the sensors are less accurate than with your own
+  sensors.
+

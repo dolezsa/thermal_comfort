@@ -43,6 +43,15 @@ The entry reloads when you save changed options.
   <dd>
     The sensors used for the calculations.
   </dd>
+  <dt><strong>Temperature attribute</strong> and <strong>Humidity attribute</strong> <code>text</code> (optional, advanced options)</dt>
+  <dd>
+    The attribute of the source entity that has the value, instead of its state.
+    Weather and climate entities can be chosen as a source without it: their
+    attributes <code>temperature</code> and <code>humidity</code> (weather) and
+    <code>current_temperature</code> and <code>current_humidity</code> (climate)
+    are used. Fill in the field for another entity, or to use another attribute.
+    See <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md#input-values">input values</a>.
+  </dd>
   <dt><strong>Pressure sensor</strong> <code>entity</code> (optional)</dt>
   <dd>
     An atmospheric pressure sensor (device class <code>pressure</code> or

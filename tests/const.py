@@ -8,7 +8,9 @@ from custom_components.thermal_comfort.const import (
 from custom_components.thermal_comfort.sensor import (
     CONF_CUSTOM_ICONS,
     CONF_ENABLED_SENSORS,
+    CONF_HUMIDITY_ATTRIBUTE,
     CONF_SCAN_INTERVAL,
+    CONF_TEMPERATURE_ATTRIBUTE,
     LegacySensorType,
     SensorType,
 )
@@ -40,7 +42,14 @@ RENAMED_SENSOR_TYPES = {
 
 def form_input(flat_input: dict) -> dict:
     """Turn flat options into the nested input of the config and options forms."""
-    advanced = (CONF_POLL, CONF_SCAN_INTERVAL, CONF_CUSTOM_ICONS, CONF_ENABLED_SENSORS)
+    advanced = (
+        CONF_POLL,
+        CONF_SCAN_INTERVAL,
+        CONF_CUSTOM_ICONS,
+        CONF_ENABLED_SENSORS,
+        CONF_TEMPERATURE_ATTRIBUTE,
+        CONF_HUMIDITY_ATTRIBUTE,
+    )
     return {k: v for k, v in flat_input.items() if k not in advanced} | {
         "advanced": {k: v for k, v in flat_input.items() if k in advanced}
     }

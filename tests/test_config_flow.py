@@ -7,6 +7,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.thermal_comfort.config_flow import (
     check_input,
+    flatten_input,
     get_sensors_by_device_class,
     get_value,
 )
@@ -16,9 +17,13 @@ from custom_components.thermal_comfort.const import (
     CONF_TEMPERATURE_SENSOR,
     DOMAIN,
 )
+from custom_components.thermal_comfort.sensor import (
+    CONF_HUMIDITY_ATTRIBUTE,
+    CONF_TEMPERATURE_ATTRIBUTE,
+)
 from homeassistant import config_entries
 from homeassistant.components.sensor import SensorDeviceClass
-from homeassistant.const import CONF_NAME
+from homeassistant.const import CONF_NAME, STATE_UNAVAILABLE
 from homeassistant.data_entry_flow import FlowResultType, InvalidData
 from homeassistant.helpers import entity_registry as er
 from homeassistant.setup import async_setup_component
@@ -135,6 +140,8 @@ async def test_advanced_options_section(hass, start_ha, hass_client):
         "poll",
         "scan_interval",
         "custom_icons",
+        "temperature_attribute",
+        "humidity_attribute",
         "enabled_sensors",
     ]
 
@@ -386,3 +393,248 @@ async def test_micro_units_are_excluded_in_both_spellings(hass, unit):
 
     assert "sensor.useful" in sensors
     assert "sensor.useless" not in sensors
+
+
+WEATHER = "weather.home"
+CLIMATE = "climate.living_room"
+ATTRIBUTE_SOURCES = {
+    **ADVANCED_USER_INPUT,
+    CONF_TEMPERATURE_SENSOR: WEATHER,
+    CONF_HUMIDITY_SENSOR: WEATHER,
+}
+
+
+def _set_attribute_sources(hass):
+    hass.states.async_set(WEATHER, "clear-night", {"temperature": 21.5, "humidity": 50})
+    hass.states.async_set(
+        CLIMATE, "heat", {"current_temperature": 22.8, "current_humidity": 42}
+    )
+
+
+async def test_weather_and_climate_are_offered(hass):
+    """Test that the entities with the values in attributes can be chosen."""
+    _set_attribute_sources(hass)
+    registry = er.async_get(hass)
+    for device_class in (SensorDeviceClass.TEMPERATURE, SensorDeviceClass.HUMIDITY):
+        offered = get_sensors_by_device_class(registry, hass, device_class, True)
+        assert WEATHER in offered
+        assert CLIMATE in offered
+
+
+async def test_config_flow_with_attribute_source(hass):
+    """Test the setup of a weather entity, the attribute names are optional."""
+    _set_attribute_sources(hass)
+    result = await _flow_configure(hass, await _flow_init(hass), ATTRIBUTE_SOURCES)
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["data"] == ATTRIBUTE_SOURCES
+    assert CONF_TEMPERATURE_ATTRIBUTE not in result["data"]
+
+
+async def test_config_flow_with_attribute_names(hass):
+    """Test that the given attribute names are stored and empty ones are not."""
+    _set_attribute_sources(hass)
+    user_input = {
+        **ATTRIBUTE_SOURCES,
+        CONF_TEMPERATURE_ATTRIBUTE: " feel ",
+        CONF_HUMIDITY_ATTRIBUTE: "",
+    }
+    hass.states.async_set(
+        WEATHER, "clear-night", {"feel": 18, "humidity": 50, "temperature": 20}
+    )
+    result = await _flow_configure(hass, await _flow_init(hass), user_input)
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["data"] == {**ATTRIBUTE_SOURCES, CONF_TEMPERATURE_ATTRIBUTE: "feel"}
+
+
+def test_flatten_input_normalizes_the_attributes():
+    """Test that the attribute names are stripped and the empty ones are left out."""
+    flat = flatten_input(
+        {
+            "name": "x",
+            "advanced": {
+                CONF_TEMPERATURE_ATTRIBUTE: "  temp ",
+                CONF_HUMIDITY_ATTRIBUTE: "   ",
+                "poll": False,
+            },
+        }
+    )
+    assert flat == {"name": "x", CONF_TEMPERATURE_ATTRIBUTE: "temp", "poll": False}
+    assert flatten_input({"advanced": {CONF_HUMIDITY_ATTRIBUTE: None}}) == {}
+
+
+async def test_check_input_attribute_names(hass):
+    """Test that an attribute that the user typed is checked, the default is not."""
+    user_input = {CONF_TEMPERATURE_SENSOR: CLIMATE, CONF_HUMIDITY_SENSOR: CLIMATE}
+
+    # Home Assistant leaves the attribute out while the value is missing, a
+    # thermostat without a humidity reading must not stop the setup
+    hass.states.async_set(CLIMATE, "heat", {"current_temperature": 22.8})
+    assert check_input(hass, user_input) == {}
+    hass.states.async_set(CLIMATE, "heat", {"temperature": 22.5})
+    assert check_input(hass, user_input) == {}
+
+    # a typo of the user
+    hass.states.async_set(
+        CLIMATE,
+        "heat",
+        {"current_temperature": 22.8, "current_humidity": 42, "temperature": 22.5},
+    )
+    assert check_input(
+        hass, {**user_input, CONF_TEMPERATURE_ATTRIBUTE: "current_temp"}
+    ) == {"base": "temperature_attribute_not_found"}
+    assert check_input(hass, {**user_input, CONF_HUMIDITY_ATTRIBUTE: "humid"}) == {
+        "base": "humidity_attribute_not_found"
+    }
+    assert (
+        check_input(hass, {**user_input, CONF_TEMPERATURE_ATTRIBUTE: "temperature"})
+        == {}
+    )
+
+    # an attribute that was checked before is not checked again
+    typed = {**user_input, CONF_TEMPERATURE_ATTRIBUTE: "current_temp"}
+    assert check_input(hass, typed, typed) == {}
+    assert check_input(hass, typed, {**typed, CONF_TEMPERATURE_ATTRIBUTE: "other"}) == {
+        "base": "temperature_attribute_not_found"
+    }
+    assert check_input(
+        hass, typed, {**typed, CONF_TEMPERATURE_SENSOR: "climate.other"}
+    ) == {"base": "temperature_attribute_not_found"}
+
+    # an unavailable entity has no attributes, that is no reason to refuse it
+    hass.states.async_set(CLIMATE, STATE_UNAVAILABLE)
+    assert check_input(hass, typed) == {}
+
+    # the state of a sensor is the value, there is nothing to look for
+    hass.states.async_set("sensor.t", "20")
+    hass.states.async_set("sensor.h", "50")
+    sensors = {CONF_TEMPERATURE_SENSOR: "sensor.t", CONF_HUMIDITY_SENSOR: "sensor.h"}
+    assert check_input(hass, sensors) == {}
+    assert check_input(hass, {**sensors, CONF_TEMPERATURE_ATTRIBUTE: "temp"}) == {
+        "base": "temperature_attribute_not_found"
+    }
+
+
+async def test_config_flow_reports_a_missing_attribute(hass):
+    """Test that the form shows the error and keeps the flow open."""
+    hass.states.async_set(WEATHER, "clear-night", {"temperature": 21.5})
+    hass.states.async_set("sensor.h", "50")
+    result = await _flow_configure(
+        hass,
+        await _flow_init(hass),
+        {**ATTRIBUTE_SOURCES, CONF_HUMIDITY_ATTRIBUTE: "humid"},
+    )
+    assert result["type"] == FlowResultType.FORM
+    assert result["errors"] == {"base": "humidity_attribute_not_found"}
+    assert not hass.config_entries.async_entries(DOMAIN)
+
+
+async def test_duplicate_check_uses_the_attributes(hass):
+    """Test that the same entity with other attributes is another source."""
+    _set_attribute_sources(hass)
+    hass.states.async_set(
+        WEATHER,
+        "clear-night",
+        {"temperature": 21.5, "humidity": 50, "feel": 18.0},
+    )
+    result = await _flow_configure(
+        hass, await _flow_init(hass), ATTRIBUTE_SOURCES, _registry_entry
+    )
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+
+    # the default attribute named by the user is the same source
+    result = await _flow_configure(
+        hass,
+        await _flow_init(hass),
+        {
+            **ATTRIBUTE_SOURCES,
+            CONF_TEMPERATURE_ATTRIBUTE: "temperature",
+            CONF_HUMIDITY_ATTRIBUTE: "humidity",
+        },
+        _registry_entry,
+    )
+    assert result["type"] == FlowResultType.ABORT
+    assert result["reason"] == "already_configured"
+
+    # another attribute of the same entity is not
+    result = await _flow_configure(
+        hass,
+        await _flow_init(hass),
+        {**ATTRIBUTE_SOURCES, CONF_TEMPERATURE_ATTRIBUTE: "feel"},
+        _registry_entry,
+    )
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+
+
+async def test_options_flow_attribute_names(hass):
+    """Test setting, keeping and clearing the attribute names in the options flow."""
+    _set_attribute_sources(hass)
+    hass.states.async_set(
+        WEATHER, "clear-night", {"temperature": 21.5, "humidity": 50, "feel": 18.0}
+    )
+    entry = MockConfigEntry(domain=DOMAIN, data=ATTRIBUTE_SOURCES, entry_id="test")
+    entry.add_to_hass(hass)
+
+    async def submit(user_input):
+        result = await hass.config_entries.options.async_init(entry.entry_id)
+        with patch.object(hass.config_entries, "async_schedule_reload"):
+            return await hass.config_entries.options.async_configure(
+                result["flow_id"], user_input=form_input(user_input)
+            )
+
+    sources = {k: v for k, v in ATTRIBUTE_SOURCES.items() if k in USER_INPUT}
+    result = await submit({**sources, CONF_TEMPERATURE_ATTRIBUTE: "feel"})
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert get_value(entry, CONF_TEMPERATURE_ATTRIBUTE) == "feel"
+    assert get_value(entry, CONF_HUMIDITY_ATTRIBUTE) is None
+
+    # the stored value is offered again
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    advanced = result["data_schema"].schema["advanced"].schema.schema
+    key = next(k for k in advanced if k == CONF_TEMPERATURE_ATTRIBUTE)
+    assert key.description["suggested_value"] == "feel"
+    hass.config_entries.options.async_abort(result["flow_id"])
+
+    # a cleared field is left out by the form, the old value must not come back
+    result = await submit(sources)
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert get_value(entry, CONF_TEMPERATURE_ATTRIBUTE) is None
+
+    # an empty string is the same as cleared
+    await submit({**sources, CONF_TEMPERATURE_ATTRIBUTE: "feel"})
+    assert get_value(entry, CONF_TEMPERATURE_ATTRIBUTE) == "feel"
+    result = await submit({**sources, CONF_TEMPERATURE_ATTRIBUTE: ""})
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert get_value(entry, CONF_TEMPERATURE_ATTRIBUTE) is None
+
+
+async def test_options_flow_keeps_a_typed_attribute_that_is_missing_now(hass):
+    """Test that unrelated options can be saved while the value is not there."""
+    hass.states.async_set(CLIMATE, "heat", {"current_temperature": 22.8})
+    data = {
+        **ADVANCED_USER_INPUT,
+        CONF_TEMPERATURE_SENSOR: CLIMATE,
+        CONF_HUMIDITY_SENSOR: CLIMATE,
+        CONF_HUMIDITY_ATTRIBUTE: "current_humidity",
+    }
+    entry = MockConfigEntry(domain=DOMAIN, data=data, entry_id="test")
+    entry.add_to_hass(hass)
+
+    async def submit(user_input):
+        result = await hass.config_entries.options.async_init(entry.entry_id)
+        with patch.object(hass.config_entries, "async_schedule_reload"):
+            return await hass.config_entries.options.async_configure(
+                result["flow_id"], user_input=form_input(user_input)
+            )
+
+    sources = {
+        CONF_NAME: "renamed",
+        CONF_TEMPERATURE_SENSOR: CLIMATE,
+        CONF_HUMIDITY_SENSOR: CLIMATE,
+        CONF_HUMIDITY_ATTRIBUTE: "current_humidity",
+    }
+    result = await submit(sources)
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+
+    result = await submit({**sources, CONF_HUMIDITY_ATTRIBUTE: "humid"})
+    assert result["type"] == FlowResultType.FORM
+    assert result["errors"] == {"base": "humidity_attribute_not_found"}

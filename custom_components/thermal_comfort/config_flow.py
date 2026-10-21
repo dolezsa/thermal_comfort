@@ -7,7 +7,7 @@ import voluptuous as vol
 
 from homeassistant import config_entries
 from homeassistant.components.sensor import SensorDeviceClass
-from homeassistant.const import CONF_NAME, Platform
+from homeassistant.const import CONF_NAME, STATE_UNAVAILABLE, Platform
 from homeassistant.core import HomeAssistant, State, callback
 from homeassistant.data_entry_flow import section
 from homeassistant.helpers import entity_registry as er
@@ -19,14 +19,19 @@ from .const import DEFAULT_NAME, DOMAIN
 from .sensor import (
     CONF_CUSTOM_ICONS,
     CONF_ENABLED_SENSORS,
+    CONF_HUMIDITY_ATTRIBUTE,
     CONF_HUMIDITY_SENSOR,
     CONF_POLL,
     CONF_PRESSURE_SENSOR,
     CONF_SCAN_INTERVAL,
+    CONF_TEMPERATURE_ATTRIBUTE,
     CONF_TEMPERATURE_SENSOR,
+    DEFAULT_HUMIDITY_ATTRIBUTES,
+    DEFAULT_TEMPERATURE_ATTRIBUTES,
     POLL_DEFAULT,
     SCAN_INTERVAL_DEFAULT,
     SensorType,
+    source_attribute,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -111,7 +116,6 @@ def get_sensors_by_device_class(
             Platform.BUTTON,
             Platform.CALENDAR,
             Platform.CAMERA,
-            Platform.CLIMATE,
             Platform.COVER,
             Platform.DEVICE_TRACKER,
             Platform.FAN,
@@ -432,6 +436,20 @@ def build_schema(
             CONF_CUSTOM_ICONS,
             default=get_value(config_entry, CONF_CUSTOM_ICONS, False),
         ): bool,
+        # Optional, without them the state of the source is the value, except
+        # for the entities that always have it in an attribute
+        vol.Optional(
+            CONF_TEMPERATURE_ATTRIBUTE,
+            description={
+                "suggested_value": get_value(config_entry, CONF_TEMPERATURE_ATTRIBUTE)
+            },
+        ): str,
+        vol.Optional(
+            CONF_HUMIDITY_ATTRIBUTE,
+            description={
+                "suggested_value": get_value(config_entry, CONF_HUMIDITY_ATTRIBUTE)
+            },
+        ): str,
     }
     if step == "user":
         advanced[
@@ -458,14 +476,52 @@ def flatten_input(user_input: dict) -> dict:
     :return: flat dict with all options
     """
     flat = {k: v for k, v in user_input.items() if k != SECTION_ADVANCED}
-    return flat | user_input.get(SECTION_ADVANCED, {})
+    flat |= user_input.get(SECTION_ADVANCED, {})
+    # An empty attribute is the same as none, the form leaves a cleared field out
+    for key in (CONF_TEMPERATURE_ATTRIBUTE, CONF_HUMIDITY_ATTRIBUTE):
+        if key in flat:
+            value = flat[key].strip() if isinstance(flat[key], str) else flat[key]
+            if value:
+                flat[key] = value
+            else:
+                del flat[key]
+    return flat
 
 
-def check_input(hass: HomeAssistant, user_input: dict) -> dict:
+def source_pair(config: dict) -> tuple:
+    """Return the sources of the temperature and the humidity of a configuration.
+
+    The attribute is the one that is in use, so the default of the domain and
+    the same attribute given by the user are equal.
+
+    :param config: flat configuration of an entry or of the form
+    :returns: tuple of entity and attribute of the temperature and the humidity
+    """
+    return (
+        config[CONF_TEMPERATURE_SENSOR],
+        source_attribute(
+            config[CONF_TEMPERATURE_SENSOR],
+            config.get(CONF_TEMPERATURE_ATTRIBUTE),
+            DEFAULT_TEMPERATURE_ATTRIBUTES,
+        ),
+        config[CONF_HUMIDITY_SENSOR],
+        source_attribute(
+            config[CONF_HUMIDITY_SENSOR],
+            config.get(CONF_HUMIDITY_ATTRIBUTE),
+            DEFAULT_HUMIDITY_ATTRIBUTES,
+        ),
+    )
+
+
+def check_input(
+    hass: HomeAssistant, user_input: dict, current: dict | None = None
+) -> dict:
     """Check that we may use suggested configuration.
 
     :param hass: hass instance
     :param user_input: user input
+    :param current: the configuration that is changed, the sources it already has
+        are not checked again
     :returns: dict with error.
     """
 
@@ -487,6 +543,37 @@ def check_input(hass: HomeAssistant, user_input: dict) -> dict:
         and hass.states.get(user_input[CONF_PRESSURE_SENSOR]) is None
     ):
         result["base"] = "pressure_not_found"
+
+    for entity_key, attribute_key, error in (
+        (
+            CONF_TEMPERATURE_SENSOR,
+            CONF_TEMPERATURE_ATTRIBUTE,
+            "temperature_attribute_not_found",
+        ),
+        (
+            CONF_HUMIDITY_SENSOR,
+            CONF_HUMIDITY_ATTRIBUTE,
+            "humidity_attribute_not_found",
+        ),
+    ):
+        # Only an attribute the user typed is checked. The attributes of the
+        # weather and climate entities are left out by Home Assistant while
+        # the value is missing, which must not stop the setup or the options.
+        attribute = user_input.get(attribute_key)
+        if not attribute or (
+            current is not None
+            and current.get(entity_key) == user_input[entity_key]
+            and current.get(attribute_key) == attribute
+        ):
+            continue
+        state = hass.states.get(user_input[entity_key])
+        # An unavailable entity has no attributes, that is no reason to refuse it
+        if (
+            state is not None
+            and state.state != STATE_UNAVAILABLE
+            and attribute not in state.attributes
+        ):
+            result["base"] = error
 
     # ToDo: we should not trust user and check:
     #  - that CONF_TEMPERATURE_SENSOR is temperature sensor and have state_class measurement
@@ -514,14 +601,18 @@ class ThermalComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if not (errors := check_input(self.hass, user_input)):
                 # The options flow can change the sensors of an entry later, so
                 # compare with the current ones instead of the unique_id.
-                sensors = (
-                    user_input[CONF_TEMPERATURE_SENSOR],
-                    user_input[CONF_HUMIDITY_SENSOR],
-                )
+                sources = source_pair(user_input)
                 for entry in self._async_current_entries():
-                    if sensors == (
-                        get_value(entry, CONF_TEMPERATURE_SENSOR),
-                        get_value(entry, CONF_HUMIDITY_SENSOR),
+                    if sources == source_pair(
+                        {
+                            key: get_value(entry, key)
+                            for key in (
+                                CONF_TEMPERATURE_SENSOR,
+                                CONF_HUMIDITY_SENSOR,
+                                CONF_TEMPERATURE_ATTRIBUTE,
+                                CONF_HUMIDITY_ATTRIBUTE,
+                            )
+                        }
                     ):
                         return self.async_abort(reason="already_configured")
 
@@ -572,14 +663,26 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlowWithReload):
         errors = {}
         if user_input is not None:
             user_input = flatten_input(user_input)
-            if not user_input.get(CONF_PRESSURE_SENSOR) and get_value(
-                self.config_entry, CONF_PRESSURE_SENSOR
+            for key in (
+                CONF_PRESSURE_SENSOR,
+                CONF_TEMPERATURE_ATTRIBUTE,
+                CONF_HUMIDITY_ATTRIBUTE,
             ):
-                # The options win over the data, so removing the sensor must
-                # be stored, the missing key would bring back the old one.
-                user_input[CONF_PRESSURE_SENSOR] = None
+                if not user_input.get(key) and get_value(self.config_entry, key):
+                    # The options win over the data, so removing the value must
+                    # be stored, the missing key would bring back the old one.
+                    user_input[key] = None
             _LOGGER.debug("OptionsFlow: going to update configuration %s", user_input)
-            if not (errors := check_input(self.hass, user_input)):
+            current = {
+                key: get_value(self.config_entry, key)
+                for key in (
+                    CONF_TEMPERATURE_SENSOR,
+                    CONF_TEMPERATURE_ATTRIBUTE,
+                    CONF_HUMIDITY_SENSOR,
+                    CONF_HUMIDITY_ATTRIBUTE,
+                )
+            }
+            if not (errors := check_input(self.hass, user_input, current)):
                 return self.async_create_entry(title="", data=user_input)
 
         return self.async_show_form(

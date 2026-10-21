@@ -60,6 +60,20 @@ thermal_comfort:
   <dd>ID of temperature sensor entity to be used for calculations.</dd>
   <dt><strong>humidity_sensor</strong>  <code>string</code> <code>REQUIRED</code></dt>
   <dd>ID of humidity sensor entity to be used for calculations.</dd>
+  <dt><strong>temperature_attribute</strong> and <strong>humidity_attribute</strong> <code>string</code> <code>(optional)</code></dt>
+  <dd>
+    Name of the attribute of the source entity that has the value, instead of its state.
+    Weather entities (<code>temperature</code>, <code>humidity</code>) and climate entities
+    (<code>current_temperature</code>, <code>current_humidity</code>) do not need it, the
+    attributes are used for them. Use it for another entity, or to use another attribute of one of
+    them. See <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md#input-values">input values</a>.
+    <pre>
+    - name: Outside
+      temperature_sensor: weather.home
+      humidity_sensor: weather.home
+      unique_id: 3a6dd7e9-6b9d-4fd0-a0e3-0c3a1c4c9b7e
+    </pre>
+  </dd>
   <dt><strong>pressure_sensor</strong> <code>string</code> <code>(optional)</code></dt>
   <dd>
     ID of an atmospheric pressure sensor entity, used for the moist air enthalpy.

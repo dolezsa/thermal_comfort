@@ -3,7 +3,9 @@
     "error": {
       "temperature_not_found": "Temperature sensor not found",
       "humidity_not_found": "Humidity sensor not found",
-      "pressure_not_found": "Pressure sensor not found"
+      "pressure_not_found": "Pressure sensor not found",
+      "temperature_attribute_not_found": "The temperature source has no attribute with this name, see the advanced options",
+      "humidity_attribute_not_found": "The humidity source has no attribute with this name, see the advanced options"
     },
     "step": {
       "init": {
@@ -23,7 +25,13 @@
             "data": {
               "poll": "Enable Polling",
               "scan_interval": "Poll interval (seconds)",
-              "custom_icons": "Use custom icons pack"
+              "custom_icons": "Use custom icons pack",
+              "temperature_attribute": "Temperature attribute (optional)",
+              "humidity_attribute": "Humidity attribute (optional)"
+            },
+            "data_description": {
+              "temperature_attribute": "Attribute of the temperature sensor that has the value, instead of its state. Not needed for weather and climate entities.",
+              "humidity_attribute": "Attribute of the humidity sensor that has the value, instead of its state. Not needed for weather and climate entities."
             }
           }
         }
@@ -38,7 +46,9 @@
     "error": {
       "temperature_not_found": "Temperature sensor not found",
       "humidity_not_found": "Humidity sensor not found",
-      "pressure_not_found": "Pressure sensor not found"
+      "pressure_not_found": "Pressure sensor not found",
+      "temperature_attribute_not_found": "The temperature source has no attribute with this name, see the advanced options",
+      "humidity_attribute_not_found": "The humidity source has no attribute with this name, see the advanced options"
     },
     "step": {
       "user": {
@@ -59,9 +69,13 @@
               "poll": "Enable Polling",
               "scan_interval": "Poll interval (seconds)",
               "custom_icons": "Use custom icons pack",
-              "enabled_sensors": "Enabled sensors"
+              "enabled_sensors": "Enabled sensors",
+              "temperature_attribute": "Temperature attribute (optional)",
+              "humidity_attribute": "Humidity attribute (optional)"
             },
             "data_description": {
+              "temperature_attribute": "Attribute of the temperature sensor that has the value, instead of its state. Not needed for weather and climate entities.",
+              "humidity_attribute": "Attribute of the humidity sensor that has the value, instead of its state. Not needed for weather and climate entities.",
               "enabled_sensors": "Sensors you do not select are still created, but disabled. You can enable them later in the entity settings."
             }
           }
