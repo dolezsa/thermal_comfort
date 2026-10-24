@@ -1,22 +1,45 @@
 {
   "options": {
     "error": {
-      "temperature_not_found": "Hőmérséklet szenzor nem található",
-      "humidity_not_found": "Páratartalom szenzor nem található"
+      "temperature_not_found": "Hőmérséklet-szenzor nem található",
+      "humidity_not_found": "Páratartalom-szenzor nem található",
+      "pressure_not_found": "Nyomásszenzor nem található",
+      "temperature_attribute_not_found": "A hőmérséklet forrásának nincs ilyen nevű attribútuma, ellenőrizze a haladó beállításokat",
+      "humidity_attribute_not_found": "A páratartalom forrásának nincs ilyen nevű attribútuma, ellenőrizze a haladó beállításokat",
+      "outdoor_temperature_not_found": "Kültéri hőmérséklet-szenzor nem található",
+      "outdoor_humidity_not_found": "Kültéri páratartalom-szenzor nem található",
+      "outdoor_incomplete": "Válassza ki a kültéri hőmérséklet- és a kültéri páratartalom-szenzort is, vagy egyiket se",
+      "outdoor_same_as_indoor": "A kültéri szenzorok nem lehetnek azonosak a beltéri szenzorokkal"
     },
     "step": {
       "init": {
-        "title": "Hőkomfort beállítások",
+        "title": "Hőkomfort-beállítások",
         "data": {
-          "temperature_sensor": "Hőmérséklet szenzor",
-          "humidity_sensor": "Páratartalom szenzor"
+          "name": "Eszköz neve",
+          "temperature_sensor": "Hőmérséklet-szenzor",
+          "humidity_sensor": "Páratartalom-szenzor",
+          "outdoor_temperature_sensor": "Kültéri hőmérséklet-szenzor (opcionális)",
+          "outdoor_humidity_sensor": "Kültéri páratartalom-szenzor (opcionális)",
+          "pressure_sensor": "Nyomásszenzor (opcionális)"
+        },
+        "data_description": {
+          "name": "Ez lesz az eszköz neve és a szenzornevek előtagja, például a helyiség neve.",
+          "outdoor_temperature_sensor": "A kültéri páratartalom-szenzorral együtt létrejönnek a helyiséget a kültéri levegővel összehasonlító szenzorok: a páratöbblet és a szellőztetési szenzorok. Időjárás-entitás is használható.",
+          "outdoor_humidity_sensor": "A kültéri hőmérséklet-szenzorral együtt létrejönnek a helyiséget a kültéri levegővel összehasonlító szenzorok. Időjárás-entitás is használható."
         },
         "sections": {
           "advanced": {
+            "name": "Haladó beállítások",
             "data": {
-              "poll": "Állapotlekérdezés (polling) engedélyezése",
-              "scan_interval": "Lekérdezési időköz (polling) (másodpercekben)",
-              "custom_icons": "Egyedi ikonkészlet használata"
+              "poll": "Állapotlekérdezés engedélyezése",
+              "scan_interval": "Lekérdezési időköz (másodpercben)",
+              "custom_icons": "Egyedi ikonkészlet használata",
+              "temperature_attribute": "Hőmérséklet-attribútum (opcionális)",
+              "humidity_attribute": "Páratartalom-attribútum (opcionális)"
+            },
+            "data_description": {
+              "temperature_attribute": "A hőmérséklet-szenzor azon attribútuma, amely az értéket tartalmazza az állapota helyett. Időjárás- és klímaentitásoknál nincs rá szükség.",
+              "humidity_attribute": "A páratartalom-szenzor azon attribútuma, amely az értéket tartalmazza az állapota helyett. Időjárás- és klímaentitásoknál nincs rá szükség."
             }
           }
         }
@@ -29,24 +52,47 @@
       "no_sensors": "Nem található hőmérséklet- vagy páratartalom-szenzor."
     },
     "error": {
-      "temperature_not_found": "Hőmérséklet szenzor nem található.",
-      "humidity_not_found": "Páratartalom szenzor nem található."
+      "temperature_not_found": "Hőmérséklet-szenzor nem található",
+      "humidity_not_found": "Páratartalom-szenzor nem található",
+      "pressure_not_found": "Nyomásszenzor nem található",
+      "temperature_attribute_not_found": "A hőmérséklet forrásának nincs ilyen nevű attribútuma, ellenőrizze a haladó beállításokat",
+      "humidity_attribute_not_found": "A páratartalom forrásának nincs ilyen nevű attribútuma, ellenőrizze a haladó beállításokat",
+      "outdoor_temperature_not_found": "Kültéri hőmérséklet-szenzor nem található",
+      "outdoor_humidity_not_found": "Kültéri páratartalom-szenzor nem található",
+      "outdoor_incomplete": "Válassza ki a kültéri hőmérséklet- és a kültéri páratartalom-szenzort is, vagy egyiket se",
+      "outdoor_same_as_indoor": "A kültéri szenzorok nem lehetnek azonosak a beltéri szenzorokkal"
     },
     "step": {
       "user": {
-        "title": "Hőkomfort beállítások",
+        "title": "Hőkomfort-beállítások",
         "data": {
-          "name": "Név",
-          "temperature_sensor": "Hőmérséklet szenzor",
-          "humidity_sensor": "Páratartalom szenzor"
+          "name": "Eszköz neve",
+          "temperature_sensor": "Hőmérséklet-szenzor",
+          "humidity_sensor": "Páratartalom-szenzor",
+          "outdoor_temperature_sensor": "Kültéri hőmérséklet-szenzor (opcionális)",
+          "outdoor_humidity_sensor": "Kültéri páratartalom-szenzor (opcionális)",
+          "pressure_sensor": "Nyomásszenzor (opcionális)"
+        },
+        "data_description": {
+          "name": "Ez lesz az eszköz neve és a szenzornevek előtagja, például a helyiség neve.",
+          "outdoor_temperature_sensor": "A kültéri páratartalom-szenzorral együtt létrejönnek a helyiséget a kültéri levegővel összehasonlító szenzorok: a páratöbblet és a szellőztetési szenzorok. Időjárás-entitás is használható.",
+          "outdoor_humidity_sensor": "A kültéri hőmérséklet-szenzorral együtt létrejönnek a helyiséget a kültéri levegővel összehasonlító szenzorok. Időjárás-entitás is használható."
         },
         "sections": {
           "advanced": {
+            "name": "Haladó beállítások",
             "data": {
-              "poll": "Állapotlekérdezés (polling) engedélyezése",
-              "scan_interval": "Lekérdezési időköz (polling) (másodpercekben)",
+              "poll": "Állapotlekérdezés engedélyezése",
+              "scan_interval": "Lekérdezési időköz (másodpercben)",
               "custom_icons": "Egyedi ikonkészlet használata",
-              "enabled_sensors": "Engedélyezett szenzorok"
+              "enabled_sensors": "Engedélyezett szenzorok",
+              "temperature_attribute": "Hőmérséklet-attribútum (opcionális)",
+              "humidity_attribute": "Páratartalom-attribútum (opcionális)"
+            },
+            "data_description": {
+              "temperature_attribute": "A hőmérséklet-szenzor azon attribútuma, amely az értéket tartalmazza az állapota helyett. Időjárás- és klímaentitásoknál nincs rá szükség.",
+              "humidity_attribute": "A páratartalom-szenzor azon attribútuma, amely az értéket tartalmazza az állapota helyett. Időjárás- és klímaentitásoknál nincs rá szükség.",
+              "enabled_sensors": "A ki nem választott szenzorok is létrejönnek, de letiltva. Később az entitásbeállításokban engedélyezheti őket."
             }
           }
         }
@@ -62,20 +108,20 @@
         "name": "Harmatpont"
       },
       "dew_point_perception": {
-        "name": "Harmatpont érzékelés",
+        "name": "Harmatpont-komfortérzet",
         "state": {
           "dry": "Egyeseknek kissé száraz",
           "very_comfortable": "Nagyon kellemes",
           "comfortable": "Kellemes",
           "ok_but_humid": "A többségnek megfelelő, de párás",
           "somewhat_uncomfortable": "Kicsit kellemetlen",
-          "quite_uncomfortable": "Nagyon nedves, eléggé kellemetlen",
+          "quite_uncomfortable": "Nagyon párás, eléggé kellemetlen",
           "extremely_uncomfortable": "Rendkívül kellemetlen, nyomasztó",
-          "severely_high": "Különösen magas, az asztmás betegségek számára életveszélyes"
+          "severely_high": "Rendkívül magas, asztmás betegeknek akár életveszélyes"
         }
       },
       "frost_point": {
-        "name": "Fagypont"
+        "name": "Dérpont"
       },
       "frost_risk": {
         "name": "Fagyveszély",
@@ -87,29 +133,29 @@
         }
       },
       "heat_index": {
-        "name": "Hő index"
+        "name": "Hőindex"
       },
       "humidex": {
-        "name": "Páratartalom index"
+        "name": "Humidex"
       },
       "humidex_perception": {
-        "name": "Páratartalom index \n\n\nérzékelés",
+        "name": "Humidex-komfortérzet",
         "state": {
           "comfortable": "Kellemes",
           "noticable_discomfort": "Érezhető kellemetlenség",
-          "evident_discomfort": "Kellemetlen",
-          "great_discomfort": "Rendkívül kellemetlen, kerüld a megterhelést",
+          "evident_discomfort": "Nyilvánvaló kellemetlenség",
+          "great_discomfort": "Rendkívül kellemetlen, kerülje a megterhelést",
           "dangerous_discomfort": "Veszélyesen kellemetlen",
-          "heat_stroke": "Napszúrás lehetséges"
+          "heat_stroke": "Hőguta lehetséges"
         }
       },
       "moist_air_enthalpy": {
-        "name": "Páradús levegő entalpia"
+        "name": "Nedves levegő entalpiája"
       },
       "relative_strain_perception": {
-        "name": "Relatív feszültség érzékelése",
+        "name": "Relatív terhelés komfortérzete",
         "state": {
-          "outside_calculable_range": "A számolható tartományon kívül\n",
+          "outside_calculable_range": "A számítható tartományon kívül",
           "comfortable": "Kellemes",
           "slight_discomfort": "Enyhén kellemetlen",
           "discomfort": "Kellemetlen",
@@ -118,48 +164,77 @@
         }
       },
       "summer_scharlau_perception": {
-        "name": "Nyári Scharlau érzékelés",
+        "name": "Nyári Scharlau-komfortérzet",
         "state": {
-          "outside_calculable_range": "A számolható tartományon kívül",
+          "outside_calculable_range": "A számítható tartományon kívül",
           "comfortable": "Kellemes",
-          "slightly_uncomfortable": "Kissé kényelmetlen",
-          "moderately_uncomfortable": "Mérsékelten kényelmetlen",
-          "highly_uncomfortable": "Nagyon kényelmetlen"
+          "slightly_uncomfortable": "Kissé kellemetlen",
+          "moderately_uncomfortable": "Mérsékelten kellemetlen",
+          "highly_uncomfortable": "Nagyon kellemetlen"
         }
       },
       "winter_scharlau_perception": {
-        "name": "Téli scharlau felfogás",
+        "name": "Téli Scharlau-komfortérzet",
         "state": {
-          "outside_calculable_range": "A számolható tartományon kívül",
+          "outside_calculable_range": "A számítható tartományon kívül",
           "comfortable": "Kellemes",
-          "slightly_uncomfortable": "Kissé kényelmetlen",
-          "moderately_uncomfortable": "Mérsékelten kényelmetlen",
-          "highly_uncomfortable": "Nagyon kényelmetlen"
+          "slightly_uncomfortable": "Kissé kellemetlen",
+          "moderately_uncomfortable": "Mérsékelten kellemetlen",
+          "highly_uncomfortable": "Nagyon kellemetlen"
         }
       },
+      "summer_simmer_index": {
+        "name": "Nyári Simmer-index"
+      },
       "summer_simmer_perception": {
-        "name": "Nyári forrongás érzékelése",
+        "name": "Nyári Simmer-komfortérzet",
         "state": {
-          "cool": "Hideg",
+          "cool": "Hűvös",
           "slightly_cool": "Enyhén hűvös",
           "comfortable": "Kellemes",
           "slightly_warm": "Enyhén meleg",
-          "increasing_discomfort": "Fokozódó diszkomfort",
+          "increasing_discomfort": "Fokozódó kellemetlenség",
           "extremely_warm": "Rendkívül meleg",
-          "danger_of_heatstroke": "Napszúrásveszély",
-          "extreme_danger_of_heatstroke": "Rendkívüli napszúrásveszély",
-          "circulatory_collapse_imminent": "Keringési összeomlás veszélye"
+          "danger_of_heatstroke": "Hőgutaveszély",
+          "extreme_danger_of_heatstroke": "Rendkívüli hőgutaveszély",
+          "circulatory_collapse_imminent": "Keringési összeomlás közvetlen veszélye"
         }
       },
+      "thoms_discomfort_index": {
+        "name": "Thom-féle diszkomfortindex"
+      },
       "thoms_discomfort_perception": {
-        "name": "Thoms kellemetlen érzés",
+        "name": "Thom-féle komfortérzet",
         "state": {
           "no_discomfort": "Nincs kellemetlen érzés",
-          "less_than_half": "A lakosság kevesebb mint fele érez kényelmetlenséget",
+          "less_than_half": "A lakosság kevesebb mint fele érez kellemetlenséget",
           "more_than_half": "A lakosság több mint fele kellemetlenül érzi magát",
-          "most": "A legtöbb ember kényelmetlenséget és pszichofizikai állapotának romlását érzi",
-          "everyone": "Mindenki jelentős kényelmetlenséget érez",
-          "dangerous": "Veszélyes, nagyon erős kényelmetlenség, amely hőgutát okozhat"
+          "most": "A legtöbb ember kellemetlenséget és pszichofizikai állapotának romlását érzi",
+          "everyone": "Mindenki jelentős kellemetlenséget érez",
+          "dangerous": "Veszélyes, nagyon erős kellemetlenség, amely hőgutát okozhat"
+        }
+      },
+      "wet_bulb_temperature": {
+        "name": "Nedves hőmérséklet"
+      },
+      "moisture_excess": {
+        "name": "Páratöbblet"
+      },
+      "ventilation_advice": {
+        "name": "Szellőztetési javaslat",
+        "state": {
+          "drier_outside": "A szellőztetés szárítja a helyiséget",
+          "similar": "A szellőztetésnek alig van hatása",
+          "more_humid_outside": "A szellőztetés párásítja a helyiséget",
+          "condensation_risk": "Ne szellőztessen: páralecsapódás veszélye"
+        }
+      },
+      "ventilation_need": {
+        "name": "Szellőztetési igény",
+        "state": {
+          "above_limit": "A határérték felett",
+          "within_limit": "A határértéken belül",
+          "not_winter": "Nem téli időszak"
         }
       }
     }
