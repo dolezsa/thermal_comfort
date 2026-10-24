@@ -5,7 +5,11 @@
       "humidity_not_found": "Humidity sensor not found",
       "pressure_not_found": "Pressure sensor not found",
       "temperature_attribute_not_found": "The temperature source has no attribute with this name, see the advanced options",
-      "humidity_attribute_not_found": "The humidity source has no attribute with this name, see the advanced options"
+      "humidity_attribute_not_found": "The humidity source has no attribute with this name, see the advanced options",
+      "outdoor_temperature_not_found": "Outdoor temperature sensor not found",
+      "outdoor_humidity_not_found": "Outdoor humidity sensor not found",
+      "outdoor_incomplete": "Choose both the outdoor temperature and the outdoor humidity sensor, or neither",
+      "outdoor_same_as_indoor": "The outdoor sensors must be other than the indoor sensors"
     },
     "step": {
       "init": {
@@ -14,10 +18,14 @@
           "name": "Device name",
           "temperature_sensor": "Temperature sensor",
           "humidity_sensor": "Humidity sensor",
+          "outdoor_temperature_sensor": "Outdoor temperature sensor (optional)",
+          "outdoor_humidity_sensor": "Outdoor humidity sensor (optional)",
           "pressure_sensor": "Pressure sensor (optional)"
         },
         "data_description": {
-          "name": "Used as the device name and as the prefix of the sensor names, for example the name of the room."
+          "name": "Used as the device name and as the prefix of the sensor names, for example the name of the room.",
+          "outdoor_temperature_sensor": "With the outdoor humidity sensor, the sensors that compare the room with the outdoor air are created: the moisture excess and the ventilation sensors. A weather entity can be used.",
+          "outdoor_humidity_sensor": "With the outdoor temperature sensor, the sensors that compare the room with the outdoor air are created. A weather entity can be used."
         },
         "sections": {
           "advanced": {
@@ -48,7 +56,11 @@
       "humidity_not_found": "Humidity sensor not found",
       "pressure_not_found": "Pressure sensor not found",
       "temperature_attribute_not_found": "The temperature source has no attribute with this name, see the advanced options",
-      "humidity_attribute_not_found": "The humidity source has no attribute with this name, see the advanced options"
+      "humidity_attribute_not_found": "The humidity source has no attribute with this name, see the advanced options",
+      "outdoor_temperature_not_found": "Outdoor temperature sensor not found",
+      "outdoor_humidity_not_found": "Outdoor humidity sensor not found",
+      "outdoor_incomplete": "Choose both the outdoor temperature and the outdoor humidity sensor, or neither",
+      "outdoor_same_as_indoor": "The outdoor sensors must be other than the indoor sensors"
     },
     "step": {
       "user": {
@@ -57,10 +69,14 @@
           "name": "Device name",
           "temperature_sensor": "Temperature sensor",
           "humidity_sensor": "Humidity sensor",
+          "outdoor_temperature_sensor": "Outdoor temperature sensor (optional)",
+          "outdoor_humidity_sensor": "Outdoor humidity sensor (optional)",
           "pressure_sensor": "Pressure sensor (optional)"
         },
         "data_description": {
-          "name": "Used as the device name and as the prefix of the sensor names, for example the name of the room."
+          "name": "Used as the device name and as the prefix of the sensor names, for example the name of the room.",
+          "outdoor_temperature_sensor": "With the outdoor humidity sensor, the sensors that compare the room with the outdoor air are created: the moisture excess and the ventilation sensors. A weather entity can be used.",
+          "outdoor_humidity_sensor": "With the outdoor temperature sensor, the sensors that compare the room with the outdoor air are created. A weather entity can be used."
         },
         "sections": {
           "advanced": {
@@ -200,6 +216,26 @@
       },
       "wet_bulb_temperature": {
         "name": "Wet-bulb temperature"
+      },
+      "moisture_excess": {
+        "name": "Moisture excess"
+      },
+      "ventilation_advice": {
+        "name": "Ventilation advice",
+        "state": {
+          "drier_outside": "Airing dries the room",
+          "similar": "Airing changes little",
+          "more_humid_outside": "Airing adds moisture",
+          "condensation_risk": "Do not air: condensation risk"
+        }
+      },
+      "ventilation_need": {
+        "name": "Ventilation need",
+        "state": {
+          "above_limit": "Above the limit",
+          "within_limit": "Within the limit",
+          "not_winter": "Not winter"
+        }
       }
     }
   }

@@ -18,6 +18,7 @@ from custom_components.thermal_comfort.sensor import (
     CONF_HUMIDITY_SENSOR,
     CONF_TEMPERATURE_ATTRIBUTE,
     CONF_TEMPERATURE_SENSOR,
+    DEFAULT_SENSOR_TYPES,
     DEFAULT_TEMPERATURE_ATTRIBUTES,
     DeviceThermalComfort,
     SensorType,
@@ -67,7 +68,7 @@ def all_states(hass, name="test_thermal_comfort"):
     """Return the states of all sensors of a device."""
     return {
         sensor_type: sensor_state(hass, sensor_type, name).state
-        for sensor_type in SensorType
+        for sensor_type in DEFAULT_SENSOR_TYPES
     }
 
 

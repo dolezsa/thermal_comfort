@@ -7,14 +7,18 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.thermal_comfort import async_setup_entry, async_unload_entry
 from custom_components.thermal_comfort.const import DOMAIN, PLATFORMS
-from custom_components.thermal_comfort.sensor import SensorType, id_generator
+from custom_components.thermal_comfort.sensor import (
+    DEFAULT_SENSOR_TYPES,
+    SensorType,
+    id_generator,
+)
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.helpers import entity_registry as er
 
 from .const import ADVANCED_USER_INPUT, RENAMED_SENSOR_TYPES
 
 ENGLISH_ENTITY_IDS = {
-    f"sensor.test_thermal_comfort_{sensor_type}" for sensor_type in SensorType
+    f"sensor.test_thermal_comfort_{sensor_type}" for sensor_type in DEFAULT_SENSOR_TYPES
 }
 
 
@@ -94,7 +98,7 @@ async def test_entity_ids_are_english(hass, language, name):
     hass.config.language = language
     config_entry = MockConfigEntry(
         domain=DOMAIN,
-        data={**ADVANCED_USER_INPUT, "enabled_sensors": list(SensorType)},
+        data={**ADVANCED_USER_INPUT, "enabled_sensors": list(DEFAULT_SENSOR_TYPES)},
         entry_id="test",
         unique_id="uid",
         version=2,

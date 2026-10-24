@@ -102,6 +102,49 @@ sensor.
     The perception sensor shows the value of the index in the attribute <code>thoms_discomfort_index</code>.
     The index has no device class, it is shown in °C, also if the system uses °F.
   </dd>
+  <dt><strong>Moisture Excess</strong> <code>moisture_excess</code></dt>
+  <dd>
+    The absolute humidity of the room minus the absolute humidity of the outdoor air, in g/m³.
+    A positive value means that airing makes the room drier, a negative value that it makes it more humid.
+    The attributes are the outdoor temperature (<code>outdoor_temperature</code>, in °C also if the source is in another unit),
+    the outdoor humidity, the absolute humidity (g/m³) and the dew point (<code>outdoor_dew_point</code>, in °C) of the outdoor air,
+    and <code>ventilated_relative_humidity</code>, the relative humidity the room would have right
+    after the air is exchanged completely, as the outdoor air keeps its vapor pressure when it is warmed to the temperature
+    of the room (capped at 100 %).
+    It needs the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md">outdoor temperature and humidity sensors</a>.
+    The relative humidity is taken over water also below 0°C, as the sensors and the weather services report it.
+  </dd>
+  <dt><strong>Ventilation Advice</strong> <code>ventilation_advice</code></dt>
+  <dd>
+    What airing would do to the humidity of the room:
+    <code>drier_outside</code> (the moisture excess is above 1 g/m³), <code>similar</code> (between -1 and 1 g/m³),
+    <code>more_humid_outside</code> (below -1 g/m³) and <code>condensation_risk</code>.
+    The last one is shown, before the others, if the outdoor air would have a relative humidity of 80 % or more
+    after it is warmed to the temperature of the room (<code>ventilated_relative_humidity</code>): it is near saturation on
+    the cooler surfaces of the room, like a cellar in summer. 80 % is the surface humidity of the criterion of EN ISO 13788 for mould.<br>
+    The sensor knows nothing about earlier values, the states are bands. The band of 1 g/m³ is about the uncertainty
+    of two simple sensors (two sensors of ±3 % relative humidity add up to about ±1 g/m³ at 21°C), so the state
+    changes back and forth in spring and autumn. Use it in automations with the outer states and a duration, see the
+    <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md">recipes</a>.
+    It answers one question, what happens to the humidity of the room. It does not say if airing is worth the heat
+    it loses, if it cools the room, or if the air is fresh (the carbon dioxide is another thing).
+  </dd>
+  <dt><strong>Ventilation Need</strong> <code>ventilation_need</code></dt>
+  <dd>
+    Compares the moisture excess to the limit of the Swedish Public Health Agency:
+    <a href="https://www.folkhalsomyndigheten.se/contentassets/641784832543443ea4eebe9b300c244e/fohmfs-2014-18.pdf">FoHMFS 2014:18</a>
+    says that in dwellings the difference of the absolute humidity between outdoors and indoors under winter conditions
+    should not regularly exceed 3 g/m³, an indication that the ventilation is not satisfactory
+    (<a href="https://www.folkhalsomyndigheten.se/contentassets/26ea6c0d999742c0a5351c63e70cb0ce/fohmfs-2014-14.pdf">FoHMFS 2014:14</a>
+    uses it as one of the reasons for an investigation of a building). The states are <code>above_limit</code> (the moisture excess is
+    above 3 g/m³ and the outdoor temperature is below 10°C), <code>within_limit</code> and <code>not_winter</code> (the outdoor temperature
+    is 10°C or more). The advice does not define winter, 10°C is the choice of this integration.<br>
+    The sensor shows the moment, the rule is about the usual values: the Swedish surveys use the mean of about two weeks of the
+    winter half-year. A shower or cooking brings the sensor above the limit for a while. Look at the mean of the
+    moisture excess, or at the share of the time above the limit, as in the
+    <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md">recipes</a>.
+    It is not the limit of the advice for opening a window, it says that the ventilation is not enough, not when to air.
+  </dd>
 </dl>
 
 ## Diagnostic sensors

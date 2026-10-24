@@ -52,6 +52,15 @@ The entry reloads when you save changed options.
     are used. Fill in the field for another entity, or to use another attribute.
     See <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md#input-values">input values</a>.
   </dd>
+  <dt><strong>Outdoor temperature sensor</strong> and <strong>Outdoor humidity sensor</strong> <code>entity</code> (optional)</dt>
+  <dd>
+    The sensors of the outdoor air, both are needed. A weather entity can be both, its attributes are used.
+    With them the sensors that compare the room with the outdoor air are created and enabled
+    (moisture excess, ventilation advice and ventilation need), see
+    <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md">ventilation</a>.
+    If you remove the sensors the entities stay in the entity registry, they are not provided any more and
+    work again when you add the sensors again.
+  </dd>
   <dt><strong>Pressure sensor</strong> <code>entity</code> (optional)</dt>
   <dd>
     An atmospheric pressure sensor (device class <code>pressure</code> or

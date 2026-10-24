@@ -63,6 +63,11 @@ ATTR_WINTER_SCHARLAU_INDEX = "winter_scharlau_index"
 ATTR_SUMMER_SIMMER_INDEX = "summer_simmer_index"
 ATTR_THOMS_DISCOMFORT_INDEX = "thoms_discomfort_index"
 ATTR_EPSTEIN_MORAN_DISCOMFORT_INDEX = "epstein_moran_discomfort_index"
+ATTR_OUTDOOR_TEMPERATURE = "outdoor_temperature"
+ATTR_OUTDOOR_HUMIDITY = "outdoor_humidity"
+ATTR_OUTDOOR_ABSOLUTE_HUMIDITY = "outdoor_absolute_humidity"
+ATTR_OUTDOOR_DEW_POINT = "outdoor_dew_point"
+ATTR_VENTILATED_RELATIVE_HUMIDITY = "ventilated_relative_humidity"
 CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
@@ -71,6 +76,8 @@ CONF_SCAN_INTERVAL = "scan_interval"
 CONF_TEMPERATURE_SENSOR = "temperature_sensor"
 CONF_HUMIDITY_SENSOR = "humidity_sensor"
 CONF_PRESSURE_SENSOR = "pressure_sensor"
+CONF_OUTDOOR_TEMPERATURE_SENSOR = "outdoor_temperature_sensor"
+CONF_OUTDOOR_HUMIDITY_SENSOR = "outdoor_humidity_sensor"
 CONF_TEMPERATURE_ATTRIBUTE = "temperature_attribute"
 CONF_HUMIDITY_ATTRIBUTE = "humidity_attribute"
 CONF_POLL = "poll"
@@ -94,6 +101,18 @@ DEFAULT_HUMIDITY_ATTRIBUTES = {
 }
 # The attribute of a weather entity that has the unit of its temperature
 ATTR_TEMPERATURE_UNIT = "temperature_unit"
+# Ventilation, with a source of the outdoor air
+# Differences of the absolute humidity (g/m3) below which the air is "similar"
+VENTILATION_BAND = 1.0
+# The indoor air should not regularly have more than this (g/m3) above the
+# outdoor air in winter (Folkhälsomyndigheten, FoHMFS 2014:18)
+VENTILATION_NEED_LIMIT = 3.0
+# There is no definition of winter in it, this is the outdoor temperature (C)
+# below which the limit is looked at
+VENTILATION_NEED_MAX_OUTDOOR_TEMPERATURE = 10.0
+# Outdoor air with this relative humidity (%) after it is warmed to the indoor
+# temperature is near saturation on the cooler surfaces (EN ISO 13788)
+CONDENSATION_RH_LIMIT = 80.0
 
 
 class LegacySensorType(StrEnum):
@@ -126,6 +145,10 @@ class SensorType(StrEnum):
     WET_BULB_TEMPERATURE = "wet_bulb_temperature"
     THOMS_DISCOMFORT_INDEX = "thoms_discomfort_index"
     THOMS_DISCOMFORT_PERCEPTION = "thoms_discomfort_perception"
+    # These need the outdoor air, see OUTDOOR_SENSOR_TYPES
+    MOISTURE_EXCESS = "moisture_excess"
+    VENTILATION_ADVICE = "ventilation_advice"
+    VENTILATION_NEED = "ventilation_need"
 
     def to_name(self) -> str:
         """Return the title of the sensor type."""
@@ -140,6 +163,23 @@ class SensorType(StrEnum):
             raise ValueError(
                 f"Unknown sensor type: {string}. Please check https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-options for valid options."
             )
+
+
+class VentilationAdvice(StrEnum):
+    """What airing does to the humidity of the room."""
+
+    DRIER_OUTSIDE = "drier_outside"
+    SIMILAR = "similar"
+    MORE_HUMID_OUTSIDE = "more_humid_outside"
+    CONDENSATION_RISK = "condensation_risk"
+
+
+class VentilationNeed(StrEnum):
+    """Where the moisture excess is compared to the limit for winter."""
+
+    ABOVE_LIMIT = "above_limit"
+    WITHIN_LIMIT = "within_limit"
+    NOT_WINTER = "not_winter"
 
 
 class DewPointPerception(StrEnum):
@@ -358,9 +398,39 @@ SENSOR_TYPES = {
         "options": list(map(str, ThomsDiscomfortPerception)),
         "icon": "mdi:sun-thermometer",
     },
+    SensorType.MOISTURE_EXCESS: {
+        "key": SensorType.MOISTURE_EXCESS,
+        "suggested_display_precision": DISPLAY_PRECISION,
+        "native_unit_of_measurement": "g/m³",
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:water-percent",
+    },
+    SensorType.VENTILATION_ADVICE: {
+        "key": SensorType.VENTILATION_ADVICE,
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, VentilationAdvice)),
+        "icon": "mdi:window-open-variant",
+    },
+    SensorType.VENTILATION_NEED: {
+        "key": SensorType.VENTILATION_NEED,
+        "device_class": SensorDeviceClass.ENUM,
+        "options": list(map(str, VentilationNeed)),
+        "icon": "mdi:home-alert",
+    },
 }
 
-DEFAULT_SENSOR_TYPES = list(SENSOR_TYPES.keys())
+# The sensors that compare with the outdoor air, a device has them when it has
+# the sensors of the outdoor temperature and humidity
+OUTDOOR_SENSOR_TYPES = [
+    SensorType.MOISTURE_EXCESS,
+    SensorType.VENTILATION_ADVICE,
+    SensorType.VENTILATION_NEED,
+]
+DEFAULT_SENSOR_TYPES = [
+    sensor_type
+    for sensor_type in SENSOR_TYPES
+    if sensor_type not in OUTDOOR_SENSOR_TYPES
+]
 
 SENSOR_OPTIONS_SCHEMA = vol.Schema(
     {
@@ -368,6 +438,8 @@ SENSOR_OPTIONS_SCHEMA = vol.Schema(
         vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
         vol.Optional(CONF_CUSTOM_ICONS): cv.boolean,
         vol.Optional(CONF_SENSOR_TYPES): cv.ensure_list,
+        vol.Optional(CONF_OUTDOOR_TEMPERATURE_SENSOR): cv.entity_id,
+        vol.Optional(CONF_OUTDOOR_HUMIDITY_SENSOR): cv.entity_id,
     },
     extra=vol.REMOVE_EXTRA,
 )
@@ -393,7 +465,7 @@ def compute_once_lock(sensor_type):
     def wrapper(func):
         @wraps(func)
         async def wrapped(self, *args, **kwargs):
-            if not self.available:
+            if not self.type_available(sensor_type):
                 return None
             async with self._compute_states[sensor_type].lock:
                 if self._compute_states[sensor_type].needs_update:
@@ -425,6 +497,14 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     for device_config in devices:
         device_config = options | device_config
+        outdoor_temperature = device_config.get(CONF_OUTDOOR_TEMPERATURE_SENSOR)
+        outdoor_humidity = device_config.get(CONF_OUTDOOR_HUMIDITY_SENSOR)
+        if bool(outdoor_temperature) != bool(outdoor_humidity):
+            _LOGGER.warning(
+                "The sensors of the outdoor temperature and of the outdoor humidity are both needed, the outdoor air is not used for %s",
+                device_config.get(CONF_NAME, device_config.get(CONF_UNIQUE_ID)),
+            )
+            outdoor_temperature = outdoor_humidity = None
         compute_device = DeviceThermalComfort(
             hass=hass,
             name=device_config.get(CONF_NAME),
@@ -434,24 +514,42 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             pressure_entity=device_config.get(CONF_PRESSURE_SENSOR),
             temperature_attribute=device_config.get(CONF_TEMPERATURE_ATTRIBUTE),
             humidity_attribute=device_config.get(CONF_HUMIDITY_ATTRIBUTE),
+            outdoor_temperature_entity=outdoor_temperature,
+            outdoor_humidity_entity=outdoor_humidity,
             should_poll=device_config.get(CONF_POLL, POLL_DEFAULT),
             scan_interval=device_config.get(
                 CONF_SCAN_INTERVAL, timedelta(seconds=SCAN_INTERVAL_DEFAULT)
             ),
         )
 
+        if CONF_SENSOR_TYPES in device_config:
+            sensor_types = [
+                SensorType.from_string(sensor_type)
+                for sensor_type in device_config[CONF_SENSOR_TYPES]
+            ]
+            outdoor_types = [t for t in sensor_types if t in OUTDOOR_SENSOR_TYPES]
+            if outdoor_types and not compute_device.has_outdoor:
+                _LOGGER.warning(
+                    "The sensor types %s need the sensors of the outdoor temperature and the outdoor humidity, they are not created for %s",
+                    ", ".join(outdoor_types),
+                    device_config.get(CONF_NAME, device_config.get(CONF_UNIQUE_ID)),
+                )
+                sensor_types = [t for t in sensor_types if t not in outdoor_types]
+        else:
+            sensor_types = list(DEFAULT_SENSOR_TYPES)
+            if compute_device.has_outdoor:
+                sensor_types += OUTDOOR_SENSOR_TYPES
+
         sensors += [
             SensorThermalComfort(
                 device=compute_device,
                 icon_template=device_config.get(CONF_ICON_TEMPLATE),
                 entity_picture_template=device_config.get(CONF_ENTITY_PICTURE_TEMPLATE),
-                sensor_type=SensorType.from_string(sensor_type),
+                sensor_type=sensor_type,
                 custom_icons=device_config.get(CONF_CUSTOM_ICONS, False),
                 is_config_entry=False,
             )
-            for sensor_type in device_config.get(
-                CONF_SENSOR_TYPES, DEFAULT_SENSOR_TYPES
-            )
+            for sensor_type in sensor_types
         ]
 
     async_add_entities(sensors)
@@ -484,6 +582,8 @@ async def async_setup_entry(
         pressure_entity=data.get(CONF_PRESSURE_SENSOR),
         temperature_attribute=data.get(CONF_TEMPERATURE_ATTRIBUTE),
         humidity_attribute=data.get(CONF_HUMIDITY_ATTRIBUTE),
+        outdoor_temperature_entity=data.get(CONF_OUTDOOR_TEMPERATURE_SENSOR),
+        outdoor_humidity_entity=data.get(CONF_OUTDOOR_HUMIDITY_SENSOR),
         should_poll=data[CONF_POLL],
         scan_interval=timedelta(
             seconds=data.get(CONF_SCAN_INTERVAL, SCAN_INTERVAL_DEFAULT)
@@ -497,9 +597,15 @@ async def async_setup_entry(
             device=compute_device,
             sensor_type=sensor_type,
             custom_icons=data[CONF_CUSTOM_ICONS],
-            is_enabled_default=sensor_type in data.get(CONF_ENABLED_SENSORS, {})
+            # The sensors of the outdoor air are what the outdoor sensors are
+            # for, and are not among the sensors that can be chosen
+            is_enabled_default=sensor_type in OUTDOOR_SENSOR_TYPES
+            or sensor_type in data.get(CONF_ENABLED_SENSORS, {}),
         )
-        for sensor_type in SensorType
+        for sensor_type in (
+            DEFAULT_SENSOR_TYPES
+            + (OUTDOOR_SENSOR_TYPES if compute_device.has_outdoor else [])
+        )
     ]
 
     if entities:
@@ -522,7 +628,15 @@ class SensorThermalComfort(SensorEntity):
     # The source values change with almost every update, don't fill the
     # database with a new attribute row each time.
     _unrecorded_attributes = frozenset(
-        {ATTR_TEMPERATURE, ATTR_HUMIDITY, ATTR_PRESSURE}
+        {
+            ATTR_TEMPERATURE,
+            ATTR_HUMIDITY,
+            ATTR_PRESSURE,
+            ATTR_OUTDOOR_TEMPERATURE,
+            ATTR_OUTDOOR_HUMIDITY,
+            ATTR_OUTDOOR_ABSOLUTE_HUMIDITY,
+            ATTR_OUTDOOR_DEW_POINT,
+        }
     )
 
     def __init__(
@@ -615,12 +729,12 @@ class SensorThermalComfort(SensorEntity):
 
     @property
     def available(self) -> bool:
-        """Return True if both source values are valid."""
-        return self._device.available
+        """Return True if the source values the sensor needs are valid."""
+        return self._device.type_available(self._sensor_type)
 
     async def async_update(self):
         """Update the state of the sensor."""
-        if not self._device.available:
+        if not self._device.type_available(self._sensor_type):
             return
 
         value = await getattr(self._device, self._sensor_type)()
@@ -690,6 +804,8 @@ class DeviceThermalComfort:
         pressure_entity: str | None = None,
         temperature_attribute: str | None = None,
         humidity_attribute: str | None = None,
+        outdoor_temperature_entity: str | None = None,
+        outdoor_humidity_entity: str | None = None,
     ):
         """Initialize the sensor."""
         self.hass = hass
@@ -714,6 +830,21 @@ class DeviceThermalComfort:
         self._humidity = None
         self._pressure = None  # Pa, None means the standard pressure
         self._was_available = False
+        # The outdoor air is used when both are given
+        self._outdoor_temperature_entity = outdoor_temperature_entity
+        self._outdoor_humidity_entity = outdoor_humidity_entity
+        self._outdoor_temperature_attribute = source_attribute(
+            outdoor_temperature_entity,
+            None,
+            DEFAULT_TEMPERATURE_ATTRIBUTES,
+        )
+        self._outdoor_humidity_attribute = source_attribute(
+            outdoor_humidity_entity, None, DEFAULT_HUMIDITY_ATTRIBUTES
+        )
+        self._outdoor_temperature = None  # C
+        self._outdoor_temperature_value = None  # as the source has it
+        self._outdoor_humidity = None
+        self._was_outdoor_available = False
         self._unsubscribers = []
         self._should_poll = should_poll
         self.sensors = []
@@ -755,6 +886,34 @@ class DeviceThermalComfort:
                     self.hass, self._pressure_entity, self.pressure_state_listener
                 )
             )
+
+        if self.has_outdoor:
+            # Read before the first computation, like the pressure
+            self._apply_outdoor_temperature(hass.states.get(outdoor_temperature_entity))
+            self._apply_outdoor_humidity(hass.states.get(outdoor_humidity_entity))
+            if outdoor_temperature_entity == outdoor_humidity_entity:
+                self._unsubscribers.append(
+                    async_track_state_change_event(
+                        self.hass,
+                        outdoor_temperature_entity,
+                        self.outdoor_source_state_listener,
+                    )
+                )
+            else:
+                self._unsubscribers.append(
+                    async_track_state_change_event(
+                        self.hass,
+                        outdoor_temperature_entity,
+                        self.outdoor_temperature_state_listener,
+                    )
+                )
+                self._unsubscribers.append(
+                    async_track_state_change_event(
+                        self.hass,
+                        outdoor_humidity_entity,
+                        self.outdoor_humidity_state_listener,
+                    )
+                )
 
         if self._temperature_entity == self._humidity_entity:
             hass.async_create_task(
@@ -810,43 +969,15 @@ class DeviceThermalComfort:
         if self._apply_temperature(state):
             await self.async_update()
 
-    def _attribute_temperature_unit(self, state) -> str:
-        """Return the unit of a temperature that is an attribute of a source state."""
-        for unit in (
-            state.attributes.get(ATTR_TEMPERATURE_UNIT),
-            # The unit of the state does not have to be a temperature unit
-            state.attributes.get(ATTR_UNIT_OF_MEASUREMENT),
-        ):
-            if isinstance(unit, str) and unit in TemperatureConverter.VALID_UNITS:
-                return unit
-        return self.hass.config.units.temperature_unit
-
     def _apply_temperature(self, state) -> bool:
         """Read the temperature of a source state.
 
         :returns: True if the sensors have to be updated, which is the case for
             a new value and for an invalid one.
         """
-        temperature = None
-        value = None
-        if self._temperature_attribute is None:
-            if _is_valid_state(state):
-                unit = state.attributes.get(
-                    ATTR_UNIT_OF_MEASUREMENT, self.hass.config.units.temperature_unit
-                )
-                value = util.convert(state.state, float)
-        else:
-            value = _attribute_value(state, self._temperature_attribute)
-            if value is not None:
-                unit = self._attribute_temperature_unit(state)
-        if value is not None:
-            # convert to celsius if necessary
-            with contextlib.suppress(HomeAssistantError):
-                temperature = TemperatureConverter.convert(
-                    value, unit, UnitOfTemperature.CELSIUS
-                )
-            if temperature is not None and not -89.2 <= temperature <= 56.7:
-                temperature = None
+        temperature, value = _parse_temperature(
+            self.hass, state, self._temperature_attribute
+        )
         # A source with the value in an attribute changes its other attributes
         # often, plain sensors update for every change as they always did.
         changed = (
@@ -877,17 +1008,7 @@ class DeviceThermalComfort:
         :returns: True if the sensors have to be updated, which is the case for
             a new value and for an invalid one.
         """
-        humidity = None
-        if self._humidity_attribute is None:
-            if _is_valid_state(state):
-                humidity = float(state.state)
-        else:
-            humidity = _attribute_value(state, self._humidity_attribute)
-        if humidity is not None:
-            if 100 < humidity <= HUMIDITY_MAX_OVERSHOOT:
-                humidity = 100.0
-            if not 0 < humidity <= 100:
-                humidity = None
+        humidity = _parse_humidity(state, self._humidity_attribute)
         changed = (
             self._humidity_attribute is None
             or humidity is None
@@ -900,6 +1021,94 @@ class DeviceThermalComfort:
             self.extra_state_attributes[ATTR_HUMIDITY] = humidity
         self._humidity = humidity
         return changed
+
+    @property
+    def has_outdoor(self) -> bool:
+        """Return True if the sources of the outdoor air are set."""
+        return bool(self._outdoor_temperature_entity) and bool(
+            self._outdoor_humidity_entity
+        )
+
+    @property
+    def outdoor_available(self) -> bool:
+        """Return True if both values of the outdoor air are valid."""
+        return (
+            self.has_outdoor
+            and self._outdoor_temperature is not None
+            and self._outdoor_humidity is not None
+        )
+
+    def type_available(self, sensor_type: SensorType) -> bool:
+        """Return True if the values a sensor type needs are valid.
+
+        The sensors of the outdoor air need its values too, the other sensors
+        never depend on them.
+        """
+        if sensor_type in OUTDOOR_SENSOR_TYPES:
+            return self.available and self.outdoor_available
+        return self.available
+
+    async def outdoor_temperature_state_listener(self, event):
+        """Handle outdoor temperature state changes."""
+        await self._new_outdoor_temperature_state(event.data.get("new_state"))
+
+    async def outdoor_humidity_state_listener(self, event):
+        """Handle outdoor humidity state changes."""
+        await self._new_outdoor_humidity_state(event.data.get("new_state"))
+
+    async def outdoor_source_state_listener(self, event):
+        """Handle the state changes of an entity that is the source of both outdoor values."""
+        state = event.data.get("new_state")
+        changed = self._apply_outdoor_temperature(state) | self._apply_outdoor_humidity(
+            state
+        )
+        if changed:
+            await self._outdoor_updated()
+
+    async def _new_outdoor_temperature_state(self, state):
+        if self._apply_outdoor_temperature(state):
+            await self._outdoor_updated()
+
+    async def _new_outdoor_humidity_state(self, state):
+        if self._apply_outdoor_humidity(state):
+            await self._outdoor_updated()
+
+    def _apply_outdoor_temperature(self, state) -> bool:
+        """Read the outdoor temperature, True if the sensors need an update."""
+        temperature, value = _parse_temperature(
+            self.hass, state, self._outdoor_temperature_attribute
+        )
+        changed = (
+            temperature is None
+            or temperature != self._outdoor_temperature
+            or value != self._outdoor_temperature_value
+        )
+        if temperature is None:
+            _LOGGER.info("Outdoor temperature has an invalid value: %s. Can't calculate the sensors of the outdoor air.", state)
+        self._outdoor_temperature = temperature
+        self._outdoor_temperature_value = value
+        return changed
+
+    def _apply_outdoor_humidity(self, state) -> bool:
+        """Read the outdoor humidity, True if the sensors need an update."""
+        humidity = _parse_humidity(state, self._outdoor_humidity_attribute)
+        changed = humidity is None or humidity != self._outdoor_humidity
+        if humidity is None:
+            _LOGGER.info("Outdoor relative humidity has an invalid value: %s. Can't calculate the sensors of the outdoor air.", state)
+        self._outdoor_humidity = humidity
+        return changed
+
+    async def _outdoor_updated(self):
+        """Update the sensors of the outdoor air, the others do not depend on it."""
+        for sensor_type in OUTDOOR_SENSOR_TYPES:
+            self._compute_states[sensor_type].needs_update = True
+        available = self.type_available(OUTDOOR_SENSOR_TYPES[0])
+        # Polling devices refresh on the timer, but not when availability changes
+        if not self._should_poll or available != self._was_outdoor_available:
+            for sensor in self.sensors:
+                if sensor._sensor_type in OUTDOOR_SENSOR_TYPES:
+                    sensor.async_schedule_update_ha_state(True)
+        self._was_outdoor_available = available
 
     async def pressure_state_listener(self, event):
         """Handle pressure device state changes."""
@@ -950,16 +1159,7 @@ class DeviceThermalComfort:
     @compute_once_lock(SensorType.DEW_POINT)
     async def dew_point(self) -> float:
         """Dew Point <http://wahiduddin.net/calc/density_algorithms.htm>."""
-        A0 = 373.15 / (273.15 + self._temperature)
-        SUM = -7.90298 * (A0 - 1)
-        SUM += 5.02808 * math.log(A0, 10)
-        SUM += -1.3816e-7 * (pow(10, (11.344 * (1 - 1 / A0))) - 1)
-        SUM += 8.1328e-3 * (pow(10, (-3.49149 * (A0 - 1))) - 1)
-        SUM += math.log(1013.246, 10)
-        VP = pow(10, SUM - 3) * self._humidity
-        Td = math.log(VP / 0.61078)
-        Td = (241.88 * Td) / (17.558 - Td)
-        return Td
+        return _dew_point(self._temperature, self._humidity)
 
     @compute_once_lock(SensorType.HEAT_INDEX)
     async def heat_index(self) -> float:
@@ -1043,15 +1243,7 @@ class DeviceThermalComfort:
     @compute_once_lock(SensorType.ABSOLUTE_HUMIDITY)
     async def absolute_humidity(self) -> float:
         """Absolute Humidity <https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/>."""
-        abs_temperature = self._temperature + 273.15
-        abs_humidity = 6.112
-        abs_humidity *= math.exp(
-            (17.67 * self._temperature) / (243.5 + self._temperature)
-        )
-        abs_humidity *= self._humidity
-        abs_humidity *= 2.1674
-        abs_humidity /= abs_temperature
-        return abs_humidity
+        return _absolute_humidity(self._temperature, self._humidity)
 
     @compute_once_lock(SensorType.FROST_POINT)
     async def frost_point(self) -> float:
@@ -1288,6 +1480,74 @@ class DeviceThermalComfort:
 
         return perception, {ATTR_THOMS_DISCOMFORT_INDEX: round(tdi, 2)}
 
+    @compute_once_lock(SensorType.MOISTURE_EXCESS)
+    async def moisture_excess(self) -> (float, dict):
+        """Moisture excess, the absolute humidity indoors above the one outdoors.
+
+        <https://www.folkhalsomyndigheten.se/contentassets/641784832543443ea4eebe9b300c244e/fohmfs-2014-18.pdf>
+        """
+        indoor = await self.absolute_humidity()
+        if indoor is None or not self.outdoor_available:
+            return None
+        outdoor = _absolute_humidity(self._outdoor_temperature, self._outdoor_humidity)
+        # The vapor pressure stays when the outdoor air is warmed to the indoor
+        # temperature, the relative humidity changes with the saturation
+        ventilated = (
+            self._outdoor_humidity
+            * _saturation_vapor_pressure(self._outdoor_temperature)
+            / _saturation_vapor_pressure(self._temperature)
+        )
+        return indoor - outdoor, {
+            ATTR_OUTDOOR_TEMPERATURE: self._outdoor_temperature,
+            ATTR_OUTDOOR_HUMIDITY: self._outdoor_humidity,
+            ATTR_OUTDOOR_ABSOLUTE_HUMIDITY: round(outdoor, 2),
+            ATTR_OUTDOOR_DEW_POINT: round(
+                _dew_point(self._outdoor_temperature, self._outdoor_humidity), 2
+            ),
+            # The advice follows this value, so they never disagree
+            ATTR_VENTILATED_RELATIVE_HUMIDITY: round(min(ventilated, 100.0), 2),
+        }
+
+    @compute_once_lock(SensorType.VENTILATION_ADVICE)
+    async def ventilation_advice(self) -> (VentilationAdvice, dict):
+        """Compare the humidity of the room with the one it would have after airing."""
+        result = await self.moisture_excess()
+        if result is None:
+            return None
+        excess, attributes = result
+        if attributes[ATTR_VENTILATED_RELATIVE_HUMIDITY] >= CONDENSATION_RH_LIMIT:
+            advice = VentilationAdvice.CONDENSATION_RISK
+        elif excess > VENTILATION_BAND:
+            advice = VentilationAdvice.DRIER_OUTSIDE
+        elif excess < -VENTILATION_BAND:
+            advice = VentilationAdvice.MORE_HUMID_OUTSIDE
+        else:
+            advice = VentilationAdvice.SIMILAR
+        return advice, self._outdoor_attributes(attributes)
+
+    @compute_once_lock(SensorType.VENTILATION_NEED)
+    async def ventilation_need(self) -> (VentilationNeed, dict):
+        """Compare the moisture excess with the limit for winter."""
+        result = await self.moisture_excess()
+        if result is None:
+            return None
+        excess, attributes = result
+        if attributes[ATTR_OUTDOOR_TEMPERATURE] >= VENTILATION_NEED_MAX_OUTDOOR_TEMPERATURE:
+            need = VentilationNeed.NOT_WINTER
+        elif excess > VENTILATION_NEED_LIMIT:
+            need = VentilationNeed.ABOVE_LIMIT
+        else:
+            need = VentilationNeed.WITHIN_LIMIT
+        return need, self._outdoor_attributes(attributes)
+
+    @staticmethod
+    def _outdoor_attributes(attributes: dict) -> dict:
+        """Return the attributes of the outdoor air that all its sensors have."""
+        return {
+            key: attributes[key]
+            for key in (ATTR_OUTDOOR_TEMPERATURE, ATTR_OUTDOOR_HUMIDITY)
+        }
+
     async def async_update(self):
         """Update the state."""
         available = self.available
@@ -1298,6 +1558,7 @@ class DeviceThermalComfort:
         if not self._should_poll or available != self._was_available:
             await self.async_update_sensors(True)
         self._was_available = available
+        self._was_outdoor_available = self.type_available(OUTDOOR_SENSOR_TYPES[0])
 
     async def async_update_sensors(self, force_refresh: bool = False) -> None:
         """Update the state of the sensors."""
@@ -1328,6 +1589,95 @@ class DeviceThermalComfort:
     def name(self) -> str:
         """Return the name."""
         return self._device_info["name"]
+
+
+def _attribute_temperature_unit(hass: HomeAssistant, state) -> str:
+    """Return the unit of a temperature that is an attribute of a source state."""
+    for unit in (
+        state.attributes.get(ATTR_TEMPERATURE_UNIT),
+        # The unit of the state does not have to be a temperature unit
+        state.attributes.get(ATTR_UNIT_OF_MEASUREMENT),
+    ):
+        if isinstance(unit, str) and unit in TemperatureConverter.VALID_UNITS:
+            return unit
+    return hass.config.units.temperature_unit
+
+
+def _parse_temperature(
+    hass: HomeAssistant, state, attribute: str | None
+) -> tuple[float | None, float | None]:
+    """Return the temperature of a source state in C and the value it has.
+
+    :param attribute: the attribute that has the value, None for the state
+    :returns: the temperature in C, None if it is unusable, and the value as the
+        source has it, in its unit
+    """
+    temperature = None
+    value = None
+    if attribute is None:
+        if _is_valid_state(state):
+            unit = state.attributes.get(
+                ATTR_UNIT_OF_MEASUREMENT, hass.config.units.temperature_unit
+            )
+            value = util.convert(state.state, float)
+    else:
+        value = _attribute_value(state, attribute)
+        if value is not None:
+            unit = _attribute_temperature_unit(hass, state)
+    if value is not None:
+        # convert to celsius if necessary
+        with contextlib.suppress(HomeAssistantError):
+            temperature = TemperatureConverter.convert(
+                value, unit, UnitOfTemperature.CELSIUS
+            )
+        if temperature is not None and not -89.2 <= temperature <= 56.7:
+            temperature = None
+    return temperature, value
+
+
+def _parse_humidity(state, attribute: str | None) -> float | None:
+    """Return the relative humidity of a source state, None if it is unusable."""
+    humidity = None
+    if attribute is None:
+        if _is_valid_state(state):
+            humidity = float(state.state)
+    else:
+        humidity = _attribute_value(state, attribute)
+    if humidity is not None:
+        if 100 < humidity <= HUMIDITY_MAX_OVERSHOOT:
+            humidity = 100.0
+        if not 0 < humidity <= 100:
+            humidity = None
+    return humidity
+
+
+def _saturation_vapor_pressure(temperature: float) -> float:
+    """Return the saturation vapor pressure in hPa (Magnus)."""
+    return 6.112 * math.exp((17.67 * temperature) / (243.5 + temperature))
+
+
+def _absolute_humidity(temperature: float, humidity: float) -> float:
+    """Absolute Humidity <https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/>."""
+    abs_temperature = temperature + 273.15
+    abs_humidity = _saturation_vapor_pressure(temperature)
+    abs_humidity *= humidity
+    abs_humidity *= 2.1674
+    abs_humidity /= abs_temperature
+    return abs_humidity
+
+
+def _dew_point(temperature: float, humidity: float) -> float:
+    """Dew Point <http://wahiduddin.net/calc/density_algorithms.htm>."""
+    A0 = 373.15 / (273.15 + temperature)
+    SUM = -7.90298 * (A0 - 1)
+    SUM += 5.02808 * math.log(A0, 10)
+    SUM += -1.3816e-7 * (pow(10, (11.344 * (1 - 1 / A0))) - 1)
+    SUM += 8.1328e-3 * (pow(10, (-3.49149 * (A0 - 1))) - 1)
+    SUM += math.log(1013.246, 10)
+    VP = pow(10, SUM - 3) * humidity
+    Td = math.log(VP / 0.61078)
+    Td = (241.88 * Td) / (17.558 - Td)
+    return Td
 
 
 def source_attribute(

@@ -73,6 +73,9 @@ Enable the custom icons options for your sensor in the
 
 ## Upgrading from 3.0
 
+* With an optional outdoor temperature and humidity sensor (a weather entity works too) a device also has the
+  moisture excess, the ventilation advice and the ventilation need, see the
+  [documentation](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md). Without them nothing changes.
 * Weather and climate entities can be a source of the temperature and the humidity, their
   attributes are used. Other entities can be used with the attribute options in the advanced
   options. A configuration that already uses a weather entity starts to work without a change.

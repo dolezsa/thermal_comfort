@@ -74,6 +74,15 @@ thermal_comfort:
       unique_id: 3a6dd7e9-6b9d-4fd0-a0e3-0c3a1c4c9b7e
     </pre>
   </dd>
+  <dt><strong>outdoor_temperature_sensor</strong> and <strong>outdoor_humidity_sensor</strong> <code>string</code> <code>(optional)</code></dt>
+  <dd>
+    IDs of the sensors of the outdoor temperature and the outdoor humidity. Both are needed. A weather entity can be both,
+    its attributes are used. With them the sensors that compare the room with the outdoor air are created
+    (<code>moisture_excess</code>, <code>ventilation_advice</code> and <code>ventilation_need</code>), by default or
+    when they are in <code>sensor_types</code>. Without them these sensor types are left out. The two can be given
+    once in the entry for all the rooms, instead of the room.
+    See <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md">ventilation</a>.
+  </dd>
   <dt><strong>pressure_sensor</strong> <code>string</code> <code>(optional)</code></dt>
   <dd>
     ID of an atmospheric pressure sensor entity, used for the moist air enthalpy.

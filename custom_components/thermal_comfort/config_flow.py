@@ -21,12 +21,15 @@ from .sensor import (
     CONF_ENABLED_SENSORS,
     CONF_HUMIDITY_ATTRIBUTE,
     CONF_HUMIDITY_SENSOR,
+    CONF_OUTDOOR_HUMIDITY_SENSOR,
+    CONF_OUTDOOR_TEMPERATURE_SENSOR,
     CONF_POLL,
     CONF_PRESSURE_SENSOR,
     CONF_SCAN_INTERVAL,
     CONF_TEMPERATURE_ATTRIBUTE,
     CONF_TEMPERATURE_SENSOR,
     DEFAULT_HUMIDITY_ATTRIBUTES,
+    DEFAULT_SENSOR_TYPES,
     DEFAULT_TEMPERATURE_ATTRIBUTES,
     POLL_DEFAULT,
     SCAN_INTERVAL_DEFAULT,
@@ -408,6 +411,23 @@ def build_schema(
                     }
                 }
             ),
+            # Optional, both are needed for the sensors of the outdoor air
+            vol.Optional(
+                CONF_OUTDOOR_TEMPERATURE_SENSOR,
+                description={
+                    "suggested_value": get_value(
+                        config_entry, CONF_OUTDOOR_TEMPERATURE_SENSOR
+                    )
+                },
+            ): selector({"entity": {"include_entities": temperature_sensors}}),
+            vol.Optional(
+                CONF_OUTDOOR_HUMIDITY_SENSOR,
+                description={
+                    "suggested_value": get_value(
+                        config_entry, CONF_OUTDOOR_HUMIDITY_SENSOR
+                    )
+                },
+            ): selector({"entity": {"include_entities": humidity_sensors}}),
             # Optional, without it the standard pressure of 101325 Pa is used
             vol.Optional(
                 CONF_PRESSURE_SENSOR,
@@ -453,9 +473,9 @@ def build_schema(
     }
     if step == "user":
         advanced[
-            vol.Optional(CONF_ENABLED_SENSORS, default=list(SensorType))
+            vol.Optional(CONF_ENABLED_SENSORS, default=list(DEFAULT_SENSOR_TYPES))
         ] = cv.multi_select(
-            {sensor_type: sensor_type.to_name() for sensor_type in SensorType}
+            {sensor_type: sensor_type.to_name() for sensor_type in DEFAULT_SENSOR_TYPES}
         )
 
     return schema.extend(
@@ -543,6 +563,35 @@ def check_input(
         and hass.states.get(user_input[CONF_PRESSURE_SENSOR]) is None
     ):
         result["base"] = "pressure_not_found"
+
+    outdoor = (
+        user_input.get(CONF_OUTDOOR_TEMPERATURE_SENSOR),
+        user_input.get(CONF_OUTDOOR_HUMIDITY_SENSOR),
+    )
+    for key, error in (
+        (CONF_OUTDOOR_TEMPERATURE_SENSOR, "outdoor_temperature_not_found"),
+        (CONF_OUTDOOR_HUMIDITY_SENSOR, "outdoor_humidity_not_found"),
+    ):
+        # A source the entry has already is not checked again, it can be missing
+        # for a while
+        if (
+            user_input.get(key)
+            and (current is None or current.get(key) != user_input[key])
+            and hass.states.get(user_input[key]) is None
+        ):
+            result["base"] = error
+    if all(outdoor) and source_pair(
+        {
+            **user_input,
+            CONF_TEMPERATURE_SENSOR: outdoor[0],
+            CONF_HUMIDITY_SENSOR: outdoor[1],
+            CONF_TEMPERATURE_ATTRIBUTE: None,
+            CONF_HUMIDITY_ATTRIBUTE: None,
+        }
+    ) == source_pair(user_input):
+        result["base"] = "outdoor_same_as_indoor"
+    if any(outdoor) and not all(outdoor):
+        result["base"] = "outdoor_incomplete"
 
     for entity_key, attribute_key, error in (
         (
@@ -667,6 +716,8 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlowWithReload):
                 CONF_PRESSURE_SENSOR,
                 CONF_TEMPERATURE_ATTRIBUTE,
                 CONF_HUMIDITY_ATTRIBUTE,
+                CONF_OUTDOOR_TEMPERATURE_SENSOR,
+                CONF_OUTDOOR_HUMIDITY_SENSOR,
             ):
                 if not user_input.get(key) and get_value(self.config_entry, key):
                     # The options win over the data, so removing the value must
@@ -680,6 +731,8 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlowWithReload):
                     CONF_TEMPERATURE_ATTRIBUTE,
                     CONF_HUMIDITY_SENSOR,
                     CONF_HUMIDITY_ATTRIBUTE,
+                    CONF_OUTDOOR_TEMPERATURE_SENSOR,
+                    CONF_OUTDOOR_HUMIDITY_SENSOR,
                 )
             }
             if not (errors := check_input(self.hass, user_input, current)):

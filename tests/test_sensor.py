@@ -1095,7 +1095,7 @@ async def test_create_sensors(hass: HomeAssistant):
     await hass.async_block_till_done()
 
     # Make sure that sensors in registry
-    for s in SensorType:
+    for s in DEFAULT_SENSOR_TYPES:
         assert get_eid(registry, id_generator(entry.unique_id, s)) is not None
 
 

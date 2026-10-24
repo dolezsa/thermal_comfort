@@ -30,6 +30,8 @@ from .sensor import (
     CONF_ENABLED_SENSORS,
     CONF_HUMIDITY_ATTRIBUTE,
     CONF_HUMIDITY_SENSOR,
+    CONF_OUTDOOR_HUMIDITY_SENSOR,
+    CONF_OUTDOOR_TEMPERATURE_SENSOR,
     CONF_POLL,
     CONF_PRESSURE_SENSOR,
     CONF_SCAN_INTERVAL,
@@ -52,6 +54,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         CONF_TEMPERATURE_SENSOR: get_value(entry, CONF_TEMPERATURE_SENSOR),
         CONF_HUMIDITY_SENSOR: get_value(entry, CONF_HUMIDITY_SENSOR),
         CONF_PRESSURE_SENSOR: get_value(entry, CONF_PRESSURE_SENSOR),
+        CONF_OUTDOOR_TEMPERATURE_SENSOR: get_value(
+            entry, CONF_OUTDOOR_TEMPERATURE_SENSOR
+        ),
+        CONF_OUTDOOR_HUMIDITY_SENSOR: get_value(entry, CONF_OUTDOOR_HUMIDITY_SENSOR),
         CONF_TEMPERATURE_ATTRIBUTE: get_value(entry, CONF_TEMPERATURE_ATTRIBUTE),
         CONF_HUMIDITY_ATTRIBUTE: get_value(entry, CONF_HUMIDITY_ATTRIBUTE),
         CONF_POLL: get_value(entry, CONF_POLL),

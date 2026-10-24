@@ -19,7 +19,10 @@ from custom_components.thermal_comfort.const import (
 )
 from custom_components.thermal_comfort.sensor import (
     CONF_HUMIDITY_ATTRIBUTE,
+    CONF_OUTDOOR_HUMIDITY_SENSOR,
+    CONF_OUTDOOR_TEMPERATURE_SENSOR,
     CONF_TEMPERATURE_ATTRIBUTE,
+    DEFAULT_SENSOR_TYPES,
 )
 from homeassistant import config_entries
 from homeassistant.components.sensor import SensorDeviceClass
@@ -638,3 +641,158 @@ async def test_options_flow_keeps_a_typed_attribute_that_is_missing_now(hass):
     result = await submit({**sources, CONF_HUMIDITY_ATTRIBUTE: "humid"})
     assert result["type"] == FlowResultType.FORM
     assert result["errors"] == {"base": "humidity_attribute_not_found"}
+
+
+OUTDOOR = {
+    CONF_OUTDOOR_TEMPERATURE_SENSOR: "sensor.outdoor_temperature",
+    CONF_OUTDOOR_HUMIDITY_SENSOR: "sensor.outdoor_humidity",
+}
+
+
+def _set_outdoor(hass):
+    hass.states.async_set("sensor.outdoor_temperature", "5")
+    hass.states.async_set("sensor.outdoor_humidity", "80")
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_outdoor_sensor_selectors(hass, start_ha, hass_client):
+    """Test the outdoor fields as the frontend receives them, and the sensors to choose."""
+    _set_outdoor(hass)
+    assert await async_setup_component(hass, "config", {})
+    client = await hass_client()
+
+    response = await client.post(
+        "/api/config/config_entries/flow", json={"handler": DOMAIN}
+    )
+    form = await response.json()
+    names = [f["name"] for f in form["data_schema"]]
+    assert names.index("humidity_sensor") < names.index("outdoor_temperature_sensor")
+    for name, entity in (
+        ("outdoor_temperature_sensor", "sensor.outdoor_temperature"),
+        ("outdoor_humidity_sensor", "sensor.outdoor_humidity"),
+    ):
+        field = next(f for f in form["data_schema"] if f["name"] == name)
+        assert field["optional"] is True
+        assert entity in field["selector"]["entity"]["include_entities"]
+    advanced = next(f for f in form["data_schema"] if f["name"] == "advanced")
+    enabled = next(f for f in advanced["schema"] if f["name"] == "enabled_sensors")
+    # the sensors of the outdoor air are created for the outdoor sensors
+    assert set(enabled["options"]) == set(map(str, DEFAULT_SENSOR_TYPES))
+    assert set(enabled["default"]) == set(map(str, DEFAULT_SENSOR_TYPES))
+
+    response = await client.post(
+        f"/api/config/config_entries/flow/{form['flow_id']}",
+        json=form_input({**ADVANCED_USER_INPUT, **OUTDOOR}),
+    )
+    assert (await response.json())["type"] == "create_entry"
+    (entry,) = hass.config_entries.async_entries(DOMAIN)
+    assert entry.data[CONF_OUTDOOR_TEMPERATURE_SENSOR] == "sensor.outdoor_temperature"
+    assert entry.data[CONF_OUTDOOR_HUMIDITY_SENSOR] == "sensor.outdoor_humidity"
+
+
+async def test_check_input_outdoor_sensors(hass):
+    """Test the errors of the outdoor sensors."""
+    _set_outdoor(hass)
+    hass.states.async_set("sensor.t", "20")
+    hass.states.async_set("sensor.h", "50")
+    indoor = {CONF_TEMPERATURE_SENSOR: "sensor.t", CONF_HUMIDITY_SENSOR: "sensor.h"}
+
+    assert check_input(hass, {**indoor, **OUTDOOR}) == {}
+    assert check_input(hass, indoor) == {}
+
+    # both or none
+    for key, value in OUTDOOR.items():
+        assert check_input(hass, {**indoor, key: value}) == {
+            "base": "outdoor_incomplete"
+        }
+
+    # not found
+    assert check_input(
+        hass,
+        {**indoor, **OUTDOOR, CONF_OUTDOOR_TEMPERATURE_SENSOR: "sensor.no_such"},
+    ) == {"base": "outdoor_temperature_not_found"}
+    assert check_input(
+        hass, {**indoor, **OUTDOOR, CONF_OUTDOOR_HUMIDITY_SENSOR: "sensor.no_such"}
+    ) == {"base": "outdoor_humidity_not_found"}
+
+    # a sensor the entry has already can be missing for a while
+    hass.states.async_remove("sensor.outdoor_humidity")
+    assert check_input(hass, {**indoor, **OUTDOOR}) == {
+        "base": "outdoor_humidity_not_found"
+    }
+    assert check_input(hass, {**indoor, **OUTDOOR}, {**indoor, **OUTDOOR}) == {}
+
+    # the same sources as the room
+    assert check_input(
+        hass,
+        {
+            **indoor,
+            CONF_OUTDOOR_TEMPERATURE_SENSOR: "sensor.t",
+            CONF_OUTDOOR_HUMIDITY_SENSOR: "sensor.h",
+        },
+    ) == {"base": "outdoor_same_as_indoor"}
+    # one weather entity for the outdoor air is fine, and not the room's
+    hass.states.async_set(WEATHER, "sunny", {"temperature": 5, "humidity": 80})
+    assert (
+        check_input(
+            hass,
+            {
+                **indoor,
+                CONF_OUTDOOR_TEMPERATURE_SENSOR: WEATHER,
+                CONF_OUTDOOR_HUMIDITY_SENSOR: WEATHER,
+            },
+        )
+        == {}
+    )
+    assert check_input(
+        hass,
+        {
+            CONF_TEMPERATURE_SENSOR: WEATHER,
+            CONF_HUMIDITY_SENSOR: WEATHER,
+            CONF_OUTDOOR_TEMPERATURE_SENSOR: WEATHER,
+            CONF_OUTDOOR_HUMIDITY_SENSOR: WEATHER,
+        },
+    ) == {"base": "outdoor_same_as_indoor"}
+
+
+async def test_options_flow_outdoor_sensors(hass):
+    """Test adding, keeping and clearing the outdoor sensors in the options flow."""
+    _set_outdoor(hass)
+    hass.states.async_set("sensor.test_temperature_sensor", "20")
+    hass.states.async_set("sensor.test_humidity_sensor", "50")
+    entry = MockConfigEntry(domain=DOMAIN, data=ADVANCED_USER_INPUT, entry_id="test")
+    entry.add_to_hass(hass)
+    sources = {k: v for k, v in ADVANCED_USER_INPUT.items() if k in USER_INPUT}
+
+    async def submit(user_input):
+        result = await hass.config_entries.options.async_init(entry.entry_id)
+        with patch.object(hass.config_entries, "async_schedule_reload"):
+            return await hass.config_entries.options.async_configure(
+                result["flow_id"], user_input=form_input(user_input)
+            )
+
+    result = await submit({**sources, **OUTDOOR})
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    for key, value in OUTDOOR.items():
+        assert get_value(entry, key) == value
+
+    # the stored values are offered again
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    schema = result["data_schema"].schema
+    for key, value in OUTDOOR.items():
+        field = next(k for k in schema if k == key)
+        assert field.description["suggested_value"] == value
+    hass.config_entries.options.async_abort(result["flow_id"])
+
+    # only one of them
+    result = await submit(
+        {**sources, CONF_OUTDOOR_TEMPERATURE_SENSOR: "sensor.outdoor_temperature"}
+    )
+    assert result["type"] == FlowResultType.FORM
+    assert result["errors"] == {"base": "outdoor_incomplete"}
+
+    # cleared by the form, the old values must not come back
+    result = await submit(sources)
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    for key in OUTDOOR:
+        assert get_value(entry, key) is None
