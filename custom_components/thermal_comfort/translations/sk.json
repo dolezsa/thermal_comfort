@@ -4,8 +4,8 @@
       "temperature_not_found": "Teplotný snímač nenájdený",
       "humidity_not_found": "Snímač vlhkosti nenájdený",
       "pressure_not_found": "Tlakový snímač nenájdený",
-      "temperature_attribute_not_found": "Zdroj teploty nemá atribút s týmto názvom; pozrite si rozšírené možnosti.",
-      "humidity_attribute_not_found": "Zdroj vlhkosti nemá atribút s týmto názvom; pozrite si rozšírené možnosti."
+      "temperature_attribute_not_found": "Zdroj teploty nemá atribút s týmto názvom; pozrite si rozšírené možnosti",
+      "humidity_attribute_not_found": "Zdroj vlhkosti nemá atribút s týmto názvom; pozrite si rozšírené možnosti"
     },
     "step": {
       "init": {
@@ -74,7 +74,7 @@
               "humidity_attribute": "Atribút vlhkosti (voliteľný)"
             },
             "data_description": {
-              "temperature_attribute": "Vlastnosť teplotného senzora, ktorá obsahuje hodnotu namiesto stavu. Pri entitách týkajúcich sa počasia a klímy nie je potrebná.",
+              "temperature_attribute": "Vlastnosť teplotného snímača, ktorá obsahuje hodnotu namiesto stavu. Pri entitách týkajúcich sa počasia a klímy nie je potrebná.",
               "humidity_attribute": "Vlastnosť snímača vlhkosti, ktorá obsahuje hodnotu namiesto stavu. Pri entitách týkajúcich sa počasia a klímy nie je potrebná.",
               "enabled_sensors": "Snímače, ktoré si nevyberiete, sa napriek tomu vytvoria, avšak budú deaktivované. Neskôr ich môžete aktivovať v nastaveniach entity."
             }
