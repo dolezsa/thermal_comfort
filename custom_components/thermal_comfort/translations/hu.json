@@ -217,6 +217,12 @@
       "wet_bulb_temperature": {
         "name": "Nedves hőmérséklet"
       },
+      "humidity_ratio": {
+        "name": "Keverési arány"
+      },
+      "vapor_pressure_deficit": {
+        "name": "Telítési hiány"
+      },
       "moisture_excess": {
         "name": "Páratöbblet"
       },

@@ -64,11 +64,11 @@ The entry reloads when you save changed options.
   <dt><strong>Pressure sensor</strong> <code>entity</code> (optional)</dt>
   <dd>
     An atmospheric pressure sensor (device class <code>pressure</code> or
-    <code>atmospheric_pressure</code>, any pressure unit). Only the moist air
-    enthalpy uses the pressure. Without a sensor, or while its value is
+    <code>atmospheric_pressure</code>, any pressure unit). The moist air
+    enthalpy and the humidity ratio use the pressure. Without a sensor, or while its value is
     unavailable or implausible (outside 300 to 1100 hPa), the standard
-    pressure of 101325 Pa (1013.25 hPa) is used. With a sensor, the enthalpy
-    sensor shows the pressure in use in its <code>pressure</code> attribute.
+    pressure of 101325 Pa (1013.25 hPa) is used. With a sensor, these
+    sensors show the pressure in use in their <code>pressure</code> attribute.
     Use the station pressure, not a pressure reduced to sea level, otherwise the
     result is off at higher elevations.
   </dd>

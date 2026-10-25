@@ -71,7 +71,7 @@ Enable the custom icons options for your sensor in the
  [frontend](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md#configuration-options)
  or in [yaml](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables).
 
-## Upgrading from 3.0
+## Upgrading from 3.1
 
 * With an optional outdoor temperature and humidity sensor (a weather entity works too) a device also has the
   moisture excess, the ventilation advice and the ventilation need, see the
@@ -81,9 +81,9 @@ Enable the custom icons options for your sensor in the
   options. A configuration that already uses a weather entity starts to work without a change.
 * The entity IDs of new sensors are in English also if Home Assistant uses a language with native entity IDs,
   they used to be translated. Existing entities keep their entity ID.
-* New sensors: the wet-bulb temperature and the Thoms discomfort index. Sensors configured in the
-  frontend before the update get them as disabled entities, enable them in the entity settings.
-  YAML sensors without `sensor_types` get them automatically.
+* New sensors: the wet-bulb temperature, the Thoms discomfort index, the humidity ratio and the vapor pressure
+  deficit. Sensors configured in the frontend before the update get them as disabled entities, enable them in
+  the entity settings. YAML sensors without `sensor_types` get them automatically.
 * The Thoms discomfort perception and its `thoms_discomfort_index` attribute use the relative humidity
   form of the index, the one the categories belong to, instead of the mean of the air and wet-bulb
   temperature. The values change (see the [sensor documentation](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)),

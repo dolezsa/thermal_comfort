@@ -85,7 +85,7 @@ thermal_comfort:
   </dd>
   <dt><strong>pressure_sensor</strong> <code>string</code> <code>(optional)</code></dt>
   <dd>
-    ID of an atmospheric pressure sensor entity, used for the moist air enthalpy.
+    ID of an atmospheric pressure sensor entity, used for the moist air enthalpy and the humidity ratio.
     Without it, or while its value is unusable (unavailable or outside 300 to
     1100 hPa), the standard pressure of 101325 Pa is used. Use the station
     pressure, not a pressure reduced to sea level.

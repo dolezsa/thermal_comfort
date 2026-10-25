@@ -3,7 +3,7 @@
 All sensors are calculated from one temperature and one relative humidity
 sensor. The ventilation sensors also need the optional
 [outdoor sensors](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md),
-the moist air enthalpy can use an optional pressure sensor.
+the moist air enthalpy and the humidity ratio can use an optional pressure sensor.
 Sensors with a text value (the perceptions, the frost risk, the ventilation
 advice and the ventilation need) have fixed English state names, like `comfortable`, which
 Home Assistant shows translated. Use the English names in automations and templates.
@@ -13,6 +13,8 @@ Home Assistant shows translated. Use the English names in automations and templa
 | I want to ... | Use |
 | --- | --- |
 | know how much water the air holds, independent of the temperature | `dew_point`, `absolute_humidity` |
+| compare the water content of two rooms or of the room and the outdoors, per kg of dry air | `humidity_ratio` |
+| see how strongly the air dries things (laundry, wood, plants) | `vapor_pressure_deficit` |
 | see if windows or walls will get wet | `dew_point` (condensation starts on a surface colder than the dew point) |
 | see how hot it feels in warm weather | `humidex`, `heat_index`, `summer_simmer_index`, or their perception sensors, `thoms_discomfort_perception` |
 | see if cool, damp weather is uncomfortable | `winter_scharlau_perception` (only between -5 and 6°C and above 40 % humidity, otherwise `outside_calculable_range`; there is no wind chill) |
@@ -35,6 +37,35 @@ Home Assistant shows translated. Use the English names in automations and templa
     or to follow a dehumidifier. In a dwelling the value is mostly between about 4 and 14 g/m³,
     lowest in the heating season and highest in summer.
     Source: <a href="https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/">Carnot Cycle</a>
+  </dd>
+  <dt><strong>Humidity Ratio</strong> <code>humidity_ratio</code></dt>
+  <dd>
+    The mass of water vapor in the air in grams per kilogram of <em>dry</em> air (g/kg), also called the mixing ratio,
+    the humidity axis of the Mollier chart. It is not the absolute humidity (g/m³, per volume of air) and
+    not the specific humidity, which is per kilogram of moist air and about 1 % lower.
+    Air that is heated or cooled without gaining or losing water keeps its humidity ratio, so
+    values of different rooms or of the room and the outdoors compare directly, and the change
+    of the value shows how much water a dehumidifier, a humidifier or the airing moves.
+    It depends on the atmospheric pressure (about 1.2 % per 100 m of elevation), from the optional
+    pressure sensor, otherwise 101325 Pa is used, see the configuration docs. With a pressure sensor the
+    <code>pressure</code> attribute shows the pressure in use.
+    The saturation vapor pressure comes from the equation of ASHRAE Fundamentals 2021 (Hyland and Wexler), the ratio from
+    the ideal gas relation, which stays within about 0.5 % of the tabulated real gas values. The relative humidity is taken over water also below 0°C, as the
+    sensors and the weather services report it.
+  </dd>
+  <dt><strong>Vapor Pressure Deficit</strong> <code>vapor_pressure_deficit</code></dt>
+  <dd>
+    How much more water vapor the air could take up, as a pressure in kPa: the saturation vapor pressure minus the vapor pressure
+    of the air, <code>VPD = pws × (1 - RH / 100)</code>. A high value means dry air that takes up moisture quickly (laundry
+    dries, plants transpire strongly), a low value damp air where things dry slowly.
+    Growers use it to judge the climate of a greenhouse or grow tent.
+    The attributes are the <code>vapor_pressure</code> and the <code>saturation_vapor_pressure</code> of the air in kPa.<br>
+    This is the vapor pressure deficit of the <em>air</em>. The charts of growers are made for the deficit of the leaf, and a leaf is
+    usually 1 to 3°C cooler than the air, so their values are roughly 0.15 to 0.5 kPa lower than this sensor at room
+    conditions. The leaf deficit needs the temperature of the leaf and is not calculated, and the sensor does not
+    give target ranges, they depend on the plant, its stage and on whether they are meant for the leaf or the air.
+    The pressure sensor is not used, the deficit is a pressure difference. The relative humidity is taken over water
+    also below 0°C.
   </dd>
   <dt><strong>Dew Point + Perception</strong> <code>dew_point</code> <code>dew_point_perception</code></dt>
   <dd>
@@ -157,6 +188,7 @@ into text states, for dashboards and automations ("it is uncomfortable").
     energy than dry air of the same temperature. With a second device for the outdoor air, compare the two
     values to see if airing or a ventilation unit brings heat in or takes it out, or use it for cooling calculations.
     It depends on the atmospheric pressure, from the optional pressure sensor, otherwise the standard pressure of 101325 Pa is used, see the configuration docs.
+    Below 0°C the saturation vapor pressure is taken over ice, unlike in the humidity ratio, which uses water at all temperatures.
   </dd>
 </dl>
 

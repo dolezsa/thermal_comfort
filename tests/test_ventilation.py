@@ -618,7 +618,7 @@ async def test_options_flow_adds_and_removes_the_outdoor_air(hass):
         }
     )
     assert float(hass.states.get(eid).state) == pytest.approx(4.79, abs=0.01)
-    assert len(registry.entities.get_entries_for_config_entry_id(entry.entry_id)) == 20
+    assert len(registry.entities.get_entries_for_config_entry_id(entry.entry_id)) == 22
 
 
 def yaml_config(**options):

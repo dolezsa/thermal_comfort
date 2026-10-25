@@ -22,8 +22,10 @@ from custom_components.thermal_comfort.sensor import (
     ATTR_HUMIDITY,
     ATTR_PRESSURE,
     ATTR_RELATIVE_STRAIN_INDEX,
+    ATTR_SATURATION_VAPOR_PRESSURE,
     ATTR_SUMMER_SCHARLAU_INDEX,
     ATTR_THOMS_DISCOMFORT_INDEX,
+    ATTR_VAPOR_PRESSURE,
     ATTR_WINTER_SCHARLAU_INDEX,
     CONF_CUSTOM_ICONS,
     CONF_ENABLED_SENSORS,
@@ -32,6 +34,7 @@ from custom_components.thermal_comfort.sensor import (
     CONF_SCAN_INTERVAL,
     CONF_SENSOR_TYPES,
     DEFAULT_SENSOR_TYPES,
+    PRESSURE_SENSOR_TYPES,
     DeviceThermalComfort,
     DewPointPerception,
     FrostRisk,
@@ -42,6 +45,9 @@ from custom_components.thermal_comfort.sensor import (
     SensorType,
     SummerSimmerPerception,
     ThomsDiscomfortPerception,
+    _humidity_ratio,
+    _saturation_vapor_pressure_ashrae,
+    _vapor_pressure_deficit,
     id_generator,
 )
 from homeassistant.components.sensor import DOMAIN as PLATFORM_DOMAIN, SensorDeviceClass
@@ -1402,6 +1408,11 @@ async def test_enthalpy_with_pressure_sensor(hass, start_ha):
     sensor = get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY)
     assert float(sensor.state) == pytest.approx(reference_enthalpy(25, 50, 90000))
     assert sensor.attributes[ATTR_PRESSURE] == 900.0
+    ratio = get_sensor(hass, SensorType.HUMIDITY_RATIO)
+    assert float(ratio.state) == pytest.approx(
+        reference_humidity_ratio(25, 50, 90000), rel=1e-6
+    )
+    assert ratio.attributes[ATTR_PRESSURE] == 900.0
 
     # a state change that leaves the pressure as it is changes nothing
     with patch.object(
@@ -1414,8 +1425,12 @@ async def test_enthalpy_with_pressure_sensor(hass, start_ha):
     schedule_update.assert_not_called()
     assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == sensor.state
 
-    # only the enthalpy shows the pressure
+    # only the sensors that use the pressure show it
     assert ATTR_PRESSURE not in get_sensor(hass, SensorType.DEW_POINT).attributes
+    assert (
+        ATTR_PRESSURE
+        not in get_sensor(hass, SensorType.VAPOR_PRESSURE_DEFICIT).attributes
+    )
 
 
 @pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
@@ -1483,6 +1498,10 @@ async def test_invalid_pressure_falls_back_to_standard(
     sensor = get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY)
     assert float(sensor.state) == pytest.approx(reference_enthalpy(25, 50, 101325))
     assert sensor.attributes[ATTR_PRESSURE] == 1013.25
+    ratio = get_sensor(hass, SensorType.HUMIDITY_RATIO)
+    assert float(ratio.state) == pytest.approx(
+        reference_humidity_ratio(25, 50, 101325), rel=1e-6
+    )
 
     # and it recovers
     hass.states.async_set(
@@ -1494,8 +1513,8 @@ async def test_invalid_pressure_falls_back_to_standard(
 
 @pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
 async def test_pressure_does_not_gate_availability_or_other_sensors(hass, start_ha):
-    """Test that the pressure only touches the enthalpy sensor."""
-    others = [t for t in DEFAULT_SENSOR_TYPES if t != SensorType.MOIST_AIR_ENTHALPY]
+    """Test that the pressure only touches the sensors that use it."""
+    others = [t for t in DEFAULT_SENSOR_TYPES if t not in PRESSURE_SENSOR_TYPES]
     before = {t: get_sensor(hass, t).state for t in others}
     hass.states.async_set(
         "sensor.test_pressure_sensor", "800", {"unit_of_measurement": "hPa"}
@@ -1505,7 +1524,8 @@ async def test_pressure_does_not_gate_availability_or_other_sensors(hass, start_
 
     hass.states.async_set("sensor.test_temperature_sensor", STATE_UNAVAILABLE)
     await hass.async_block_till_done()
-    assert get_sensor(hass, SensorType.MOIST_AIR_ENTHALPY).state == STATE_UNAVAILABLE
+    for sensor_type in PRESSURE_SENSOR_TYPES:
+        assert get_sensor(hass, sensor_type).state == STATE_UNAVAILABLE
     hass.states.async_set(
         "sensor.test_pressure_sensor", "850", {"unit_of_measurement": "hPa"}
     )
@@ -1552,10 +1572,16 @@ async def test_pressure_with_polling(hass, start_ha):
     )
     await hass.async_block_till_done()
     assert enthalpy(hass) == pytest.approx(reference_enthalpy(25, 50, 100000))
+    assert float(get_sensor(hass, SensorType.HUMIDITY_RATIO).state) == pytest.approx(
+        reference_humidity_ratio(25, 50, 100000), rel=1e-6
+    )
 
     async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=3601))
     await hass.async_block_till_done()
     assert enthalpy(hass) == pytest.approx(reference_enthalpy(25, 50, 90000))
+    assert float(get_sensor(hass, SensorType.HUMIDITY_RATIO).state) == pytest.approx(
+        reference_humidity_ratio(25, 50, 90000), rel=1e-6
+    )
 
     remove_platform_entities(hass)
     await hass.async_block_till_done()
@@ -1593,6 +1619,10 @@ async def test_entry_with_pressure_sensor(hass: HomeAssistant, poll: bool) -> No
         await hass.async_block_till_done()
         state = hass.states.get("sensor.test_thermal_comfort_moist_air_enthalpy")
         assert float(state.state) == pytest.approx(reference_enthalpy(25, 50, 95000))
+        state = hass.states.get("sensor.test_thermal_comfort_humidity_ratio")
+        assert float(state.state) == pytest.approx(
+            reference_humidity_ratio(25, 50, 95000), rel=1e-6
+        )
 
         # a reload does not leave a second listener behind
         assert await hass.config_entries.async_reload(entry.entry_id)
@@ -1634,7 +1664,11 @@ async def test_yaml_entities_removed_unsubscribes_pressure(hass, start_ha):
 
 def test_pressure_is_not_recorded():
     """Test that the pressure attribute is kept out of the database."""
-    assert ATTR_PRESSURE in SensorThermalComfort._unrecorded_attributes
+    assert {
+        ATTR_PRESSURE,
+        ATTR_VAPOR_PRESSURE,
+        ATTR_SATURATION_VAPOR_PRESSURE,
+    } <= SensorThermalComfort._unrecorded_attributes
 
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
@@ -1749,3 +1783,144 @@ async def test_yaml_entity_ids_without_name_are_english(hass):
     registry = er.async_get(hass)
     assert registry.async_get("sensor.dew_point") is not None
     assert registry.async_get("sensor.punto_di_rugiada") is None
+
+
+def reference_saturation_pressure(temperature: float) -> float:
+    """Saturation vapor pressure over water in Pa, Hyland and Wexler (ASHRAE 2021 eq 6), independent of the code."""
+    t = temperature + 273.15
+    return math.exp(
+        -5.8002206e03 / t
+        + 1.3914993
+        - 4.8640239e-02 * t
+        + 4.1764768e-05 * t**2
+        - 1.4452093e-08 * t**3
+        + 6.5459673 * math.log(t)
+    )
+
+
+def reference_humidity_ratio(temperature: float, humidity: float, patm: float) -> float:
+    """Humidity ratio in g/kg dry air over water, independent of the code."""
+    p_w = humidity / 100 * reference_saturation_pressure(temperature)
+    return 1000 * 0.621945 * p_w / (patm - p_w)
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(
+    "temperature, humidity, expected",
+    [
+        (25, 50, 9.88),
+        (21, 50, 7.73),
+        (20, 60, 8.73),
+        (28, 70, 16.69),
+        (-10, 80, 1.410),  # over water, not over ice
+    ],
+)
+async def test_humidity_ratio(hass, start_ha, temperature, humidity, expected):
+    """Test the humidity ratio against values computed from the ASHRAE equations."""
+    hass.states.async_set("sensor.test_temperature_sensor", str(temperature))
+    hass.states.async_set("sensor.test_humidity_sensor", str(humidity))
+    await hass.async_block_till_done()
+    sensor = get_sensor(hass, SensorType.HUMIDITY_RATIO)
+    assert float(sensor.state) == pytest.approx(expected, abs=0.01)
+    assert float(sensor.state) == pytest.approx(
+        reference_humidity_ratio(temperature, humidity, 101325), rel=1e-9
+    )
+    assert sensor.attributes["unit_of_measurement"] == "g/kg"
+    assert ATTR_PRESSURE not in sensor.attributes
+
+
+@pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
+async def test_humidity_ratio_with_pressure_sensor(hass, start_ha):
+    """Test that the humidity ratio follows the pressure sensor, the VPD does not."""
+    sensor = get_sensor(hass, SensorType.HUMIDITY_RATIO)
+    assert float(sensor.state) == pytest.approx(
+        reference_humidity_ratio(25, 50, 100000), rel=1e-9
+    )
+    assert sensor.attributes[ATTR_PRESSURE] == 1000.0
+    deficit = get_sensor(hass, SensorType.VAPOR_PRESSURE_DEFICIT).state
+
+    hass.states.async_set(
+        "sensor.test_pressure_sensor", "950", {"unit_of_measurement": "hPa"}
+    )
+    await hass.async_block_till_done()
+    sensor = get_sensor(hass, SensorType.HUMIDITY_RATIO)
+    assert float(sensor.state) == pytest.approx(10.55, abs=0.01)
+    assert sensor.attributes[ATTR_PRESSURE] == 950.0
+    assert get_sensor(hass, SensorType.VAPOR_PRESSURE_DEFICIT).state == deficit
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(
+    "temperature, humidity, deficit, vapor_pressure, saturation",
+    [
+        (25, 50, 1.5846, 1.585, 3.169),
+        (20, 60, 0.936, 1.404, 2.340),
+        (28, 70, 1.135, 2.648, 3.782),
+        (25, 5, 3.011, 0.158, 3.169),
+        (25, 100, 0.0, 3.169, 3.169),
+    ],
+)
+async def test_vapor_pressure_deficit(
+    hass, start_ha, temperature, humidity, deficit, vapor_pressure, saturation
+):
+    """Test the vapor pressure deficit and its attributes in kPa."""
+    hass.states.async_set("sensor.test_temperature_sensor", str(temperature))
+    hass.states.async_set("sensor.test_humidity_sensor", str(humidity))
+    await hass.async_block_till_done()
+    sensor = get_sensor(hass, SensorType.VAPOR_PRESSURE_DEFICIT)
+    assert float(sensor.state) == pytest.approx(deficit, abs=0.005)
+    assert sensor.attributes[ATTR_VAPOR_PRESSURE] == pytest.approx(
+        vapor_pressure, abs=0.002
+    )
+    assert sensor.attributes[ATTR_SATURATION_VAPOR_PRESSURE] == pytest.approx(
+        saturation, abs=0.002
+    )
+    assert sensor.attributes["unit_of_measurement"] == "kPa"
+    assert float(sensor.state) == pytest.approx(
+        reference_saturation_pressure(temperature) / 1000 * (1 - humidity / 100),
+        abs=1e-9,
+    )
+
+
+def test_vapor_pressure_deficit_of_a_leaf():
+    """Test the leaf temperature argument that the sensor does not use yet."""
+    deficit, vapor_pressure, saturation = _vapor_pressure_deficit(25, 50, 23)
+    assert deficit == pytest.approx(1.2255, abs=0.005)
+    # the pressures of the air do not depend on the leaf
+    assert vapor_pressure == pytest.approx(1.5846, abs=0.001)
+    assert saturation == pytest.approx(3.169, abs=0.001)
+
+
+def test_saturation_pressure_over_water_and_ice():
+    """Test that only the default switches to ice below 0 degrees."""
+    assert _saturation_vapor_pressure_ashrae(10) == _saturation_vapor_pressure_ashrae(
+        10, over_water=True
+    )
+    ice = _saturation_vapor_pressure_ashrae(-10)
+    water = _saturation_vapor_pressure_ashrae(-10, over_water=True)
+    assert ice == pytest.approx(259.9, abs=0.2)
+    assert water == pytest.approx(286.5, abs=0.2)
+
+
+def test_humidity_ratio_at_the_limits():
+    """Test that the highest vapor pressure stays well below the lowest pressure."""
+    ratio = _humidity_ratio(56.7, 100, 30000, over_water=True)
+    assert 0 < ratio < math.inf
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(
+    "temperature, humidity", [(0, 50), (10, 80), (25, 50), (40, 30)]
+)
+async def test_humidity_ratio_matches_the_enthalpy(
+    hass, start_ha, temperature, humidity
+):
+    """Test that the humidity ratio is the one inside the enthalpy at and above 0 degrees."""
+    hass.states.async_set("sensor.test_temperature_sensor", str(temperature))
+    hass.states.async_set("sensor.test_humidity_sensor", str(humidity))
+    await hass.async_block_till_done()
+    ratio_from_enthalpy = (enthalpy(hass) - 1.006 * temperature) / (
+        2501 + 1.86 * temperature
+    )
+    ratio = float(get_sensor(hass, SensorType.HUMIDITY_RATIO).state)
+    assert ratio == pytest.approx(1000 * ratio_from_enthalpy, rel=1e-6)

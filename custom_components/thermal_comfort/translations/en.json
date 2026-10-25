@@ -217,6 +217,12 @@
       "wet_bulb_temperature": {
         "name": "Wet-bulb temperature"
       },
+      "humidity_ratio": {
+        "name": "Humidity ratio"
+      },
+      "vapor_pressure_deficit": {
+        "name": "Vapor pressure deficit"
+      },
       "moisture_excess": {
         "name": "Moisture excess"
       },

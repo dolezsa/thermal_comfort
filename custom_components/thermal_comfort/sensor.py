@@ -55,6 +55,8 @@ _LOGGER = logging.getLogger(__name__)
 ATTR_DEW_POINT = "dew_point"
 ATTR_HUMIDITY = "humidity"
 ATTR_PRESSURE = "pressure"
+ATTR_VAPOR_PRESSURE = "vapor_pressure"
+ATTR_SATURATION_VAPOR_PRESSURE = "saturation_vapor_pressure"
 ATTR_HUMIDEX = "humidex"
 ATTR_FROST_POINT = "frost_point"
 ATTR_RELATIVE_STRAIN_INDEX = "relative_strain_index"
@@ -145,6 +147,8 @@ class SensorType(StrEnum):
     WET_BULB_TEMPERATURE = "wet_bulb_temperature"
     THOMS_DISCOMFORT_INDEX = "thoms_discomfort_index"
     THOMS_DISCOMFORT_PERCEPTION = "thoms_discomfort_perception"
+    HUMIDITY_RATIO = "humidity_ratio"
+    VAPOR_PRESSURE_DEFICIT = "vapor_pressure_deficit"
     # These need the outdoor air, see OUTDOOR_SENSOR_TYPES
     MOISTURE_EXCESS = "moisture_excess"
     VENTILATION_ADVICE = "ventilation_advice"
@@ -398,6 +402,20 @@ SENSOR_TYPES = {
         "options": list(map(str, ThomsDiscomfortPerception)),
         "icon": "mdi:sun-thermometer",
     },
+    SensorType.HUMIDITY_RATIO: {
+        "key": SensorType.HUMIDITY_RATIO,
+        "suggested_display_precision": DISPLAY_PRECISION,
+        "native_unit_of_measurement": "g/kg",
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:water-outline",
+    },
+    SensorType.VAPOR_PRESSURE_DEFICIT: {
+        "key": SensorType.VAPOR_PRESSURE_DEFICIT,
+        "suggested_display_precision": DISPLAY_PRECISION,
+        "native_unit_of_measurement": "kPa",
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:water-minus",
+    },
     SensorType.MOISTURE_EXCESS: {
         "key": SensorType.MOISTURE_EXCESS,
         "suggested_display_precision": DISPLAY_PRECISION,
@@ -425,6 +443,11 @@ OUTDOOR_SENSOR_TYPES = [
     SensorType.MOISTURE_EXCESS,
     SensorType.VENTILATION_ADVICE,
     SensorType.VENTILATION_NEED,
+]
+# The sensors that depend on the pressure of the optional pressure sensor
+PRESSURE_SENSOR_TYPES = [
+    SensorType.MOIST_AIR_ENTHALPY,
+    SensorType.HUMIDITY_RATIO,
 ]
 DEFAULT_SENSOR_TYPES = [
     sensor_type
@@ -632,6 +655,8 @@ class SensorThermalComfort(SensorEntity):
             ATTR_TEMPERATURE,
             ATTR_HUMIDITY,
             ATTR_PRESSURE,
+            ATTR_VAPOR_PRESSURE,
+            ATTR_SATURATION_VAPOR_PRESSURE,
             ATTR_OUTDOOR_TEMPERATURE,
             ATTR_OUTDOOR_HUMIDITY,
             ATTR_OUTDOOR_ABSOLUTE_HUMIDITY,
@@ -1139,11 +1164,11 @@ class DeviceThermalComfort:
         if pressure == self._pressure:
             return
         self._pressure = pressure
-        # Only the enthalpy depends on the pressure
-        self._compute_states[SensorType.MOIST_AIR_ENTHALPY].needs_update = True
+        for sensor_type in PRESSURE_SENSOR_TYPES:
+            self._compute_states[sensor_type].needs_update = True
         if self.available and not self._should_poll:
             for sensor in self.sensors:
-                if sensor._sensor_type == SensorType.MOIST_AIR_ENTHALPY:
+                if sensor._sensor_type in PRESSURE_SENSOR_TYPES:
                     sensor.async_schedule_update_ha_state(True)
 
     def _actual_pressure(self) -> float:
@@ -1382,39 +1407,9 @@ class DeviceThermalComfort:
     async def moist_air_enthalpy(self) -> float | tuple[float, dict]:
         """Calculate the enthalpy of moist air."""
         patm = self._actual_pressure()  # Pa
-        c_to_k = 273.15
-
-        # ASHRAE fundamentals 2021 pg 1.5
-        c1 = -5.6745359e03
-        c2 = 6.3925247e00
-        c3 = -9.6778430e-03
-        c4 = 6.2215701e-07
-        c5 = 2.0747825e-09
-        c6 = -9.4840240e-13
-        c7 = 4.1635019e00
-        c8 = -5.8002206e03
-        c9 = 1.3914993e00
-        c10 = -4.8640239e-02
-        c11 = 4.1764768e-05
-        c12 = -1.4452093e-08
-        c13 = 6.5459673e00
-
-        T = self._temperature + c_to_k
-
-        # calculate saturation vapor pressure for temperature
-        p_ws = (
-            # ASHRAE fundamentals 2021 pg 1.5 eq 5
-            math.exp(c1 / T + c2 + c3 * T + c4 * T**2 + c5 * T**3 + c6 * T**4 + c7 * math.log(T))
-            if T < c_to_k  # noqa: SIM300
-            # ASHRAE fundamentals 2021 pg 1.5 eq 6
-            else math.exp(c8 / T + c9 + c10 * T + c11 * T**2 + c12 * T**3 + c13 * math.log(T))
-        )
-
-        # calculate vapor pressure for RH % (ASHRAE fundamentals 2021 pg 1.9 eq 22)
-        p_w = self._humidity / 100 * p_ws
 
         # calculate humidity ratio (ASHRAE fundamentals 2021 pg 1.9 eq 20)
-        W = 0.621945 * p_w / (patm - p_w)
+        W = _humidity_ratio(self._temperature, self._humidity, patm)
 
         # calculate enthalpy (ASHRAE fundamentals 2021 pg 1.10 eq 30)
         enthalpy = 1.006 * self._temperature + W * (2501 + 1.86 * self._temperature)
@@ -1422,6 +1417,34 @@ class DeviceThermalComfort:
             # Show the pressure in use, only where a sensor was configured
             return enthalpy, {ATTR_PRESSURE: patm / 100}
         return enthalpy
+
+    @compute_once_lock(SensorType.HUMIDITY_RATIO)
+    async def humidity_ratio(self) -> float | tuple[float, dict]:
+        """Humidity ratio in g of water vapor per kg of dry air.
+
+        The relative humidity is taken over water also below 0 °C, as the
+        sensors and the weather services report it.
+        """
+        patm = self._actual_pressure()  # Pa
+        ratio = (
+            _humidity_ratio(self._temperature, self._humidity, patm, over_water=True)
+            * 1000
+        )
+        if self._pressure_entity:
+            # Show the pressure in use, only where a sensor was configured
+            return ratio, {ATTR_PRESSURE: patm / 100}
+        return ratio
+
+    @compute_once_lock(SensorType.VAPOR_PRESSURE_DEFICIT)
+    async def vapor_pressure_deficit(self) -> tuple[float, dict]:
+        """Vapor pressure deficit of the air in kPa."""
+        deficit, vapor_pressure, saturation = _vapor_pressure_deficit(
+            self._temperature, self._humidity
+        )
+        return deficit, {
+            ATTR_VAPOR_PRESSURE: round(vapor_pressure, 3),
+            ATTR_SATURATION_VAPOR_PRESSURE: round(saturation, 3),
+        }
 
     @compute_once_lock(SensorType.WET_BULB_TEMPERATURE)
     async def wet_bulb_temperature(self) -> float:
@@ -1654,6 +1677,67 @@ def _parse_humidity(state, attribute: str | None) -> float | None:
 def _saturation_vapor_pressure(temperature: float) -> float:
     """Return the saturation vapor pressure in hPa (Magnus)."""
     return 6.112 * math.exp((17.67 * temperature) / (243.5 + temperature))
+
+
+def _saturation_vapor_pressure_ashrae(temperature: float, over_water: bool = False) -> float:
+    """Return the saturation vapor pressure in Pa (ASHRAE fundamentals 2021 pg 1.5).
+
+    Over ice below 0 °C (eq 5), over water otherwise (eq 6) or always with
+    over_water.
+    """
+    c1 = -5.6745359e03
+    c2 = 6.3925247e00
+    c3 = -9.6778430e-03
+    c4 = 6.2215701e-07
+    c5 = 2.0747825e-09
+    c6 = -9.4840240e-13
+    c7 = 4.1635019e00
+    c8 = -5.8002206e03
+    c9 = 1.3914993e00
+    c10 = -4.8640239e-02
+    c11 = 4.1764768e-05
+    c12 = -1.4452093e-08
+    c13 = 6.5459673e00
+
+    c_to_k = 273.15
+    T = temperature + c_to_k
+    if c_to_k > T and not over_water:
+        return math.exp(c1 / T + c2 + c3 * T + c4 * T**2 + c5 * T**3 + c6 * T**4 + c7 * math.log(T))
+    return math.exp(c8 / T + c9 + c10 * T + c11 * T**2 + c12 * T**3 + c13 * math.log(T))
+
+
+def _humidity_ratio(temperature: float, humidity: float, pressure: float, over_water: bool = False) -> float:
+    """Return the humidity ratio in kg of water vapor per kg of dry air.
+
+    The pressure is in Pa. The denominator stays positive within the input
+    ranges (the vapor pressure is at most 17 kPa at 56.7 °C, the pressure is
+    limited to 30 kPa and up).
+    """
+    p_ws = _saturation_vapor_pressure_ashrae(temperature, over_water)
+
+    # calculate vapor pressure for RH % (ASHRAE fundamentals 2021 pg 1.9 eq 22)
+    p_w = humidity / 100 * p_ws
+
+    # calculate humidity ratio (ASHRAE fundamentals 2021 pg 1.9 eq 20)
+    return 0.621945 * p_w / (pressure - p_w)
+
+
+def _vapor_pressure_deficit(
+    temperature: float, humidity: float, leaf_temperature: float | None = None
+) -> tuple[float, float, float]:
+    """Return the vapor pressure deficit, the vapor pressure and the saturation vapor pressure in kPa.
+
+    The deficit is the saturation vapor pressure at the leaf temperature
+    minus the vapor pressure of the air. Without a leaf temperature it is the
+    deficit of the air itself. The pressures are over water.
+    """
+    saturation = _saturation_vapor_pressure_ashrae(temperature, over_water=True) / 1000
+    vapor_pressure = humidity / 100 * saturation
+    if leaf_temperature is None:
+        leaf_saturation = saturation
+    else:
+        leaf_saturation = _saturation_vapor_pressure_ashrae(leaf_temperature, over_water=True) / 1000
+    return leaf_saturation - vapor_pressure, vapor_pressure, saturation
 
 
 def _absolute_humidity(temperature: float, humidity: float) -> float:
