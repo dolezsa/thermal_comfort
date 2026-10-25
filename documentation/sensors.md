@@ -1,35 +1,48 @@
 # Sensors:
 
 All sensors are calculated from one temperature and one relative humidity
-sensor.
+sensor. The ventilation sensors also need the optional
+[outdoor sensors](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md),
+the moist air enthalpy can use an optional pressure sensor.
+Sensors with a text value (the perceptions, the frost risk, the ventilation
+advice and the ventilation need) have fixed English state names, like `comfortable`, which
+Home Assistant shows translated. Use the English names in automations and templates.
+
+## Which sensor do I need?
+
+| I want to ... | Use |
+| --- | --- |
+| know how much water the air holds, independent of the temperature | `dew_point`, `absolute_humidity` |
+| see if windows or walls will get wet | `dew_point` (condensation starts on a surface colder than the dew point) |
+| see how hot it feels in warm weather | `humidex`, `heat_index`, `summer_simmer_index`, or their perception sensors, `thoms_discomfort_perception` |
+| see if cool, damp weather is uncomfortable | `winter_scharlau_perception` (only between -5 and 6°C and above 40 % humidity, otherwise `outside_calculable_range`; there is no wind chill) |
+| know the risk of frost | `frost_risk`, `frost_point` |
+| judge heat stress or evaporative cooling | `wet_bulb_temperature` |
+| decide if airing dries or humidifies the room | `moisture_excess`, `ventilation_advice` (outdoor sensors needed) |
+| check if the ventilation of a dwelling is sufficient | `ventilation_need` (outdoor sensors needed) |
+| know the energy content of the air, for example to compare two rooms or the room and the outdoors (one device each) | `moist_air_enthalpy` |
+
+## Humidity and dew
 
 <dl>
   <dt><strong>Absolute Humidity</strong> <code>absolute_humidity</code></dt>
   <dd>
     Absolute humidity is a measure of the actual amount of water vapor
-      (moisture) in the air.
+    (moisture) in the air, the mass of the water vapor in one cubic meter of air, in g/m³.
+    Unlike the relative humidity it changes only a little when the air is heated or cooled
+    (the air expands a bit, and water condenses only below the dew point), so it tells how much water
+    there really is in a room. Use it to compare rooms or the room and the outdoors,
+    or to follow a dehumidifier. In a dwelling the value is mostly between about 4 and 14 g/m³,
+    lowest in the heating season and highest in summer.
     Source: <a href="https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/">Carnot Cycle</a>
-  </dd>
-  <dt><strong>Heat Index</strong> <code>heat_index</code></dt>
-  <dd>
-    The heat index combines air temperature and relative humidity to posit a
-    human-perceived equivalent temperature.
-    The calculation follows the <a href="http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml">NWS procedure</a>:
-    a simple formula is used first and the full regression only applies once
-    that result exceeds 26.1°C (79°F), so the value can show a small step at
-    that point. Above 85 % relative humidity a further humidity adjustment
-    applies between 26.7°C and 30.6°C (80°F and 87°F), which makes the value
-    jump again at 26.7°C.
-  </dd>
-  <dt><strong>Humidex + Perception</strong> <code>humidex</code> <code>humidex_perception</code></dt>
-  <dd>
-    The humidex (humidity index) describes how hot the weather feels to an average person as a result of the combined effect of heat and humidity. It is calculated from the dew point.
-    Source: <a href="https://simple.wikipedia.org/wiki/Humidex#Humidex_formula">Wikipedia</a>
   </dd>
   <dt><strong>Dew Point + Perception</strong> <code>dew_point</code> <code>dew_point_perception</code></dt>
   <dd>
     The dew point is the temperature to which air must be cooled to become
-    saturated with water vapor and dew forms on surfaces.
+    saturated with water vapor and dew forms on surfaces, in °C.
+    Water condenses on every surface that is colder than the dew point, so it is the
+    number to watch for wet windows and cold walls.
+    It depends only on the amount of water in the air, not on how warm the air is.
     Sources: <a href="http://wahiduddin.net/calc/density_algorithms.htm">calculation</a>,
     <a href="https://en.wikipedia.org/wiki/Dew_point">perception levels</a>.
     The perception follows a general, mainly outdoor scale, it is not tuned for
@@ -44,43 +57,47 @@ sensor.
   </dd>
   <dt><strong>Frost Risk</strong> <code>frost_risk</code></dt>
   <dd>
-    Risk of Frost based on current temperature, frost point and absolute humidity.
+    Risk of frost based on current temperature, frost point and absolute humidity.
+    The states are <code>no_risk</code>, <code>unlikely</code>, <code>probable</code>
+    and <code>high</code>. It is meant for the outdoor air, for example for plants or the windscreen of the car,
+    its thresholds (air temperature up to 4°C) are never reached in a heated room.
     It only knows the current values and cannot anticipate an overnight minimum,
     so don't rely on it alone to protect plants or equipment.
   </dd>
-  <dt><strong>Relative Strain Perception</strong> <code>relative_strain_perception</code></dt>
+</dl>
+
+## Feels-like temperatures and perceptions
+
+These indices describe how a person feels the combination of temperature and humidity.
+Most of them are meant for warm weather. The perception sensors translate the number
+into text states, for dashboards and automations ("it is uncomfortable").
+
+<dl>
+  <dt><strong>Heat Index</strong> <code>heat_index</code></dt>
   <dd>
-    A measure of discomfort resulting from the combined effect of temperature and humidity. It assumes a person dressed in a light business suit, walking at a moderate pace in a very light air motion. It is applicable to assess heat stress of manual workers under shelter at various metabolic rates. Valid for temperatures between 26 and 35°C (79 to 95°F).
+    The heat index combines air temperature and relative humidity to posit a
+    human-perceived equivalent temperature, in °C. It is meant for warm weather
+    (the National Weather Service uses it from 27°C, 80°F), at lower temperatures the value roughly follows the air temperature.
+    The calculation follows the <a href="http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml">NWS procedure</a>:
+    a simple formula is used first and the full regression only applies once
+    that result exceeds 26.1°C (79°F), so the value can show a small step at
+    that point. Above 85 % relative humidity a further humidity adjustment
+    applies between 26.7°C and 30.6°C (80°F and 87°F), which makes the value
+    jump again at 26.7°C.
+  </dd>
+  <dt><strong>Humidex + Perception</strong> <code>humidex</code> <code>humidex_perception</code></dt>
+  <dd>
+    The humidex (humidity index) describes how hot the weather feels to an average person as a result of the combined effect of heat and humidity. It is calculated from the dew point.
+    It is a Canadian index for warm weather, the perception ranges from <code>comfortable</code> to <code>heat_stroke</code>.
+    Source: <a href="https://simple.wikipedia.org/wiki/Humidex#Humidex_formula">Wikipedia</a>
   </dd>
   <dt><strong>Summer Simmer Index + Perception</strong> <code>summer_simmer_index</code> <code>summer_simmer_perception</code></dt>
   <dd>
-    Provides a proven indicator of heat stress concerns and discomfort using meaningful equivalent temperature values for general public acceptance and awareness.
+    Provides an indicator of heat stress concerns and discomfort using equivalent temperature values for general public acceptance and awareness.
+    It is meant for warm weather, the perception ranges from <code>cool</code> to <code>circulatory_collapse_imminent</code>.
+    Below 14.4°C (58°F) the index is the air temperature.
     Sources: <a href="https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index">index</a>,
     <a href="http://summersimmer.com/default.asp">perception</a>.
-  </dd>
-  <dt><strong>Moist Air Enthalpy</strong> <code>moist_air_enthalpy</code></dt>
-  <dd>
-    The enthalpy of moist air is the sum of the enthalpy of the dry air and the enthalpy of the water vapour. Enthalpy is the total energy of a thermodynamic system.
-    It depends on the atmospheric pressure, from the optional pressure sensor, otherwise the standard pressure of 101325 Pa is used, see the configuration docs.
-  </dd>
-  <dt><strong>Summer Scharlau Perception</strong> <code>summer_scharlau_perception</code></dt>
-  <dd>
-    The summer Scharlau index describes a bioclimatic thermal comfort when temperature values are higher than 0°C. Valid for temperatures 17° to 39°C (63° to 102°F) and humidity >= 30%.
-    Source: <a href="https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf">Rusanescu et al.</a>
-  </dd>
-  <dt><strong>Winter Scharlau Perception</strong> <code>winter_scharlau_perception</code></dt>
-  <dd>
-    Reflects the level of human discomfort caused by cooling. Valid for: temperatures -5 to +6°C (23 to 43°F) and humidity >= 40%.
-    Source: <a href="https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf">Rusanescu et al.</a>
-  </dd>
-  <dt><strong>Wet-Bulb Temperature</strong> <code>wet_bulb_temperature</code></dt>
-  <dd>
-    The lowest temperature the air can reach by evaporative cooling. It is calculated with the
-    approximation of <a href="https://doi.org/10.1175/JAMC-D-11-0143.1">Stull (2011)</a>,
-    which is valid for 5 to 99 % relative humidity and -20 to 50°C (-4 to 122°F) with an error of
-    about 0.3°C on average, and assumes the pressure at sea level. The pressure sensor is not used.
-    Outside the valid range the formula can give a value above the air temperature or below the
-    dew point, the sensor limits the value to that range, but the accuracy is lower there.
   </dd>
   <dt><strong>Thoms discomfort Index + Perception</strong> <code>thoms_discomfort_index</code> <code>thoms_discomfort_perception</code></dt>
   <dd>
@@ -102,6 +119,53 @@ sensor.
     The perception sensor shows the value of the index in the attribute <code>thoms_discomfort_index</code>.
     The index has no device class, it is shown in °C, also if the system uses °F.
   </dd>
+  <dt><strong>Relative Strain Perception</strong> <code>relative_strain_perception</code></dt>
+  <dd>
+    A measure of discomfort resulting from the combined effect of temperature and humidity. It assumes a person dressed in a light business suit, walking at a moderate pace in a very light air motion. It is applicable to assess heat stress of manual workers under shelter at various metabolic rates. Valid for temperatures between 26 and 35°C (79 to 95°F).
+  </dd>
+  <dt><strong>Summer Scharlau Perception</strong> <code>summer_scharlau_perception</code></dt>
+  <dd>
+    The summer Scharlau index describes a bioclimatic thermal comfort when temperature values are higher than 0°C. Valid for temperatures 17° to 39°C (63° to 102°F) and humidity >= 30%.
+    Source: <a href="https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf">Rusanescu et al.</a>
+  </dd>
+  <dt><strong>Winter Scharlau Perception</strong> <code>winter_scharlau_perception</code></dt>
+  <dd>
+    Reflects the level of human discomfort caused by cooling. Valid for: temperatures -5 to +6°C (23 to 43°F) and humidity >= 40%.
+    Source: <a href="https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf">Rusanescu et al.</a>
+  </dd>
+</dl>
+
+## Heat stress and energy
+
+<dl>
+  <dt><strong>Wet-Bulb Temperature</strong> <code>wet_bulb_temperature</code></dt>
+  <dd>
+    The lowest temperature the air can reach by evaporative cooling, in °C. It tells how well sweating or an
+    evaporative cooler works: the closer it is to the air temperature, the less they cool. A wet-bulb
+    temperature above about 30°C is dangerous even at rest, 35°C is considered the limit of survival.
+    It is calculated with the
+    approximation of <a href="https://doi.org/10.1175/JAMC-D-11-0143.1">Stull (2011)</a>,
+    which is valid for 5 to 99 % relative humidity and -20 to 50°C (-4 to 122°F) with an error of
+    about 0.3°C on average, and assumes the pressure at sea level. The pressure sensor is not used.
+    Outside the valid range the formula can give a value above the air temperature or below the
+    dew point, the sensor limits the value to that range, but the accuracy is lower there.
+  </dd>
+  <dt><strong>Moist Air Enthalpy</strong> <code>moist_air_enthalpy</code></dt>
+  <dd>
+    The enthalpy of moist air is the sum of the enthalpy of the dry air and the enthalpy of the water vapour. Enthalpy is the total energy of a thermodynamic system.
+    It is shown in kJ/kg of dry air and includes the heat of the water vapor, so humid air has more
+    energy than dry air of the same temperature. With a second device for the outdoor air, compare the two
+    values to see if airing or a ventilation unit brings heat in or takes it out, or use it for cooling calculations.
+    It depends on the atmospheric pressure, from the optional pressure sensor, otherwise the standard pressure of 101325 Pa is used, see the configuration docs.
+  </dd>
+</dl>
+
+## Ventilation
+
+These sensors compare the room with the outdoor air, they need the
+[outdoor sensors](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md).
+
+<dl>
   <dt><strong>Moisture Excess</strong> <code>moisture_excess</code></dt>
   <dd>
     The absolute humidity of the room minus the absolute humidity of the outdoor air, in g/m³.
