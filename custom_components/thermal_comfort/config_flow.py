@@ -28,6 +28,7 @@ from .sensor import (
     CONF_SCAN_INTERVAL,
     CONF_TEMPERATURE_ATTRIBUTE,
     CONF_TEMPERATURE_SENSOR,
+    CONF_WIND_SPEED_SENSOR,
     DEFAULT_HUMIDITY_ATTRIBUTES,
     DEFAULT_SENSOR_TYPES,
     DEFAULT_TEMPERATURE_ATTRIBUTES,
@@ -43,6 +44,10 @@ SECTION_ADVANCED = "advanced"
 PRESSURE_DEVICE_CLASSES = [
     SensorDeviceClass.ATMOSPHERIC_PRESSURE,
     SensorDeviceClass.PRESSURE,
+]
+WIND_SPEED_DEVICE_CLASSES = [
+    SensorDeviceClass.WIND_SPEED,
+    SensorDeviceClass.SPEED,
 ]
 
 
@@ -300,7 +305,14 @@ def get_sensors_by_device_class(
         return unit_of_measurement not in units_for_exclude
 
     def filter_thermal_comfort_ids(entity_id: str) -> bool:
-        """Filter out device_ids containing our SensorType."""
+        """Filter out our own sensors.
+
+        The registry tells the integration of an entity, so a sensor of
+        another integration with the name of a sensor type is kept. Entities
+        without a registry entry are recognized by the sensor type in the id.
+        """
+        if (entry := _er.async_get(entity_id)) is not None:
+            return entry.platform != DOMAIN
         return all(sensor_type not in entity_id for sensor_type in SensorType)
 
     filters_for_additional_sensors: list[callable] = [
@@ -382,6 +394,16 @@ def build_schema(
     if not temperature_sensors or not humidity_sensors:
         return None
 
+    # The selector rejects a value that is not in the list, so a source the
+    # entry already has stays selectable even if the filters would hide it now
+    for keys, sensors in (
+        ((CONF_TEMPERATURE_SENSOR, CONF_OUTDOOR_TEMPERATURE_SENSOR), temperature_sensors),
+        ((CONF_HUMIDITY_SENSOR, CONF_OUTDOOR_HUMIDITY_SENSOR), humidity_sensors),
+    ):
+        for key in keys:
+            if (current := get_value(config_entry, key)) and current not in sensors:
+                sensors.append(current)
+
     schema = vol.Schema(
         {
             vol.Required(
@@ -439,6 +461,25 @@ def build_schema(
                     "entity": {
                         "domain": Platform.SENSOR,
                         "device_class": PRESSURE_DEVICE_CLASSES,
+                    }
+                }
+            ),
+            # Optional, the sensors of the wind are created with it
+            vol.Optional(
+                CONF_WIND_SPEED_SENSOR,
+                description={
+                    "suggested_value": get_value(config_entry, CONF_WIND_SPEED_SENSOR)
+                },
+            ): selector(
+                {
+                    "entity": {
+                        "filter": [
+                            {
+                                "domain": Platform.SENSOR,
+                                "device_class": WIND_SPEED_DEVICE_CLASSES,
+                            },
+                            {"domain": Platform.WEATHER},
+                        ]
                     }
                 }
             ),
@@ -580,6 +621,17 @@ def check_input(
             and hass.states.get(user_input[key]) is None
         ):
             result["base"] = error
+    # Like the outdoor sensors, a source the entry has already is not checked
+    if (
+        user_input.get(CONF_WIND_SPEED_SENSOR)
+        and (
+            current is None
+            or current.get(CONF_WIND_SPEED_SENSOR)
+            != user_input[CONF_WIND_SPEED_SENSOR]
+        )
+        and hass.states.get(user_input[CONF_WIND_SPEED_SENSOR]) is None
+    ):
+        result["base"] = "wind_speed_not_found"
     if all(outdoor) and source_pair(
         {
             **user_input,
@@ -718,6 +770,7 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlowWithReload):
                 CONF_HUMIDITY_ATTRIBUTE,
                 CONF_OUTDOOR_TEMPERATURE_SENSOR,
                 CONF_OUTDOOR_HUMIDITY_SENSOR,
+                CONF_WIND_SPEED_SENSOR,
             ):
                 if not user_input.get(key) and get_value(self.config_entry, key):
                     # The options win over the data, so removing the value must
@@ -733,6 +786,7 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlowWithReload):
                     CONF_HUMIDITY_ATTRIBUTE,
                     CONF_OUTDOOR_TEMPERATURE_SENSOR,
                     CONF_OUTDOOR_HUMIDITY_SENSOR,
+                    CONF_WIND_SPEED_SENSOR,
                 )
             }
             if not (errors := check_input(self.hass, user_input, current)):

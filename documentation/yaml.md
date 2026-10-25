@@ -90,6 +90,16 @@ thermal_comfort:
     1100 hPa), the standard pressure of 101325 Pa is used. Use the station
     pressure, not a pressure reduced to sea level.
   </dd>
+  <dt><strong>wind_speed_sensor</strong> <code>string</code> <code>(optional)</code></dt>
+  <dd>
+    ID of a wind speed sensor entity, or of a weather entity (its <code>wind_speed</code> attribute is used).
+    With it the <code>wind_chill</code> and the <code>apparent_temperature</code> are created, by default or when they
+    are in <code>sensor_types</code>, from the temperature and humidity sensors of the device. Without it these sensor
+    types are left out. Give it for a device whose sources are outdoor sensors or a weather entity, not for a room.
+    It can also be given once in the entry for all of its devices, but then the devices that are rooms get the two
+    sensors as well, and can leave them out only with their own <code>sensor_types</code>.
+    See <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md#wind">wind</a>.
+  </dd>
   <dt><strong>icon_template</strong> <code>template</code> <code>(optional)</code></dt>
   <dd>Defines a template for the icon of the sensor.</dd>
   <dt><strong>entity_picture_template</strong> <code>template</code> <code>(optional)</code></dt>

@@ -37,6 +37,7 @@ from .sensor import (
     CONF_SCAN_INTERVAL,
     CONF_TEMPERATURE_ATTRIBUTE,
     CONF_TEMPERATURE_SENSOR,
+    CONF_WIND_SPEED_SENSOR,
     SENSOR_OPTIONS_SCHEMA,
     SENSOR_SCHEMA,
     LegacySensorType,
@@ -58,6 +59,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             entry, CONF_OUTDOOR_TEMPERATURE_SENSOR
         ),
         CONF_OUTDOOR_HUMIDITY_SENSOR: get_value(entry, CONF_OUTDOOR_HUMIDITY_SENSOR),
+        CONF_WIND_SPEED_SENSOR: get_value(entry, CONF_WIND_SPEED_SENSOR),
         CONF_TEMPERATURE_ATTRIBUTE: get_value(entry, CONF_TEMPERATURE_ATTRIBUTE),
         CONF_HUMIDITY_ATTRIBUTE: get_value(entry, CONF_HUMIDITY_ATTRIBUTE),
         CONF_POLL: get_value(entry, CONF_POLL),

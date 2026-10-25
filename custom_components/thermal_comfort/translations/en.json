@@ -9,7 +9,8 @@
       "outdoor_temperature_not_found": "Outdoor temperature sensor not found",
       "outdoor_humidity_not_found": "Outdoor humidity sensor not found",
       "outdoor_incomplete": "Choose both the outdoor temperature and the outdoor humidity sensor, or neither",
-      "outdoor_same_as_indoor": "The outdoor sensors must be other than the indoor sensors"
+      "outdoor_same_as_indoor": "The outdoor sensors must be other than the indoor sensors",
+      "wind_speed_not_found": "Wind speed sensor not found"
     },
     "step": {
       "init": {
@@ -20,12 +21,14 @@
           "humidity_sensor": "Humidity sensor",
           "outdoor_temperature_sensor": "Outdoor temperature sensor (optional)",
           "outdoor_humidity_sensor": "Outdoor humidity sensor (optional)",
-          "pressure_sensor": "Pressure sensor (optional)"
+          "pressure_sensor": "Pressure sensor (optional)",
+          "wind_speed_sensor": "Wind speed sensor (optional)"
         },
         "data_description": {
           "name": "Used as the device name and as the prefix of the sensor names, for example the name of the room.",
           "outdoor_temperature_sensor": "With the outdoor humidity sensor, the sensors that compare the room with the outdoor air are created: the moisture excess and the ventilation sensors. A weather entity can be used.",
-          "outdoor_humidity_sensor": "With the outdoor temperature sensor, the sensors that compare the room with the outdoor air are created. A weather entity can be used."
+          "outdoor_humidity_sensor": "With the outdoor temperature sensor, the sensors that compare the room with the outdoor air are created. A weather entity can be used.",
+          "wind_speed_sensor": "The wind at the place of the temperature and humidity sensors above, so outdoors. With it the wind chill and the apparent temperature are calculated. Set it only on a device whose sources are outdoor sensors or a weather entity, not on the device of a room. A weather entity can be used."
         },
         "sections": {
           "advanced": {
@@ -60,7 +63,8 @@
       "outdoor_temperature_not_found": "Outdoor temperature sensor not found",
       "outdoor_humidity_not_found": "Outdoor humidity sensor not found",
       "outdoor_incomplete": "Choose both the outdoor temperature and the outdoor humidity sensor, or neither",
-      "outdoor_same_as_indoor": "The outdoor sensors must be other than the indoor sensors"
+      "outdoor_same_as_indoor": "The outdoor sensors must be other than the indoor sensors",
+      "wind_speed_not_found": "Wind speed sensor not found"
     },
     "step": {
       "user": {
@@ -71,12 +75,14 @@
           "humidity_sensor": "Humidity sensor",
           "outdoor_temperature_sensor": "Outdoor temperature sensor (optional)",
           "outdoor_humidity_sensor": "Outdoor humidity sensor (optional)",
-          "pressure_sensor": "Pressure sensor (optional)"
+          "pressure_sensor": "Pressure sensor (optional)",
+          "wind_speed_sensor": "Wind speed sensor (optional)"
         },
         "data_description": {
           "name": "Used as the device name and as the prefix of the sensor names, for example the name of the room.",
           "outdoor_temperature_sensor": "With the outdoor humidity sensor, the sensors that compare the room with the outdoor air are created: the moisture excess and the ventilation sensors. A weather entity can be used.",
-          "outdoor_humidity_sensor": "With the outdoor temperature sensor, the sensors that compare the room with the outdoor air are created. A weather entity can be used."
+          "outdoor_humidity_sensor": "With the outdoor temperature sensor, the sensors that compare the room with the outdoor air are created. A weather entity can be used.",
+          "wind_speed_sensor": "The wind at the place of the temperature and humidity sensors above, so outdoors. With it the wind chill and the apparent temperature are calculated. Set it only on a device whose sources are outdoor sensors or a weather entity, not on the device of a room. A weather entity can be used."
         },
         "sections": {
           "advanced": {
@@ -242,6 +248,12 @@
           "within_limit": "Within the limit",
           "not_winter": "Not winter"
         }
+      },
+      "wind_chill": {
+        "name": "Wind chill"
+      },
+      "apparent_temperature": {
+        "name": "Apparent temperature"
       }
     }
   }

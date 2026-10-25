@@ -15,6 +15,7 @@ Thermal Comfort provides numerical indices like `dew point`, `frost point`, `abs
 ### Bio Indices / Perception
 
 Thermal Comfort also provides a variety of bio indices like `humidex` or `heat index` giving numeric values of human perceived temperatures (feels like temperature). In addition we also provide textual perception sensors that describe the range of an index in human readable form e.g. comfortable or uncomfortable.
+With an optional wind speed sensor, it also provides the `wind chill` and the `apparent temperature` of the outdoor air.
 
 ![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/outside.png)
 
@@ -81,6 +82,9 @@ Enable the custom icons options for your sensor in the
   options. A configuration that already uses a weather entity starts to work without a change.
 * The entity IDs of new sensors are in English also if Home Assistant uses a language with native entity IDs,
   they used to be translated. Existing entities keep their entity ID.
+* With an optional wind speed sensor (a weather entity works too) a device also has the wind chill and the
+  apparent temperature, meant for a device of the outdoor air, see the
+  [documentation](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md#wind). Without it nothing changes.
 * New sensors: the wet-bulb temperature, the Thoms discomfort index, the humidity ratio and the vapor pressure
   deficit. Sensors configured in the frontend before the update get them as disabled entities, enable them in
   the entity settings. YAML sensors without `sensor_types` get them automatically.
@@ -89,8 +93,8 @@ Enable the custom icons options for your sensor in the
   temperature. The values change (see the [sensor documentation](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)),
   so does the state of the perception near the category limits. The previous value is in the
   `epstein_moran_discomfort_index` attribute of the new index sensor.
-* The sensors with a temperature device class (dew point, frost point, heat index, humidex, summer simmer index
-  and wet-bulb temperature) have the `diagnostic` entity category, so they no longer count for the temperature of
+* The sensors with a temperature device class (dew point, frost point, heat index, humidex, summer simmer index,
+  wet-bulb temperature, wind chill and apparent temperature) have the `diagnostic` entity category, so they no longer count for the temperature of
   an area. They are shown in the diagnostic section of the device.
 
 ## Upgrading from 2.x to 3.0

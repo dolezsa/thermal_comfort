@@ -32,6 +32,7 @@ from homeassistant.const import (
     STATE_UNKNOWN,
     EntityCategory,
     UnitOfPressure,
+    UnitOfSpeed,
     UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant, callback
@@ -46,7 +47,11 @@ from homeassistant.helpers.event import (
 )
 from homeassistant.helpers.template import Template
 from homeassistant.loader import async_get_custom_components
-from homeassistant.util.unit_conversion import PressureConverter, TemperatureConverter
+from homeassistant.util.unit_conversion import (
+    PressureConverter,
+    SpeedConverter,
+    TemperatureConverter,
+)
 
 from .const import DEFAULT_NAME, DOMAIN
 
@@ -70,6 +75,7 @@ ATTR_OUTDOOR_HUMIDITY = "outdoor_humidity"
 ATTR_OUTDOOR_ABSOLUTE_HUMIDITY = "outdoor_absolute_humidity"
 ATTR_OUTDOOR_DEW_POINT = "outdoor_dew_point"
 ATTR_VENTILATED_RELATIVE_HUMIDITY = "ventilated_relative_humidity"
+ATTR_WIND_SPEED = "wind_speed"
 CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
@@ -80,6 +86,7 @@ CONF_HUMIDITY_SENSOR = "humidity_sensor"
 CONF_PRESSURE_SENSOR = "pressure_sensor"
 CONF_OUTDOOR_TEMPERATURE_SENSOR = "outdoor_temperature_sensor"
 CONF_OUTDOOR_HUMIDITY_SENSOR = "outdoor_humidity_sensor"
+CONF_WIND_SPEED_SENSOR = "wind_speed_sensor"
 CONF_TEMPERATURE_ATTRIBUTE = "temperature_attribute"
 CONF_HUMIDITY_ATTRIBUTE = "humidity_attribute"
 CONF_POLL = "poll"
@@ -101,8 +108,22 @@ DEFAULT_HUMIDITY_ATTRIBUTES = {
     "weather": "humidity",
     "climate": "current_humidity",
 }
+DEFAULT_WIND_SPEED_ATTRIBUTES = {
+    "weather": "wind_speed",
+}
 # The attribute of a weather entity that has the unit of its temperature
 ATTR_TEMPERATURE_UNIT = "temperature_unit"
+# The attribute of a weather entity that has the unit of its wind speed
+ATTR_WIND_SPEED_UNIT = "wind_speed_unit"
+# Only the units of a speed, the converter of speeds also has the ones of
+# the precipitation intensity
+WIND_SPEED_UNITS = frozenset(UnitOfSpeed)
+# Wind speeds above this (m/s) are no plausible reading of the wind
+WIND_SPEED_MAX = 120.0
+# The wind chill formula is valid up to this air temperature (C) and above
+# this wind speed (km/h), otherwise the wind chill is the air temperature
+WIND_CHILL_MAX_TEMPERATURE = 10.0
+WIND_CHILL_MIN_WIND_SPEED = 4.8
 # Ventilation, with a source of the outdoor air
 # Differences of the absolute humidity (g/m3) below which the air is "similar"
 VENTILATION_BAND = 1.0
@@ -153,6 +174,9 @@ class SensorType(StrEnum):
     MOISTURE_EXCESS = "moisture_excess"
     VENTILATION_ADVICE = "ventilation_advice"
     VENTILATION_NEED = "ventilation_need"
+    # These need the wind speed, see WIND_SENSOR_TYPES
+    WIND_CHILL = "wind_chill"
+    APPARENT_TEMPERATURE = "apparent_temperature"
 
     def to_name(self) -> str:
         """Return the title of the sensor type."""
@@ -435,6 +459,24 @@ SENSOR_TYPES = {
         "options": list(map(str, VentilationNeed)),
         "icon": "mdi:home-alert",
     },
+    SensorType.WIND_CHILL: {
+        "key": SensorType.WIND_CHILL,
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "suggested_display_precision": DISPLAY_PRECISION,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:snowflake-thermometer",
+    },
+    SensorType.APPARENT_TEMPERATURE: {
+        "key": SensorType.APPARENT_TEMPERATURE,
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "suggested_display_precision": DISPLAY_PRECISION,
+        "native_unit_of_measurement": UnitOfTemperature.CELSIUS,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "icon": "mdi:thermometer-lines",
+    },
 }
 
 # The sensors that compare with the outdoor air, a device has them when it has
@@ -449,10 +491,17 @@ PRESSURE_SENSOR_TYPES = [
     SensorType.MOIST_AIR_ENTHALPY,
     SensorType.HUMIDITY_RATIO,
 ]
+# The sensors that need the wind speed, a device has them when it has the
+# sensor of the wind speed
+WIND_SENSOR_TYPES = [
+    SensorType.WIND_CHILL,
+    SensorType.APPARENT_TEMPERATURE,
+]
 DEFAULT_SENSOR_TYPES = [
     sensor_type
     for sensor_type in SENSOR_TYPES
     if sensor_type not in OUTDOOR_SENSOR_TYPES
+    and sensor_type not in WIND_SENSOR_TYPES
 ]
 
 SENSOR_OPTIONS_SCHEMA = vol.Schema(
@@ -463,6 +512,7 @@ SENSOR_OPTIONS_SCHEMA = vol.Schema(
         vol.Optional(CONF_SENSOR_TYPES): cv.ensure_list,
         vol.Optional(CONF_OUTDOOR_TEMPERATURE_SENSOR): cv.entity_id,
         vol.Optional(CONF_OUTDOOR_HUMIDITY_SENSOR): cv.entity_id,
+        vol.Optional(CONF_WIND_SPEED_SENSOR): cv.entity_id,
     },
     extra=vol.REMOVE_EXTRA,
 )
@@ -539,6 +589,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             humidity_attribute=device_config.get(CONF_HUMIDITY_ATTRIBUTE),
             outdoor_temperature_entity=outdoor_temperature,
             outdoor_humidity_entity=outdoor_humidity,
+            wind_speed_entity=device_config.get(CONF_WIND_SPEED_SENSOR),
             should_poll=device_config.get(CONF_POLL, POLL_DEFAULT),
             scan_interval=device_config.get(
                 CONF_SCAN_INTERVAL, timedelta(seconds=SCAN_INTERVAL_DEFAULT)
@@ -558,10 +609,20 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
                     device_config.get(CONF_NAME, device_config.get(CONF_UNIQUE_ID)),
                 )
                 sensor_types = [t for t in sensor_types if t not in outdoor_types]
+            wind_types = [t for t in sensor_types if t in WIND_SENSOR_TYPES]
+            if wind_types and not compute_device.has_wind:
+                _LOGGER.warning(
+                    "The sensor types %s need the sensor of the wind speed, they are not created for %s",
+                    ", ".join(wind_types),
+                    device_config.get(CONF_NAME, device_config.get(CONF_UNIQUE_ID)),
+                )
+                sensor_types = [t for t in sensor_types if t not in wind_types]
         else:
             sensor_types = list(DEFAULT_SENSOR_TYPES)
             if compute_device.has_outdoor:
                 sensor_types += OUTDOOR_SENSOR_TYPES
+            if compute_device.has_wind:
+                sensor_types += WIND_SENSOR_TYPES
 
         sensors += [
             SensorThermalComfort(
@@ -607,6 +668,7 @@ async def async_setup_entry(
         humidity_attribute=data.get(CONF_HUMIDITY_ATTRIBUTE),
         outdoor_temperature_entity=data.get(CONF_OUTDOOR_TEMPERATURE_SENSOR),
         outdoor_humidity_entity=data.get(CONF_OUTDOOR_HUMIDITY_SENSOR),
+        wind_speed_entity=data.get(CONF_WIND_SPEED_SENSOR),
         should_poll=data[CONF_POLL],
         scan_interval=timedelta(
             seconds=data.get(CONF_SCAN_INTERVAL, SCAN_INTERVAL_DEFAULT)
@@ -620,14 +682,16 @@ async def async_setup_entry(
             device=compute_device,
             sensor_type=sensor_type,
             custom_icons=data[CONF_CUSTOM_ICONS],
-            # The sensors of the outdoor air are what the outdoor sensors are
-            # for, and are not among the sensors that can be chosen
+            # The sensors of the outdoor air and of the wind are what their
+            # sensors are for, and are not among the sensors that can be chosen
             is_enabled_default=sensor_type in OUTDOOR_SENSOR_TYPES
+            or sensor_type in WIND_SENSOR_TYPES
             or sensor_type in data.get(CONF_ENABLED_SENSORS, {}),
         )
         for sensor_type in (
             DEFAULT_SENSOR_TYPES
             + (OUTDOOR_SENSOR_TYPES if compute_device.has_outdoor else [])
+            + (WIND_SENSOR_TYPES if compute_device.has_wind else [])
         )
     ]
 
@@ -661,6 +725,7 @@ class SensorThermalComfort(SensorEntity):
             ATTR_OUTDOOR_HUMIDITY,
             ATTR_OUTDOOR_ABSOLUTE_HUMIDITY,
             ATTR_OUTDOOR_DEW_POINT,
+            ATTR_WIND_SPEED,
         }
     )
 
@@ -831,6 +896,7 @@ class DeviceThermalComfort:
         humidity_attribute: str | None = None,
         outdoor_temperature_entity: str | None = None,
         outdoor_humidity_entity: str | None = None,
+        wind_speed_entity: str | None = None,
     ):
         """Initialize the sensor."""
         self.hass = hass
@@ -870,6 +936,12 @@ class DeviceThermalComfort:
         self._outdoor_temperature_value = None  # as the source has it
         self._outdoor_humidity = None
         self._was_outdoor_available = False
+        self._wind_speed_entity = wind_speed_entity
+        self._wind_speed_attribute = source_attribute(
+            wind_speed_entity, None, DEFAULT_WIND_SPEED_ATTRIBUTES
+        )
+        self._wind_speed = None  # m/s
+        self._was_wind_available = False
         self._unsubscribers = []
         self._should_poll = should_poll
         self.sensors = []
@@ -940,6 +1012,19 @@ class DeviceThermalComfort:
                     )
                 )
 
+        if self.has_wind:
+            # Read before the first computation, like the pressure
+            self._apply_wind_speed(hass.states.get(wind_speed_entity))
+            # A source of the temperature or the humidity that has the wind
+            # speed too is read by its own listener, so one change is never
+            # computed with the new value of the one and the old of the other.
+            if wind_speed_entity not in (temperature_entity, humidity_entity):
+                self._unsubscribers.append(
+                    async_track_state_change_event(
+                        self.hass, wind_speed_entity, self.wind_speed_state_listener
+                    )
+                )
+
         if self._temperature_entity == self._humidity_entity:
             hass.async_create_task(
                 self._new_source_state(hass.states.get(temperature_entity))
@@ -985,14 +1070,20 @@ class DeviceThermalComfort:
         await self._new_source_state(event.data.get("new_state"))
 
     async def _new_source_state(self, state):
+        wind_changed = self._apply_shared_wind_speed(self._temperature_entity, state)
         # Both values have to be read, a bitwise or does not skip the second
         changed = self._apply_temperature(state) | self._apply_humidity(state)
         if changed:
             await self.async_update()
+        elif wind_changed:
+            await self._wind_updated()
 
     async def _new_temperature_state(self, state):
+        wind_changed = self._apply_shared_wind_speed(self._temperature_entity, state)
         if self._apply_temperature(state):
             await self.async_update()
+        elif wind_changed:
+            await self._wind_updated()
 
     def _apply_temperature(self, state) -> bool:
         """Read the temperature of a source state.
@@ -1024,8 +1115,11 @@ class DeviceThermalComfort:
         await self._new_humidity_state(event.data.get("new_state"))
 
     async def _new_humidity_state(self, state):
+        wind_changed = self._apply_shared_wind_speed(self._humidity_entity, state)
         if self._apply_humidity(state):
             await self.async_update()
+        elif wind_changed:
+            await self._wind_updated()
 
     def _apply_humidity(self, state) -> bool:
         """Read the humidity of a source state.
@@ -1071,6 +1165,8 @@ class DeviceThermalComfort:
         """
         if sensor_type in OUTDOOR_SENSOR_TYPES:
             return self.available and self.outdoor_available
+        if sensor_type in WIND_SENSOR_TYPES:
+            return self.available and self.wind_available
         return self.available
 
     async def outdoor_temperature_state_listener(self, event):
@@ -1134,6 +1230,90 @@ class DeviceThermalComfort:
                 if sensor._sensor_type in OUTDOOR_SENSOR_TYPES:
                     sensor.async_schedule_update_ha_state(True)
         self._was_outdoor_available = available
+
+    @property
+    def has_wind(self) -> bool:
+        """Return True if the source of the wind speed is set."""
+        return bool(self._wind_speed_entity)
+
+    @property
+    def wind_available(self) -> bool:
+        """Return True if the wind speed is valid."""
+        return self.has_wind and self._wind_speed is not None
+
+    async def wind_speed_state_listener(self, event):
+        """Handle wind speed state changes."""
+        if self._apply_wind_speed(event.data.get("new_state")):
+            await self._wind_updated()
+
+    def _apply_shared_wind_speed(self, entity_id: str, state) -> bool:
+        """Read the wind speed of a source of the temperature or the humidity.
+
+        :returns: True if the entity is the source of the wind speed too and
+            the sensors of the wind need an update.
+        """
+        if not self.has_wind or entity_id != self._wind_speed_entity:
+            return False
+        return self._apply_wind_speed(state)
+
+    def _apply_wind_speed(self, state) -> bool:
+        """Read the wind speed, True if the sensors need an update."""
+        speed = self._parse_wind_speed(state)
+        changed = speed is None or speed != self._wind_speed
+        if speed is None:
+            _LOGGER.info("Wind speed has an invalid value: %s. Can't calculate the sensors of the wind.", state)
+        self._wind_speed = speed
+        return changed
+
+    def _parse_wind_speed(self, state) -> float | None:
+        """Return the wind speed of a source state in m/s, None if unusable."""
+        value = None
+        unit = None
+        if self._wind_speed_attribute is None:
+            if _is_valid_state(state):
+                value = util.convert(state.state, float)
+                unit = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
+        else:
+            value = _attribute_value(state, self._wind_speed_attribute)
+            if value is not None:
+                unit = state.attributes.get(ATTR_WIND_SPEED_UNIT)
+        if unit is None:
+            unit = self.hass.config.units.wind_speed_unit
+        # A negative Beaufort value can't even be converted
+        if (
+            value is None
+            or not math.isfinite(value)
+            or value < 0
+            or not isinstance(unit, str)
+            or unit not in WIND_SPEED_UNITS
+        ):
+            return None
+        speed = None
+        with contextlib.suppress(HomeAssistantError, TypeError, ValueError):
+            speed = SpeedConverter.convert(value, unit, UnitOfSpeed.METERS_PER_SECOND)
+        if speed is None or not math.isfinite(speed) or not 0 <= speed <= WIND_SPEED_MAX:
+            return None
+        return speed
+
+    async def _wind_updated(self):
+        """Update the sensors of the wind, the others do not depend on it."""
+        for sensor_type in WIND_SENSOR_TYPES:
+            self._compute_states[sensor_type].needs_update = True
+        available = self.type_available(WIND_SENSOR_TYPES[0])
+        # Polling devices refresh on the timer, but not when availability changes
+        if not self._should_poll or available != self._was_wind_available:
+            self._schedule_wind_sensors()
+        self._was_wind_available = available
+
+    def _schedule_wind_sensors(self) -> None:
+        """Ask the sensors of the wind for a new state."""
+        for sensor in self.sensors:
+            if sensor._sensor_type in WIND_SENSOR_TYPES:
+                sensor.async_schedule_update_ha_state(True)
+
+    def _wind_attributes(self) -> dict:
+        """Return the attributes of the sensors of the wind."""
+        return {ATTR_WIND_SPEED: round(self._wind_speed * 3.6, 2)}
 
     async def pressure_state_listener(self, event):
         """Handle pressure device state changes."""
@@ -1563,6 +1743,20 @@ class DeviceThermalComfort:
             need = VentilationNeed.WITHIN_LIMIT
         return need, self._outdoor_attributes(attributes)
 
+    @compute_once_lock(SensorType.WIND_CHILL)
+    async def wind_chill(self) -> tuple[float, dict]:
+        """Wind chill temperature of Environment Canada and the NWS (JAG/TI 2001)."""
+        speed = self._wind_speed * 3.6  # km/h
+        return _wind_chill(self._temperature, speed), self._wind_attributes()
+
+    @compute_once_lock(SensorType.APPARENT_TEMPERATURE)
+    async def apparent_temperature(self) -> tuple[float, dict]:
+        """Apparent temperature of Steadman (1994) without radiation, as the BoM uses it."""
+        value = _apparent_temperature(
+            self._temperature, self._humidity, self._wind_speed
+        )
+        return value, self._wind_attributes()
+
     @staticmethod
     def _outdoor_attributes(attributes: dict) -> dict:
         """Return the attributes of the outdoor air that all its sensors have."""
@@ -1577,11 +1771,16 @@ class DeviceThermalComfort:
         if available:
             for sensor_type in SENSOR_TYPES:
                 self._compute_states[sensor_type].needs_update = True
+        wind_available = self.type_available(WIND_SENSOR_TYPES[0])
         # Polling devices refresh on the timer, but not when availability changes
         if not self._should_poll or available != self._was_available:
             await self.async_update_sensors(True)
+        elif wind_available != self._was_wind_available:
+            # The wind speed of a source of the temperature or the humidity
+            self._schedule_wind_sensors()
         self._was_available = available
         self._was_outdoor_available = self.type_available(OUTDOOR_SENSOR_TYPES[0])
+        self._was_wind_available = wind_available
 
     async def async_update_sensors(self, force_refresh: bool = False) -> None:
         """Update the state of the sensors."""
@@ -1738,6 +1937,34 @@ def _vapor_pressure_deficit(
     else:
         leaf_saturation = _saturation_vapor_pressure_ashrae(leaf_temperature, over_water=True) / 1000
     return leaf_saturation - vapor_pressure, vapor_pressure, saturation
+
+
+def _wind_chill(temperature: float, wind_speed: float) -> float:
+    """Return the wind chill temperature in C <https://www.weather.gov/media/epz/wxcalc/windChill.pdf>.
+
+    The formula of JAG/TI (2001), with the temperature in C and the wind speed
+    in km/h at 10 m. It is valid up to 10 C and above 4.8 km/h, otherwise the
+    air temperature is returned.
+    """
+    if (
+        temperature > WIND_CHILL_MAX_TEMPERATURE
+        or wind_speed <= WIND_CHILL_MIN_WIND_SPEED
+    ):
+        return temperature
+    factor = pow(wind_speed, 0.16)
+    return 13.12 + 0.6215 * temperature - 11.37 * factor + 0.3965 * temperature * factor
+
+
+def _apparent_temperature(temperature: float, humidity: float, wind_speed: float) -> float:
+    """Return the apparent temperature in C <http://www.bom.gov.au/info/thermal_stress/>.
+
+    Steadman (1994) without the radiation, with the temperature in C, the
+    relative humidity in % and the wind speed in m/s at 10 m.
+    """
+    vapor_pressure = (
+        humidity / 100 * 6.105 * math.exp(17.27 * temperature / (237.7 + temperature))
+    )
+    return temperature + 0.33 * vapor_pressure - 0.70 * wind_speed - 4.00
 
 
 def _absolute_humidity(temperature: float, humidity: float) -> float:

@@ -3,7 +3,8 @@
 All sensors are calculated from one temperature and one relative humidity
 sensor. The ventilation sensors also need the optional
 [outdoor sensors](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md),
-the moist air enthalpy and the humidity ratio can use an optional pressure sensor.
+the moist air enthalpy and the humidity ratio can use an optional pressure sensor,
+and the wind chill and the apparent temperature need an optional wind speed sensor.
 Sensors with a text value (the perceptions, the frost risk, the ventilation
 advice and the ventilation need) have fixed English state names, like `comfortable`, which
 Home Assistant shows translated. Use the English names in automations and templates.
@@ -17,7 +18,9 @@ Home Assistant shows translated. Use the English names in automations and templa
 | see how strongly the air dries things (laundry, wood, plants) | `vapor_pressure_deficit` |
 | see if windows or walls will get wet | `dew_point` (condensation starts on a surface colder than the dew point) |
 | see how hot it feels in warm weather | `humidex`, `heat_index`, `summer_simmer_index`, or their perception sensors, `thoms_discomfort_perception` |
-| see if cool, damp weather is uncomfortable | `winter_scharlau_perception` (only between -5 and 6°C and above 40 % humidity, otherwise `outside_calculable_range`; there is no wind chill) |
+| see if cool, damp weather is uncomfortable | `winter_scharlau_perception` (only between -5 and 6°C and above 40 % humidity, otherwise `outside_calculable_range`; it does not know the wind) |
+| see how cold the wind makes it outdoors | `wind_chill` (wind speed sensor needed) |
+| have one temperature that combines the temperature, the humidity and the wind outdoors, in all seasons | `apparent_temperature` (wind speed sensor needed) |
 | know the risk of frost | `frost_risk`, `frost_point` |
 | judge heat stress or evaporative cooling | `wet_bulb_temperature` |
 | decide if airing dries or humidifies the room | `moisture_excess`, `ventilation_advice` (outdoor sensors needed) |
@@ -243,10 +246,53 @@ These sensors compare the room with the outdoor air, they need the
   </dd>
 </dl>
 
+## Wind
+
+These sensors need the optional wind speed sensor, see the
+[configuration](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md).
+The wind speed belongs to the air of the device, so they make sense for a device whose temperature and humidity
+are outdoor sensors or a weather entity, not for a room. They are created, and enabled, only for a device with a
+wind speed sensor. Both have the attribute <code>wind_speed</code>, the wind speed in use, always in km/h.
+
+<dl>
+  <dt><strong>Wind Chill</strong> <code>wind_chill</code></dt>
+  <dd>
+    How cold the wind makes the air feel on the exposed skin of the face, in °C, with the formula of Environment Canada
+    and the US National Weather Service (<a href="https://www.weather.gov/media/epz/wxcalc/windChill.pdf">JAG/TI, 2001</a>):
+    <code>Twc = 13.12 + 0.6215 T - 11.37 v^0.16 + 0.3965 T v^0.16</code>, with the temperature in °C and the wind speed in km/h.
+    The humidity is not used.<br>
+    The formula is made for the sustained wind (not the gusts) at 10 m, the height at which weather stations and weather
+    services measure and report the wind. An anemometer lower down, on a roof or in a garden, usually reads
+    less wind, so the wind chill is less cold than the official one.<br>
+    It is valid up to 10°C and above 4.8 km/h (1.3 m/s). Outside this range the sensor shows the air temperature, so the
+    value has two steps. It is unavailable when the humidity sensor fails too, like the other sensors of the device:
+    <ul>
+      <li>At 10°C: in a wind of 10 km/h the value jumps by about 1.4°C (from 8.6°C to the air temperature), in 30 km/h by about 3.4°C,
+      in 50 km/h by about 4.5°C.</li>
+      <li>At 4.8 km/h: the value jumps by about 0.2°C at 10°C, 1.5°C at 0°C, 2.8°C at -10°C and 4.1°C at -20°C.</li>
+    </ul>
+    Environment Canada publishes the wind chill only at 0°C and below and from 5 km/h, the National Weather Service at 10°C (50°F) and below.
+  </dd>
+  <dt><strong>Apparent Temperature</strong> <code>apparent_temperature</code></dt>
+  <dd>
+    The temperature that combines the air temperature, the humidity and the wind, in °C, in the form the
+    <a href="http://www.bom.gov.au/info/thermal_stress/">Australian Bureau of Meteorology</a> uses, the version of
+    Steadman (1994) without the radiation:
+    <code>AT = T + 0.33 e - 0.70 v - 4.00</code>, with the temperature in °C, the vapor pressure
+    <code>e = RH / 100 × 6.105 × exp(17.27 T / (237.7 + T))</code> in hPa and the wind speed in m/s at 10 m.
+    It is meant for the outdoor air in all seasons, in the shade. The wind is the sustained wind at 10 m, as for the wind chill;
+    a lower anemometer usually gives a higher apparent temperature.<br>
+    The sun is not taken into account, in sunshine it feels warmer. Because of the constant term the value is below the
+    air temperature in calm, not humid weather, for example about 2.5 to 3°C below it at 0°C without wind and with 50 to 75 %
+    humidity. Weather integrations that provide their own apparent or feels-like temperature can use another formula, for example with the
+    radiation, so their value may differ from this sensor.
+  </dd>
+</dl>
+
 ## Diagnostic sensors
 
 The sensors with a temperature device class (dew point, frost point, heat index, humidex,
-summer simmer index and wet-bulb temperature) have the `diagnostic` entity category.
+summer simmer index, wet-bulb temperature, wind chill and apparent temperature) have the `diagnostic` entity category.
 Home Assistant does not use diagnostic entities for the temperature of an area, for area
 targeted temperature triggers and conditions and, by default, for voice assistants, so these derived
 values do not mix with the measured air temperature. The sensors are listed in the diagnostic
@@ -261,6 +307,13 @@ The sensors need a valid value from both source sensors:
   are treated as 100%.
 * If a source is `unavailable`, `unknown` or outside these ranges, all sensors of
   the device become `unavailable` until both sources are valid again.
+
+The optional wind speed is converted from its unit, any speed unit of Home Assistant, the Beaufort scale too.
+The unit is the one of the sensor, of a weather entity its `wind_speed_unit` attribute (its `wind_speed`
+attribute is the value). Without a unit the wind speed unit of the unit system of Home Assistant is used,
+m/s in the metric system and mph in the US customary system. A wind speed that is `unavailable`, `unknown`,
+negative, above 120 m/s or not in a unit of speed makes only the wind chill and the apparent temperature
+`unavailable`, the other sensors do not use it.
 
 ### Values in attributes
 

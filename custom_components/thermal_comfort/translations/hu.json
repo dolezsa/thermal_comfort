@@ -9,7 +9,8 @@
       "outdoor_temperature_not_found": "Kültéri hőmérséklet-szenzor nem található",
       "outdoor_humidity_not_found": "Kültéri páratartalom-szenzor nem található",
       "outdoor_incomplete": "Válassza ki a kültéri hőmérséklet- és a kültéri páratartalom-szenzort is, vagy egyiket se",
-      "outdoor_same_as_indoor": "A kültéri szenzorok nem lehetnek azonosak a beltéri szenzorokkal"
+      "outdoor_same_as_indoor": "A kültéri szenzorok nem lehetnek azonosak a beltéri szenzorokkal",
+      "wind_speed_not_found": "Szélsebesség-szenzor nem található"
     },
     "step": {
       "init": {
@@ -20,12 +21,14 @@
           "humidity_sensor": "Páratartalom-szenzor",
           "outdoor_temperature_sensor": "Kültéri hőmérséklet-szenzor (opcionális)",
           "outdoor_humidity_sensor": "Kültéri páratartalom-szenzor (opcionális)",
-          "pressure_sensor": "Nyomásszenzor (opcionális)"
+          "pressure_sensor": "Nyomásszenzor (opcionális)",
+          "wind_speed_sensor": "Szélsebesség-szenzor (opcionális)"
         },
         "data_description": {
           "name": "Ez lesz az eszköz neve és a szenzornevek előtagja, például a helyiség neve.",
           "outdoor_temperature_sensor": "A kültéri páratartalom-szenzorral együtt létrejönnek a helyiséget a kültéri levegővel összehasonlító szenzorok: a páratöbblet és a szellőztetési szenzorok. Időjárás-entitás is használható.",
-          "outdoor_humidity_sensor": "A kültéri hőmérséklet-szenzorral együtt létrejönnek a helyiséget a kültéri levegővel összehasonlító szenzorok. Időjárás-entitás is használható."
+          "outdoor_humidity_sensor": "A kültéri hőmérséklet-szenzorral együtt létrejönnek a helyiséget a kültéri levegővel összehasonlító szenzorok. Időjárás-entitás is használható.",
+          "wind_speed_sensor": "A fenti hőmérséklet- és páratartalom-szenzor helyén fújó szél, tehát a kültéri szél. Ebből számítjuk ki a szélhűtést és a hőérzeti hőmérsékletet. Csak olyan eszközön adja meg, amelynek forrásai kültéri szenzorok vagy egy időjárás-entitás, egy helyiség eszközén ne. Időjárás-entitás is használható."
         },
         "sections": {
           "advanced": {
@@ -60,7 +63,8 @@
       "outdoor_temperature_not_found": "Kültéri hőmérséklet-szenzor nem található",
       "outdoor_humidity_not_found": "Kültéri páratartalom-szenzor nem található",
       "outdoor_incomplete": "Válassza ki a kültéri hőmérséklet- és a kültéri páratartalom-szenzort is, vagy egyiket se",
-      "outdoor_same_as_indoor": "A kültéri szenzorok nem lehetnek azonosak a beltéri szenzorokkal"
+      "outdoor_same_as_indoor": "A kültéri szenzorok nem lehetnek azonosak a beltéri szenzorokkal",
+      "wind_speed_not_found": "Szélsebesség-szenzor nem található"
     },
     "step": {
       "user": {
@@ -71,12 +75,14 @@
           "humidity_sensor": "Páratartalom-szenzor",
           "outdoor_temperature_sensor": "Kültéri hőmérséklet-szenzor (opcionális)",
           "outdoor_humidity_sensor": "Kültéri páratartalom-szenzor (opcionális)",
-          "pressure_sensor": "Nyomásszenzor (opcionális)"
+          "pressure_sensor": "Nyomásszenzor (opcionális)",
+          "wind_speed_sensor": "Szélsebesség-szenzor (opcionális)"
         },
         "data_description": {
           "name": "Ez lesz az eszköz neve és a szenzornevek előtagja, például a helyiség neve.",
           "outdoor_temperature_sensor": "A kültéri páratartalom-szenzorral együtt létrejönnek a helyiséget a kültéri levegővel összehasonlító szenzorok: a páratöbblet és a szellőztetési szenzorok. Időjárás-entitás is használható.",
-          "outdoor_humidity_sensor": "A kültéri hőmérséklet-szenzorral együtt létrejönnek a helyiséget a kültéri levegővel összehasonlító szenzorok. Időjárás-entitás is használható."
+          "outdoor_humidity_sensor": "A kültéri hőmérséklet-szenzorral együtt létrejönnek a helyiséget a kültéri levegővel összehasonlító szenzorok. Időjárás-entitás is használható.",
+          "wind_speed_sensor": "A fenti hőmérséklet- és páratartalom-szenzor helyén fújó szél, tehát a kültéri szél. Ebből számítjuk ki a szélhűtést és a hőérzeti hőmérsékletet. Csak olyan eszközön adja meg, amelynek forrásai kültéri szenzorok vagy egy időjárás-entitás, egy helyiség eszközén ne. Időjárás-entitás is használható."
         },
         "sections": {
           "advanced": {
@@ -242,6 +248,12 @@
           "within_limit": "A határértéken belül",
           "not_winter": "Nem téli időszak"
         }
+      },
+      "wind_chill": {
+        "name": "Szélhűtés"
+      },
+      "apparent_temperature": {
+        "name": "Hőérzeti hőmérséklet"
       }
     }
   }

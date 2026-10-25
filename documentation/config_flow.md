@@ -72,6 +72,17 @@ The entry reloads when you save changed options.
     Use the station pressure, not a pressure reduced to sea level, otherwise the
     result is off at higher elevations.
   </dd>
+  <dt><strong>Wind speed sensor</strong> <code>entity</code> (optional)</dt>
+  <dd>
+    A wind speed sensor (device class <code>wind_speed</code> or <code>speed</code>, any speed unit) or a weather
+    entity, its <code>wind_speed</code> attribute is used. With it the wind chill and the apparent temperature are
+    created and enabled, calculated from the temperature and humidity sensors of the device. The wind belongs to the
+    air of the device, so set it on a device whose sources are outdoor sensors or a weather entity, not on the device of
+    a room. While the wind speed is unusable only these two sensors are unavailable, see the
+    <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md#wind">sensors</a>.
+    If you remove the sensor the entities stay in the entity registry, they are not provided any more and
+    work again when you add the sensor again.
+  </dd>
 </dl>
 
 The following options are in the collapsed "Advanced options" section:
