@@ -5,7 +5,12 @@
       "humidity_not_found": "Snímač vlhkosti nenájdený",
       "pressure_not_found": "Tlakový snímač nenájdený",
       "temperature_attribute_not_found": "Zdroj teploty nemá atribút s týmto názvom; pozrite si rozšírené možnosti",
-      "humidity_attribute_not_found": "Zdroj vlhkosti nemá atribút s týmto názvom; pozrite si rozšírené možnosti"
+      "humidity_attribute_not_found": "Zdroj vlhkosti nemá atribút s týmto názvom; pozrite si rozšírené možnosti",
+      "outdoor_temperature_not_found": "Snímač vonkajšej teploty nebol nájdený",
+      "outdoor_humidity_not_found": "Snímač vonkajšej vlhkosti nebol nájdený",
+      "outdoor_incomplete": "Vyberte snímač vonkajšej teploty aj vonkajšej vlhkosti alebo ani jeden",
+      "outdoor_same_as_indoor": "Vonkajšie snímače musia byť odlišné od vnútorných snímačov.",
+      "wind_speed_not_found": "Snímač rýchlosti vetra nebol nájdený"
     },
     "step": {
       "init": {
@@ -14,10 +19,16 @@
           "name": "Názov zariadenia",
           "temperature_sensor": "Teplotný snímač",
           "humidity_sensor": "Snímač vlhkosti",
-          "pressure_sensor": "Tlakový snímač (voliteľný)"
+          "outdoor_temperature_sensor": "Vonkajší snímač teploty (voliteľné)",
+          "outdoor_humidity_sensor": "Vonkajší snímač vlhkosti (voliteľný)",
+          "pressure_sensor": "Tlakový snímač (voliteľný)",
+          "wind_speed_sensor": "Snímač rýchlosti vetra (voliteľný)"
         },
         "data_description": {
-          "name": "Používa sa ako názov zariadenia a ako predpona názvov snímačov, napríklad názov miestnosti."
+          "name": "Používa sa ako názov zariadenia a ako predpona názvov snímačov, napríklad názov miestnosti.",
+          "outdoor_temperature_sensor": "Pomocou vonkajšieho snímača vlhkosti vznikajú snímače, ktoré porovnávajú podmienky v miestnosti s vonkajším vzduchom: snímače prebytku vlhkosti a snímače vetrania. Možno použiť entitu počasia.",
+"outdoor_humidity_sensor": "Pomocou vonkajšieho snímača teploty vznikajú snímače, ktoré porovnávajú podmienky v miestnosti s vonkajším vzduchom. Možno použiť entitu počasia.",
+          "wind_speed_sensor": "Ide o vietor v mieste, kde sú umiestnené vyššie uvedené snímače teploty a vlhkosti, teda vo vonkajšom prostredí. Na základe týchto údajov sa vypočítava ochladzovanie vetrom a pocitová teplota. Túto možnosť nastavte iba pri zariadení, ktorého zdrojmi sú vonkajšie snímače alebo meteorologická entita; nenastavujte ju pri zariadení umiestnenom v interiéri. Možno použiť meteorologickú entitu."
         },
         "sections": {
           "advanced": {
@@ -48,7 +59,12 @@
       "humidity_not_found": "Snímač vlhkosti nenájdený",
       "pressure_not_found": "Snímač tlaku nebol nájdený",
       "temperature_attribute_not_found": "Zdroj teploty nemá atribút s týmto názvom; pozrite si rozšírené možnosti",
-      "humidity_attribute_not_found": "Zdroj vlhkosti nemá atribút s týmto názvom; pozrite si rozšírené možnosti"
+      "humidity_attribute_not_found": "Zdroj vlhkosti nemá atribút s týmto názvom; pozrite si rozšírené možnosti",
+      "outdoor_temperature_not_found": "Snímač vonkajšej teploty nebol nájdený",
+      "outdoor_humidity_not_found": "Snímač vonkajšej vlhkosti nebol nájdený",
+      "outdoor_incomplete": "Vyberte snímač vonkajšej teploty aj vonkajšej vlhkosti alebo ani jeden",
+      "outdoor_same_as_indoor": "Vonkajšie snímače musia byť odlišné od vnútorných snímačov.",
+      "wind_speed_not_found": "Snímač rýchlosti vetra nebol nájdený"
     },
     "step": {
       "user": {
@@ -57,10 +73,16 @@
           "name": "Názov",
           "temperature_sensor": "Teplotný snímač",
           "humidity_sensor": "Snímač vlhkosti",
-          "pressure_sensor": "Snímač tlaku (voliteľný)"
+          "outdoor_temperature_sensor": "Vonkajší snímač teploty (voliteľný)",
+          "outdoor_humidity_sensor": "Vonkajší snímač vlhkosti (voliteľný)",
+          "pressure_sensor": "Snímač tlaku (voliteľný)",
+          "wind_speed_sensor": "Snímač rýchlosti vetra (voliteľný)"
         },
         "data_description": {
-          "name": "Používa sa ako názov zariadenia a ako predpona názvov snímačov, napríklad názov miestnosti."
+          "name": "Používa sa ako názov zariadenia a ako predpokladaný názov snímačov, napríklad názov miestnosti.",
+"outdoor_temperature_sensor": "So snímačom vonkajšej vlhkosti sa vytvárajú snímače, ktoré porovnávajú miestnosť s vonkajším vzduchom: snímač prebytku vlhkosti a snímač vetrania. Je možné použiť entitu počasia.",
+"outdoor_humidity_sensor": "So snímačom vonkajšej teploty sa vytvárajú snímače, ktoré porovnávajú miestnosť s vonkajším vzduchom. Je možné použiť entitu počasia.",
+          "wind_speed_sensor": "Ide o vietor v mieste, kde sú umiestnené vyššie uvedené snímače teploty a vlhkosti, teda vo vonkajšom prostredí. Na základe týchto údajov sa vypočítava ochladzovanie vetrom (wind chill) a pocitová teplota. Túto možnosť nastavte iba pri zariadení, ktorého zdrojmi sú vonkajšie snímače alebo meteorologická entita; nenastavujte ju pri zariadení umiestnenom v interiéri. Možno použiť meteorologickú entitu."
         },
         "sections": {
           "advanced": {
@@ -200,6 +222,38 @@
       },
       "wet_bulb_temperature": {
         "name": "Teplota mokrej žiarovky"
+      },
+      "humidity_ratio": {
+        "name": "Merná vlhkosť"
+      },
+      "vapor_pressure_deficit": {
+        "name": "Deficit tlaku pár"
+      },
+      "moisture_excess": {
+        "name": "Nadbytok vlhkosti"
+      },
+      "ventilation_advice": {
+        "name": "Odporúčania týkajúce sa vetrania",
+        "state": {
+          "drier_outside": "Vetranie vysušuje miestnosť",
+          "similar": "Vetranie toho veľa nezmení",
+          "more_humid_outside": "Vetranie zvyšuje vlhkosť",
+          "condensation_risk": "Nevetrať: riziko kondenzácie"
+        }
+      },
+      "ventilation_need": {
+        "name": "Vetranie potrebné",
+        "state": {
+          "above_limit": "Nad limitom",
+          "within_limit": "V rámci limitu",
+          "not_winter": "Nie je zima"
+        }
+      },
+      "wind_chill": {
+        "name": "Chladný účinok vetra"
+      },
+      "apparent_temperature": {
+        "name": "Zdanlivá teplota"
       }
     }
   }
