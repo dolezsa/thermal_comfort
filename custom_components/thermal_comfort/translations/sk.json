@@ -27,7 +27,7 @@
         "data_description": {
           "name": "Používa sa ako názov zariadenia a ako predpona názvov snímačov, napríklad názov miestnosti.",
           "outdoor_temperature_sensor": "Pomocou vonkajšieho snímača vlhkosti vznikajú snímače, ktoré porovnávajú podmienky v miestnosti s vonkajším vzduchom: snímače prebytku vlhkosti a snímače vetrania. Možno použiť entitu počasia.",
-"outdoor_humidity_sensor": "Pomocou vonkajšieho snímača teploty vznikajú snímače, ktoré porovnávajú podmienky v miestnosti s vonkajším vzduchom. Možno použiť entitu počasia.",
+          "outdoor_humidity_sensor": "Pomocou vonkajšieho snímača teploty vznikajú snímače, ktoré porovnávajú podmienky v miestnosti s vonkajším vzduchom. Možno použiť entitu počasia.",
           "wind_speed_sensor": "Ide o vietor v mieste, kde sú umiestnené vyššie uvedené snímače teploty a vlhkosti, teda vo vonkajšom prostredí. Na základe týchto údajov sa vypočítava ochladzovanie vetrom a pocitová teplota. Túto možnosť nastavte iba pri zariadení, ktorého zdrojmi sú vonkajšie snímače alebo meteorologická entita; nenastavujte ju pri zariadení umiestnenom v interiéri. Možno použiť meteorologickú entitu."
         },
         "sections": {
@@ -79,9 +79,9 @@
           "wind_speed_sensor": "Snímač rýchlosti vetra (voliteľný)"
         },
         "data_description": {
-          "name": "Používa sa ako názov zariadenia a ako predpokladaný názov snímačov, napríklad názov miestnosti.",
-"outdoor_temperature_sensor": "So snímačom vonkajšej vlhkosti sa vytvárajú snímače, ktoré porovnávajú miestnosť s vonkajším vzduchom: snímač prebytku vlhkosti a snímač vetrania. Je možné použiť entitu počasia.",
-"outdoor_humidity_sensor": "So snímačom vonkajšej teploty sa vytvárajú snímače, ktoré porovnávajú miestnosť s vonkajším vzduchom. Je možné použiť entitu počasia.",
+          "name": "Používa sa ako názov zariadenia a ako predpona názvov snímačov, napríklad názov miestnosti.",
+          "outdoor_temperature_sensor": "So snímačom vonkajšej vlhkosti sa vytvárajú snímače, ktoré porovnávajú miestnosť s vonkajším vzduchom: snímač prebytku vlhkosti a snímač vetrania. Je možné použiť entitu počasia.",
+          "outdoor_humidity_sensor": "So snímačom vonkajšej teploty sa vytvárajú snímače, ktoré porovnávajú miestnosť s vonkajším vzduchom. Je možné použiť entitu počasia.",
           "wind_speed_sensor": "Ide o vietor v mieste, kde sú umiestnené vyššie uvedené snímače teploty a vlhkosti, teda vo vonkajšom prostredí. Na základe týchto údajov sa vypočítava ochladzovanie vetrom (wind chill) a pocitová teplota. Túto možnosť nastavte iba pri zariadení, ktorého zdrojmi sú vonkajšie snímače alebo meteorologická entita; nenastavujte ju pri zariadení umiestnenom v interiéri. Možno použiť meteorologickú entitu."
         },
         "sections": {
