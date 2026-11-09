@@ -3,7 +3,7 @@
     "error": {
       "temperature_not_found": "Temperatursensor konnte nicht gefunden werden",
       "humidity_not_found": "Feuchtigkeitssensor konnte nicht gefunden werden",
-      "pressure_not_found": "Drucksensor konnte nicht gefunden werden",   
+      "pressure_not_found": "Drucksensor konnte nicht gefunden werden",
       "temperature_attribute_not_found": "Der Temperatursensor hat kein Attribut mit diesem Namen, siehe die erweiterten Optionen",
       "humidity_attribute_not_found": "Der Feuchtigkeitssensor hat kein Attribut mit diesem Namen, siehe die erweiterten Optionen",
       "outdoor_temperature_not_found": "Der Außentemperatursensor konnte nicht gefunden werden",
@@ -23,7 +23,7 @@
           "outdoor_humidity_sensor": "Außenfeuchtigkeitssensor (optional)",
           "pressure_sensor": "Drucksensor (optional)",
           "wind_speed_sensor": "Windgeschwindigkeitssensor (optional)"
-          },
+        },
         "data_description": {
           "name": "Wird als Gerätename und als Präfix für die Sensornamen verwendet, beispielsweise als Name des Raums.",
           "outdoor_temperature_sensor": "Mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetterentität kann verwendet werden.",
@@ -57,7 +57,7 @@
     "error": {
       "temperature_not_found": "Temperatursensor konnte nicht gefunden werden",
       "humidity_not_found": "Feuchtigkeitssensor konnte nicht gefunden werden",
-      "pressure_not_found": "Drucksensor konnte nicht gefunden werden",   
+      "pressure_not_found": "Drucksensor konnte nicht gefunden werden",
       "temperature_attribute_not_found": "Der Temperatursensor hat kein Attribut mit diesem Namen, siehe die erweiterten Optionen",
       "humidity_attribute_not_found": "Der Feuchtigkeitssensor hat kein Attribut mit diesem Namen, siehe die erweiterten Optionen",
       "outdoor_temperature_not_found": "Der Außentemperatursensor konnte nicht gefunden werden",
