@@ -5,7 +5,7 @@ import copy
 from datetime import timedelta
 import logging
 import math
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from pytest_homeassistant_custom_component.common import (
@@ -48,6 +48,7 @@ from custom_components.thermal_comfort.sensor import (
     _humidity_ratio,
     _saturation_vapor_pressure_ashrae,
     _vapor_pressure_deficit,
+    async_setup_platform,
     id_generator,
 )
 from homeassistant.components.sensor import DOMAIN as PLATFORM_DOMAIN, SensorDeviceClass
@@ -1740,27 +1741,66 @@ async def test_invalid_first_source_state(hass, bad_state):
         assert get_sensor(hass, sensor_type).state == STATE_UNAVAILABLE
 
 
-async def test_legacy_yaml_warns_about_the_end_of_support(hass, caplog):
-    """Test that the legacy YAML format still works and announces its end."""
+LEGACY_YAML_CONFIG = {
+    "platform": DOMAIN,
+    "sensors": {
+        "test_thermal_comfort": {
+            "temperature_sensor": "sensor.test_temperature_sensor",
+            "humidity_sensor": "sensor.test_humidity_sensor",
+            "unique_id": "unique_thermal_comfort_id",
+        },
+    },
+}
+
+
+async def test_legacy_yaml_is_rejected(hass, caplog):
+    """Test that the legacy YAML format creates nothing and tells how to move on."""
     config = {
         TEMPLATE_DOMAIN: [TEMPERATURE_TEST_SENSOR, HUMIDITY_TEST_SENSOR],
-        PLATFORM_DOMAIN: {
-            "platform": DOMAIN,
-            "sensors": {
-                "test_thermal_comfort": {
-                    "temperature_sensor": "sensor.test_temperature_sensor",
-                    "humidity_sensor": "sensor.test_humidity_sensor",
-                    "unique_id": "unique_thermal_comfort_id",
-                },
-            },
-        },
+        PLATFORM_DOMAIN: LEGACY_YAML_CONFIG,
     }
     for domain in (TEMPLATE_DOMAIN, PLATFORM_DOMAIN):
         assert await async_setup_component(hass, domain, config)
         await hass.async_block_till_done()
 
-    assert "will stop working in the next release" in caplog.text
+    # Home Assistant rejects the entry with the message of the platform schema
+    assert (
+        "Invalid config for 'sensor' from integration 'thermal_comfort'" in caplog.text
+    )
+    assert "is no longer supported" in caplog.text
+    assert "thermal_comfort: key" in caplog.text
+    # only the two template sources exist
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == 2
+
+
+async def test_legacy_yaml_next_to_the_new_format(hass, caplog):
+    """Test that the legacy format does not disturb the new one, also on a reload."""
+    config = copy.deepcopy(DEFAULT_CONFIG)
+    config[PLATFORM_DOMAIN] = LEGACY_YAML_CONFIG
+    for domain, count in DEFAULT_DOMAINS:
+        with assert_setup_component(count, domain):
+            assert await async_setup_component(hass, domain, config)
+        await hass.async_block_till_done()
+    assert await async_setup_component(hass, PLATFORM_DOMAIN, config)
+    await hass.async_block_till_done()
+    await hass.async_start()
+    await hass.async_block_till_done()
+
+    assert "is no longer supported" in caplog.text
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
+
+    with patch("homeassistant.config.async_hass_config_yaml", return_value=config):
+        await hass.services.async_call(DOMAIN, SERVICE_RELOAD, blocking=True)
+    await hass.async_block_till_done()
+    assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
+
+
+async def test_legacy_yaml_reaching_the_platform_creates_nothing(hass, caplog):
+    """Test that the platform itself does not crash without discovery info."""
+    add_entities = MagicMock()
+    await async_setup_platform(hass, LEGACY_YAML_CONFIG, add_entities, None)
+    add_entities.assert_not_called()
+    assert "is no longer supported" in caplog.text
 
 
 async def test_yaml_entity_ids_without_name_are_english(hass):

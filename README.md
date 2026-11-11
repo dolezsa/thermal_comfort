@@ -79,6 +79,10 @@ the standard icons are used unless `custom_icons` is set to `true`.
 
 ## Upgrading from 3.1
 
+* The old YAML format (`sensor:` with `platform: thermal_comfort` and `sensors:`), deprecated since 2.0, no longer works.
+  Home Assistant reports it as an invalid configuration and no sensors are created from it. Move each device under the
+  `thermal_comfort:` key as described in the [YAML documentation](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md).
+  To keep the entity IDs, use the old key of the device as its `name` and keep its `unique_id`.
 * The icons of the former icon pack are built in. Devices created in the UI from now on use them by default; existing
   devices and YAML sensors keep their setting (`custom_icons`). The separate icon pack can be removed, see
   [Custom Icons](#custom-icons).

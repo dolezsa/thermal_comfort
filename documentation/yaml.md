@@ -1,5 +1,8 @@
 # YAML Configuration
 
+The old format with `sensor:`, `platform: thermal_comfort` and `sensors:` is no longer supported from 3.2.0 on, use the
+format below.
+
 To use, add according to the following example to your `configuration.yaml` file:
 
 ```yaml

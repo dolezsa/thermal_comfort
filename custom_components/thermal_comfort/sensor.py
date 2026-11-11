@@ -26,7 +26,6 @@ from homeassistant.const import (
     CONF_ENTITY_PICTURE_TEMPLATE,
     CONF_ICON_TEMPLATE,
     CONF_NAME,
-    CONF_SENSORS,
     CONF_UNIQUE_ID,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
@@ -554,20 +553,33 @@ def compute_once_lock(sensor_type):
     return wrapper
 
 
+LEGACY_YAML_MESSAGE = (
+    "The YAML format with sensor:, platform: thermal_comfort and sensors: is no "
+    "longer supported. Move each device under the thermal_comfort: key, use its "
+    "old key as name: and keep its unique_id to keep its entity IDs: "
+    "https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
+)
+
+
+def _reject_legacy_yaml(_config):
+    """Reject the legacy YAML format, Home Assistant reports the message."""
+    raise vol.Invalid(LEGACY_YAML_MESSAGE)
+
+
+# Home Assistant validates an entry of `sensor:` with this schema. The sensors of
+# the `thermal_comfort:` key are loaded by discovery, which does not use it.
+PLATFORM_SCHEMA = vol.Schema(_reject_legacy_yaml)
+
+
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the Thermal Comfort sensors."""
     if discovery_info is None:
-        _LOGGER.warning(
-            "Legacy YAML configuration is unsupported since 2.0 and will stop working in the next release. You should update to the new yaml format: https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md"
-        )
-        devices = [
-            dict(device_config, **{CONF_NAME: device_name})
-            for (device_name, device_config) in config[CONF_SENSORS].items()
-        ]
-        options = {}
-    else:
-        devices = discovery_info["devices"]
-        options = discovery_info["options"]
+        # Only the legacy YAML format gets here, the platform schema rejects it
+        _LOGGER.error(LEGACY_YAML_MESSAGE)
+        return
+
+    devices = discovery_info["devices"]
+    options = discovery_info["options"]
 
     sensors = []
 
