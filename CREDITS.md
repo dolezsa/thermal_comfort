@@ -145,6 +145,8 @@ Federico Tartarini
 @MyUncleSam](https://github.com/MyUncleSam)
 [<img src="https://github.com/Migsi.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @Migsi](https://github.com/Migsi)
+[<img src="https://github.com/JohanHartung.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@JohanHartung](https://github.com/JohanHartung)
 
 **Greek:**
 [<img src="https://github.com/ChriZathens.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
