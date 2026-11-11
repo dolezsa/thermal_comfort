@@ -10,6 +10,7 @@
     "el",
     "es",
     "et",
+    "fi",
     "fr",
     "hu",
     "it",
@@ -25,7 +26,8 @@
     "sv",
     "uk",
     "ur",
-    "zh-Hans"
+    "zh-Hans",
+    "zh-Hant"
   ],
   "modules": [
     "https://cdn.jsdelivr.net/npm/@inlang/message-lint-rule-empty-pattern/dist/index.js",
