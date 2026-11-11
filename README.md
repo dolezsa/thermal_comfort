@@ -1,6 +1,8 @@
 # [![thermal_comfort](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/icons/logo.png)](https://github.com/dolezsa/thermal_comfort)
+<!-- ha-marketplace:exclude-start -->
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/dolezsa/thermal_comfort/latest/total?style=for-the-badge&color=f55041)
+<!-- ha-marketplace:exclude-end -->
 
 Thermal Comfort provides a variety of thermal indices and thermal perceptions including feels like temperatures in numeric and textual representation for Home Assistant.
 
@@ -39,9 +41,15 @@ Older Home Assistant versions can keep using the 2.2 releases (Home Assistant
 or the 1.5 releases for even older versions
  ([documentation](https://github.com/dolezsa/thermal_comfort/tree/1.5/documentation)).
 
-### Using [HACS](https://hacs.xyz/) (recommended)
+<!-- ha-marketplace:exclude-start -->
+### Home Assistant 2026.11 or newer
 
-This integration can be installed using HACS. Open HACS, search for Thermal Comfort, download it and restart Home Assistant.
+Open **Settings > Marketplace**, search for Thermal Comfort and select **Install**. No GitHub account is needed.
+Home Assistant shows a repair when a restart is needed, as after an update.
+
+### Home Assistant 2025.8.0 to 2026.10
+
+This integration can be installed using [HACS](https://hacs.xyz/). Open HACS, search for Thermal Comfort, download it and restart Home Assistant.
 
 ### Manual
 
@@ -55,13 +63,14 @@ cd thermal_comfort
 # if you want a specific version checkout its tag
 # e.g. git checkout 1.0.0
 
-# replace $hacs_config_folder with your home assistant config folder path
-cp -r custom_components $hacs_config_folder
+# replace $config_folder with your home assistant config folder path
+cp -r custom_components $config_folder
 ```
 
 * Download `thermal_comfort.zip` from the [latest release](https://github.com/dolezsa/thermal_comfort/releases/latest) and extract it into the `custom_components/thermal_comfort` folder of your Home Assistant config folder.
 
 Finally you need to restart home assistant before you can use it.
+<!-- ha-marketplace:exclude-end -->
 
 ### Custom Icons
 The dew point, frost point and perception sensors have their own icons, the `tc:` icon set of the
@@ -73,7 +82,7 @@ To use the standard Home Assistant icons instead, switch off "Use custom icons" 
 In [yaml](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables)
 the standard icons are used unless `custom_icons` is set to `true`.
 
-* The separate icon pack from HACS is not needed any more, you can remove it. If it stays installed nothing breaks.
+* The separate icon pack (installed with HACS or from the Marketplace) is not needed any more, you can remove it. If it stays installed nothing breaks.
 * If an icon stays empty after the update, reload the page of the browser (or clear its cache). Surfaces that do not use
   the Home Assistant frontend, such as some widgets of the mobile apps, may not show custom icons.
 
