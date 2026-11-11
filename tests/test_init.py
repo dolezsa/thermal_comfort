@@ -1,5 +1,6 @@
 """Test setup process."""
 
+import logging
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -14,6 +15,7 @@ from custom_components.thermal_comfort.sensor import (
 )
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.helpers import entity_registry as er
+from homeassistant.setup import async_setup_component
 
 from .const import ADVANCED_USER_INPUT, RENAMED_SENSOR_TYPES
 
@@ -142,3 +144,98 @@ async def test_registered_entity_id_is_kept(hass):
     entry = registry.async_get(old_entity_id)
     assert entry.unique_id == id_generator("uid", SensorType.MOIST_AIR_ENTHALPY)
     assert registry.async_get("sensor.test_thermal_comfort_dew_point") is not None
+
+
+ICONS_PATH = "/thermal_comfort/thermal_comfort_icons.js"
+
+
+async def test_icons_are_served_and_loaded_in_the_frontend(hass, hass_client, caplog):
+    """Test that the tc: icon set is served and added to the frontend once."""
+    assert await async_setup_component(hass, "http", {})
+    hass.config.components.add("frontend")
+    with patch("custom_components.thermal_comfort.add_extra_js_url") as add:
+        assert await async_setup_component(hass, DOMAIN, {})
+        await hass.async_block_till_done()
+
+        # more entries do not register it again
+        for index in range(2):
+            entry = MockConfigEntry(
+                domain=DOMAIN,
+                data={**ADVANCED_USER_INPUT, "temperature_sensor": f"sensor.t{index}"},
+                entry_id=f"test{index}",
+                unique_id=f"uid{index}",
+            )
+            entry.add_to_hass(hass)
+            assert await hass.config_entries.async_setup(entry.entry_id)
+        await hass.async_block_till_done()
+
+    add.assert_called_once()
+    assert "Could not register the custom icons" not in caplog.text
+    url = add.call_args.args[1]
+    assert url.startswith(f"{ICONS_PATH}?v=")
+
+    client = await hass_client()
+    response = await client.get(url)
+    assert response.status == 200
+    body = await response.text()
+    assert 'window.customIconsets["tc"]' in body
+    for name in ("dew-point", "frost-point", "thermal-perception"):
+        assert f'"{name}"' in body
+
+
+async def test_icons_are_skipped_without_the_frontend(hass, caplog):
+    """Test that a setup without the frontend works and does not serve the icons."""
+    assert await async_setup_component(hass, "http", {})
+    with (
+        caplog.at_level(logging.INFO),
+        patch("custom_components.thermal_comfort.add_extra_js_url") as add,
+    ):
+        assert await async_setup_component(hass, DOMAIN, {})
+    add.assert_not_called()
+    assert "custom icons (tc:) are not available" in caplog.text
+
+
+async def test_icons_are_skipped_without_http(hass):
+    """Test that a setup without the http component works."""
+    hass.config.components.add("frontend")
+    with patch("custom_components.thermal_comfort.add_extra_js_url") as add:
+        assert await async_setup_component(hass, DOMAIN, {})
+    add.assert_not_called()
+
+
+async def test_icon_registration_failure_does_not_break_the_setup(hass, caplog):
+    """Test that an error while registering the icons only logs a warning."""
+    assert await async_setup_component(hass, "http", {})
+    hass.config.components.add("frontend")
+    with patch(
+        "custom_components.thermal_comfort.add_extra_js_url",
+        side_effect=RuntimeError("boom"),
+    ):
+        assert await async_setup_component(hass, DOMAIN, {})
+    assert "Could not register the custom icons" in caplog.text
+
+
+@pytest.mark.parametrize(
+    ("stored", "icon"),
+    [(True, "tc:thermal-perception"), (False, "mdi:"), (None, "mdi:")],
+)
+async def test_entry_icons_follow_the_stored_option(hass, stored, icon):
+    """Test that only an entry that has the option on gets the tc: icons."""
+    data = {k: v for k, v in ADVANCED_USER_INPUT.items() if k != "custom_icons"}
+    data["enabled_sensors"] = [SensorType.DEW_POINT_PERCEPTION]
+    if stored is not None:
+        data["custom_icons"] = stored
+    entry = MockConfigEntry(
+        domain=DOMAIN, data=data, entry_id="test", unique_id="uid", version=2
+    )
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    registry = er.async_get(hass)
+    entity_id = registry.async_get_entity_id(
+        SENSOR_DOMAIN, DOMAIN, id_generator("uid", SensorType.DEW_POINT_PERCEPTION)
+    )
+    entity = hass.data["entity_components"]["sensor"].get_entity(entity_id)
+    # the standard icons are mdi: ones
+    assert entity.entity_description.icon.startswith(icon)

@@ -44,8 +44,9 @@ thermal_comfort:
     (e.g. <code>60</code>) or as a time (e.g. <code>00:01:00</code>).
   </dd>
   <dt><strong>custom_icons</strong> <code>boolean</code> <code>(optional, default: false)</code></dt>
-  <dd>Set to true if you have the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/README.md#custom-icons">custom icon pack</a>
-    installed and want to use it as default icons for the sensors.
+  <dd>Set to true to use the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/README.md#custom-icons">custom icons</a>
+    that come with the integration for the dew point, frost point and perception sensors, instead of the standard
+    Home Assistant icons.
   </dd>
 </dl>
 

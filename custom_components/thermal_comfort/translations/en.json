@@ -36,11 +36,12 @@
             "data": {
               "poll": "Enable Polling",
               "scan_interval": "Poll interval (seconds)",
-              "custom_icons": "Use custom icons pack",
+              "custom_icons": "Use custom icons",
               "temperature_attribute": "Temperature attribute (optional)",
               "humidity_attribute": "Humidity attribute (optional)"
             },
             "data_description": {
+              "custom_icons": "Uses the icons of this integration for the dew point, frost point and perception sensors. Switch it off for the standard Home Assistant icons.",
               "temperature_attribute": "Attribute of the temperature sensor that has the value, instead of its state. Not needed for weather and climate entities.",
               "humidity_attribute": "Attribute of the humidity sensor that has the value, instead of its state. Not needed for weather and climate entities."
             }
@@ -90,12 +91,13 @@
             "data": {
               "poll": "Enable Polling",
               "scan_interval": "Poll interval (seconds)",
-              "custom_icons": "Use custom icons pack",
+              "custom_icons": "Use custom icons",
               "enabled_sensors": "Enabled sensors",
               "temperature_attribute": "Temperature attribute (optional)",
               "humidity_attribute": "Humidity attribute (optional)"
             },
             "data_description": {
+              "custom_icons": "Uses the icons of this integration for the dew point, frost point and perception sensors. Switch it off for the standard Home Assistant icons.",
               "temperature_attribute": "Attribute of the temperature sensor that has the value, instead of its state. Not needed for weather and climate entities.",
               "humidity_attribute": "Attribute of the humidity sensor that has the value, instead of its state. Not needed for weather and climate entities.",
               "enabled_sensors": "Sensors you do not select are still created, but disabled. You can enable them later in the entity settings."

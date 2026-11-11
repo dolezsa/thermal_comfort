@@ -98,10 +98,11 @@ The following options are in the collapsed "Advanced options" section:
   <dd>
     If polling is enabled this sets the interval in seconds (default: 30).
   </dd>
-  <dt><strong>Use custom icons pack</strong>  <code>boolean</code></dt>
+  <dt><strong>Use custom icons</strong>  <code>boolean</code></dt>
   <dd>
-    Enable this if you have the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/README.md#custom-icons">custom icon pack</a>
-    installed and want to use it as default icons for the sensors
+    Uses the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/README.md#custom-icons">custom icons</a>
+    that come with the integration for the dew point, frost point and perception sensors (default: on for a new
+    device). Switch it off for the standard Home Assistant icons.
   </dd>
   <dt><strong>Enabled sensors</strong> <code>list</code> (initial setup only)</dt>
   <dd>

@@ -5,10 +5,14 @@ https://github.com/dolezsa/thermal_comfort
 """
 from __future__ import annotations
 
+import hashlib
 import logging
+from pathlib import Path
 
 import voluptuous as vol
 
+from homeassistant.components.frontend import add_extra_js_url
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME, SERVICE_RELOAD
@@ -45,6 +49,35 @@ from .sensor import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+ICONS_FILE = Path(__file__).parent / "www" / "thermal_comfort_icons.js"
+ICONS_URL = f"/{DOMAIN}/{ICONS_FILE.name}"
+
+
+def _icons_version() -> str:
+    """Return a short hash of the icon file, used to refresh the browser cache."""
+    return hashlib.sha256(ICONS_FILE.read_bytes()).hexdigest()[:12]
+
+
+async def _async_register_icons(hass: HomeAssistant) -> None:
+    """Serve the `tc:` icon set and load it in the frontend.
+
+    Never raises: without the frontend (tests, headless setups) the sensors only
+    show no `tc:` icon, everything else keeps working.
+    """
+    if hass.http is None or "frontend" not in hass.config.components:
+        _LOGGER.info(
+            "The frontend is not loaded, the custom icons (tc:) are not available"
+        )
+        return
+    try:
+        version = await hass.async_add_executor_job(_icons_version)
+        await hass.http.async_register_static_paths(
+            [StaticPathConfig(ICONS_URL, str(ICONS_FILE), True)]
+        )
+        add_extra_js_url(hass, f"{ICONS_URL}?v={version}")
+    except Exception:  # noqa: BLE001
+        _LOGGER.warning("Could not register the custom icons (tc:)", exc_info=True)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -137,6 +170,8 @@ CONFIG_SCHEMA = vol.Schema(
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the thermal_comfort integration."""
+    await _async_register_icons(hass)
+
     if DOMAIN in config:
         await _process_config(hass, config)
 

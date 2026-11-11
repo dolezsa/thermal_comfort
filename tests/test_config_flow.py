@@ -18,6 +18,7 @@ from custom_components.thermal_comfort.const import (
     DOMAIN,
 )
 from custom_components.thermal_comfort.sensor import (
+    CONF_CUSTOM_ICONS,
     CONF_HUMIDITY_ATTRIBUTE,
     CONF_OUTDOOR_HUMIDITY_SENSOR,
     CONF_OUTDOOR_TEMPERATURE_SENSOR,
@@ -796,3 +797,73 @@ async def test_options_flow_outdoor_sensors(hass):
     assert result["type"] == FlowResultType.CREATE_ENTRY
     for key in OUTDOOR:
         assert get_value(entry, key) is None
+
+
+def _custom_icons_default(result):
+    """Return the default of the custom icons option in a form."""
+    section = result["data_schema"].schema["advanced"]
+    marker = next(m for m in section.schema.schema if m == CONF_CUSTOM_ICONS)
+    return marker.default()
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_new_entry_form_starts_with_custom_icons_on(hass, start_ha):
+    """Test that the form of a new entry has the custom icons on."""
+    result = await _flow_init(hass)
+    assert _custom_icons_default(result) is True
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_new_entry_stores_custom_icons_when_not_changed(hass, start_ha):
+    """Test that a form submitted without the option stores it as on."""
+    result = await _flow_init(hass)
+    user_input = {
+        k: v for k, v in ADVANCED_USER_INPUT.items() if k != CONF_CUSTOM_ICONS
+    }
+    result = await _flow_configure(hass, result, user_input)
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["data"][CONF_CUSTOM_ICONS] is True
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_new_entry_can_switch_custom_icons_off(hass, start_ha):
+    """Test that the way back to the standard icons is kept."""
+    result = await _flow_init(hass)
+    result = await _flow_configure(
+        hass, result, {**ADVANCED_USER_INPUT, CONF_CUSTOM_ICONS: False}
+    )
+    assert result["data"][CONF_CUSTOM_ICONS] is False
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+@pytest.mark.parametrize(
+    ("stored", "expected"), [(False, False), (True, True), (None, False)]
+)
+async def test_options_form_keeps_the_stored_custom_icons(
+    hass, start_ha, stored, expected
+):
+    """Test that an existing entry never gets the new default, also without the key."""
+    data = {k: v for k, v in ADVANCED_USER_INPUT.items() if k != CONF_CUSTOM_ICONS}
+    if stored is not None:
+        data[CONF_CUSTOM_ICONS] = stored
+    entry = MockConfigEntry(domain=DOMAIN, data=data, entry_id="test")
+    entry.add_to_hass(hass)
+
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert _custom_icons_default(result) is expected
+
+
+@pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
+async def test_advanced_section_custom_icons_default_in_the_rest_form(
+    hass, start_ha, hass_client
+):
+    """Test the default as the frontend receives it."""
+    assert await async_setup_component(hass, "config", {})
+    client = await hass_client()
+    response = await client.post(
+        "/api/config/config_entries/flow", json={"handler": DOMAIN}
+    )
+    form = await response.json()
+    advanced = next(f for f in form["data_schema"] if f["name"] == "advanced")
+    field = next(f for f in advanced["schema"] if f["name"] == CONF_CUSTOM_ICONS)
+    assert field["default"] is True

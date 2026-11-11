@@ -64,15 +64,24 @@ cp -r custom_components $hacs_config_folder
 Finally you need to restart home assistant before you can use it.
 
 ### Custom Icons
-The [icon pack](https://github.com/rautesamtr/thermal_comfort_icons) is no longer
-available in the HACS default repositories, follow the installation instructions
-in its repository to install it.
+The dew point, frost point and perception sensors have their own icons, the `tc:` icon set of the
+[Thermal Comfort icon pack](https://github.com/rautesamtr/thermal_comfort_icons). The icons come with the
+integration, there is nothing to install. Sensors of a device created in the UI use them by default.
 
-Enable the custom icons options for your sensor in the
- [frontend](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md#configuration-options)
- or in [yaml](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables).
+To use the standard Home Assistant icons instead, switch off "Use custom icons" in the advanced options of the
+ [device](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md#configuration-options).
+In [yaml](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables)
+the standard icons are used unless `custom_icons` is set to `true`.
+
+* The separate icon pack from HACS is not needed any more, you can remove it. If it stays installed nothing breaks.
+* If an icon stays empty after the update, reload the page of the browser (or clear its cache). Surfaces that do not use
+  the Home Assistant frontend, such as some widgets of the mobile apps, may not show custom icons.
 
 ## Upgrading from 3.1
+
+* The icons of the former icon pack are built in. Devices created in the UI from now on use them by default; existing
+  devices and YAML sensors keep their setting (`custom_icons`). The separate icon pack can be removed, see
+  [Custom Icons](#custom-icons).
 
 * With an optional outdoor temperature and humidity sensor (a weather entity works too) a device also has the
   moisture excess, the ventilation advice and the ventilation need, see the
@@ -122,3 +131,7 @@ Contribute translations directly with PRs or with the inlang editor
 Please report bugs and ask questions in the [issues](https://github.com/dolezsa/thermal_comfort/issues),
 see [CONTRIBUTING.md](CONTRIBUTING.md) if you want to contribute.
 Thermal Comfort is licensed under the [MIT license](LICENSE), credits are listed in [CREDITS.md](CREDITS.md).
+Exceptions: the bundled `tc:` icons are licensed under Apache-2.0 (modified Material Design Icons, loader code MIT, see
+[custom_components/thermal_comfort/www/LICENSE](custom_components/thermal_comfort/www/LICENSE) and
+[ATTRIBUTION.md](custom_components/thermal_comfort/www/ATTRIBUTION.md)), and the artwork in the `icons` folder is
+licensed under CC BY-NC-SA 4.0 (see [icons/LICENCE.md](icons/LICENCE.md)).

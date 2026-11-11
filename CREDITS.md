@@ -4,6 +4,9 @@
 
 # Co-Maintainer
 [<img src="https://github.com/rautesamtr.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @rautesamtr](https://github.com/rautesamtr)
+* Author of the Thermal Comfort icon pack, bundled with the integration since 3.2.0. The icons are modified
+  [Material Design Icons](https://github.com/Templarian/MaterialDesign), the creators of the original icons are listed in
+  [ATTRIBUTION.md](custom_components/thermal_comfort/www/ATTRIBUTION.md).
 
 
 # Contributors

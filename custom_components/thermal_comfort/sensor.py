@@ -79,6 +79,9 @@ ATTR_WIND_SPEED = "wind_speed"
 CONF_ENABLED_SENSORS = "enabled_sensors"
 CONF_SENSOR_TYPES = "sensor_types"
 CONF_CUSTOM_ICONS = "custom_icons"
+# Only the form of a NEW config entry starts with the custom icons on. The
+# YAML default and the entries that already exist keep the standard icons.
+CUSTOM_ICONS_DEFAULT_NEW_ENTRY = True
 CONF_SCAN_INTERVAL = "scan_interval"
 
 CONF_TEMPERATURE_SENSOR = "temperature_sensor"

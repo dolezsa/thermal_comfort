@@ -42,6 +42,8 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
+        # bundled third-party file, kept as it is in the icon pack
+        exclude: ^custom_components/thermal_comfort/www/
   - repo: https://github.com/cdce8p/python-typing-update
     rev: v0.9.0
     hooks:

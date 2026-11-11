@@ -29,6 +29,7 @@ from .sensor import (
     CONF_TEMPERATURE_ATTRIBUTE,
     CONF_TEMPERATURE_SENSOR,
     CONF_WIND_SPEED_SENSOR,
+    CUSTOM_ICONS_DEFAULT_NEW_ENTRY,
     DEFAULT_HUMIDITY_ATTRIBUTES,
     DEFAULT_SENSOR_TYPES,
     DEFAULT_TEMPERATURE_ATTRIBUTES,
@@ -495,7 +496,11 @@ def build_schema(
         ): vol.All(vol.Coerce(int), vol.Range(min=1)),
         vol.Optional(
             CONF_CUSTOM_ICONS,
-            default=get_value(config_entry, CONF_CUSTOM_ICONS, False),
+            default=get_value(
+                config_entry,
+                CONF_CUSTOM_ICONS,
+                CUSTOM_ICONS_DEFAULT_NEW_ENTRY if config_entry is None else False,
+            ),
         ): bool,
         # Optional, without them the state of the source is the value, except
         # for the entities that always have it in an attribute
