@@ -1,4 +1,4 @@
-# Sensors:
+# Sensors
 
 All sensors are calculated from one temperature and one relative humidity
 sensor. The ventilation sensors also need the optional
@@ -18,7 +18,7 @@ Home Assistant shows translated. Use the English names in automations and templa
 | see how strongly the air dries things (laundry, wood, plants) | `vapor_pressure_deficit` |
 | see if windows or walls will get wet | `dew_point` (condensation starts on a surface colder than the dew point) |
 | see how hot it feels in warm weather | `humidex`, `heat_index`, `summer_simmer_index`, or their perception sensors, `thoms_discomfort_perception` |
-| see if cool, damp weather is uncomfortable | `winter_scharlau_perception` (only between -5 and 6°C and above 40 % humidity, otherwise `outside_calculable_range`; it does not know the wind) |
+| see if cool, damp weather is uncomfortable | `winter_scharlau_perception` (only between -5 and 6°C and above 40% humidity, otherwise `outside_calculable_range`; it does not know the wind) |
 | see how cold the wind makes it outdoors | `wind_chill` (wind speed sensor needed) |
 | have one temperature that combines the temperature, the humidity and the wind outdoors, in all seasons | `apparent_temperature` (wind speed sensor needed) |
 | know the risk of frost | `frost_risk`, `frost_point` |
@@ -45,15 +45,15 @@ Home Assistant shows translated. Use the English names in automations and templa
   <dd>
     The mass of water vapor in the air in grams per kilogram of <em>dry</em> air (g/kg), also called the mixing ratio,
     the humidity axis of the Mollier chart. It is not the absolute humidity (g/m³, per volume of air) and
-    not the specific humidity, which is per kilogram of moist air and about 1 % lower.
+    not the specific humidity, which is per kilogram of moist air and about 1% lower.
     Air that is heated or cooled without gaining or losing water keeps its humidity ratio, so
     values of different rooms or of the room and the outdoors compare directly, and the change
     of the value shows how much water a dehumidifier, a humidifier or the airing moves.
-    It depends on the atmospheric pressure (about 1.2 % per 100 m of elevation), from the optional
+    It depends on the atmospheric pressure (about 1.2% per 100 m of elevation), from the optional
     pressure sensor, otherwise 101325 Pa is used, see the configuration docs. With a pressure sensor the
     <code>pressure</code> attribute shows the pressure in use.
     The saturation vapor pressure comes from the equation of ASHRAE Fundamentals 2021 (Hyland and Wexler), the ratio from
-    the ideal gas relation, which stays within about 0.5 % of the tabulated real gas values. The relative humidity is taken over water also below 0°C, as the
+    the ideal gas relation, which stays within about 0.5% of the tabulated real gas values. The relative humidity is taken over water also below 0°C, as the
     sensors and the weather services report it.
   </dd>
   <dt><strong>Vapor Pressure Deficit</strong> <code>vapor_pressure_deficit</code></dt>
@@ -66,8 +66,8 @@ Home Assistant shows translated. Use the English names in automations and templa
     This is the vapor pressure deficit of the <em>air</em>. The charts of growers are made for the deficit of the leaf, and a leaf is
     usually 1 to 3°C cooler than the air, so their values are roughly 0.15 to 0.5 kPa lower than this sensor at room
     conditions. The leaf deficit needs the temperature of the leaf and is not calculated, and the sensor does not
-    give target ranges, they depend on the plant, its stage and on whether they are meant for the leaf or the air.
-    The pressure sensor is not used, the deficit is a pressure difference. The relative humidity is taken over water
+    give target ranges, as they depend on the plant, its stage and on whether they are meant for the leaf or the air.
+    The pressure sensor is not used because the deficit is a pressure difference. The relative humidity is taken over water
     also below 0°C.
   </dd>
   <dt><strong>Dew Point + Perception</strong> <code>dew_point</code> <code>dew_point_perception</code></dt>
@@ -79,13 +79,13 @@ Home Assistant shows translated. Use the English names in automations and templa
     It depends only on the amount of water in the air, not on how warm the air is.
     Sources: <a href="http://wahiduddin.net/calc/density_algorithms.htm">calculation</a>,
     <a href="https://en.wikipedia.org/wiki/Dew_point">perception levels</a>.
-    The perception follows a general, mainly outdoor scale, it is not tuned for
+    The perception follows a general, mainly outdoor scale and is not tuned for
     indoor comfort targets. Use the numeric dew point or the absolute humidity
     for indoor humidity automations.
   </dd>
   <dt><strong>Frost Point</strong> <code>frost_point</code></dt>
   <dd>
-    Frost point, temperature, below 0° C (32° F), at which moisture in the air 
+    Frost point, temperature, below 0°C (32°F), at which moisture in the air 
     will condense as a layer of frost on any exposed surface.
     Source: <a href="https://pon.fr/dzvents-alerte-givre-et-calcul-humidite-absolue/">pon.fr</a>
   </dd>
@@ -93,7 +93,7 @@ Home Assistant shows translated. Use the English names in automations and templa
   <dd>
     Risk of frost based on current temperature, frost point and absolute humidity.
     The states are <code>no_risk</code>, <code>unlikely</code>, <code>probable</code>
-    and <code>high</code>. It is meant for the outdoor air, for example for plants or the windscreen of the car,
+    and <code>high</code>. It is meant for the outdoor air, for example for plants or the windscreen of the car;
     its thresholds (air temperature up to 4°C) are never reached in a heated room.
     It only knows the current values and cannot anticipate an overnight minimum,
     so don't rely on it alone to protect plants or equipment.
@@ -111,11 +111,11 @@ into text states, for dashboards and automations ("it is uncomfortable").
   <dd>
     The heat index combines air temperature and relative humidity to posit a
     human-perceived equivalent temperature, in °C. It is meant for warm weather
-    (the National Weather Service uses it from 27°C, 80°F), at lower temperatures the value roughly follows the air temperature.
+    (the National Weather Service uses it from 27°C, 80°F); at lower temperatures the value roughly follows the air temperature.
     The calculation follows the <a href="http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml">NWS procedure</a>:
     a simple formula is used first and the full regression only applies once
     that result exceeds 26.1°C (79°F), so the value can show a small step at
-    that point. Above 85 % relative humidity a further humidity adjustment
+    that point. Above 85% relative humidity a further humidity adjustment
     applies between 26.7°C and 30.6°C (80°F and 87°F), which makes the value
     jump again at 26.7°C.
   </dd>
@@ -133,7 +133,7 @@ into text states, for dashboards and automations ("it is uncomfortable").
     Sources: <a href="https://www.vcalc.com/wiki/rklarsen/Summer+Simmer+Index">index</a>,
     <a href="http://summersimmer.com/default.asp">perception</a>.
   </dd>
-  <dt><strong>Thoms discomfort Index + Perception</strong> <code>thoms_discomfort_index</code> <code>thoms_discomfort_perception</code></dt>
+  <dt><strong>Thom's Discomfort Index + Perception</strong> <code>thoms_discomfort_index</code> <code>thoms_discomfort_perception</code></dt>
   <dd>
     Thom's discomfort index shows the discomfort as a result of high temperature and the combined effect with
     relative humidity. The index is calculated with the relative humidity form
@@ -151,7 +151,7 @@ into text states, for dashboards and automations ("it is uncomfortable").
     categories (below 22 no heat stress, 22 to 24 mild, 24 to 28 moderate, above 28 severe),
     which this integration does not use.
     The perception sensor shows the value of the index in the attribute <code>thoms_discomfort_index</code>.
-    The index has no device class, it is shown in °C, also if the system uses °F.
+    The index has no device class and is always shown in °C, even if the system uses °F.
   </dd>
   <dt><strong>Relative Strain Perception</strong> <code>relative_strain_perception</code></dt>
   <dd>
@@ -159,12 +159,12 @@ into text states, for dashboards and automations ("it is uncomfortable").
   </dd>
   <dt><strong>Summer Scharlau Perception</strong> <code>summer_scharlau_perception</code></dt>
   <dd>
-    The summer Scharlau index describes a bioclimatic thermal comfort when temperature values are higher than 0°C. Valid for temperatures 17° to 39°C (63° to 102°F) and humidity >= 30%.
+    The summer Scharlau index describes a bioclimatic thermal comfort when temperature values are higher than 0°C. Valid for temperatures 17 to 39°C (63 to 102°F) and humidity >= 30%.
     Source: <a href="https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf">Rusanescu et al.</a>
   </dd>
   <dt><strong>Winter Scharlau Perception</strong> <code>winter_scharlau_perception</code></dt>
   <dd>
-    Reflects the level of human discomfort caused by cooling. Valid for: temperatures -5 to +6°C (23 to 43°F) and humidity >= 40%.
+    Reflects the level of human discomfort caused by cooling. Valid for: temperatures -5 to 6°C (23 to 43°F) and humidity >= 40%.
     Source: <a href="https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf">Rusanescu et al.</a>
   </dd>
 </dl>
@@ -179,14 +179,14 @@ into text states, for dashboards and automations ("it is uncomfortable").
     temperature above about 30°C is dangerous even at rest, 35°C is considered the limit of survival.
     It is calculated with the
     approximation of <a href="https://doi.org/10.1175/JAMC-D-11-0143.1">Stull (2011)</a>,
-    which is valid for 5 to 99 % relative humidity and -20 to 50°C (-4 to 122°F) with an error of
+    which is valid for 5 to 99% relative humidity and -20 to 50°C (-4 to 122°F) with an error of
     about 0.3°C on average, and assumes the pressure at sea level. The pressure sensor is not used.
-    Outside the valid range the formula can give a value above the air temperature or below the
-    dew point, the sensor limits the value to that range, but the accuracy is lower there.
+    Outside the valid range, the formula can give a value above the air temperature or below the
+    dew point; the sensor limits the value to that range, but the accuracy is lower there.
   </dd>
   <dt><strong>Moist Air Enthalpy</strong> <code>moist_air_enthalpy</code></dt>
   <dd>
-    The enthalpy of moist air is the sum of the enthalpy of the dry air and the enthalpy of the water vapour. Enthalpy is the total energy of a thermodynamic system.
+    The enthalpy of moist air is the sum of the enthalpy of the dry air and the enthalpy of the water vapor. Enthalpy is the total energy of a thermodynamic system.
     It is shown in kJ/kg of dry air and includes the heat of the water vapor, so humid air has more
     energy than dry air of the same temperature. With a second device for the outdoor air, compare the two
     values to see if airing or a ventilation unit brings heat in or takes it out, or use it for cooling calculations.
@@ -209,7 +209,7 @@ These sensors compare the room with the outdoor air, they need the
     the outdoor humidity, the absolute humidity (g/m³) and the dew point (<code>outdoor_dew_point</code>, in °C) of the outdoor air,
     and <code>ventilated_relative_humidity</code>, the relative humidity the room would have right
     after the air is exchanged completely, as the outdoor air keeps its vapor pressure when it is warmed to the temperature
-    of the room (capped at 100 %).
+    of the room (capped at 100%).
     It needs the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md">outdoor temperature and humidity sensors</a>.
     The relative humidity is taken over water also below 0°C, as the sensors and the weather services report it.
   </dd>
@@ -218,11 +218,11 @@ These sensors compare the room with the outdoor air, they need the
     What airing would do to the humidity of the room:
     <code>drier_outside</code> (the moisture excess is above 1 g/m³), <code>similar</code> (between -1 and 1 g/m³),
     <code>more_humid_outside</code> (below -1 g/m³) and <code>condensation_risk</code>.
-    The last one is shown, before the others, if the outdoor air would have a relative humidity of 80 % or more
+    The last one is shown, before the others, if the outdoor air would have a relative humidity of 80% or more
     after it is warmed to the temperature of the room (<code>ventilated_relative_humidity</code>): it is near saturation on
-    the cooler surfaces of the room, like a cellar in summer. 80 % is the surface humidity of the criterion of EN ISO 13788 for mould.<br>
+    the cooler surfaces of the room, like a cellar in summer. 80% is the surface humidity of the criterion of EN ISO 13788 for mold.<br>
     The sensor knows nothing about earlier values, the states are bands. The band of 1 g/m³ is about the uncertainty
-    of two simple sensors (two sensors of ±3 % relative humidity add up to about ±1 g/m³ at 21°C), so the state
+    of two simple sensors (two sensors of ±3% relative humidity add up to about ±1 g/m³ at 21°C), so the state
     changes back and forth in spring and autumn. Use it in automations with the outer states and a duration, see the
     <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md">recipes</a>.
     It answers one question, what happens to the humidity of the room. It does not say if airing is worth the heat
@@ -283,7 +283,7 @@ wind speed sensor. Both have the attribute <code>wind_speed</code>, the wind spe
     It is meant for the outdoor air in all seasons, in the shade. The wind is the sustained wind at 10 m, as for the wind chill;
     a lower anemometer usually gives a higher apparent temperature.<br>
     The sun is not taken into account, in sunshine it feels warmer. Because of the constant term the value is below the
-    air temperature in calm, not humid weather, for example about 2.5 to 3°C below it at 0°C without wind and with 50 to 75 %
+    air temperature in calm, not humid weather, for example about 2.5 to 3°C below it at 0°C without wind and with 50 to 75%
     humidity. Weather integrations that provide their own apparent or feels-like temperature can use another formula, for example with the
     radiation, so their value may differ from this sensor.
   </dd>
