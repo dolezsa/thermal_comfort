@@ -6,15 +6,15 @@
       "pressure_not_found": "Drucksensor konnte nicht gefunden werden",
       "temperature_attribute_not_found": "Der Temperatursensor hat kein Attribut mit diesem Namen, siehe die erweiterten Optionen",
       "humidity_attribute_not_found": "Der Feuchtigkeitssensor hat kein Attribut mit diesem Namen, siehe die erweiterten Optionen",
-      "outdoor_temperature_not_found": "Der Außentemperatursensor konnte nicht gefunden werden",
-      "outdoor_humidity_not_found": "Der Außenfeuchtigkeitssensor konnte nicht gefunden werden",
+      "outdoor_temperature_not_found": "Außentemperatursensor konnte nicht gefunden werden",
+      "outdoor_humidity_not_found": "Außenfeuchtigkeitssensor konnte nicht gefunden werden",
       "outdoor_incomplete": "Wähle entweder den Außentemperatur- und den Außenfeuchtigkeitssensor oder keinen von beiden aus",
       "outdoor_same_as_indoor": "Die Außensensoren müssen andere sein als die Innensensoren",
       "wind_speed_not_found": "Windgeschwindigkeitssensor konnte nicht gefunden werden"
     },
     "step": {
       "init": {
-        "title": "Thermal Comfort Einstellungen",
+        "title": "Einstellungen für Thermal Comfort",
         "data": {
           "name": "Gerätename",
           "temperature_sensor": "Temperatursensor",
@@ -26,9 +26,9 @@
         },
         "data_description": {
           "name": "Wird als Gerätename und als Präfix für die Sensornamen verwendet, beispielsweise als Name des Raums.",
-          "outdoor_temperature_sensor": "Mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetterentität kann verwendet werden.",
-          "outdoor_humidity_sensor": "Mit dem Außentemperatursensor werden die Sensoren erstellt, die die Raumluft mit der Außenluft vergleichen. Eine Wetterentität kann verwendet werden.",
-          "wind_speed_sensor": "Der Wind am Standort der Außensensoren. Anhand dessen werden die gefühlte Temperatur und die Windchill-Temperatur berechnet. Stelle diesen Wert nur auf einem Gerät ein, dessen Datenquellen Außensensoren oder eine Wetterentität sind, nicht auf einem Gerät, das für einen Raum bestimmt ist. Eine Wetterentität kann verwendet werden."
+          "outdoor_temperature_sensor": "Mit dem Außentemperatursensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetter-Entität kann verwendet werden.",
+          "outdoor_humidity_sensor": "Mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die die Raumluft mit der Außenluft vergleichen. Eine Wetter-Entität kann verwendet werden.",
+          "wind_speed_sensor": "Der Wind am Standort der Außensensoren. Anhand dessen werden die gefühlte Temperatur und die Windchill-Temperatur berechnet. Stelle diesen Wert nur auf einem Gerät ein, dessen Datenquellen Außensensoren oder eine Wetter-Entität sind, nicht auf einem Gerät, das für einen Raum bestimmt ist. Eine Wetter-Entität kann verwendet werden."
         },
         "sections": {
           "advanced": {
@@ -60,15 +60,15 @@
       "pressure_not_found": "Drucksensor konnte nicht gefunden werden",
       "temperature_attribute_not_found": "Der Temperatursensor hat kein Attribut mit diesem Namen, siehe die erweiterten Optionen",
       "humidity_attribute_not_found": "Der Feuchtigkeitssensor hat kein Attribut mit diesem Namen, siehe die erweiterten Optionen",
-      "outdoor_temperature_not_found": "Der Außentemperatursensor konnte nicht gefunden werden",
-      "outdoor_humidity_not_found": "Der Außenfeuchtigkeitssensor konnte nicht gefunden werden",
+      "outdoor_temperature_not_found": "Außentemperatursensor konnte nicht gefunden werden",
+      "outdoor_humidity_not_found": "Außenfeuchtigkeitssensor konnte nicht gefunden werden",
       "outdoor_incomplete": "Wähle entweder den Außentemperatur- und den Außenfeuchtigkeitssensor oder keinen von beiden aus",
       "outdoor_same_as_indoor": "Die Außensensoren müssen andere sein als die Innensensoren",
       "wind_speed_not_found": "Windgeschwindigkeitssensor konnte nicht gefunden werden"
     },
     "step": {
       "user": {
-        "title": "Thermal Comfort Einstellungen",
+        "title": "Einstellungen für Thermal Comfort",
         "data": {
           "name": "Gerätename",
           "temperature_sensor": "Temperatursensor",
@@ -80,9 +80,9 @@
         },
         "data_description": {
           "name": "Wird als Gerätename und als Präfix für die Sensornamen verwendet, beispielsweise als Name des Raums.",
-          "outdoor_temperature_sensor": "Mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetterentität kann verwendet werden.",
-          "outdoor_humidity_sensor": "Mit dem Außentemperatursensor werden die Sensoren erstellt, die die Raumluft mit der Außenluft vergleichen. Eine Wetterentität kann verwendet werden.",
-          "wind_speed_sensor": "Der Wind am Standort der Außensensoren. Anhand dessen werden die gefühlte Temperatur und die Windchill-Temperatur berechnet. Stelle diesen Wert nur auf einem Gerät ein, dessen Datenquellen Außensensoren oder eine Wetterentität sind, nicht auf einem Gerät, das für einen Raum bestimmt ist. Eine Wetterentität kann verwendet werden."
+          "outdoor_temperature_sensor": "Mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetter-Entität kann verwendet werden.",
+          "outdoor_humidity_sensor": "Mit dem Außentemperatursensor werden die Sensoren erstellt, die die Raumluft mit der Außenluft vergleichen. Eine Wetter-Entität kann verwendet werden.",
+          "wind_speed_sensor": "Der Wind am Standort der Außensensoren. Anhand dessen werden die gefühlte Temperatur und die Windchill-Temperatur berechnet. Stelle diesen Wert nur auf einem Gerät ein, dessen Datenquellen Außensensoren oder eine Wetter-Entität sind, nicht auf einem Gerät, das für einen Raum bestimmt ist. Eine Wetter-Entität kann verwendet werden."
         },
         "sections": {
           "advanced": {
@@ -98,7 +98,7 @@
             "data_description": {
               "temperature_attribute": "Attribut des Temperatursensors, das den Wert anstelle seines Zustands angibt. Für Wetter- und Klima-Entitäten nicht erforderlich.",
               "humidity_attribute": "Attribut des Feuchtigkeitssensors, das den Wert anstelle seines Zustands angibt. Für Wetter- und Klima-Entitäten nicht erforderlich.",
-              "enabled_sensors": "Nichtausgewählte Sensoren werden deaktiviert erstellt. Sie können später in den Entitätseinstellungen aktiviert werden."
+              "enabled_sensors": "Nicht ausgewählte Sensoren werden deaktiviert erstellt. Sie können später in den Entitätseinstellungen aktiviert werden."
             }
           }
         }
@@ -123,7 +123,7 @@
           "somewhat_uncomfortable": "Etwas unangenehm",
           "quite_uncomfortable": "Unangenehm und sehr schwül",
           "extremely_uncomfortable": "Äußerst unangenehm und drückend",
-          "severely_high": "Extrem hoch, tödlich für asthmabedingte Erkrankungen"
+          "severely_high": "Extrem hoch, lebensgefährlich bei asthmabedingten Erkrankungen"
         }
       },
       "frost_point": {
@@ -163,14 +163,14 @@
         "state": {
           "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
           "comfortable": "Angenehm",
-          "slight_discomfort": "Etwas unbehaglich",
-          "discomfort": "Unbehaglich",
-          "significant_discomfort": "Erhebliches Unbehagen",
-          "extreme_discomfort": "Extremes Unbehagen"
+          "slight_discomfort": "Leicht unangenehm",
+          "discomfort": "Unangenehm",
+          "significant_discomfort": "Sehr unangenehm",
+          "extreme_discomfort": "Extrem unangenehm"
         }
       },
       "summer_scharlau_perception": {
-        "name": "Sommer Scharlau gefühlt",
+        "name": "Sommer-Scharlau gefühlt",
         "state": {
           "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
           "comfortable": "Angenehm",
@@ -180,7 +180,7 @@
         }
       },
       "winter_scharlau_perception": {
-        "name": "Winter Scharlau gefühlt",
+        "name": "Winter-Scharlau gefühlt",
         "state": {
           "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
           "comfortable": "Angenehm",
@@ -190,10 +190,10 @@
         }
       },
       "summer_simmer_index": {
-        "name": "Sommer Simmer Index"
+        "name": "Sommer-Simmer-Index"
       },
       "summer_simmer_perception": {
-        "name": "Sommer Simmer gefühlt",
+        "name": "Sommer-Simmer gefühlt",
         "state": {
           "cool": "Kühl",
           "slightly_cool": "Etwas kühl",
@@ -207,10 +207,10 @@
         }
       },
       "thoms_discomfort_index": {
-        "name": "Thoms Discomfort Index"
+        "name": "Thoms-Discomfort-Index"
       },
       "thoms_discomfort_perception": {
-        "name": "Thoms Discomfort gefühlt",
+        "name": "Thoms-Discomfort gefühlt",
         "state": {
           "no_discomfort": "Kein Unbehagen",
           "less_than_half": "Weniger als die Hälfte der Bevölkerung empfindet Unbehagen",
