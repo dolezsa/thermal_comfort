@@ -61,6 +61,9 @@ Federico Tartarini
 [<img src="https://github.com/blakebill.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @blakebill](https://github.com/blakebill)
 * Fix the humidity term of the winter Scharlau index.
 
+[<img src="https://github.com/tquakulinsky.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @tquakulinsky](https://github.com/tquakulinsky)
+* Fixes in the sensor documentation.
+
 
 # Translators
 
@@ -109,6 +112,8 @@ Federico Tartarini
 @Xander-V](https://github.com/Xander-V)
 [<img src="https://github.com/Synthetica9.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @Synthetica9](https://github.com/Synthetica9)
+[<img src="https://github.com/tquakulinsky.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@tquakulinsky](https://github.com/tquakulinsky)
 
 **Estonian:**
 [<img src="https://github.com/Repsionu.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
@@ -147,6 +152,8 @@ Federico Tartarini
 @Migsi](https://github.com/Migsi)
 [<img src="https://github.com/JohanHartung.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @JohanHartung](https://github.com/JohanHartung)
+[<img src="https://github.com/tquakulinsky.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@tquakulinsky](https://github.com/tquakulinsky)
 
 **Greek:**
 [<img src="https://github.com/ChriZathens.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
