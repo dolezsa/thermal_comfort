@@ -6,7 +6,7 @@
 
 Thermal Comfort provides a variety of thermal indices and thermal perceptions including feels like temperatures in numeric and textual representation for Home Assistant.
 
-## Sensors:
+## Sensors
 
 **[Full list](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)**
 
@@ -22,7 +22,7 @@ With an optional wind speed sensor, it also provides the `wind chill` and the `a
 ![Custom Icons](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/outside.png)
 
 ## Usage
-To use Thermal Comfort check the documentation for your preferred way to setup
+To use Thermal Comfort check the documentation for your preferred way to set up
 sensors.
 
 **[UI/Frontend (Config Flow)](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md)**
@@ -60,16 +60,16 @@ To install this integration manually you can either
 ```sh
 git clone https://github.com/dolezsa/thermal_comfort.git
 cd thermal_comfort
-# if you want a specific version checkout its tag
+# if you want a specific version check out its tag
 # e.g. git checkout 1.0.0
 
-# replace $config_folder with your home assistant config folder path
+# replace $config_folder with your Home Assistant config folder path
 cp -r custom_components $config_folder
 ```
 
 * Download `thermal_comfort.zip` from the [latest release](https://github.com/dolezsa/thermal_comfort/releases/latest) and extract it into the `custom_components/thermal_comfort` folder of your Home Assistant config folder.
 
-Finally you need to restart home assistant before you can use it.
+Finally you need to restart Home Assistant before you can use it.
 <!-- ha-marketplace:exclude-end -->
 
 ### Custom Icons
@@ -79,7 +79,7 @@ integration, there is nothing to install. Sensors of a device created in the UI 
 
 To use the standard Home Assistant icons instead, switch off "Use custom icons" in the advanced options of the
  [device](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/config_flow.md#configuration-options).
-In [yaml](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables)
+In [YAML](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables)
 the standard icons are used unless `custom_icons` is set to `true`.
 
 * The separate icon pack (installed with HACS or from the Marketplace) is not needed any more, you can remove it. If it stays installed nothing breaks.

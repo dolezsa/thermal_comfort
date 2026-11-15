@@ -1,7 +1,7 @@
 # Contributing to Thermal Comfort
 Everybody is invited and welcome to contribute to Thermal Comfort.
 
-## Report bugs using Github's [issues](https://github.com/dolezsa/thermal_comfort/issues)
+## Report bugs using GitHub's [issues](https://github.com/dolezsa/thermal_comfort/issues)
 We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/dolezsa/thermal_comfort/issues/new/choose).
 
 ## Write bug reports with detail, background, and sample code
@@ -28,11 +28,11 @@ People *love* thorough bug reports. I'm not even kidding.
 7. Issue that pull request!
 
 ## Test Suite
- 1. Setup local tests:
+ 1. Set up local tests:
 ```bash
 python -m venv venv
 source venv/bin/activate
-pip install -r requirements.test.txt
+pip install -r requirements_test.txt
 ```
 2. Run local tests:
 ```bash
@@ -41,9 +41,9 @@ pytest
 ```
 
 ## Style Guideline
-We use [home assistants style guideline](https://developers.home-assistant.io/docs/development_guidelines).
+We use [Home Assistant's style guideline](https://developers.home-assistant.io/docs/development_guidelines).
 
-In the documentation and the English texts, write American English (`mold`, `vapor`) and put no space before `%` and `°C`/`°F` (`50%`, `21°C`). Other units get a space (`1.2 g/kg`, `0.5 kPa`).
+In the documentation and the English texts, write American English (`mold`, `vapor`, `windshield`) and put no space before `%` and `°C`/`°F` (`50%`, `21°C`). Other units get a space (`1.2 g/kg`, `0.5 kPa`).
 
 ## Contributor Credits
 You can add yourself to [CREDITS.md](CREDITS.md) in your PR. Otherwise you will be added before our next release.

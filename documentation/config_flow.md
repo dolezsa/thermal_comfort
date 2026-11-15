@@ -1,5 +1,5 @@
 # Initial Configuration
-## In your Home Assistant UI go to "Configuration", then click "Devices & Services"
+## In your Home Assistant UI go to "Settings", then click "Devices & Services"
 
 ![Config Dashboard](https://raw.githubusercontent.com/dolezsa/thermal_comfort/master/screenshots/config_dashboard.png)
 

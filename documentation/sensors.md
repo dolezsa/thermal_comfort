@@ -85,7 +85,7 @@ Home Assistant shows translated. Use the English names in automations and templa
   </dd>
   <dt><strong>Frost Point</strong> <code>frost_point</code></dt>
   <dd>
-    Frost point, temperature, below 0°C (32°F), at which moisture in the air 
+    The frost point is the temperature, below 0°C (32°F), at which moisture in the air
     will condense as a layer of frost on any exposed surface.
     Source: <a href="https://pon.fr/dzvents-alerte-givre-et-calcul-humidite-absolue/">pon.fr</a>
   </dd>
@@ -93,7 +93,7 @@ Home Assistant shows translated. Use the English names in automations and templa
   <dd>
     Risk of frost based on current temperature, frost point and absolute humidity.
     The states are <code>no_risk</code>, <code>unlikely</code>, <code>probable</code>
-    and <code>high</code>. It is meant for the outdoor air, for example for plants or the windscreen of the car;
+    and <code>high</code>. It is meant for the outdoor air, for example for plants or the windshield of the car;
     its thresholds (air temperature up to 4°C) are never reached in a heated room.
     It only knows the current values and cannot anticipate an overnight minimum,
     so don't rely on it alone to protect plants or equipment.
@@ -111,7 +111,7 @@ into text states, for dashboards and automations ("it is uncomfortable").
   <dd>
     The heat index combines air temperature and relative humidity to posit a
     human-perceived equivalent temperature, in °C. It is meant for warm weather
-    (the National Weather Service uses it from 27°C, 80°F); at lower temperatures the value roughly follows the air temperature.
+    (the National Weather Service uses it from 27°C (80°F)); at lower temperatures the value roughly follows the air temperature.
     The calculation follows the <a href="http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml">NWS procedure</a>:
     a simple formula is used first and the full regression only applies once
     that result exceeds 26.1°C (79°F), so the value can show a small step at
@@ -151,7 +151,7 @@ into text states, for dashboards and automations ("it is uncomfortable").
     categories (below 22 no heat stress, 22 to 24 mild, 24 to 28 moderate, above 28 severe),
     which this integration does not use.
     The perception sensor shows the value of the index in the attribute <code>thoms_discomfort_index</code>.
-    The index has no device class and is always shown in °C, even if the system uses °F.
+    The index has no device class, so it is always shown in °C, even if the system uses °F.
   </dd>
   <dt><strong>Relative Strain Perception</strong> <code>relative_strain_perception</code></dt>
   <dd>
@@ -159,12 +159,12 @@ into text states, for dashboards and automations ("it is uncomfortable").
   </dd>
   <dt><strong>Summer Scharlau Perception</strong> <code>summer_scharlau_perception</code></dt>
   <dd>
-    The summer Scharlau index describes a bioclimatic thermal comfort when temperature values are higher than 0°C. Valid for temperatures 17 to 39°C (63 to 102°F) and humidity >= 30%.
+    The summer Scharlau index describes a bioclimatic thermal comfort when temperature values are higher than 0°C. Valid for temperatures 17 to 39°C (63 to 102°F) and humidity of at least 30%.
     Source: <a href="https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf">Rusanescu et al.</a>
   </dd>
   <dt><strong>Winter Scharlau Perception</strong> <code>winter_scharlau_perception</code></dt>
   <dd>
-    Reflects the level of human discomfort caused by cooling. Valid for: temperatures -5 to 6°C (23 to 43°F) and humidity >= 40%.
+    Reflects the level of human discomfort caused by cooling. Valid for temperatures -5 to 6°C (23 to 43°F) and humidity of at least 40%.
     Source: <a href="https://revistadechimie.ro/pdf/16%20RUSANESCU%204%2019.pdf">Rusanescu et al.</a>
   </dd>
 </dl>
@@ -223,7 +223,7 @@ These sensors compare the room with the outdoor air, they need the
     the cooler surfaces of the room, like a cellar in summer. 80% is the surface humidity of the criterion of EN ISO 13788 for mold.<br>
     The sensor knows nothing about earlier values, the states are bands. The band of 1 g/m³ is about the uncertainty
     of two simple sensors (two sensors of ±3% relative humidity add up to about ±1 g/m³ at 21°C), so the state
-    changes back and forth in spring and autumn. Use it in automations with the outer states and a duration, see the
+    changes back and forth in spring and fall. Use it in automations with the outer states and a duration, see the
     <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md">recipes</a>.
     It answers one question, what happens to the humidity of the room. It does not say if airing is worth the heat
     it loses, if it cools the room, or if the air is fresh (the carbon dioxide is another thing).
@@ -332,7 +332,7 @@ The value of a source can be in an attribute of its entity instead of its state:
   number is accepted. The state of the entity does not matter, except that
   an `unavailable` entity has no attributes.
 * A weather entity can be the source of both values. Its values are rounded (the temperature
-  to the precision of the entity, the humidity to whole percents), and are weather data of a
+  to the precision of the entity, the humidity to whole percent), and are weather data of a
   provider, not measured at your home, so the sensors are less accurate than with your own
   sensors.
 

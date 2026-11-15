@@ -14,7 +14,7 @@
 * Support Config Flow configuration.
 
 [<img src="https://github.com/johnboiles.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @johnboiles](https://github.com/johnboiles)
-* Support fahrenheit temperature sensors
+* Support Fahrenheit temperature sensors
 
 [<img src="https://github.com/d3m3trius.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @d3m3trius](https://github.com/d3m3trius)
 * Possibility to create only some of the sensors
