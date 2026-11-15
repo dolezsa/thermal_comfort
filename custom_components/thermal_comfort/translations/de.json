@@ -26,8 +26,8 @@
         },
         "data_description": {
           "name": "Wird als Gerätename und als Präfix für die Sensornamen verwendet, beispielsweise als Name des Raums.",
-          "outdoor_temperature_sensor": "Mit dem Außentemperatursensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetter-Entität kann verwendet werden.",
-          "outdoor_humidity_sensor": "Mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die die Raumluft mit der Außenluft vergleichen. Eine Wetter-Entität kann verwendet werden.",
+          "outdoor_temperature_sensor": "Mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetter-Entität kann verwendet werden.",
+          "outdoor_humidity_sensor": "Mit dem Außentemperatursensor werden die Sensoren erstellt, die die Raumluft mit der Außenluft vergleichen. Eine Wetter-Entität kann verwendet werden.",
           "wind_speed_sensor": "Der Wind am Standort der Außensensoren. Anhand dessen werden die gefühlte Temperatur und die Windchill-Temperatur berechnet. Stelle diesen Wert nur auf einem Gerät ein, dessen Datenquellen Außensensoren oder eine Wetter-Entität sind, nicht auf einem Gerät, das für einen Raum bestimmt ist. Eine Wetter-Entität kann verwendet werden."
         },
         "sections": {
