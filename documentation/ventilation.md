@@ -119,5 +119,5 @@ The sensors here can be their input.
 
 ## The outdoor sensors are removed again
 
-The entities stay in the entity registry, Home Assistant shows them as not provided any more. Delete them there if you do not
+The entities stay in the entity registry, Home Assistant shows them as not provided anymore. Delete them there if you do not
 want them. They work again, with their names and settings, when you add the outdoor sensors again.

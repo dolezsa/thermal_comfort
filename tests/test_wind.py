@@ -125,7 +125,7 @@ async def setup_entry(hass, wind=WIND, name=NAME, **extra):
         (-20, 30, -32.57),
         (-25, 40, -40.82),
         (0, 10, -3.31),
-        # the limits: up to 10 C, above 4.8 km/h
+        # the limits: up to 10°C, above 4.8 km/h
         (10, 5, 9.76),
         # 4.8 km/h converted to m/s and back is exactly 4.8, keep the test of the limit
         (10, 4.8, 10.0),
@@ -146,7 +146,7 @@ async def test_wind_chill(hass, temperature, wind_speed, expected):
 
 
 async def test_wind_chill_of_sources_in_fahrenheit_and_mph(hass):
-    """Test the wind chill of -5 F and 15 mph, -25.86 F in the table of the NWS (-26 F)."""
+    """Test the wind chill of -5°F and 15 mph, -25.86°F in the table of the NWS (-26°F)."""
     hass.states.async_set("sensor.t", "-5", {"unit_of_measurement": "°F"})
     hass.states.async_set("sensor.h", "50")
     hass.states.async_set(WIND, "15", {"unit_of_measurement": "mph"})
@@ -670,7 +670,7 @@ async def test_options_flow_adds_and_removes_the_wind_speed(hass):
     assert result["type"] == "form"
     assert result["errors"] == {"base": "wind_speed_not_found"}
 
-    # cleared by the form: the sensors are not provided any more, the registry
+    # cleared by the form: the sensors are not provided anymore, the registry
     # keeps them
     result = await submit(sources)
     assert result["type"] == "create_entry"
@@ -733,7 +733,7 @@ async def test_options_flow_keeps_a_wind_speed_that_is_missing_now(hass):
 
 
 async def test_options_flow_keeps_a_source_the_filters_hide(hass):
-    """Test that a source of the entry that is not offered any more stays selectable."""
+    """Test that a source of the entry that is not offered anymore stays selectable."""
     set_sources(hass)
     entry = await setup_entry(hass)
     hass.config_entries.async_update_entry(

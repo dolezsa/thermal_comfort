@@ -1026,7 +1026,7 @@ async def test_valid_icon_template(hass, start_ha):
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_zero_degree_celcius(hass, start_ha):
-    """Test if zero degree celsius does not cause any errors."""
+    """Test if zero degrees Celsius does not cause any errors."""
     assert len(hass.states.async_all(PLATFORM_DOMAIN)) == LEN_DEFAULT_SENSORS + 2
     hass.states.async_set("sensor.test_temperature_sensor", "0")
     await hass.async_block_till_done()
@@ -1216,7 +1216,7 @@ async def test_invalid_source_makes_sensors_unavailable(hass, start_ha):
 
 @pytest.mark.parametrize(*DEFAULT_TEST_SENSORS)
 async def test_humidity_overshoot_is_clipped(hass, start_ha):
-    """Test that a small humidity overshoot is clipped to 100 percent."""
+    """Test that a small humidity overshoot is clipped to 100%."""
     hass.states.async_set("sensor.test_humidity_sensor", "103.5")
     await hass.async_block_till_done()
     sensor = get_sensor(hass, SensorType.DEW_POINT)
@@ -1364,7 +1364,7 @@ def test_source_values_are_not_recorded():
 
 
 def reference_enthalpy(temperature: float, humidity: float, patm: float) -> float:
-    """Moist air enthalpy (ASHRAE 2021) above 0 degrees, independent of the code."""
+    """Moist air enthalpy (ASHRAE 2021) above 0°C, independent of the code."""
     t = temperature + 273.15
     p_ws = math.exp(
         -5.8002206e03 / t
@@ -1932,7 +1932,7 @@ def test_vapor_pressure_deficit_of_a_leaf():
 
 
 def test_saturation_pressure_over_water_and_ice():
-    """Test that only the default switches to ice below 0 degrees."""
+    """Test that only the default switches to ice below 0°C."""
     assert _saturation_vapor_pressure_ashrae(10) == _saturation_vapor_pressure_ashrae(
         10, over_water=True
     )
@@ -1955,7 +1955,7 @@ def test_humidity_ratio_at_the_limits():
 async def test_humidity_ratio_matches_the_enthalpy(
     hass, start_ha, temperature, humidity
 ):
-    """Test that the humidity ratio is the one inside the enthalpy at and above 0 degrees."""
+    """Test that the humidity ratio is the one inside the enthalpy at and above 0°C."""
     hass.states.async_set("sensor.test_temperature_sensor", str(temperature))
     hass.states.async_set("sensor.test_humidity_sensor", str(humidity))
     await hass.async_block_till_done()

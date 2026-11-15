@@ -59,10 +59,10 @@ thermal_comfort:
   <dd>
     Name of the sensor will be used both for the friendly name and entity ID
     combined with the sensor type. e.g. Kitchen would get your
-    `sensor.kitchen_absolute_humidity` and Kitchen Absolute humidity.</dd>
+    <code>sensor.kitchen_absolute_humidity</code> and Kitchen Absolute humidity.</dd>
   <dt><strong>temperature_sensor</strong> <code>string</code> <code>REQUIRED</code></dt>
   <dd>ID of temperature sensor entity to be used for calculations.</dd>
-  <dt><strong>humidity_sensor</strong>  <code>string</code> <code>REQUIRED</code></dt>
+  <dt><strong>humidity_sensor</strong> <code>string</code> <code>REQUIRED</code></dt>
   <dd>ID of humidity sensor entity to be used for calculations.</dd>
   <dt><strong>temperature_attribute</strong> and <strong>humidity_attribute</strong> <code>string</code> <code>(optional)</code></dt>
   <dd>
@@ -112,12 +112,12 @@ thermal_comfort:
   <dd>
     An ID that uniquely identifies the sensors. Set this to a unique value to
     allow customization through the UI.
-    <p> Make sure this is a unique value. Home Assistant uses this internally and you
+    <p>Make sure this is a unique value. Home Assistant uses this internally and you
     will not see it in the frontend.
     A good tool to get a unique value is the <code>uuidgen</code> command line tool or you can
-    use an <a href="https://www.uuidgenerator.net/">online UUID generator</a></p>
-    Internally we add the sensor type name to the unique id you set for each sensor.
-    e.g. with a unique id of <code>0ee4d8a7-c610-4afa-855d-0b2c2c265e11</code> for an absolute humidity
+    use an <a href="https://www.uuidgenerator.net/">online UUID generator</a>.</p>
+    Internally we add the sensor type name to the unique ID you set for each sensor.
+    e.g. with a unique ID of <code>0ee4d8a7-c610-4afa-855d-0b2c2c265e11</code> for an absolute humidity
     sensor you would get <code>0ee4d8a7-c610-4afa-855d-0b2c2c265e11absolute_humidity</code>.
   </dd>
 </dl>

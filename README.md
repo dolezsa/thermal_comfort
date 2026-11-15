@@ -12,7 +12,7 @@ Thermal Comfort provides a variety of thermal indices and thermal perceptions in
 
 ### Numeric Indices
 
-Thermal Comfort provides numerical indices like `dew point`, `frost point`, `absolute humidity` and `moist air enthalpy` that are numeric values usable for further automations but also human readable. e.g. dew point tells the temperature to which air must be cooled to produce dew on a surface.
+Thermal Comfort provides numerical indices like `dew point`, `frost point`, `absolute humidity` and `moist air enthalpy` that are numeric values usable for further automations but also human-readable. For example, the dew point tells the temperature to which air must be cooled to produce dew on a surface.
 
 ### Bio Indices / Perception
 
@@ -82,7 +82,7 @@ To use the standard Home Assistant icons instead, switch off "Use custom icons" 
 In [YAML](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/yaml.md#sensor-configuration-variables)
 the standard icons are used unless `custom_icons` is set to `true`.
 
-* The separate icon pack (installed with HACS or from the Marketplace) is not needed any more, you can remove it. If it stays installed nothing breaks.
+* The separate icon pack (installed with HACS or from the Marketplace) is not needed anymore, you can remove it. If it stays installed nothing breaks.
 * If an icon stays empty after the update, reload the page of the browser (or clear its cache). Surfaces that do not use
   the Home Assistant frontend, such as some widgets of the mobile apps, may not show custom icons.
 
@@ -107,10 +107,10 @@ the standard icons are used unless `custom_icons` is set to `true`.
 * With an optional wind speed sensor (a weather entity works too) a device also has the wind chill and the
   apparent temperature, meant for a device of the outdoor air, see the
   [documentation](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md#wind). Without it nothing changes.
-* New sensors: the wet-bulb temperature, the Thoms discomfort index, the humidity ratio and the vapor pressure
+* New sensors: the wet-bulb temperature, the Thom's discomfort index, the humidity ratio and the vapor pressure
   deficit. Sensors configured in the frontend before the update get them as disabled entities, enable them in
   the entity settings. YAML sensors without `sensor_types` get them automatically.
-* The Thoms discomfort perception and its `thoms_discomfort_index` attribute use the relative humidity
+* The Thom's discomfort perception and its `thoms_discomfort_index` attribute use the relative humidity
   form of the index, the one the categories belong to, instead of the mean of the air and wet-bulb
   temperature. The values change (see the [sensor documentation](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md)),
   so does the state of the perception near the category limits. The previous value is in the

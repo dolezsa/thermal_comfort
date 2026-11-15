@@ -127,9 +127,9 @@ WIND_SPEED_MAX = 120.0
 WIND_CHILL_MAX_TEMPERATURE = 10.0
 WIND_CHILL_MIN_WIND_SPEED = 4.8
 # Ventilation, with a source of the outdoor air
-# Differences of the absolute humidity (g/m3) below which the air is "similar"
+# Differences of the absolute humidity (g/m³) below which the air is "similar"
 VENTILATION_BAND = 1.0
-# The indoor air should not regularly have more than this (g/m3) above the
+# The indoor air should not regularly have more than this (g/m³) above the
 # outdoor air in winter (Folkhälsomyndigheten, FoHMFS 2014:18)
 VENTILATION_NEED_LIMIT = 3.0
 # There is no definition of winter in it, this is the outdoor temperature (C)
@@ -1617,7 +1617,7 @@ class DeviceThermalComfort:
     async def humidity_ratio(self) -> float | tuple[float, dict]:
         """Humidity ratio in g of water vapor per kg of dry air.
 
-        The relative humidity is taken over water also below 0 °C, as the
+        The relative humidity is taken over water also below 0°C, as the
         sensors and the weather services report it.
         """
         patm = self._actual_pressure()  # Pa
@@ -1645,7 +1645,7 @@ class DeviceThermalComfort:
     async def wet_bulb_temperature(self) -> float:
         """Wet-bulb temperature <https://doi.org/10.1175/JAMC-D-11-0143.1>.
 
-        Stull (2011), valid for 5 to 99 % relative humidity and -20 to 50 °C
+        Stull (2011), valid for 5 to 99% relative humidity and -20 to 50°C
         at sea level pressure. Outside that range the formula can exceed the
         air temperature or fall below the dew point, so the result is limited
         to the physically possible range.
@@ -1862,7 +1862,7 @@ def _parse_temperature(
         if value is not None:
             unit = _attribute_temperature_unit(hass, state)
     if value is not None:
-        # convert to celsius if necessary
+        # convert to Celsius if necessary
         with contextlib.suppress(HomeAssistantError):
             temperature = TemperatureConverter.convert(
                 value, unit, UnitOfTemperature.CELSIUS
@@ -1896,7 +1896,7 @@ def _saturation_vapor_pressure(temperature: float) -> float:
 def _saturation_vapor_pressure_ashrae(temperature: float, over_water: bool = False) -> float:
     """Return the saturation vapor pressure in Pa (ASHRAE fundamentals 2021 pg 1.5).
 
-    Over ice below 0 °C (eq 5), over water otherwise (eq 6) or always with
+    Over ice below 0°C (eq 5), over water otherwise (eq 6) or always with
     over_water.
     """
     c1 = -5.6745359e03
@@ -1924,7 +1924,7 @@ def _humidity_ratio(temperature: float, humidity: float, pressure: float, over_w
     """Return the humidity ratio in kg of water vapor per kg of dry air.
 
     The pressure is in Pa. The denominator stays positive within the input
-    ranges (the vapor pressure is at most 17 kPa at 56.7 °C, the pressure is
+    ranges (the vapor pressure is at most 17 kPa at 56.7°C, the pressure is
     limited to 30 kPa and up).
     """
     p_ws = _saturation_vapor_pressure_ashrae(temperature, over_water)
@@ -1958,7 +1958,7 @@ def _wind_chill(temperature: float, wind_speed: float) -> float:
     """Return the wind chill temperature in C <https://www.weather.gov/media/epz/wxcalc/windChill.pdf>.
 
     The formula of JAG/TI (2001), with the temperature in C and the wind speed
-    in km/h at 10 m. It is valid up to 10 C and above 4.8 km/h, otherwise the
+    in km/h at 10 m. It is valid up to 10°C and above 4.8 km/h, otherwise the
     air temperature is returned.
     """
     if (

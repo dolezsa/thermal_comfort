@@ -28,7 +28,7 @@ People *love* thorough bug reports. I'm not even kidding.
 7. Issue that pull request!
 
 ## Test Suite
- 1. Set up local tests:
+1. Set up local tests:
 ```bash
 python -m venv venv
 source venv/bin/activate
@@ -43,7 +43,7 @@ pytest
 ## Style Guideline
 We use [Home Assistant's style guideline](https://developers.home-assistant.io/docs/development_guidelines).
 
-In the documentation and the English texts, write American English (`mold`, `vapor`, `windshield`) and put no space before `%` and `°C`/`°F` (`50%`, `21°C`). Other units get a space (`1.2 g/kg`, `0.5 kPa`).
+In the documentation and the English texts, write American English (`mold`, `vapor`, `windshield`) and put no space before `%` and `°C`/`°F` (`50%`, `21°C`). Other units get a space (`1.2 g/kg`, `0.5 kPa`). In a range, write the unit once, at the end (`17 to 39°C`).
 
 ## Contributor Credits
 You can add yourself to [CREDITS.md](CREDITS.md) in your PR. Otherwise you will be added before our next release.

@@ -14,16 +14,16 @@
 * Support Config Flow configuration.
 
 [<img src="https://github.com/johnboiles.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @johnboiles](https://github.com/johnboiles)
-* Support Fahrenheit temperature sensors
+* Support Fahrenheit temperature sensors.
 
 [<img src="https://github.com/d3m3trius.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @d3m3trius](https://github.com/d3m3trius)
-* Possibility to create only some of the sensors
+* Possibility to create only some of the sensors.
 
 [<img src="https://github.com/papo-o.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @papo-o](https://github.com/papo-o)
-* Original frost point and frost risk sensor [implementation](https://github.com/papo-o/home-assistant-frost-risks) and support at porting it upstream.
+* Original frost point and frost risk sensor [implementation](https://github.com/papo-o/home-assistant-frost-risks) and support in porting it upstream.
 
 Federico Tartarini
-* Moist air enthalpy calculation (2019-2020)
+* Moist air enthalpy calculation (2019-2020).
 
 [<img src="https://github.com/lymanepp.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @lymanepp](https://github.com/lymanepp)
 * Original simmer index and simmer zone [implementation](https://github.com/lymanepp/thermal_comfort).
@@ -32,7 +32,7 @@ Federico Tartarini
 * Upstream port of simmer index and simmer zone. Implementing tests for it.
 
 [<img src="https://github.com/ejpenney.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @ejpenney](https://github.com/ejpenney)
-* Fix deprecated converter
+* Fix deprecated converter.
 
 [<img src="https://github.com/SukramJ.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/> @SukramJ](https://github.com/SukramJ)
 * Avoid a deprecated method call.
@@ -62,21 +62,13 @@ Federico Tartarini
 * Fix the humidity term of the winter Scharlau index.
 
 
-# Translators 
+# Translators
 
 **Brazilian Portuguese:**
 [<img src="https://github.com/cvroque.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @cvroque](https://github.com/cvroque)
 [<img src="https://github.com/magusagnus.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @magusagnus](https://github.com/magusagnus)
-
-**Czech:**
-[<img src="https://github.com/mstefany.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@mstefany](https://github.com/mstefany)
-[<img src="https://github.com/WoMec.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@WoMec](https://github.com/WoMec)
-[<img src="https://github.com/misa1515.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@misa1515](https://github.com/misa1515)
 
 **Catalan:**
 [<img src="https://github.com/eretna.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
@@ -94,9 +86,17 @@ Federico Tartarini
 [<img src="https://github.com/Marxxu3ru.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @Marxxu3ru](https://github.com/Marxxu3ru)
 
+**Czech:**
+[<img src="https://github.com/mstefany.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@mstefany](https://github.com/mstefany)
+[<img src="https://github.com/WoMec.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@WoMec](https://github.com/WoMec)
+[<img src="https://github.com/misa1515.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@misa1515](https://github.com/misa1515)
+
 **Danish:**
 [<img src="https://github.com/Tntdruid.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@Tntdruid](https://github.com/Tntdruid) 
+@Tntdruid](https://github.com/Tntdruid)
 [<img src="https://github.com/Nils-75.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @Nils-75](https://github.com/Nils-75)
 
@@ -160,18 +160,6 @@ Federico Tartarini
 [<img src="https://github.com/Csontikka.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @Csontikka](https://github.com/Csontikka)
 
-**Portuguese:**
-[<img src="https://github.com/FragMenthor.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%;border: solid 0.1px grey;" width="24"/>
-@FragMenthor](https://github.com/FragMenthor)
-[<img src="https://github.com/ivanbibas.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%;border: solid 0.1px grey;" width="24"/>
-@ivanbibas](https://github.com/ivanbibas)
-[<img src="https://github.com/miguelcouteirorodrigues.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@miguelcouteirorodrigues](https://github.com/miguelcouteirorodrigues)
-[<img src="https://github.com/magusagnus.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@magusagnus](https://github.com/magusagnus)
-[<img src="https://github.com/JoseClimaco.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@JoseClimaco](https://github.com/JoseClimaco)
-
 **Italian:**
 [<img src="https://github.com/mario-tux.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @mario-tux](https://github.com/mario-tux)
@@ -182,7 +170,7 @@ Federico Tartarini
 [<img src="https://github.com/ovimano.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @ovimano](https://github.com/ovimano)
 [<img src="https://github.com/uroh.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@uroh](https://github.com/uroh) 
+@uroh](https://github.com/uroh)
 [<img src="https://github.com/Fabbro03.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @Fabbro03](https://github.com/Fabbro03)
 [<img src="https://github.com/Menelao147.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
@@ -204,9 +192,21 @@ Federico Tartarini
 [<img src="https://github.com/pejotigrek.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @pejotigrek](https://github.com/pejotigrek)
 [<img src="https://github.com/marcin77.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
-@marcin77](https://github.com/marcin77) 
+@marcin77](https://github.com/marcin77)
 [<img src="https://github.com/MorganMLGman.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
 @MorganMLGman](https://github.com/MorganMLGman)
+
+**Portuguese:**
+[<img src="https://github.com/FragMenthor.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%;border: solid 0.1px grey;" width="24"/>
+@FragMenthor](https://github.com/FragMenthor)
+[<img src="https://github.com/ivanbibas.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%;border: solid 0.1px grey;" width="24"/>
+@ivanbibas](https://github.com/ivanbibas)
+[<img src="https://github.com/miguelcouteirorodrigues.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@miguelcouteirorodrigues](https://github.com/miguelcouteirorodrigues)
+[<img src="https://github.com/magusagnus.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@magusagnus](https://github.com/magusagnus)
+[<img src="https://github.com/JoseClimaco.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>
+@JoseClimaco](https://github.com/JoseClimaco)
 
 **Romanian:**
 [<img src="https://github.com/ovimano.png" style="margin: 0.2em; vertical-align: middle; border-radius: 50%; border: solid 0.1px grey;" width="24"/>

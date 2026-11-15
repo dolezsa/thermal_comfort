@@ -58,7 +58,7 @@ The entry reloads when you save changed options.
     With them the sensors that compare the room with the outdoor air are created and enabled
     (moisture excess, ventilation advice and ventilation need), see
     <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/ventilation.md">ventilation</a>.
-    If you remove the sensors the entities stay in the entity registry, they are not provided any more and
+    If you remove the sensors the entities stay in the entity registry, they are not provided anymore and
     work again when you add the sensors again.
   </dd>
   <dt><strong>Pressure sensor</strong> <code>entity</code> (optional)</dt>
@@ -80,7 +80,7 @@ The entry reloads when you save changed options.
     air of the device, so set it on a device whose sources are outdoor sensors or a weather entity, not on the device of
     a room. While the wind speed is unusable only these two sensors are unavailable, see the
     <a href="https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md#wind">sensors</a>.
-    If you remove the sensor the entities stay in the entity registry, they are not provided any more and
+    If you remove the sensor the entities stay in the entity registry, they are not provided anymore and
     work again when you add the sensor again.
   </dd>
 </dl>
@@ -88,7 +88,7 @@ The entry reloads when you save changed options.
 The following options are in the collapsed "Advanced options" section:
 
 <dl>
-  <dt><strong>Enable Polling</strong> <code>boolean</code></dt>
+  <dt><strong>Enable polling</strong> <code>boolean</code></dt>
   <dd>
     Enable this if you want the sensors to be polled. This can avoid double
     calculated values if your input sensors split change updates for humidity
@@ -98,7 +98,7 @@ The following options are in the collapsed "Advanced options" section:
   <dd>
     If polling is enabled this sets the interval in seconds (default: 30).
   </dd>
-  <dt><strong>Use custom icons</strong>  <code>boolean</code></dt>
+  <dt><strong>Use custom icons</strong> <code>boolean</code></dt>
   <dd>
     Uses the <a href="https://github.com/dolezsa/thermal_comfort/blob/master/README.md#custom-icons">custom icons</a>
     that come with the integration for the dew point, frost point and perception sensors (default: on for a new

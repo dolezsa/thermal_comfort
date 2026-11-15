@@ -42,7 +42,7 @@ NAME = "test_thermal_comfort"
 
 
 def reference_absolute_humidity(temperature, humidity):
-    """Absolute humidity from the gas law, independent of the code (g/m3)."""
+    """Absolute humidity from the gas law, independent of the code (g/m³)."""
     saturation = 6.112 * math.exp(17.62 * temperature / (243.12 + temperature))
     return saturation * humidity / 100 * 100 / (461.5 * (temperature + 273.15)) * 1000
 
@@ -212,9 +212,9 @@ async def test_ventilated_humidity_is_not_the_ratio_of_the_absolute_humidity(has
 @pytest.mark.parametrize("inside", [True, False])
 @pytest.mark.parametrize("edge", [1.0, -1.0])
 async def test_band_of_the_advice(hass, edge, inside):
-    """Test that the air is similar up to a difference of 1 g/m3 and not at it."""
+    """Test that the air is similar up to a difference of 1 g/m³ and not at it."""
     set_indoor(hass, 21, 50)
-    # the outdoor air at 15 C, no condensation risk for the room at 21 C
+    # the outdoor air at 15°C, no condensation risk for the room at 21°C
     target = edge * (0.98 if inside else 1.02)
     set_outdoor(hass, 15, humidity_for_excess(_absolute_humidity(21, 50), 15, target))
     await setup_entry(hass)
@@ -254,7 +254,7 @@ async def test_more_humid_outside_without_condensation_risk(hass):
     ],
 )
 async def test_condensation_risk_limit(hass, humidity, expected):
-    """Test that the advice warns from 80 % relative humidity after airing."""
+    """Test that the advice warns from 80% relative humidity after airing."""
     set_indoor(hass, 21, 30)
     set_outdoor(hass, 21, humidity)
     await setup_entry(hass)
@@ -263,7 +263,7 @@ async def test_condensation_risk_limit(hass, humidity, expected):
 
 @pytest.mark.parametrize("above", [True, False])
 async def test_limit_of_the_need(hass, above):
-    """Test that the need is above the limit for more than 3 g/m3."""
+    """Test that the need is above the limit for more than 3 g/m³."""
     set_indoor(hass, 21, 42)
     humidity = humidity_for_excess(
         _absolute_humidity(21, 42), 0, 3.0 + (0.02 if above else -0.02)
@@ -287,7 +287,7 @@ async def test_limit_of_the_need(hass, above):
     ],
 )
 async def test_winter_of_the_need(hass, outdoor_temperature, expected):
-    """Test that the need is only looked at below an outdoor temperature of 10 C."""
+    """Test that the need is only looked at below an outdoor temperature of 10°C."""
     set_indoor(hass, 22, 70)
     set_outdoor(hass, outdoor_temperature, 20)
     await setup_entry(hass)
@@ -601,7 +601,7 @@ async def test_options_flow_adds_and_removes_the_outdoor_air(hass):
     assert registry.async_get(eid).disabled_by is None
     assert float(hass.states.get(eid).state) == pytest.approx(4.79, abs=0.01)
 
-    # removed again: the sensors are not provided any more, the registry keeps them
+    # removed again: the sensors are not provided anymore, the registry keeps them
     result = await submit(sources)
     assert result["type"] == "create_entry"
     assert entry.options.get(CONF_OUTDOOR_TEMPERATURE_SENSOR) is None

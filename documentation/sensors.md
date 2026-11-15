@@ -116,7 +116,7 @@ into text states, for dashboards and automations ("it is uncomfortable").
     a simple formula is used first and the full regression only applies once
     that result exceeds 26.1°C (79°F), so the value can show a small step at
     that point. Above 85% relative humidity a further humidity adjustment
-    applies between 26.7°C and 30.6°C (80°F and 87°F), which makes the value
+    applies between 26.7 and 30.6°C (80 and 87°F), which makes the value
     jump again at 26.7°C.
   </dd>
   <dt><strong>Humidex + Perception</strong> <code>humidex</code> <code>humidex_perception</code></dt>
@@ -147,7 +147,7 @@ into text states, for dashboards and automations ("it is uncomfortable").
     where the term <code>T - 14.5</code> changes its sign.<br>
     The index sensor has the attribute <code>epstein_moran_discomfort_index</code> with the
     form of Epstein and Moran, the mean of the air temperature and the wet-bulb temperature,
-    <code>DI = 0.5 Tw + 0.5 T</code>. It gives other values, in dry air up to several °C, and has its own
+    <code>DI = 0.5 Tw + 0.5 T</code>. It gives other values, in dry air up to several degrees, and has its own
     categories (below 22 no heat stress, 22 to 24 mild, 24 to 28 moderate, above 28 severe),
     which this integration does not use.
     The perception sensor shows the value of the index in the attribute <code>thoms_discomfort_index</code>.
@@ -155,7 +155,7 @@ into text states, for dashboards and automations ("it is uncomfortable").
   </dd>
   <dt><strong>Relative Strain Perception</strong> <code>relative_strain_perception</code></dt>
   <dd>
-    A measure of discomfort resulting from the combined effect of temperature and humidity. It assumes a person dressed in a light business suit, walking at a moderate pace in a very light air motion. It is applicable to assess heat stress of manual workers under shelter at various metabolic rates. Valid for temperatures between 26 and 35°C (79 to 95°F).
+    A measure of discomfort resulting from the combined effect of temperature and humidity. It assumes a person dressed in a light business suit, walking at a moderate pace in a very light air motion. It is applicable to assess heat stress of manual workers under shelter at various metabolic rates. Valid for temperatures between 26 and 35°C (79 and 95°F).
   </dd>
   <dt><strong>Summer Scharlau Perception</strong> <code>summer_scharlau_perception</code></dt>
   <dd>
@@ -302,7 +302,7 @@ section of the device. Dashboards, automations and templates can use them as bef
 
 The sensors need a valid value from both source sensors:
 
-* The temperature is converted to °C and has to be between -89.2°C and 56.7°C.
+* The temperature is converted to °C and has to be between -89.2 and 56.7°C.
 * The relative humidity has to be above 0% and at most 100%. Readings up to 105%
   are treated as 100%.
 * If a source is `unavailable`, `unknown` or outside these ranges, all sensors of

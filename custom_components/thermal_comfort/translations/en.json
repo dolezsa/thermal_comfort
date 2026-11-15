@@ -14,7 +14,7 @@
     },
     "step": {
       "init": {
-        "title": "Thermal comfort settings",
+        "title": "Thermal Comfort settings",
         "data": {
           "name": "Device name",
           "temperature_sensor": "Temperature sensor",
@@ -34,7 +34,7 @@
           "advanced": {
             "name": "Advanced options",
             "data": {
-              "poll": "Enable Polling",
+              "poll": "Enable polling",
               "scan_interval": "Poll interval (seconds)",
               "custom_icons": "Use custom icons",
               "temperature_attribute": "Temperature attribute (optional)",
@@ -53,7 +53,7 @@
   "config": {
     "abort": {
       "already_configured": "This combination of temperature and humidity sensors is already configured",
-      "no_sensors": "No temperature or humidity sensors found."
+      "no_sensors": "No temperature or humidity sensors found"
     },
     "error": {
       "temperature_not_found": "Temperature sensor not found",
@@ -69,7 +69,7 @@
     },
     "step": {
       "user": {
-        "title": "Thermal comfort settings",
+        "title": "Thermal Comfort settings",
         "data": {
           "name": "Device name",
           "temperature_sensor": "Temperature sensor",
@@ -89,7 +89,7 @@
           "advanced": {
             "name": "Advanced options",
             "data": {
-              "poll": "Enable Polling",
+              "poll": "Enable polling",
               "scan_interval": "Poll interval (seconds)",
               "custom_icons": "Use custom icons",
               "enabled_sensors": "Enabled sensors",
@@ -125,7 +125,7 @@
           "somewhat_uncomfortable": "Somewhat uncomfortable",
           "quite_uncomfortable": "Very humid, quite uncomfortable",
           "extremely_uncomfortable": "Extremely uncomfortable, oppressive",
-          "severely_high": "Severely high, even deadly for asthma related illnesses"
+          "severely_high": "Severely high, even deadly for asthma-related illnesses"
         }
       },
       "frost_point": {
@@ -154,7 +154,7 @@
           "evident_discomfort": "Evident discomfort",
           "great_discomfort": "Great discomfort, avoid exertion",
           "dangerous_discomfort": "Dangerous discomfort",
-          "heat_stroke": "Heat stroke possible"
+          "heat_stroke": "Heatstroke possible"
         }
       },
       "moist_air_enthalpy": {
@@ -219,7 +219,7 @@
           "more_than_half": "More than half of the population feels discomfort",
           "most": "Most individuals feel discomfort and deterioration of psychophysical conditions",
           "everyone": "Everyone feels significant discomfort",
-          "dangerous": "Dangerous, very strong discomfort which may cause heat strokes"
+          "dangerous": "Dangerous, very strong discomfort which may cause heatstroke"
         }
       },
       "wet_bulb_temperature": {
