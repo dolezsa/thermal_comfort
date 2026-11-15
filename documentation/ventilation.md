@@ -20,8 +20,8 @@ The [sensor documentation](https://github.com/dolezsa/thermal_comfort/blob/maste
   it loses, if it cools the room, or how long to air.
 * It has no memory. "Not aired for hours", quiet hours, a window contact, wind or rain are for an automation, see below.
 * The carbon dioxide is another matter, a dry room can have stale air. Use a CO₂ sensor for that.
-* It is not a mould index. The mould depends on the humidity at the coldest surface and on time, a sensor in the room does not know it.
-* The sensors are as good as the outdoor values. Two simple sensors (±3 % relative humidity) give a moisture excess with an
+* It is not a mold index. The mold depends on the humidity at the coldest surface and on time, a sensor in the room does not know it.
+* The sensors are as good as the outdoor values. Two simple sensors (±3% relative humidity) give a moisture excess with an
   uncertainty of about ±1 g/m³, so `similar` is a wide state. Use the outer states and a duration in automations.
 * `ventilation_need` shows the moment, the Swedish limit is about usual values. A shower is enough to exceed it for a while.
 
@@ -57,8 +57,8 @@ automation:
         data:
           message: >-
             Open the living room window: the outdoor air would bring the humidity to
-            {{ state_attr('sensor.living_room_moisture_excess', 'ventilated_relative_humidity') | round(0) }} %
-            (now {{ states('sensor.living_room_humidity') }} %).
+            {{ state_attr('sensor.living_room_moisture_excess', 'ventilated_relative_humidity') | round(0) }}%
+            (now {{ states('sensor.living_room_humidity') }}%).
 
   - alias: "Living room: close the window"
     triggers:

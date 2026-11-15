@@ -43,5 +43,7 @@ pytest
 ## Style Guideline
 We use [home assistants style guideline](https://developers.home-assistant.io/docs/development_guidelines).
 
+In the documentation and the English texts, write American English (`mold`, `vapor`) and put no space before `%` and `°C`/`°F` (`50%`, `21°C`). Other units get a space (`1.2 g/kg`, `0.5 kPa`).
+
 ## Contributor Credits
 You can add yourself to [CREDITS.md](CREDITS.md) in your PR. Otherwise you will be added before our next release.

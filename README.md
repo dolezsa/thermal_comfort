@@ -126,9 +126,9 @@ the standard icons are used unless `custom_icons` is set to `true`.
   (see [input values](https://github.com/dolezsa/thermal_comfort/blob/master/documentation/sensors.md#input-values)),
   instead of keeping the last value. They also start as `unavailable` instead of `unknown` until both sources are valid.
   Adjust automations or templates that relied on the old behavior.
-* Humidity readings up to 105 % are treated as 100 %.
-* Corrected formulas change the values of two attributes: `thoms_discomfort_index` (typically about 0.4 to 1.1 °C
-  higher at 40 to 70 % humidity, more at higher humidity) and, from 3.0.1 on, `winter_scharlau_index`.
+* Humidity readings up to 105% are treated as 100%.
+* Corrected formulas change the values of two attributes: `thoms_discomfort_index` (typically about 0.4 to 1.1°C
+  higher at 40 to 70% humidity, more at higher humidity) and, from 3.0.1 on, `winter_scharlau_index`.
   The state of the Thom's discomfort and winter Scharlau perception sensors changes with them.
 * Polling, the poll interval, custom icons and the enabled sensors are in a collapsed "Advanced options" section,
   advanced mode is no longer needed. Existing entries keep working unchanged.
