@@ -2,21 +2,48 @@
   "options": {
     "error": {
       "temperature_not_found": "Temperatuursensor niet gevonden",
-      "humidity_not_found": "Luchtvochtigheidssensor niet gevonden"
+      "humidity_not_found": "Luchtvochtigheidssensor niet gevonden",
+      "pressure_not_found": "Luchtdruksensor niet gevonden",
+      "temperature_attribute_not_found": "De temperatuurbron heeft geen attribuut met deze naam, zie de geavanceerde opties",
+      "humidity_attribute_not_found": "De luchtvochtigheidsbron heeft geen attribuut met deze naam, zie de geavanceerde opties",
+      "outdoor_temperature_not_found": "Buitentemperatuursensor niet gevonden",
+      "outdoor_humidity_not_found": "Buitenluchtvochtigheidssensor niet gevonden",
+      "outdoor_incomplete": "Kies zowel de buitentemperatuur- als de buitenluchtvochtigheidssensor, of geen van beide",
+      "outdoor_same_as_indoor": "De buitensensoren moeten anders zijn dan de binnensensoren",
+      "wind_speed_not_found": "Windsnelheidssensor niet gevonden"
     },
     "step": {
       "init": {
         "title": "Instellingen Thermal comfort",
         "data": {
+          "name": "Naam",
           "temperature_sensor": "Temperatuursensor",
-          "humidity_sensor": "Luchtvochtigheidssensor"
+          "humidity_sensor": "Luchtvochtigheidssensor",
+          "outdoor_temperature_sensor": "Buitentemperatuursensor (optioneel)",
+          "outdoor_humidity_sensor": "Buitenluchtvochtigheidssensor (optioneel)",
+          "pressure_sensor": "Luchtdruksensor (optioneel)",
+          "wind_speed_sensor": "Windsnelheidssensor (optioneel)"
+        },
+        "data_description": {
+          "name": "Gebruikt als apparaatnaam en als voorvoegsel voor de sensor-namen, bijvoorbeeld de naam van de kamer.",
+          "outdoor_temperature_sensor": "Samen met de buitenluchtvochtigheidssensor worden de sensoren aangemaakt die de kamer met de buitenlucht vergelijken: het vochtoverschot en de ventilatiesensoren. Een weer-entiteit kan worden gebruikt.",
+          "outdoor_humidity_sensor": "Samen met de buitentemperatuursensor worden de sensoren aangemaakt die de kamer met de buitenlucht vergelijken. Een weer-entiteit kan worden gebruikt.",
+          "wind_speed_sensor": "De wind op de locatie van de bovenstaande temperatuur- en luchtvochtigheidssensoren, dus buiten. Hiermee worden de gevoelstemperatuur (windchill) en de schijnbare temperatuur berekend. Stel dit alleen in op een apparaat waarvan de bronnen buitensensoren of een weer-entiteit zijn, niet op het apparaat van een kamer. Een weer-entiteit kan worden gebruikt."
         },
         "sections": {
           "advanced": {
+            "name": "Geavanceerde opties",
             "data": {
               "poll": "Inschakelen polling",
               "scan_interval": "Poll interval (seconden)",
-              "custom_icons": "Gebruikerspecifieke iconen"
+              "custom_icons": "Gebruikerspecifieke iconen",
+              "temperature_attribute": "Temperatuurattribuut (optioneel)",
+              "humidity_attribute": "Luchtvochtigheidsattribuut (optioneel)"
+            },
+            "data_description": {
+              "custom_icons": "Gebruikt de iconen van deze integratie voor het dauwpunt, de rijptemperatuur en de belevingssensoren. Schakel dit uit voor de standaard Home Assistant-iconen.",
+              "temperature_attribute": "Attribuut van de temperatuursensor dat de waarde bevat, in plaats van de status. Niet nodig voor weer- en klimaatentiteiten.",
+              "humidity_attribute": "Attribuut van de luchtvochtigheidssensor dat de waarde bevat, in plaats van de status. Niet nodig voor weer- en klimaatentiteiten."
             }
           }
         }
@@ -30,7 +57,15 @@
     },
     "error": {
       "temperature_not_found": "Temperatuursensor niet gevonden",
-      "humidity_not_found": "Luchtvochtigheidssensor niet gevonden"
+      "humidity_not_found": "Luchtvochtigheidssensor niet gevonden",
+      "pressure_not_found": "Luchtdruksensor niet gevonden",
+      "temperature_attribute_not_found": "De temperatuurbron heeft geen attribuut met deze naam, zie de geavanceerde opties",
+      "humidity_attribute_not_found": "De luchtvochtigheidsbron heeft geen attribuut met deze naam, zie de geavanceerde opties",
+      "outdoor_temperature_not_found": "Buitentemperatuursensor niet gevonden",
+      "outdoor_humidity_not_found": "Buitenluchtvochtigheidssensor niet gevonden",
+      "outdoor_incomplete": "Kies zowel de buitentemperatuur- als de buitenluchtvochtigheidssensor, of geen van beide",
+      "outdoor_same_as_indoor": "De buitensensoren moeten anders zijn dan de binnensensoren",
+      "wind_speed_not_found": "Windsnelheidssensor niet gevonden"
     },
     "step": {
       "user": {
@@ -38,15 +73,34 @@
         "data": {
           "name": "Naam",
           "temperature_sensor": "Temperatuursensor",
-          "humidity_sensor": "Luchtvochtigheidssensor"
+          "humidity_sensor": "Luchtvochtigheidssensor",
+          "outdoor_temperature_sensor": "Buitentemperatuursensor (optioneel)",
+          "outdoor_humidity_sensor": "Buitenluchtvochtigheidssensor (optioneel)",
+          "pressure_sensor": "Luchtdruksensor (optioneel)",
+          "wind_speed_sensor": "Windsnelheidssensor (optioneel)"
+        },
+        "data_description": {
+          "name": "Gebruikt als apparaatnaam en als voorvoegsel voor de sensor-namen, bijvoorbeeld de naam van de kamer.",
+          "outdoor_temperature_sensor": "Samen met de buitenluchtvochtigheidssensor worden de sensoren aangemaakt die de kamer met de buitenlucht vergelijken: het vochtoverschot en de ventilatiesensoren. Een weer-entiteit kan worden gebruikt.",
+          "outdoor_humidity_sensor": "Samen met de buitentemperatuursensor worden de sensoren aangemaakt die de kamer met de buitenlucht vergelijken. Een weer-entiteit kan worden gebruikt.",
+          "wind_speed_sensor": "De wind op de locatie van de bovenstaande temperatuur- en luchtvochtigheidssensoren, dus buiten. Hiermee worden de gevoelstemperatuur (windchill) en de schijnbare temperatuur berekend. Stel dit alleen in op een apparaat waarvan de bronnen buitensensoren of een weer-entiteit zijn, niet op het apparaat van een kamer. Een weer-entiteit kan worden gebruikt."
         },
         "sections": {
           "advanced": {
+            "name": "Geavanceerde opties",
             "data": {
               "poll": "Inschakelen polling",
               "scan_interval": "Poll interval (seconden)",
               "custom_icons": "Gebruikerspecifieke iconen",
-              "enabled_sensors": "Ingeschakelde sensoren"
+              "enabled_sensors": "Ingeschakelde sensoren",
+              "temperature_attribute": "Temperatuurattribuut (optioneel)",
+              "humidity_attribute": "Luchtvochtigheidsattribuut (optioneel)"
+            },
+            "data_description": {
+              "custom_icons": "Gebruikt de iconen van deze integratie voor het dauwpunt, de rijptemperatuur en de belevingssensoren. Schakel dit uit voor de standaard Home Assistant-iconen.",
+              "temperature_attribute": "Attribuut van de temperatuursensor dat de waarde bevat, in plaats van de status. Niet nodig voor weer- en klimaatentiteiten.",
+              "humidity_attribute": "Attribuut van de luchtvochtigheidssensor dat de waarde bevat, in plaats van de status. Niet nodig voor weer- en klimaatentiteiten.",
+              "enabled_sensors": "Sensoren die u niet selecteert worden nog steeds aangemaakt, maar zijn uitgeschakeld. U kunt ze later inschakelen in de entiteitsinstellingen."
             }
           }
         }
@@ -154,6 +208,9 @@
           "circulatory_collapse_imminent": "Direct gevaar voor flauwvallen, circulatoir collaps"
         }
       },
+      "thoms_discomfort_index": {
+        "name": "Temperatuurindex volgens Thoms"
+      },
       "thoms_discomfort_perception": {
         "name": "Temperatuurbeleving volgens Thoms",
         "state": {
@@ -164,6 +221,41 @@
           "everyone": "Iedereen ervaart aanzienlijk ongemak",
           "dangerous": "Gevaarlijk, zeer sterk ongemak dat een hitteberoerte kan veroorzaken"
         }
+      },
+      "wet_bulb_temperature": {
+        "name": "Natteboltemperatuur"
+      },
+      "humidity_ratio": {
+        "name": "Vochtigheidsverhouding"
+      },
+      "vapor_pressure_deficit": {
+        "name": "Dampdruktekort"
+      },
+      "moisture_excess": {
+        "name": "Vochtoverschot"
+      },
+      "ventilation_advice": {
+        "name": "Ventilatieadvies",
+        "state": {
+          "drier_outside": "Ventileren droogt de kamer",
+          "similar": "Ventileren verandert weinig",
+          "more_humid_outside": "Ventileren voegt vocht toe",
+          "condensation_risk": "Niet ventileren: risico op condensatie"
+        }
+      },
+      "ventilation_need": {
+        "name": "Ventilatiebehoefte",
+        "state": {
+          "above_limit": "Boven de limiet",
+          "within_limit": "Binnen de limiet",
+          "not_winter": "Geen winter"
+        }
+      },
+      "wind_chill": {
+        "name": "Gevoelstemperatuur (windchill)"
+      },
+      "apparent_temperature": {
+        "name": "Schijnbare temperatuur"
       }
     }
   }
