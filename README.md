@@ -132,7 +132,7 @@ the standard icons are used unless `custom_icons` is set to `true`.
   The state of the Thom's discomfort and winter Scharlau perception sensors changes with them.
 * Polling, the poll interval, custom icons and the enabled sensors are in a collapsed "Advanced options" section,
   advanced mode is no longer needed. Existing entries keep working unchanged.
-* Any sensor entity can be chosen as a temperature or humidity source, sensors with a matching device class are listed first.
+* Any sensor entity can be chosen as a temperature or humidity source, sensors with a matching device class are listed first. The same goes for the optional pressure and wind speed sensors, they also list the sensors without a device class.
 * The absolute humidity sensor has the `absolute_humidity` device class, and the `temperature` and `humidity`
   attributes are no longer stored in the recorder.
 

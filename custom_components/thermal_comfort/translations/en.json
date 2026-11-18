@@ -10,7 +10,9 @@
       "outdoor_humidity_not_found": "Outdoor humidity sensor not found",
       "outdoor_incomplete": "Choose both the outdoor temperature and the outdoor humidity sensor, or neither",
       "outdoor_same_as_indoor": "The outdoor sensors must be other than the indoor sensors",
-      "wind_speed_not_found": "Wind speed sensor not found"
+      "wind_speed_not_found": "Wind speed sensor not found",
+      "pressure_unit_invalid": "The unit of the pressure sensor is not a pressure unit Home Assistant knows, such as hPa or mbar. A template sensor can convert it",
+      "wind_speed_unit_invalid": "The unit of the wind speed sensor is not a speed unit Home Assistant knows, such as km/h or m/s. A template sensor can convert it"
     },
     "step": {
       "init": {
@@ -65,7 +67,9 @@
       "outdoor_humidity_not_found": "Outdoor humidity sensor not found",
       "outdoor_incomplete": "Choose both the outdoor temperature and the outdoor humidity sensor, or neither",
       "outdoor_same_as_indoor": "The outdoor sensors must be other than the indoor sensors",
-      "wind_speed_not_found": "Wind speed sensor not found"
+      "wind_speed_not_found": "Wind speed sensor not found",
+      "pressure_unit_invalid": "The unit of the pressure sensor is not a pressure unit Home Assistant knows, such as hPa or mbar. A template sensor can convert it",
+      "wind_speed_unit_invalid": "The unit of the wind speed sensor is not a speed unit Home Assistant knows, such as km/h or m/s. A template sensor can convert it"
     },
     "step": {
       "user": {

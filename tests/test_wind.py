@@ -14,9 +14,12 @@ from pytest_homeassistant_custom_component.common import (
 import voluptuous as vol
 
 from custom_components.thermal_comfort.config_flow import (
+    PRESSURE_DEVICE_CLASSES,
+    WIND_SPEED_DEVICE_CLASSES,
     build_schema,
     check_input,
     get_sensors_by_device_class,
+    get_source_sensors,
     get_value,
 )
 from custom_components.thermal_comfort.const import DOMAIN
@@ -25,6 +28,7 @@ from custom_components.thermal_comfort.sensor import (
     CONF_HUMIDITY_SENSOR,
     CONF_OUTDOOR_HUMIDITY_SENSOR,
     CONF_OUTDOOR_TEMPERATURE_SENSOR,
+    CONF_PRESSURE_SENSOR,
     CONF_TEMPERATURE_SENSOR,
     CONF_WIND_SPEED_SENSOR,
     DEFAULT_SENSOR_TYPES,
@@ -41,6 +45,7 @@ from homeassistant.const import (
     STATE_UNAVAILABLE,
     EntityCategory,
 )
+from homeassistant.data_entry_flow import InvalidData
 from homeassistant.helpers import entity_registry as er
 from homeassistant.setup import async_setup_component
 from homeassistant.util import dt as dt_util
@@ -665,10 +670,9 @@ async def test_options_flow_adds_and_removes_the_wind_speed(hass):
     assert key.description["suggested_value"] == WIND
     hass.config_entries.options.async_abort(result["flow_id"])
 
-    # unknown sensor
-    result = await submit({**sources, CONF_WIND_SPEED_SENSOR: "sensor.no_such"})
-    assert result["type"] == "form"
-    assert result["errors"] == {"base": "wind_speed_not_found"}
+    # unknown sensor, the selector does not offer it
+    with pytest.raises(InvalidData):
+        await submit({**sources, CONF_WIND_SPEED_SENSOR: "sensor.no_such"})
 
     # cleared by the form: the sensors are not provided anymore, the registry
     # keeps them
@@ -794,11 +798,8 @@ async def test_wind_speed_selector(hass, hass_client):
     assert names.index("pressure_sensor") < names.index("wind_speed_sensor")
     field = next(f for f in form["data_schema"] if f["name"] == "wind_speed_sensor")
     assert field["optional"] is True
-    filters = field["selector"]["entity"]["filter"]
-    assert len(filters) == 2
-    assert filters[0]["domain"] == ["sensor"]
-    assert set(filters[0]["device_class"]) == {"wind_speed", "speed"}
-    assert filters[1]["domain"] == ["weather"]
+    offered = field["selector"]["entity"]["include_entities"]
+    assert WIND in offered
     advanced = next(f for f in form["data_schema"] if f["name"] == "advanced")
     assert "wind_speed_sensor" not in [f["name"] for f in advanced["schema"]]
     enabled = next(f for f in advanced["schema"] if f["name"] == "enabled_sensors")
@@ -932,3 +933,139 @@ async def test_yaml_sensor_types_with_the_wind_types(hass, caplog, wind):
     for sensor_type in WIND_SENSOR_TYPES:
         assert (sensor(hass, sensor_type, "yaml_room") is not None) is wind
     assert ("wind_chill, apparent_temperature" in caplog.text) is not wind
+
+
+async def test_pressure_and_wind_sources_are_offered_without_device_class(hass):
+    """Test that the entities of the pressure and the wind are offered also without a device class."""
+    registry = er.async_get(hass)
+    hass.states.async_set(
+        "sensor.p_class",
+        "990",
+        {"device_class": "pressure", "unit_of_measurement": "hPa"},
+    )
+    hass.states.async_set(
+        "sensor.p_atm", "990", {"device_class": "atmospheric_pressure"}
+    )
+    hass.states.async_set("sensor.p_none", "970", {"unit_of_measurement": "mBar"})
+    hass.states.async_set("sensor.p_unitless", "970")
+    hass.states.async_set("input_number.p_helper", "970")
+    hass.states.async_set(
+        "sensor.w_class",
+        "3",
+        {"device_class": "wind_speed", "unit_of_measurement": "m/s"},
+    )
+    hass.states.async_set("sensor.w_speed", "3", {"device_class": "speed"})
+    hass.states.async_set("sensor.w_none", "7", {"unit_of_measurement": "kph"})
+    hass.states.async_set("sensor.temperature", "20", {"device_class": "temperature"})
+    hass.states.async_set("sensor.power", "5", {"device_class": "power"})
+    hass.states.async_set("binary_sensor.window", "on")
+    hass.states.async_set("climate.room", "heat")
+    hass.states.async_set(WEATHER, *weather(wind_speed=3))
+    own = registry.async_get_or_create(
+        "sensor", DOMAIN, "own", suggested_object_id="balcony_feel"
+    )
+    hass.states.async_set(own.entity_id, "5")
+
+    pressure = get_source_sensors(
+        registry, hass, PRESSURE_DEVICE_CLASSES, ["sensor", "number", "input_number"]
+    )
+    # the right device class first, then the ones without any, each sorted
+    assert pressure == [
+        "sensor.p_atm",
+        "sensor.p_class",
+        "input_number.p_helper",
+        "sensor.p_none",
+        "sensor.p_unitless",
+        "sensor.w_none",
+    ]
+
+    wind = get_source_sensors(
+        registry,
+        hass,
+        WIND_SPEED_DEVICE_CLASSES,
+        ["sensor", "number", "input_number", "weather"],
+    )
+    assert wind[:2] == ["sensor.w_class", "sensor.w_speed"]
+    assert {WEATHER, "sensor.w_none", "sensor.p_none"} <= set(wind[2:])
+    for excluded in (
+        "sensor.temperature",
+        "sensor.power",
+        "binary_sensor.window",
+        "climate.room",
+        own.entity_id,
+    ):
+        assert excluded not in wind
+        assert excluded not in pressure
+    assert WEATHER not in pressure
+
+
+async def test_check_input_unit_of_pressure_and_wind(hass):
+    """Test that a source with a unit that Home Assistant does not know is refused."""
+    set_sources(hass)
+    hass.states.async_set("sensor.p_ok", "990", {"unit_of_measurement": "hPa"})
+    hass.states.async_set("sensor.p_bad", "970", {"unit_of_measurement": "mBar"})
+    hass.states.async_set("sensor.p_unitless", "970")
+    hass.states.async_set("sensor.w_bad", "7", {"unit_of_measurement": "kph"})
+    hass.states.async_set(WEATHER, *weather(wind_speed=3))
+    sources = {CONF_TEMPERATURE_SENSOR: "sensor.t", CONF_HUMIDITY_SENSOR: "sensor.h"}
+
+    assert check_input(hass, {**sources, CONF_PRESSURE_SENSOR: "sensor.p_ok"}) == {}
+    assert (
+        check_input(hass, {**sources, CONF_PRESSURE_SENSOR: "sensor.p_unitless"}) == {}
+    )
+    assert check_input(hass, {**sources, CONF_PRESSURE_SENSOR: "sensor.p_bad"}) == {
+        "base": "pressure_unit_invalid"
+    }
+    assert check_input(hass, {**sources, CONF_WIND_SPEED_SENSOR: WIND}) == {}
+    assert check_input(hass, {**sources, CONF_WIND_SPEED_SENSOR: WEATHER}) == {}
+    assert check_input(hass, {**sources, CONF_WIND_SPEED_SENSOR: "sensor.w_bad"}) == {
+        "base": "wind_speed_unit_invalid"
+    }
+    # a source the entry has already is not checked again
+    current = {
+        CONF_WIND_SPEED_SENSOR: "sensor.w_bad",
+        CONF_PRESSURE_SENSOR: "sensor.p_bad",
+    }
+    assert check_input(hass, {**sources, **current}, current) == {}
+
+
+async def test_options_flow_keeps_a_pressure_and_wind_source_that_is_hidden_now(hass):
+    """Test that a pressure or wind source of the entry stays selectable if it is not offered now."""
+    set_sources(hass)
+    entry = await setup_entry(hass)
+    hass.config_entries.async_update_entry(
+        entry,
+        data={
+            **entry.data,
+            CONF_PRESSURE_SENSOR: "sensor.gone_pressure",
+            CONF_WIND_SPEED_SENSOR: "sensor.gone_wind",
+        },
+    )
+    schema = build_schema(entry, hass, step="init")
+    for key, value in schema.schema.items():
+        if key in (CONF_PRESSURE_SENSOR, CONF_WIND_SPEED_SENSOR):
+            value(key.description["suggested_value"])
+
+
+async def test_options_flow_keeps_a_pressure_source_with_an_unknown_unit(hass):
+    """Test that a pressure source the entry has already is not refused again."""
+    set_sources(hass)
+    hass.states.async_set("sensor.p", "970", {"unit_of_measurement": "mBar"})
+    entry = await setup_entry(hass, **{CONF_PRESSURE_SENSOR: "sensor.p"})
+    sources = {
+        CONF_NAME: NAME,
+        CONF_TEMPERATURE_SENSOR: "sensor.t",
+        CONF_HUMIDITY_SENSOR: "sensor.h",
+        CONF_PRESSURE_SENSOR: "sensor.p",
+    }
+
+    async def submit(user_input):
+        result = await hass.config_entries.options.async_init(entry.entry_id)
+        return await hass.config_entries.options.async_configure(
+            result["flow_id"], user_input=form_input(user_input)
+        )
+
+    assert (await submit(sources))["type"] == "create_entry"
+    # the sensor is gone for a while, the options can still be saved
+    hass.states.async_remove("sensor.p")
+    assert (await submit(sources))["type"] == "create_entry"

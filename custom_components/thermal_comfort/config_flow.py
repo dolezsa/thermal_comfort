@@ -14,6 +14,7 @@ from homeassistant.helpers import entity_registry as er
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_registry import EntityRegistry
 from homeassistant.helpers.selector import selector
+from homeassistant.util.unit_conversion import PressureConverter
 
 from .const import DEFAULT_NAME, DOMAIN
 from .sensor import (
@@ -35,6 +36,7 @@ from .sensor import (
     DEFAULT_TEMPERATURE_ATTRIBUTES,
     POLL_DEFAULT,
     SCAN_INTERVAL_DEFAULT,
+    WIND_SPEED_UNITS,
     SensorType,
     source_attribute,
 )
@@ -50,6 +52,46 @@ WIND_SPEED_DEVICE_CLASSES = [
     SensorDeviceClass.WIND_SPEED,
     SensorDeviceClass.SPEED,
 ]
+
+
+def is_not_own_sensor(_er: EntityRegistry, entity_id: str) -> bool:
+    """Filter out our own sensors.
+
+    The registry tells the integration of an entity, so a sensor of
+    another integration with the name of a sensor type is kept. Entities
+    without a registry entry are recognized by the sensor type in the id.
+    """
+    if (entry := _er.async_get(entity_id)) is not None:
+        return entry.platform != DOMAIN
+    return all(sensor_type not in entity_id for sensor_type in SensorType)
+
+
+def get_source_sensors(
+    _er: EntityRegistry,
+    _hass: HomeAssistant,
+    device_classes: list[SensorDeviceClass],
+    domains: list[str],
+) -> list:
+    """Get the entities that can be the source of a quantity of an optional field.
+
+    The entities with a device class of the quantity come first, then the ones
+    without any device class. An entity with another device class is another
+    quantity, so it is not offered. Whether its unit is usable is checked when
+    the form is submitted.
+    """
+    right_class: list[str] = []
+    no_class: list[str] = []
+    for state in _hass.states.async_all():
+        if state.domain not in domains or not is_not_own_sensor(_er, state.entity_id):
+            continue
+        device_class = state.attributes.get(
+            "device_class", state.attributes.get("original_device_class")
+        )
+        if device_class in device_classes:
+            right_class.append(state.entity_id)
+        elif device_class is None:
+            no_class.append(state.entity_id)
+    return sorted(right_class) + sorted(no_class)
 
 
 def get_sensors_by_device_class(
@@ -305,17 +347,6 @@ def get_sensors_by_device_class(
             unit_of_measurement = unit_of_measurement.replace("\u03bc", "\u00b5")
         return unit_of_measurement not in units_for_exclude
 
-    def filter_thermal_comfort_ids(entity_id: str) -> bool:
-        """Filter out our own sensors.
-
-        The registry tells the integration of an entity, so a sensor of
-        another integration with the name of a sensor type is kept. Entities
-        without a registry entry are recognized by the sensor type in the id.
-        """
-        if (entry := _er.async_get(entity_id)) is not None:
-            return entry.platform != DOMAIN
-        return all(sensor_type not in entity_id for sensor_type in SensorType)
-
     filters_for_additional_sensors: list[callable] = [
         filter_useless_device_class,
         filter_useless_domain,
@@ -346,7 +377,7 @@ def get_sensors_by_device_class(
 
     result = list(
         filter(
-            filter_thermal_comfort_ids,
+            lambda entity_id: is_not_own_sensor(_er, entity_id),
             result,
         )
     )
@@ -395,11 +426,27 @@ def build_schema(
     if not temperature_sensors or not humidity_sensors:
         return None
 
+    pressure_sensors = get_source_sensors(
+        registry,
+        hass,
+        PRESSURE_DEVICE_CLASSES,
+        [Platform.SENSOR, Platform.NUMBER, "input_number"],
+    )
+    # A weather entity gives its wind_speed attribute
+    wind_speed_sensors = get_source_sensors(
+        registry,
+        hass,
+        WIND_SPEED_DEVICE_CLASSES,
+        [Platform.SENSOR, Platform.NUMBER, "input_number", Platform.WEATHER],
+    )
+
     # The selector rejects a value that is not in the list, so a source the
     # entry already has stays selectable even if the filters would hide it now
     for keys, sensors in (
         ((CONF_TEMPERATURE_SENSOR, CONF_OUTDOOR_TEMPERATURE_SENSOR), temperature_sensors),
         ((CONF_HUMIDITY_SENSOR, CONF_OUTDOOR_HUMIDITY_SENSOR), humidity_sensors),
+        ((CONF_PRESSURE_SENSOR,), pressure_sensors),
+        ((CONF_WIND_SPEED_SENSOR,), wind_speed_sensors),
     ):
         for key in keys:
             if (current := get_value(config_entry, key)) and current not in sensors:
@@ -457,33 +504,14 @@ def build_schema(
                 description={
                     "suggested_value": get_value(config_entry, CONF_PRESSURE_SENSOR)
                 },
-            ): selector(
-                {
-                    "entity": {
-                        "domain": Platform.SENSOR,
-                        "device_class": PRESSURE_DEVICE_CLASSES,
-                    }
-                }
-            ),
+            ): selector({"entity": {"include_entities": pressure_sensors}}),
             # Optional, the sensors of the wind are created with it
             vol.Optional(
                 CONF_WIND_SPEED_SENSOR,
                 description={
                     "suggested_value": get_value(config_entry, CONF_WIND_SPEED_SENSOR)
                 },
-            ): selector(
-                {
-                    "entity": {
-                        "filter": [
-                            {
-                                "domain": Platform.SENSOR,
-                                "device_class": WIND_SPEED_DEVICE_CLASSES,
-                            },
-                            {"domain": Platform.WEATHER},
-                        ]
-                    }
-                }
-            ),
+            ): selector({"entity": {"include_entities": wind_speed_sensors}}),
         },
     )
     advanced = {
@@ -606,6 +634,10 @@ def check_input(
 
     if (
         user_input.get(CONF_PRESSURE_SENSOR)
+        and (
+            current is None
+            or current.get(CONF_PRESSURE_SENSOR) != user_input[CONF_PRESSURE_SENSOR]
+        )
         and hass.states.get(user_input[CONF_PRESSURE_SENSOR]) is None
     ):
         result["base"] = "pressure_not_found"
@@ -637,6 +669,22 @@ def check_input(
         and hass.states.get(user_input[CONF_WIND_SPEED_SENSOR]) is None
     ):
         result["base"] = "wind_speed_not_found"
+    # An entity of the pressure or of the wind can have no device class, then its
+    # unit is the only proof. A source the entry has already is not checked again.
+    for key, valid_units, error in (
+        (CONF_PRESSURE_SENSOR, PressureConverter.VALID_UNITS, "pressure_unit_invalid"),
+        (CONF_WIND_SPEED_SENSOR, WIND_SPEED_UNITS, "wind_speed_unit_invalid"),
+    ):
+        entity_id = user_input.get(key)
+        if not entity_id or (current is not None and current.get(key) == entity_id):
+            continue
+        state = hass.states.get(entity_id)
+        # A weather entity has the unit of its wind speed in an attribute
+        if state is None or state.domain == Platform.WEATHER:
+            continue
+        unit = state.attributes.get("unit_of_measurement")
+        if isinstance(unit, str) and unit not in valid_units:
+            result["base"] = error
     if all(outdoor) and source_pair(
         {
             **user_input,
@@ -791,6 +839,7 @@ class ThermalComfortOptionsFlow(config_entries.OptionsFlowWithReload):
                     CONF_HUMIDITY_ATTRIBUTE,
                     CONF_OUTDOOR_TEMPERATURE_SENSOR,
                     CONF_OUTDOOR_HUMIDITY_SENSOR,
+                    CONF_PRESSURE_SENSOR,
                     CONF_WIND_SPEED_SENSOR,
                 )
             }

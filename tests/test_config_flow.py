@@ -297,11 +297,10 @@ async def test_config_flow_with_pressure_sensor(hass, start_ha):
 
 @pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
 async def test_config_flow_pressure_sensor_not_found(hass, start_ha):
-    """Test that an unknown pressure sensor is refused."""
+    """Test that an unknown pressure sensor is refused, the selector does not offer it."""
     missing = {**ADVANCED_USER_INPUT, CONF_PRESSURE_SENSOR: "sensor.no_such_sensor"}
-    result = await _flow_configure(hass, await _flow_init(hass), missing)
-    assert result["type"] == FlowResultType.FORM
-    assert result["errors"] == {"base": "pressure_not_found"}
+    with pytest.raises(InvalidData):
+        await _flow_configure(hass, await _flow_init(hass), missing)
 
 
 @pytest.mark.parametrize(*PRESSURE_TEST_SENSORS)
@@ -316,11 +315,8 @@ async def test_pressure_sensor_selector(hass, start_ha, hass_client):
     form = await response.json()
     field = next(f for f in form["data_schema"] if f["name"] == "pressure_sensor")
     assert field["optional"] is True
-    assert field["selector"]["entity"]["domain"] == ["sensor"]
-    assert set(field["selector"]["entity"]["device_class"]) == {
-        "pressure",
-        "atmospheric_pressure",
-    }
+    offered = field["selector"]["entity"]["include_entities"]
+    assert "sensor.test_pressure_sensor" in offered
     advanced = next(f for f in form["data_schema"] if f["name"] == "advanced")
     assert "pressure_sensor" not in [f["name"] for f in advanced["schema"]]
 
@@ -361,10 +357,9 @@ async def test_options_flow_pressure_sensor(hass, start_ha):
     assert key.description["suggested_value"] == "sensor.test_pressure_sensor"
     hass.config_entries.options.async_abort(result["flow_id"])
 
-    # unknown sensor
-    result = await submit({**USER_INPUT, CONF_PRESSURE_SENSOR: "sensor.no_such"})
-    assert result["type"] == FlowResultType.FORM
-    assert result["errors"] == {"base": "pressure_not_found"}
+    # unknown sensor, the selector does not offer it
+    with pytest.raises(InvalidData):
+        await submit({**USER_INPUT, CONF_PRESSURE_SENSOR: "sensor.no_such"})
 
     # remove: the options win over the data, so the old value must not come back
     entry = MockConfigEntry(
