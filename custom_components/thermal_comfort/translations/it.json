@@ -2,21 +2,48 @@
   "options": {
     "error": {
       "temperature_not_found": "Sensore di temperatura non trovato",
-      "humidity_not_found": "Sensore di umidità non trovato"
+      "humidity_not_found": "Sensore di umidità non trovato",
+      "pressure_not_found": "Sensore di pressione non trovato",
+      "temperature_attribute_not_found": "La sorgente della temperatura non ha un attributo con questo nome, vedi le opzioni avanzate",
+      "humidity_attribute_not_found": "La sorgente dell'umidità non ha un attributo con questo nome, vedi le opzioni avanzate",
+      "outdoor_temperature_not_found": "Sensore di temperatura esterna non trovato",
+      "outdoor_humidity_not_found": "Sensore di umidità esterna non trovato",
+      "outdoor_incomplete": "Scegli sia il sensore di temperatura esterna sia quello di umidità esterna, oppure nessuno dei due",
+      "outdoor_same_as_indoor": "I sensori esterni devono essere diversi da quelli interni",
+      "wind_speed_not_found": "Sensore di velocità del vento non trovato"
     },
     "step": {
       "init": {
-        "title": "Impostazioni di comfort termico",
+        "title": "Impostazioni di Thermal Comfort",
         "data": {
+          "name": "Nome del dispositivo",
           "temperature_sensor": "Sensore di temperatura",
-          "humidity_sensor": "Sensore di umidità"
+          "humidity_sensor": "Sensore di umidità",
+          "outdoor_temperature_sensor": "Sensore di temperatura esterna (facoltativo)",
+          "outdoor_humidity_sensor": "Sensore di umidità esterna (facoltativo)",
+          "pressure_sensor": "Sensore di pressione (facoltativo)",
+          "wind_speed_sensor": "Sensore di velocità del vento (facoltativo)"
+        },
+        "data_description": {
+          "name": "Usato come nome del dispositivo e come prefisso dei nomi dei sensori, per esempio il nome della stanza.",
+          "outdoor_temperature_sensor": "Insieme al sensore di umidità esterna crea i sensori che confrontano la stanza con l'aria esterna: l'eccesso di umidità e i sensori di ventilazione. Si può usare un'entità meteo.",
+          "outdoor_humidity_sensor": "Insieme al sensore di temperatura esterna crea i sensori che confrontano la stanza con l'aria esterna. Si può usare un'entità meteo.",
+          "wind_speed_sensor": "Il vento nel punto dei sensori di temperatura e umidità indicati sopra, quindi all'esterno. Serve a calcolare il raffreddamento da vento e la temperatura apparente. Impostalo solo su un dispositivo che ha come sorgenti sensori esterni o un'entità meteo, non sul dispositivo di una stanza. Si può usare un'entità meteo."
         },
         "sections": {
           "advanced": {
+            "name": "Opzioni avanzate",
             "data": {
               "poll": "Abilita polling",
               "scan_interval": "Intervallo di polling (secondi)",
-              "custom_icons": "Usa il pacchetto di icone personalizzate"
+              "custom_icons": "Usa il pacchetto di icone personalizzate",
+              "temperature_attribute": "Attributo della temperatura (facoltativo)",
+              "humidity_attribute": "Attributo dell'umidità (facoltativo)"
+            },
+            "data_description": {
+              "custom_icons": "Usa le icone di questa integrazione per i sensori del punto di rugiada, del punto di gelo e di percezione. Disattivalo per usare le icone standard di Home Assistant.",
+              "temperature_attribute": "Attributo del sensore di temperatura che contiene il valore, al posto del suo stato. Non serve per le entità meteo e clima.",
+              "humidity_attribute": "Attributo del sensore di umidità che contiene il valore, al posto del suo stato. Non serve per le entità meteo e clima."
             }
           }
         }
@@ -30,23 +57,50 @@
     },
     "error": {
       "temperature_not_found": "Sensore di temperatura non trovato",
-      "humidity_not_found": "Sensore di umidità non trovato"
+      "humidity_not_found": "Sensore di umidità non trovato",
+      "pressure_not_found": "Sensore di pressione non trovato",
+      "temperature_attribute_not_found": "La sorgente della temperatura non ha un attributo con questo nome, vedi le opzioni avanzate",
+      "humidity_attribute_not_found": "La sorgente dell'umidità non ha un attributo con questo nome, vedi le opzioni avanzate",
+      "outdoor_temperature_not_found": "Sensore di temperatura esterna non trovato",
+      "outdoor_humidity_not_found": "Sensore di umidità esterna non trovato",
+      "outdoor_incomplete": "Scegli sia il sensore di temperatura esterna sia quello di umidità esterna, oppure nessuno dei due",
+      "outdoor_same_as_indoor": "I sensori esterni devono essere diversi da quelli interni",
+      "wind_speed_not_found": "Sensore di velocità del vento non trovato"
     },
     "step": {
       "user": {
-        "title": "Impostazioni di comfort termico",
+        "title": "Impostazioni di Thermal Comfort",
         "data": {
           "name": "Nome",
           "temperature_sensor": "Sensore di temperatura",
-          "humidity_sensor": "Sensore di umidità"
+          "humidity_sensor": "Sensore di umidità",
+          "outdoor_temperature_sensor": "Sensore di temperatura esterna (facoltativo)",
+          "outdoor_humidity_sensor": "Sensore di umidità esterna (facoltativo)",
+          "pressure_sensor": "Sensore di pressione (facoltativo)",
+          "wind_speed_sensor": "Sensore di velocità del vento (facoltativo)"
+        },
+        "data_description": {
+          "name": "Usato come nome del dispositivo e come prefisso dei nomi dei sensori, per esempio il nome della stanza.",
+          "outdoor_temperature_sensor": "Insieme al sensore di umidità esterna crea i sensori che confrontano la stanza con l'aria esterna: l'eccesso di umidità e i sensori di ventilazione. Si può usare un'entità meteo.",
+          "outdoor_humidity_sensor": "Insieme al sensore di temperatura esterna crea i sensori che confrontano la stanza con l'aria esterna. Si può usare un'entità meteo.",
+          "wind_speed_sensor": "Il vento nel punto dei sensori di temperatura e umidità indicati sopra, quindi all'esterno. Serve a calcolare il raffreddamento da vento e la temperatura apparente. Impostalo solo su un dispositivo che ha come sorgenti sensori esterni o un'entità meteo, non sul dispositivo di una stanza. Si può usare un'entità meteo."
         },
         "sections": {
           "advanced": {
+            "name": "Opzioni avanzate",
             "data": {
               "poll": "Abilita polling",
               "scan_interval": "Intervallo di polling (secondi)",
-              "custom_icons": "Usa pacchetto icone personalizzato",
-              "enabled_sensors": "Sensori abilitati"
+              "custom_icons": "Usa il pacchetto di icone personalizzate",
+              "enabled_sensors": "Sensori abilitati",
+              "temperature_attribute": "Attributo della temperatura (facoltativo)",
+              "humidity_attribute": "Attributo dell'umidità (facoltativo)"
+            },
+            "data_description": {
+              "custom_icons": "Usa le icone di questa integrazione per i sensori del punto di rugiada, del punto di gelo e di percezione. Disattivalo per usare le icone standard di Home Assistant.",
+              "temperature_attribute": "Attributo del sensore di temperatura che contiene il valore, al posto del suo stato. Non serve per le entità meteo e clima.",
+              "humidity_attribute": "Attributo del sensore di umidità che contiene il valore, al posto del suo stato. Non serve per le entità meteo e clima.",
+              "enabled_sensors": "I sensori non selezionati vengono creati comunque, ma disabilitati. Puoi abilitarli in seguito nelle impostazioni dell'entità."
             }
           }
         }
@@ -107,7 +161,7 @@
         "name": "Entalpia dell'aria umida"
       },
       "relative_strain_perception": {
-        "name": "Percezione della tenzione relativa",
+        "name": "Percezione della tensione relativa",
         "state": {
           "outside_calculable_range": "Fuori scala",
           "comfortable": "Confortevole",
@@ -151,8 +205,11 @@
           "extremely_warm": "Estremamente caldo",
           "danger_of_heatstroke": "Pericolo colpo di calore",
           "extreme_danger_of_heatstroke": "Probabile colpo di calore",
-          "circulatory_collapse_imminent": "Imminente colasso circolatorio"
+          "circulatory_collapse_imminent": "Imminente collasso circolatorio"
         }
+      },
+      "thoms_discomfort_index": {
+        "name": "Indice di disagio di Thoms"
       },
       "thoms_discomfort_perception": {
         "name": "Percezione di disagio di Thoms",
@@ -164,6 +221,41 @@
           "everyone": "Forte disagio per chiunque",
           "dangerous": "Stato di emergenza medica, disagio molto forte che può causare colpi di calore"
         }
+      },
+      "wet_bulb_temperature": {
+        "name": "Temperatura di bulbo umido"
+      },
+      "humidity_ratio": {
+        "name": "Rapporto di mescolanza"
+      },
+      "vapor_pressure_deficit": {
+        "name": "Deficit di pressione di vapore"
+      },
+      "moisture_excess": {
+        "name": "Eccesso di umidità"
+      },
+      "ventilation_advice": {
+        "name": "Consiglio di ventilazione",
+        "state": {
+          "drier_outside": "Arieggiare asciuga la stanza",
+          "similar": "Arieggiare cambia poco",
+          "more_humid_outside": "Arieggiare aggiunge umidità",
+          "condensation_risk": "Non arieggiare: rischio di condensa"
+        }
+      },
+      "ventilation_need": {
+        "name": "Necessità di ricambio d'aria",
+        "state": {
+          "above_limit": "Sopra il limite",
+          "within_limit": "Entro il limite",
+          "not_winter": "Non è inverno"
+        }
+      },
+      "wind_chill": {
+        "name": "Raffreddamento da vento"
+      },
+      "apparent_temperature": {
+        "name": "Temperatura apparente"
       }
     }
   }
