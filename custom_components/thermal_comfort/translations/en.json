@@ -4,15 +4,15 @@
       "temperature_not_found": "Temperature sensor not found",
       "humidity_not_found": "Humidity sensor not found",
       "pressure_not_found": "Pressure sensor not found",
-      "temperature_attribute_not_found": "The temperature source has no attribute with this name, see the advanced options",
-      "humidity_attribute_not_found": "The humidity source has no attribute with this name, see the advanced options",
+      "temperature_attribute_not_found": "The temperature source has no attribute with this name; check the advanced options",
+      "humidity_attribute_not_found": "The humidity source has no attribute with this name; check the advanced options",
       "outdoor_temperature_not_found": "Outdoor temperature sensor not found",
       "outdoor_humidity_not_found": "Outdoor humidity sensor not found",
-      "outdoor_incomplete": "Choose both the outdoor temperature and the outdoor humidity sensor, or neither",
-      "outdoor_same_as_indoor": "The outdoor sensors must be other than the indoor sensors",
+      "outdoor_incomplete": "Select both outdoor temperature and humidity sensors, or leave both empty",
+      "outdoor_same_as_indoor": "Outdoor sensors cannot be the same as indoor sensors",
       "wind_speed_not_found": "Wind speed sensor not found",
-      "pressure_unit_invalid": "The unit of the pressure sensor is not a pressure unit Home Assistant knows, such as hPa or mbar. A template sensor can convert it",
-      "wind_speed_unit_invalid": "The unit of the wind speed sensor is not a speed unit Home Assistant knows, such as km/h or m/s. A template sensor can convert it"
+      "pressure_unit_invalid": "The pressure sensor uses an unsupported unit. Supported units include hPa and mbar; you can use a template sensor to convert it",
+      "wind_speed_unit_invalid": "The wind speed sensor uses an unsupported unit. Supported units include km/h and m/s; you can use a template sensor to convert it"
     },
     "step": {
       "init": {
@@ -28,9 +28,9 @@
         },
         "data_description": {
           "name": "Used as the device name and as the prefix of the sensor names, for example the name of the room.",
-          "outdoor_temperature_sensor": "With the outdoor humidity sensor, the sensors that compare the room with the outdoor air are created: the moisture excess and the ventilation sensors. A weather entity can be used.",
-          "outdoor_humidity_sensor": "With the outdoor temperature sensor, the sensors that compare the room with the outdoor air are created. A weather entity can be used.",
-          "wind_speed_sensor": "The wind at the place of the temperature and humidity sensors above, so outdoors. With it the wind chill and the apparent temperature are calculated. Set it only on a device whose sources are outdoor sensors or a weather entity, not on the device of a room. A weather entity can be used."
+          "outdoor_temperature_sensor": "Combined with the outdoor humidity sensor, this enables sensors comparing indoor and outdoor air (moisture excess and ventilation). A weather entity can also be used.",
+          "outdoor_humidity_sensor": "Combined with the outdoor temperature sensor, this enables sensors comparing indoor and outdoor air. A weather entity can also be used.",
+          "wind_speed_sensor": "Wind speed measured at the location of the temperature and humidity sensors (outdoors), used to calculate wind chill and apparent temperature. Only configure this for outdoor setups or weather entities, not for indoor rooms."
         },
         "sections": {
           "advanced": {
@@ -43,9 +43,9 @@
               "humidity_attribute": "Humidity attribute (optional)"
             },
             "data_description": {
-              "custom_icons": "Uses the icons of this integration for the dew point, frost point and perception sensors. Switch it off for the standard Home Assistant icons.",
-              "temperature_attribute": "Attribute of the temperature sensor that has the value, instead of its state. Not needed for weather and climate entities.",
-              "humidity_attribute": "Attribute of the humidity sensor that has the value, instead of its state. Not needed for weather and climate entities."
+              "custom_icons": "Use custom integration icons for dew point, frost point, and perception sensors instead of standard Home Assistant icons.",
+              "temperature_attribute": "Attribute containing the value, if the sensor value is stored in an attribute rather than the entity state. Not required for weather or climate entities.",
+              "humidity_attribute": "Attribute containing the value, if the sensor value is stored in an attribute rather than the entity state. Not required for weather or climate entities."
             }
           }
         }
@@ -61,15 +61,15 @@
       "temperature_not_found": "Temperature sensor not found",
       "humidity_not_found": "Humidity sensor not found",
       "pressure_not_found": "Pressure sensor not found",
-      "temperature_attribute_not_found": "The temperature source has no attribute with this name, see the advanced options",
-      "humidity_attribute_not_found": "The humidity source has no attribute with this name, see the advanced options",
+      "temperature_attribute_not_found": "The temperature source has no attribute with this name; check the advanced options",
+      "humidity_attribute_not_found": "The humidity source has no attribute with this name; check the advanced options",
       "outdoor_temperature_not_found": "Outdoor temperature sensor not found",
       "outdoor_humidity_not_found": "Outdoor humidity sensor not found",
-      "outdoor_incomplete": "Choose both the outdoor temperature and the outdoor humidity sensor, or neither",
-      "outdoor_same_as_indoor": "The outdoor sensors must be other than the indoor sensors",
+      "outdoor_incomplete": "Select both outdoor temperature and humidity sensors, or leave both empty",
+      "outdoor_same_as_indoor": "Outdoor sensors cannot be the same as indoor sensors",
       "wind_speed_not_found": "Wind speed sensor not found",
-      "pressure_unit_invalid": "The unit of the pressure sensor is not a pressure unit Home Assistant knows, such as hPa or mbar. A template sensor can convert it",
-      "wind_speed_unit_invalid": "The unit of the wind speed sensor is not a speed unit Home Assistant knows, such as km/h or m/s. A template sensor can convert it"
+      "pressure_unit_invalid": "The pressure sensor uses an unsupported unit. Supported units include hPa and mbar; you can use a template sensor to convert it",
+      "wind_speed_unit_invalid": "The wind speed sensor uses an unsupported unit. Supported units include km/h and m/s; you can use a template sensor to convert it"
     },
     "step": {
       "user": {
@@ -85,9 +85,9 @@
         },
         "data_description": {
           "name": "Used as the device name and as the prefix of the sensor names, for example the name of the room.",
-          "outdoor_temperature_sensor": "With the outdoor humidity sensor, the sensors that compare the room with the outdoor air are created: the moisture excess and the ventilation sensors. A weather entity can be used.",
-          "outdoor_humidity_sensor": "With the outdoor temperature sensor, the sensors that compare the room with the outdoor air are created. A weather entity can be used.",
-          "wind_speed_sensor": "The wind at the place of the temperature and humidity sensors above, so outdoors. With it the wind chill and the apparent temperature are calculated. Set it only on a device whose sources are outdoor sensors or a weather entity, not on the device of a room. A weather entity can be used."
+          "outdoor_temperature_sensor": "Combined with the outdoor humidity sensor, this enables sensors comparing indoor and outdoor air (moisture excess and ventilation). A weather entity can also be used.",
+          "outdoor_humidity_sensor": "Combined with the outdoor temperature sensor, this enables sensors comparing indoor and outdoor air. A weather entity can also be used.",
+          "wind_speed_sensor": "Wind speed measured at the location of the temperature and humidity sensors (outdoors), used to calculate wind chill and apparent temperature. Only configure this for outdoor setups or weather entities, not for indoor rooms."
         },
         "sections": {
           "advanced": {
@@ -101,9 +101,9 @@
               "humidity_attribute": "Humidity attribute (optional)"
             },
             "data_description": {
-              "custom_icons": "Uses the icons of this integration for the dew point, frost point and perception sensors. Switch it off for the standard Home Assistant icons.",
-              "temperature_attribute": "Attribute of the temperature sensor that has the value, instead of its state. Not needed for weather and climate entities.",
-              "humidity_attribute": "Attribute of the humidity sensor that has the value, instead of its state. Not needed for weather and climate entities.",
+              "custom_icons": "Use custom integration icons for dew point, frost point, and perception sensors instead of standard Home Assistant icons.",
+              "temperature_attribute": "Attribute containing the value, if the sensor value is stored in an attribute rather than the entity state. Not required for weather or climate entities.",
+              "humidity_attribute": "Attribute containing the value, if the sensor value is stored in an attribute rather than the entity state. Not required for weather or climate entities.",
               "enabled_sensors": "Sensors you do not select are still created, but disabled. You can enable them later in the entity settings."
             }
           }
@@ -213,10 +213,10 @@
         }
       },
       "thoms_discomfort_index": {
-        "name": "Thoms discomfort index"
+        "name": "Thom's discomfort index"
       },
       "thoms_discomfort_perception": {
-        "name": "Thoms discomfort perception",
+        "name": "Thom's discomfort perception",
         "state": {
           "no_discomfort": "No discomfort",
           "less_than_half": "Less than half of the population feels discomfort",
