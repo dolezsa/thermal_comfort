@@ -10,7 +10,9 @@
       "outdoor_humidity_not_found": "Außenfeuchtigkeitssensor konnte nicht gefunden werden",
       "outdoor_incomplete": "Wähle entweder den Außentemperatur- und den Außenfeuchtigkeitssensor oder keinen von beiden aus",
       "outdoor_same_as_indoor": "Die Außensensoren müssen andere sein als die Innensensoren",
-      "wind_speed_not_found": "Windgeschwindigkeitssensor konnte nicht gefunden werden"
+      "wind_speed_not_found": "Windgeschwindigkeitssensor konnte nicht gefunden werden",
+      "pressure_unit_invalid": "Die Einheit des Drucksensors ist keine von Home Assistant unterstützte Druckeinheit (wie hPa oder mbar). Ein Template-Sensor kann sie umrechnen",
+      "wind_speed_unit_invalid": "Die Einheit des Windgeschwindigkeitssensors ist keine von Home Assistant unterstützte Geschwindigkeitseinheit (wie km/h oder m/s). Ein Template-Sensor kann sie umrechnen"
     },
     "step": {
       "init": {
@@ -26,8 +28,8 @@
         },
         "data_description": {
           "name": "Wird als Gerätename und als Präfix für die Sensornamen verwendet, beispielsweise als Name des Raums.",
-          "outdoor_temperature_sensor": "Mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetter-Entität kann verwendet werden.",
-          "outdoor_humidity_sensor": "Mit dem Außentemperatursensor werden die Sensoren erstellt, die die Raumluft mit der Außenluft vergleichen. Eine Wetter-Entität kann verwendet werden.",
+          "outdoor_temperature_sensor": "Zusammen mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetter-Entität kann verwendet werden.",
+          "outdoor_humidity_sensor": "Zusammen mit dem Außentemperatursensor werden die Sensoren erstellt, die die Raumluft mit der Außenluft vergleichen. Eine Wetter-Entität kann verwendet werden.",
           "wind_speed_sensor": "Der Wind am Standort der Außensensoren. Anhand dessen werden die gefühlte Temperatur und die Windchill-Temperatur berechnet. Stelle diesen Wert nur auf einem Gerät ein, dessen Datenquellen Außensensoren oder eine Wetter-Entität sind, nicht auf einem Gerät, das für einen Raum bestimmt ist. Eine Wetter-Entität kann verwendet werden."
         },
         "sections": {
@@ -41,6 +43,7 @@
               "humidity_attribute": "Feuchtigkeitsattribut (optional)"
             },
             "data_description": {
+              "custom_icons": "Verwendet die Icons dieser Integration für Taupunkt-, Frostpunkt- und gefühlte Sensoren. Deaktivieren, um die Standard-Icons von Home Assistant zu nutzen.",
               "temperature_attribute": "Attribut des Temperatursensors, das den Wert anstelle seines Zustands angibt. Für Wetter- und Klima-Entitäten nicht erforderlich.",
               "humidity_attribute": "Attribut des Feuchtigkeitssensors, das den Wert anstelle seines Zustands angibt. Für Wetter- und Klima-Entitäten nicht erforderlich."
             }
@@ -52,7 +55,7 @@
   "config": {
     "abort": {
       "already_configured": "Diese Kombination aus Temperatur- und Feuchtigkeitssensor wird bereits verwendet",
-      "no_sensors": "Es wurden keine Temperatur- oder Feuchtigkeitssensoren gefunden."
+      "no_sensors": "Es wurden keine Temperatur- oder Feuchtigkeitssensoren gefunden"
     },
     "error": {
       "temperature_not_found": "Temperatursensor konnte nicht gefunden werden",
@@ -80,8 +83,8 @@
         },
         "data_description": {
           "name": "Wird als Gerätename und als Präfix für die Sensornamen verwendet, beispielsweise als Name des Raums.",
-          "outdoor_temperature_sensor": "Mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetter-Entität kann verwendet werden.",
-          "outdoor_humidity_sensor": "Mit dem Außentemperatursensor werden die Sensoren erstellt, die die Raumluft mit der Außenluft vergleichen. Eine Wetter-Entität kann verwendet werden.",
+          "outdoor_temperature_sensor": "Zusammen mit dem Außenfeuchtigkeitssensor werden die Sensoren erstellt, die den Raum mit der Außenluft vergleichen: der Feuchtigkeitsüberschuss- und der Lüftungssensor. Eine Wetter-Entität kann verwendet werden.",
+          "outdoor_humidity_sensor": "Zusammen mit dem Außentemperatursensor werden die Sensoren erstellt, die die Raumluft mit der Außenluft vergleichen. Eine Wetter-Entität kann verwendet werden.",
           "wind_speed_sensor": "Der Wind am Standort der Außensensoren. Anhand dessen werden die gefühlte Temperatur und die Windchill-Temperatur berechnet. Stelle diesen Wert nur auf einem Gerät ein, dessen Datenquellen Außensensoren oder eine Wetter-Entität sind, nicht auf einem Gerät, das für einen Raum bestimmt ist. Eine Wetter-Entität kann verwendet werden."
         },
         "sections": {
@@ -96,6 +99,7 @@
               "humidity_attribute": "Feuchtigkeitsattribut (optional)"
             },
             "data_description": {
+              "custom_icons": "Verwendet die Icons dieser Integration für Taupunkt-, Frostpunkt- und gefühlte Sensoren. Deaktivieren, um die Standard-Icons von Home Assistant zu nutzen.",
               "temperature_attribute": "Attribut des Temperatursensors, das den Wert anstelle seines Zustands angibt. Für Wetter- und Klima-Entitäten nicht erforderlich.",
               "humidity_attribute": "Attribut des Feuchtigkeitssensors, das den Wert anstelle seines Zustands angibt. Für Wetter- und Klima-Entitäten nicht erforderlich.",
               "enabled_sensors": "Nicht ausgewählte Sensoren werden deaktiviert erstellt. Sie können später in den Entitätseinstellungen aktiviert werden."
@@ -159,7 +163,7 @@
         "name": "Enthalpie feuchter Luft"
       },
       "relative_strain_perception": {
-        "name": "Gefühlte relative Belastung",
+        "name": "Relative Belastung fefühlt",
         "state": {
           "outside_calculable_range": "Außerhalb des berechenbaren Bereichs",
           "comfortable": "Angenehm",
