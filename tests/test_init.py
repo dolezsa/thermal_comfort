@@ -4,7 +4,10 @@ import logging
 from unittest.mock import AsyncMock, patch
 
 import pytest
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant_custom_component.common import (
+    MockConfigEntry,
+    async_capture_events,
+)
 
 from custom_components.thermal_comfort import async_setup_entry, async_unload_entry
 from custom_components.thermal_comfort.const import DOMAIN, PLATFORMS
@@ -14,6 +17,8 @@ from custom_components.thermal_comfort.sensor import (
     id_generator,
 )
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
+from homeassistant.const import SERVICE_RELOAD
+from homeassistant.exceptions import ConfigValidationError, ServiceValidationError
 from homeassistant.helpers import entity_registry as er
 from homeassistant.setup import async_setup_component
 
@@ -239,3 +244,52 @@ async def test_entry_icons_follow_the_stored_option(hass, stored, icon):
     entity = hass.data["entity_components"]["sensor"].get_entity(entity_id)
     # the standard icons are mdi: ones
     assert entity.entity_description.icon.startswith(icon)
+
+
+async def test_reload_invalid_yaml_raises_service_validation_error(hass):
+    """Test that invalid YAML during reload raises ServiceValidationError."""
+    assert await async_setup_component(hass, DOMAIN, {})
+    events = async_capture_events(hass, f"event_{DOMAIN}_reloaded")
+    invalid_config = {DOMAIN: {SENSOR_DOMAIN: {"name": "missing_required_sensors"}}}
+
+    with (
+        patch(
+            "homeassistant.config.async_hass_config_yaml",
+            return_value=invalid_config,
+        ),
+        patch(
+            "custom_components.thermal_comfort.async_reload_integration_platforms"
+        ) as reload_platforms,
+        pytest.raises(ServiceValidationError) as err,
+    ):
+        await hass.services.async_call(DOMAIN, SERVICE_RELOAD, blocking=True)
+
+    assert isinstance(err.value.__cause__, ConfigValidationError)
+    assert err.value.translation_domain == err.value.__cause__.translation_domain
+    assert err.value.translation_key == err.value.__cause__.translation_key
+    assert (
+        err.value.translation_placeholders
+        == err.value.__cause__.translation_placeholders
+    )
+    reload_platforms.assert_not_called()
+    assert not events
+
+
+async def test_reload_returns_early_when_yaml_config_is_none(hass):
+    """Test that reload returns early when async_integration_yaml_config returns None."""
+    assert await async_setup_component(hass, DOMAIN, {})
+    events = async_capture_events(hass, f"event_{DOMAIN}_reloaded")
+
+    with (
+        patch(
+            "custom_components.thermal_comfort.async_integration_yaml_config",
+            return_value=None,
+        ),
+        patch(
+            "custom_components.thermal_comfort.async_reload_integration_platforms"
+        ) as reload_platforms,
+    ):
+        await hass.services.async_call(DOMAIN, SERVICE_RELOAD, blocking=True)
+
+    reload_platforms.assert_not_called()
+    assert not events
