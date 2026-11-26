@@ -5,7 +5,7 @@ import copy
 from datetime import timedelta
 import logging
 import math
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from pytest_homeassistant_custom_component.common import (
@@ -35,6 +35,7 @@ from custom_components.thermal_comfort.sensor import (
     CONF_SENSOR_TYPES,
     DEFAULT_SENSOR_TYPES,
     PRESSURE_SENSOR_TYPES,
+    SCAN_INTERVAL_DEFAULT,
     DeviceThermalComfort,
     DewPointPerception,
     FrostRisk,
@@ -1964,3 +1965,167 @@ async def test_humidity_ratio_matches_the_enthalpy(
     )
     ratio = float(get_sensor(hass, SensorType.HUMIDITY_RATIO).state)
     assert ratio == pytest.approx(1000 * ratio_from_enthalpy, rel=1e-6)
+
+
+async def test_entity_picture_template(hass):
+    """Test that entity_picture_template is rendered and attached to the sensor."""
+    hass.states.async_set("sensor.t", "25", {"unit_of_measurement": "°C"})
+    hass.states.async_set("sensor.h", "50")
+    config = {
+        DOMAIN: {
+            PLATFORM_DOMAIN: {
+                "name": "test_thermal_comfort",
+                "temperature_sensor": "sensor.t",
+                "humidity_sensor": "sensor.h",
+                "entity_picture_template": "/local/comfort.png",
+                "sensor_types": [SensorType.DEW_POINT],
+                "unique_id": "unique_entity_picture",
+            }
+        }
+    }
+    assert await async_setup_component(hass, DOMAIN, config)
+    await hass.async_block_till_done()
+
+    assert (
+        get_sensor(hass, SensorType.DEW_POINT).attributes["entity_picture"]
+        == "/local/comfort.png"
+    )
+
+
+async def test_template_error_handling(hass, caplog):
+    """Test that template rendering errors log warnings or errors without breaking the sensor."""
+    hass.states.async_set("sensor.t", "25", {"unit_of_measurement": "°C"})
+    hass.states.async_set("sensor.h", "50")
+    config = {
+        DOMAIN: {
+            PLATFORM_DOMAIN: [
+                {
+                    "name": "test_startup_template",
+                    "temperature_sensor": "sensor.t",
+                    "humidity_sensor": "sensor.h",
+                    "icon_template": "{{ states.sensor.missing.attributes.foo }}",
+                    "sensor_types": [SensorType.DEW_POINT],
+                    "unique_id": "unique_template_undefined",
+                },
+                {
+                    "name": "test_broken_template",
+                    "temperature_sensor": "sensor.t",
+                    "humidity_sensor": "sensor.h",
+                    "icon_template": "{{ 1 / 0 }}",
+                    "sensor_types": [SensorType.DEW_POINT],
+                    "unique_id": "unique_template_error",
+                },
+            ]
+        }
+    }
+    with caplog.at_level(logging.WARNING):
+        assert await async_setup_component(hass, DOMAIN, config)
+        await hass.async_block_till_done()
+
+    assert "the state is unknown." in caplog.text
+    assert "ZeroDivisionError: division by zero" in caplog.text
+    assert hass.states.get("sensor.test_startup_template_dew_point") is not None
+    assert hass.states.get("sensor.test_broken_template_dew_point") is not None
+
+
+async def test_setup_entry_defaults_missing_scan_interval(hass):
+    """Test that async_setup_entry falls back to SCAN_INTERVAL_DEFAULT when scan_interval is None."""
+    hass.states.async_set("sensor.t", "25", {"unit_of_measurement": "°C"})
+    hass.states.async_set("sensor.h", "50")
+    data = {
+        k: v for k, v in ADVANCED_USER_INPUT.items() if k != CONF_SCAN_INTERVAL
+    }
+    data["temperature_sensor"] = "sensor.t"
+    data["humidity_sensor"] = "sensor.h"
+    entry = MockConfigEntry(
+        domain=DOMAIN, data=data, entry_id="no_scan_interval", unique_id="uid_no_scan"
+    )
+    entry.add_to_hass(hass)
+
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert hass.data[DOMAIN][entry.entry_id][CONF_SCAN_INTERVAL] == SCAN_INTERVAL_DEFAULT
+
+
+async def test_device_polling_defaults_missing_scan_interval(hass):
+    """Test that DeviceThermalComfort uses SCAN_INTERVAL_DEFAULT when polling with scan_interval=None."""
+    hass.states.async_set("sensor.t", "25", {"unit_of_measurement": "°C"})
+    hass.states.async_set("sensor.h", "50")
+    with patch(
+        "custom_components.thermal_comfort.sensor.async_track_time_interval"
+    ) as track_interval:
+        device = DeviceThermalComfort(
+            hass=hass,
+            name="poll_default",
+            unique_id="poll_default_uid",
+            temperature_entity="sensor.t",
+            humidity_entity="sensor.h",
+            should_poll=True,
+            scan_interval=None,
+        )
+        await hass.async_block_till_done()
+        device.async_unsubscribe()
+
+    track_interval.assert_called_once()
+    assert track_interval.call_args.args[2] == timedelta(seconds=SCAN_INTERVAL_DEFAULT)
+
+
+async def test_compute_once_lock_and_sensor_update_none_guards(hass):
+    """Test that compute_once_lock, SensorThermalComfort, and outdoor calculations handle None values safely."""
+    hass.states.async_set("sensor.t", "25", {"unit_of_measurement": "°C"})
+    hass.states.async_set("sensor.h", "50")
+    hass.states.async_set("sensor.ot", "10", {"unit_of_measurement": "°C"})
+    hass.states.async_set("sensor.oh", "60")
+
+    # Unavailable device: compute_once_lock returns None without invoking calculation
+    unavailable_device = DeviceThermalComfort(
+        hass=hass,
+        name="unavail",
+        unique_id="unavail_uid",
+        temperature_entity="sensor.missing_t",
+        humidity_entity="sensor.missing_h",
+        should_poll=False,
+        scan_interval=None,
+    )
+    assert await unavailable_device.dew_point() is None
+    unavailable_device.async_unsubscribe()
+
+    # Available device with outdoor sensors
+    device = DeviceThermalComfort(
+        hass=hass,
+        name="guards",
+        unique_id="guards_uid",
+        temperature_entity="sensor.t",
+        humidity_entity="sensor.h",
+        outdoor_temperature_entity="sensor.ot",
+        outdoor_humidity_entity="sensor.oh",
+        should_poll=False,
+        scan_interval=None,
+    )
+    await hass.async_block_till_done()
+
+    # SensorThermalComfort.async_update returns early when calculation returns None
+    sensor = SensorThermalComfort(
+        device=device,
+        icon_template=None,
+        entity_picture_template=None,
+        sensor_type=SensorType.DEW_POINT,
+    )
+    sensor._attr_native_value = 12.3
+    with patch.object(device, "dew_point", AsyncMock(return_value=None)):
+        await sensor.async_update()
+    assert sensor._attr_native_value == 12.3
+
+    # Outdoor sensors return None if their underlying dependency returns None
+    device._compute_states[SensorType.MOISTURE_EXCESS].needs_update = True
+    with patch.object(device, "absolute_humidity", AsyncMock(return_value=None)):
+        assert await device.moisture_excess() is None
+
+    device._compute_states[SensorType.VENTILATION_ADVICE].needs_update = True
+    device._compute_states[SensorType.VENTILATION_NEED].needs_update = True
+    with patch.object(device, "moisture_excess", AsyncMock(return_value=None)):
+        assert await device.ventilation_advice() is None
+        assert await device.ventilation_need() is None
+
+    device.async_unsubscribe()
