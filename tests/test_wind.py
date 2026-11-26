@@ -609,6 +609,22 @@ async def test_weather_entity_for_the_humidity_and_the_wind(hass):
         reference_apparent_temperature(-10, 80, 10), abs=1e-9
     )
 
+    # a change of the wind speed alone only updates the sensors of the wind
+    with patch.object(
+        DeviceThermalComfort,
+        "async_update",
+        autospec=True,
+        side_effect=DeviceThermalComfort.async_update,
+    ) as update:
+        hass.states.async_set(
+            WEATHER, *weather(humidity=80, wind_speed=2, wind_speed_unit="m/s")
+        )
+        await hass.async_block_till_done()
+        assert update.call_count == 0
+    assert value(hass, SensorType.APPARENT_TEMPERATURE) == pytest.approx(
+        reference_apparent_temperature(-10, 80, 2), abs=1e-9
+    )
+
 
 async def test_unload_unsubscribes_the_wind_speed(hass):
     """Test that nothing listens to the wind speed after the entry is gone."""
